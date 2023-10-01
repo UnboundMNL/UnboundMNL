@@ -9,7 +9,7 @@ const PartSchema = new mongoose.Schema({
     totalMembers: Number,
     totalKaban: Number,
     totalLoans: Number,
-    //validUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }]
+    validUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // i think we should use this field na rin.
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'member' }],
 }, {versionKey: false}
 );

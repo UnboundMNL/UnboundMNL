@@ -7,12 +7,10 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     authority: {type: String, enum:['Admin', 'SEDO', 'Treasurer'], default: 'Treasurer', required: true},
-    //remembered: {type: Boolean, default: false},
+    
+    validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
 
-    //subUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
-    //i dont think we need to have user under users but yeah this is for that
-    validOrg: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
-    //??? depends how we wanna point the stuff
+    //remembered: {type: Boolean, default: false},
 }, 
     {versionKey: false}
 )
