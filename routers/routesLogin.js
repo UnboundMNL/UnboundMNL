@@ -3,11 +3,11 @@ const router = express.Router();
 const he = require("he");
 const mongoose = require('mongoose');
 
-const Loan = require('../models/Member')
-const Member = require('../models/Member')
-const Org = require('../models/Part')
-const Saving = require('../models/Saving')
-const User = require('../models/User')
+//const Loan = require('../models/Loan')
+const Member = require('../models/Member');
+const Part = require('../models/Part');
+const Saving = require('../models/Saving');
+const User = require('../models/User');
 
 //logging in
 router.post("/login", async (req, res) => {
@@ -18,27 +18,26 @@ router.post("/login", async (req, res) => {
         console.log(username);
         const user = await User.findOne({ username: username });
         if (!user) {
-          console.log("asdasd");
-          return res.status(400).json({ error: "That user does not exist." });
+          return res.status(401).json({ error: "That user does not exist." });
         }
         const isPasswordMatch = await user.comparePassword(password);
         if (!isPasswordMatch ) {
-          return res.status(400).json({ error: "Wrong Username or Password." });
+          return res.status(401).json({ error: "Wrong Username or Password." });
         }
   
         req.session.isLoggedIn = true;
         req.session.userId = user._id;
-        if (!remember) {
-          console.log("no remember!");
-          //req.expires = false;
-          //req.session.expires=false;
-          req.session.cookie.expires = false;
-        }
+        // if (!remember) {
+        //   console.log("no remember!");
+        //   //req.expires = false;
+        //   //req.session.expires=false;
+        //   req.session.cookie.expires = false;
+        // }
         req.session.rememberMe = remember;
-        res.redirect("/profile");
+        res.redirect("/dashboard");
       }
       else{
-        res.redirect("/profile");
+        res.redirect("/dashboard");
       }
     } catch (error) {
       console.error(error);

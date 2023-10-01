@@ -7,6 +7,6 @@ const LoanSchema = new mongoose.Schema({
 }, {versionKey: false}
 );
 
-const Loan = mongoose.model('member', LoanSchema);
+const Loan = mongoose.model('loan', LoanSchema);
 
 module.exports = Loan;

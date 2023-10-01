@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
 
     //subUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
     //i dont think we need to have user under users but yeah this is for that
-    validOrg: [{ type: mongoose.Schema.Types.ObjectId, ref: 'org' }] 
+    validOrg: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
     //??? depends how we wanna point the stuff
 }, 
     {versionKey: false}
