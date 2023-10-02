@@ -74,10 +74,10 @@ app.listen(port, ()=>{
 });
 
 //const Loan = require('../models/Loan')
-const Member = require('../models/Member');
-const Part = require('../models/Part');
-const Saving = require('../models/Saving');
-const User = require('../models/User');
+const Member = require('./models/Member');
+const Part = require('./models/Part');
+const Saving = require('./models/Saving');
+const User = require('./models/User');
 
 app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
@@ -87,10 +87,15 @@ app.use(rememberMeMiddleware);
 
 app.get("/", async (req, res) => {
   try {
-    res.render("/", { params });
+    if(req.session.isLoggedIn){
+      res.render("dashboard");
+    }else{
+    res.render("login");
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).render("fail", { error: "An error occurred." });
+    //res.status(500).render("fail", { error: "An error occurred." });
+    res.status(500);
   }
 });
 
@@ -98,44 +103,44 @@ app.get("/", async (req, res) => {
 //   res.redirect("/")
 // })
 
-app.get("/", (req, res)=>{
-    res.render("/")
-})
+// app.get("/", (req, res)=>{
+//     res.sendFile("index")
+// })
 
-app.get("/register", (req, res)=>{
-  if(req.session.isLoggedIn){
-    req.session.cachedNoUpdate = false;
-    res.redirect("/dashboard");
-  }else{
-  return res.render("register", {error: null})
-  }
-  res.render("register", {error: null})
-})
+// app.get("/register", (req, res)=>{
+//   if(req.session.isLoggedIn){
+//     req.session.cachedNoUpdate = false;
+//     res.redirect("/dashboard");
+//   }else{
+//   return res.render("register", {error: null})
+//   }
+//   res.render("register", {error: null})
+// })
 
-app.get("/success", (req, res)=>{
-  res.render("success")
-})
+// app.get("/success", (req, res)=>{
+//   res.render("success")
+// })
 
-app.get("/login", (req, res)=>{
-  if(req.session.isLoggedIn){
-    req.session.cachedNoUpdate = false;
-    console.log(req.expires);
-    res.redirect("/dashboard");
-  }else{
-  return res.render("login")
-  }
-  res.render("login");
-})
+// app.get("/login", (req, res)=>{
+//   if(req.session.isLoggedIn){
+//     req.session.cachedNoUpdate = false;
+//     console.log(req.expires);
+//     res.redirect("/dashboard");
+//   }else{
+//   return res.render("login")
+//   }
+//   res.render("login");
+// })
 
-app.get("/logout", async(req, res)=>{
-  await req.session.destroy();
-  console.log("not logged in");
-  res.render("logout")
-})
+// app.get("/logout", async(req, res)=>{
+//   await req.session.destroy();
+//   console.log("not logged in");
+//   res.render("logout")
+// })
 
-app.get("/success", (req, res) => {
-  res.render("success");
-});
+// app.get("/success", (req, res) => {
+//   res.render("success");
+// });
 
 
 app.use(express.urlencoded({ extended: true }));
