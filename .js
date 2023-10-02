@@ -139,11 +139,9 @@ app.get("/success", (req, res) => {
 
 
 app.use(express.urlencoded({ extended: true }));
-app.use(routesUserRegisterAndLogin);
+app.use(routesRegister);
+app.use(routesLogin);
 app.use(routesUser);
-app.use(routesPost);
-app.use(routesComment);
-app.use(routesReact);
-app.use(routesSearch);
+
 
 
