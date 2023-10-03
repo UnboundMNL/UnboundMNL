@@ -88,13 +88,15 @@ app.get("/", async (req, res) => {
   }
 });
 
-// app.get("/", (req, res)=>{
-//   res.redirect("/")
-// })
 
-// app.get("/", (req, res)=>{
-//     res.sendFile("index")
-// })
+
+app.get("/index", (req, res)=>{
+  res.redirect("/")
+})
+
+// app.get('*', function(req, res){
+//   res.redirect('/dashboard');
+// });
 
 // app.get("/register", (req, res)=>{
 //   if(req.session.isLoggedIn){
