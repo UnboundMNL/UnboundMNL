@@ -1,22 +1,26 @@
 const mongoose = require('mongoose');
 
-const NameSchema = new mongoose.Schema({
-  firstName: { type: String },
-  middleName: { type: String },
-  lastName: { type: String },
-});
-
-const Name = mongoose.model('Name', NameSchema);
-
 
 const MemberSchema = new mongoose.Schema({
   partID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part', required: true }],
-  name: { type: NameSchema, required: true },
+  name: {
+    firstName: String,
+    middleName: String,
+    lastName: String
+  },
   id: String,
   photo: { type: String },
 
-  nameFather: { type: NameSchema },
-  nameMother: { type: NameSchema },
+  nameFather: {
+    firstName: String,
+    middleName: String,
+    lastName: String
+  },
+  nameMother: {
+    firstName: String,
+    middleName: String,
+    lastName: String
+  },
 
   age: Number, //this is a derivable field!
   sex: String,

@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
 
-const NameSchema = new mongoose.Schema({
-    firstName: { type: String },
-    middleName: { type: String },
-    lastName: { type: String },
-});
-
-const Name = mongoose.model('Name', NameSchema);
-
 const PartSchema = new mongoose.Schema({
     SPU: String,
     name: {type: String, required: true},
     
-    signatories: [NameSchema], 
+    signatories: [
+        {
+          firstName: String,
+          middleName: String,
+          lastName: String
+        }
+      ],
     depositoryBank: String,
     bankAccountType: String,
     bankAccountNum: String,
-    treasurer: NameSchema, 
-
+    treasurer:{
+          firstName: String,
+          middleName: String,
+          lastName: String
+        },
 
     type: {type: String, enum:['Cluster', 'Project', 'Group'], default: 'Group', required: true},
     childPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }],
