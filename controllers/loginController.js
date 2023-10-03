@@ -15,8 +15,8 @@ const loginController = {
                 if (!user) {
                     return res.status(401).json({ error: "That user does not exist." });
                 }
-                // const isPasswordMatch = await user.comparePassword(password);
-                const isPasswordMatch = (password == user.password);
+                const isPasswordMatch = await user.comparePassword(password);
+                // const isPasswordMatch = (password == user.password);
                 if (!isPasswordMatch ) {
                     return res.status(401).json({ error: "Wrong Username or Password." });
                 }
