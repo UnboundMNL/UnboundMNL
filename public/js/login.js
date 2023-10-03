@@ -24,6 +24,7 @@ $(document).on('click', '#login', function() {
         })
         .then(response => {
             if (response.ok) {
+                location.href="/dashboard";
             } else {
                 return response.json().then(data => {
                     var errorDiv = document.getElementById("error");

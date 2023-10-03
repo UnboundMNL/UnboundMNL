@@ -34,7 +34,7 @@ router.post("/login", async (req, res) => {
         //   req.session.cookie.expires = false;
         // }
         req.session.rememberMe = remember;
-        res.redirect("/dashboard");
+        res.json();
       }
       else{
         res.redirect("/dashboard");

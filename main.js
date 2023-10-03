@@ -77,7 +77,7 @@ app.listen(port, ()=>{
 app.get("/", async (req, res) => {
   try {
     if(req.session.isLoggedIn){
-      res.render("dashboard");
+      res.redirect("/dashboard");
     }else{
       res.render("login");
     }
