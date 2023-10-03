@@ -16,13 +16,13 @@ router.get("/dashboard", async (req, res) => {
         if (req.session.isLoggedIn) {
             const userID = req.session.userId;
             const user = await User.findById(userID);
-            const auth = user.authority;
-    
+            const authority = user.authority;
+            // const username = user.username;
             let orgParts;
     
-            if (auth === "Admin") {
+            if (authority === "Admin") {
                 orgParts = await Part.find();
-            } else if (auth === "SEDO" || auth === "Treasurer") {
+            } else if (authority === "SEDO" || authority === "Treasurer") {
                 const validOrg = user.validOrg; 
                 orgParts = await Part.find({ _id: { $in: validOrg } });
                 //maybe we could just have the topmost accessible thing for SEDO then recursively get all other things that the user can access
@@ -33,7 +33,7 @@ router.get("/dashboard", async (req, res) => {
             }
             //get members of orgParts
             //total values are in the Parts schema
-            res.render("dashboard", { user, authority: auth, orgParts });
+            res.render("dashboard", { authority, orgParts });
         } else {
             res.redirect("/");
         }

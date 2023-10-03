@@ -15,7 +15,6 @@ router.post("/login", async (req, res) => {
       console.log("does req.session not exist?", !req.session.isLoggedIn);
       if(!req.session.isLoggedIn){
         let { username, password, remember } = req.body;
-        console.log(username);
         const user = await User.findOne({ username: username });
         if (!user) {
           return res.status(401).json({ error: "That user does not exist." });
@@ -48,14 +47,13 @@ router.post("/login", async (req, res) => {
   
   router.post("/logout", async (req, res) => {
     try {
-        req.session.destroy();
-        req.session.isLoggedIn=false;
-        res.redirect("/logout");
+      req.session.destroy();
+        res.json()
     } catch (err) {
         console.error('Error logging out:', err);
-        return next(new Error('Error logging out'));
+        return new Error('Error logging out');
     }
-    
+
     res.status(200).send();
   })
 
