@@ -1,6 +1,9 @@
 require('dotenv').config();
 const link = process.env.DB_URL;
 
+// FOR LOCAL TESTING
+// const link = "mongodb://localhost:27017/Unbound"
+
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser')
