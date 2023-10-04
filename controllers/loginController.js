@@ -23,12 +23,6 @@ const loginController = {
             
                 req.session.isLoggedIn = true;
                 req.session.userId = user._id;
-                // if (!remember) {
-                //   console.log("no remember!");
-                //   //req.expires = false;
-                //   //req.session.expires=false;
-                //   req.session.cookie.expires = false;
-                // }
                 req.session.rememberMe = remember;
                 res.json();
             }

@@ -1,5 +1,8 @@
-const User = require("../models/User");
-const Part = require("../models/Part");
+const Member = require('../models/Member');
+const Part = require('../models/Part');
+const Saving = require('../models/Saving');
+const User = require('../models/User');
+
 
 const userController = {
     
@@ -23,9 +26,16 @@ const userController = {
 
                     //  as for additional security, maybe RBAC? but i think that's something very complex and im not sure where to start on that
                 }
-                //get members of orgParts
-                //total values are in the Parts schema
-                res.render("dashboard", { authority, orgParts });
+                
+                let partWithMembersAndSavings;
+                const orgPartsMembers = [];
+                for (const part of orgParts) {
+                    partWithMembersAndSavings = await Part.findById(part._id).populate('members').populate('savings');
+                    orgPartsMembers.push(partWithMembersAndSavings);
+                }
+                //might be matakaw sa memory.
+                
+                res.render("dashboard", { authority, orgParts, partWithMembersAndSavings  });
             } else {
                 res.redirect("/");
             }
