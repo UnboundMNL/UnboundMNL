@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 
 const YearSchema = new mongoose.Schema({
     year: {type: Number, required: true},
-    
+
+    //di na ako magsasalita goodbye
+    //im not fixing this this isnt my problem anymore
 
     //option 1
     months: [{type: mongoose.Schema.Types.ObjectId, ref: 'month'}],

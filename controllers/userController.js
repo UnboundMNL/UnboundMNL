@@ -3,6 +3,9 @@ const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
 
+const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
 
 const userController = {
     
@@ -19,6 +22,8 @@ const userController = {
                 //SEDO can see from project
                 //treasurer can see from group
 
+                // needs additional conditions
+                // needs update to new schemas 
                 switch (authority) {
                     case "Admin":
                         orgParts = await Part.find();

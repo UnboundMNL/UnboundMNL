@@ -8,7 +8,7 @@ const PartSchema = new mongoose.Schema({
         {
           firstName: String,
           middleName: String,
-          lastName: String
+          lastName: String,
         }
       ],
     depositoryBank: String,

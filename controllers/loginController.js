@@ -15,8 +15,14 @@ const loginController = {
                 if (!user) {
                     return res.status(401).json({ error: "That user does not exist." });
                 }
-                // const isPasswordMatch = await user.comparePassword(password);
-                const isPasswordMatch = (password == user.password);
+                const isPasswordMatch = await user.comparePassword(password);
+
+                
+                //const isPasswordMatch = (password == user.password);
+                // doesnt work for me - isnt this comparing the content of password to the hashed password in the db?
+
+
+
                 if (!isPasswordMatch ) {
                     return res.status(401).json({ error: "Wrong Username or Password." });
                 }
