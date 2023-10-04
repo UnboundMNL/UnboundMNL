@@ -1,8 +1,8 @@
 require('dotenv').config();
-const link = process.env.DB_URL;
+// const link = process.env.DB_URL;
 
 // FOR LOCAL TESTING
-// const link = "mongodb://localhost:27017/Unbound"
+const link = "mongodb://localhost:27017/Unbound"
 
 const express = require('express');
 const session = require('express-session');
@@ -58,7 +58,7 @@ app.use(session({
   key: 'user._id',
   secret: process.env.SesSECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   rolling: true,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 21,

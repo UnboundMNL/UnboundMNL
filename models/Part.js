@@ -14,11 +14,13 @@ const PartSchema = new mongoose.Schema({
     depositoryBank: String,
     bankAccountType: {type: String, enum:['Savings', 'Checking']},
     bankAccountNum: String,
-    treasurer:{
-          firstName: String,
-          middleName: String,
-          lastName: String
-        },
+    // treasurer:{
+    //       firstName: String,
+    //       middleName: String,
+    //       lastName: String
+    //     },
+    
+    treasurer: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
 
     type: {type: String, enum:['Cluster', 'Project', 'Group'], default: 'Group', required: true},
     childPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }],
@@ -32,6 +34,7 @@ const PartSchema = new mongoose.Schema({
     validUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }], // i think we should use this field na rin.
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'member' }],
     
+    location: String
     
 }, {versionKey: false}
 );
