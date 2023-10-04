@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
       lastName: String
     },
     
-    contatNum: String,
+    mobile: [String],
     validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
 }, 
     {versionKey: false}

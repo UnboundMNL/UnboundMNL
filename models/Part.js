@@ -12,7 +12,7 @@ const PartSchema = new mongoose.Schema({
         }
       ],
     depositoryBank: String,
-    bankAccountType: String,
+    bankAccountType: {type: String, enum:['Savings', 'Checking']},
     bankAccountNum: String,
     treasurer:{
           firstName: String,
