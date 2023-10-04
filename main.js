@@ -26,14 +26,14 @@ const { rememberMeMiddleware } = require('./lib/middleware');
 const { hashPassword } = require('./lib/hashing');
 
 //const Loan = require('../models/Loan')
-const Member = require('../models/Member');
-const Part = require('../models/Part');
-const Saving = require('../models/Saving');
-const User = require('../models/User');
+const Member = require('./models/Member');
+const Part = require('./models/Part');
+const Saving = require('./models/Saving');
+const User = require('./models/User');
 
-const Cluster = require('../models/Cluster');
-const Project = require('../models/Project');
-const Group = require('../models/Group');
+const Cluster = require('./models/Cluster');
+const Project = require('./models/Project');
+const Group = require('./models/Group');
 
 const app = express();
 app.use(cors());
