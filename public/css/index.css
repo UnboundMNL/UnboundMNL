@@ -1,8 +1,20 @@
-/* --------------- LANDING PAGE --------------- */
-html, body {
-    height: 100%;
+/* --------------- REUSABLE STYLES --------------- */
+@import url('https://fonts.googleapis.com/css?family=Montserrat Alternates');
+
+:root {
+    --body-color: #f2f2f2;
+    --primary-color: #0097b2;
+    --secondary-color: #0cc0df;
+    --tertiary-color: rgb(49, 118, 214);
+    --text-color: #555151;
+    --sidebar-hover-color: #c7e5eb;
 }
 
+.body-bg {
+    background-color: var(--body-color);
+}
+
+/* --------------- LANDING PAGE --------------- */
 .landing-bg {
     background-image: radial-gradient(rgb(154, 225, 238), white);
 }
@@ -25,13 +37,13 @@ html, body {
 }
 
 .btn.default-btn {
-    background-color: rgb(12,192,223);
-    border-color: rgb(12,192,223);
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
 }
 
 .btn.default-btn:hover {
-    background-color: rgb(0,151,178);
-    border-color: rgb(0,151,178);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .fine-print {
@@ -39,3 +51,187 @@ html, body {
 }
 
 /* --------------- DASHBOARD PAGE --------------- */
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    width: 14rem;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: white;
+    justify-content: space-between;
+    overflow-x: hidden;
+    padding: 0.5rem !important;
+}
+
+.sidebar .image-text img {
+    width: 2rem;
+    margin: 0.75rem;
+}
+
+.sidebar header .image-text {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.sidebar .text {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Montserrat Alternates';
+}
+
+
+.sidebar a {
+    color: var(--text-color);
+}
+
+.sidebar a:hover {
+    cursor: pointer;
+    color: var(--text-color);
+    background-color: var(--sidebar-hover-color);
+}
+
+.sidebar .icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+.sidebar .menu-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+/* TOP NAVIGATION BAR */
+.top-bar {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 4rem;
+    top: 0;
+    background-color: rgb(255, 255, 255);
+    border-left: 2px solid var(--body-color);
+    padding: 1rem 15rem 1rem 1rem;
+}
+
+.top-bar .toggle {
+    font-size: 1.75rem;
+    color: var(--text-color);
+    padding: 0.25rem;
+}
+
+.top-bar .toggle:hover {
+    cursor: pointer;
+    background-color: var(--sidebar-hover-color);
+    border-radius: 5px;
+}
+
+.top-bar .profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top-bar .profile span {
+    font-size: 1rem;
+    text-overflow: ellipsis;
+}
+
+.top-bar .logo {
+    display: none;
+}
+
+.top-bar .logo img {
+    width: 2rem;
+}
+
+.top-bar .logo span {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Montserrat Alternates';
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* MAIN */
+main {
+    margin-left: 14rem;
+    padding: 0;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dashboard-actions .container {
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.dashboard-actions .container:hover {
+    cursor: pointer;
+    background-color: var(--sidebar-hover-color);
+}
+
+.dashboard-actions .container i {
+    margin-right: 1rem;
+    padding: 0.5rem;
+    font-size: 2rem;
+    color: var(--primary-color);
+    background-color: var(--sidebar-hover-color);
+    border-radius: 50%;
+}
+
+.dashboard-actions .container span {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    #collapsibleNavbar {
+        overflow-x: hidden;
+        display: none;
+    }
+
+    .menu {
+        padding-top: 4rem;
+    }
+    .menu-bar {
+        padding: 4rem 0;
+    }
+
+    .sidebar a {
+        margin: 0 2rem;
+    }
+
+    .sidebar header {
+        display: none;
+    }       
+
+    .top-bar {
+        padding-right: 1rem;
+        border-bottom: 2px solid var(--body-color);
+    }
+
+    .top-bar .logo {
+        display: block;
+    }
+
+    .top-bar #topbar-name {
+        display: none;
+    }
+
+    main {
+        margin-left: 0;
+        width: 100%;
+    }
+}

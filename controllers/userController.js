@@ -15,7 +15,7 @@ const userController = {
                 const userID = req.session.userId;
                 const user = await User.findById(userID);
                 const authority = user.authority;
-                // const username = user.username;
+                const username = user.username;
                 let orgParts;
                 
                 //admin can see from cluster
@@ -46,7 +46,7 @@ const userController = {
                 }
                 //might be matakaw sa memory.
                 
-                res.render("dashboard", { authority, orgParts, partWithMembersAndSavings  });
+                res.render("dashboard", { authority, orgParts, partWithMembersAndSavings, username  });
             } else {
                 res.redirect("/");
             }

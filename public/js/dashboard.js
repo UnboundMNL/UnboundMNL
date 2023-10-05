@@ -26,11 +26,13 @@ $(document).on('click', '#logout', function() {
 function authCheck(authority){
     if(authority=="Admin"){
         console.log(authority)
-        forEach
     }else if (authority=="SEDO"){
         console.log(authority)
     }else{
         console.log(authority)
     }
 }
-
+document.addEventListener('DOMContentLoaded', function() {
+    var anchor = document.getElementById('dashboard');
+    anchor.style.color = "rgb(49, 118, 214)"; 
+});
