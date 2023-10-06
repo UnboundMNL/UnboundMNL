@@ -21,142 +21,35 @@
 </head>
 
 <body class="body-bg">
-    <nav class="nav nav-pills sidebar" id="collapsibleNavbar">
-        <header>
-            <div class="image-text">
-                <span class="image">
-                    <img src="../img/Unbound_icon.png" alt="Unbound Logo">
-                </span>
     
-                <span class="text text-muted header-text">
-                    <span class="name">UNBOUND</span>
-                </span>
-            </div>
-        </header>
+    <%- include('components/navbar.ejs', {authority: authority})%>
     
-        <div class="menu-bar">
-            <div class="menu ">
-                <!-- DASHBOARD BUTTON -->
-                <a href="#" class="nav-link d-flex " id="dashboard">
-                    <i class='bx bx-home icon'></i>
-                    <div>
-                        <span class="text nav-text">Dashboard</span>
-                    </div>
-                </a>
-                <!-- CLUSTER BUTTON -->
-                <a href="#" class="nav-link d-flex">
-                    <i class='bx bx-grid-alt icon'></i>
-                    <div>
-                        <span class="text nav-text">Cluster</span>
-                    </div>
-                </a>
-                <!-- MEMBERS MASTERLIST BUTTON -->
-                <a href="#" class="nav-link d-flex">
-                    <i class='bx bxs-user-account icon'></i>
-                    <div>
-                        <span class="text nav-text">Members Masterlist</span>
-                    </div>
-                </a>
-                <!-- SAVINGS AND MATCHING GRANT BUTTON -->
-                <a href="#" class="nav-link d-flex">
-                    <i class='bx bxs-bank icon'></i>
-                    <div>
-                        <span class="text nav-text">Savings & Matching Grant</span>
-                    </div>
-                </a>
-                <!-- LOAN PROGRAM BUTTON -->
-                <a href="#" class="nav-link d-flex">
-                    <i class='bx bx-money icon'></i>
-                    <div>
-                        <span class="text nav-text">Loan Program</span>
-                    </div>
-                </a>
-                <!-- ACCOUNT REGISTRATION BUTTON -->
-                <a href="#" class="nav-link d-flex">
-                    <i class='bx bx-user-plus icon'></i>
-                    <div>
-                        <span class="text nav-text">Account Registration</span>
-                    </div>
-                </a>
-            </div>
-    
-            <a href="#" class="nav-link d-flex">
-                <i class='bx bx-log-out icon'></i>
-                <div>
-                    <span class="text nav-text" id="logout">Logout</span>
-                </div>
-            </a>
-        </div>
-    </nav>
-
     <main>
         <!-- Top navigation bar -->
         <div class="top-bar">
             <!-- Navigation bar collapse button -->
             <i class="bx bx-list-ul toggle" onclick="toggleNav()"></i>
-
+            
             <!-- Logo -->
             <div class="logo">
                 <span class="image">
                     <img src="../img/Unbound_icon.png" alt="Unbound Logo">
                 </span>
-
+                
                 <span class="text text-muted header-text">
                     <span class="name">UNBOUND</span>
                 </span>
             </div>
-
+            
             <!-- Profile -->
             <div class="profile toggle">
                 <i class="bx bx-user-circle"></i>
                 <span class="text m-1" id="topbar-name"><%=username%></span>
             </div>
         </div>
-            
-        <div class="main-content p-4 mt-5">
-            <!-- Dashboard content -->
-            <h4 class="mt-4">Dashboard</h4>
-
-            <div class="dashboard-actions row">
-                <!-- CLUSTERS BUTTON -->
-                <div class="container col">
-                    <i class='bx bxs-folder-open icon'></i>
-                    <div>
-                        <span>Clusters</span>
-                    </div>
-                </div>
-                <!-- ACCOUNT REGISTRATION -->
-                <div class="container col">
-                    <i class='bx bx-user-plus icon'></i>
-                    <div>
-                        <span>Account Registration</span>
-                    </div>
-                </div>
-                <!-- MANAGE ORGANIZATION -->
-                <div class="container col">
-                    <i class='bx bx-building-house icon'></i>
-                    <div>
-                        <span>Manage Organization</span>
-                    </div>
-                </div>
-                <!-- TOTAL SAVINGS & MATCHING GRANT -->
-                <div class="container col">
-                    <i class='bx bxs-bank icon'></i>
-                    <div>
-                        <span>Total Savings & Matching Grant</span>
-                    </div>
-                </div>
-                <!-- TOTAL LOAN -->
-                <div class="container col">
-                    <i class='bx bx-money icon'></i>
-                    <div>
-                        <span>Total Loan</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TBD: Extra Dashboard Items -->
-        </div>
+        
+        <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons})%>
+    
     </main>
 </body>
 </html>

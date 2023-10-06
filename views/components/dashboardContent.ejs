@@ -1,0 +1,19 @@
+<div class="main-content p-4 mt-5">
+    <!-- Dashboard content -->
+    <h4 class="mt-4">Dashboard</h4>
+
+    <div class="dashboard-actions row">
+
+        <% for (let i = 0; i < buttons.length; i++) {%>
+        <!-- CLUSTERS BUTTON -->
+        <div class="container col">
+            <i class='bx <%=buttons[i].icon%> icon'></i>
+            <div>
+                <span><%=buttons[i].text%></span>
+            </div>
+        </div>
+        <% } %>
+    </div>
+
+    <!-- TBD: Extra Dashboard Items -->
+</div>

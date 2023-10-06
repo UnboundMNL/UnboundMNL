@@ -1,0 +1,89 @@
+<nav class="nav nav-pills sidebar" id="collapsibleNavbar">
+    <header>
+        <div class="image-text">
+            <span class="image">
+                <img src="../img/Unbound_icon.png" alt="Unbound Logo">
+            </span>
+
+            <span class="text text-muted header-text">
+                <span class="name">UNBOUND</span>
+            </span>
+        </div>
+    </header>
+
+    <div class="menu-bar">
+        <div class="menu ">
+            <!-- DASHBOARD BUTTON -->
+            <a href="/dashboard" class="nav-link d-flex " id="dashboard">
+                <i class='bx bx-home icon'></i>
+                <div>
+                    <span class="text nav-text">Dashboard</span>
+                </div>
+            </a>
+
+            <%
+                let orgPart
+                let href
+                if (authority === "Admin") {
+                    orgPart = 'Clusters'
+                    href = '/clusters'
+                } else if (authority === "SEDO") {
+                    orgPart = 'Projects'
+                    href = '/cluster'
+                } else {
+                    orgPart = 'Members'
+                    href = '/group'
+                } 
+            %>
+
+            <!-- CLUSTER BUTTON -->
+            <a href=<%=href%> class="nav-link d-flex">
+                <i class='bx bx-grid-alt icon'></i>
+                <div>
+                    <span class="text nav-text"><%=orgPart%></span>
+                </div>
+            </a>
+
+
+            <!-- MEMBERS MASTERLIST BUTTON -->
+            <a href="#" class="nav-link d-flex">
+                <i class='bx bxs-user-account icon'></i>
+                <div>
+                    <span class="text nav-text">Members Masterlist</span>
+                </div>
+            </a>
+            <!-- SAVINGS AND MATCHING GRANT BUTTON -->
+            <a href="#" class="nav-link d-flex">
+                <i class='bx bxs-bank icon'></i>
+                <div>
+                    <span class="text nav-text">Savings & Matching Grant</span>
+                </div>
+            </a>
+            
+            <!-- LOAN PROGRAM BUTTON -->
+            <!-- <a href="#" class="nav-link d-flex">
+                <i class='bx bx-money icon'></i>
+                <div>
+                    <span class="text nav-text">Loan Program</span>
+                </div>
+            </a> -->
+
+            <!-- ACCOUNT REGISTRATION BUTTON -->
+            <% if (authority === "Admin" || authority === "SEDO") {%>
+                <a href="#" class="nav-link d-flex">
+                    <i class='bx bx-user-plus icon'></i>
+                    <div>
+                        <span class="text nav-text">Account Registration</span>
+                    </div>
+                </a>
+            <% } %>
+        </div>
+
+        <a href="#" class="nav-link d-flex">
+            <i class='bx bx-log-out icon'></i>
+            <div>
+                <span class="text nav-text" id="logout">Logout</span>
+            </div>
+        </a>
+    </div>
+</nav>

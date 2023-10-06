@@ -32,6 +32,9 @@ const GroupSchema = new mongoose.Schema({
     totalMembers: Number,
     totalKaban: Number,
     //totalLoans: Number,
+
+    validSEDOs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
+    validTreasurers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}]
     
 }, {versionKey: false}
 );
