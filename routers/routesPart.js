@@ -9,8 +9,8 @@ const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
 
-const userController = require('../controllers/userController');
+const partController = require('../controllers/partController.js');
 
-router.get("/dashboard", userController.dashboard);
+//router.get("/dashboard", userController.dashboard);
 
 module.exports = router;  

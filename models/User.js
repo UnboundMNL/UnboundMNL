@@ -3,14 +3,23 @@ const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 const { hashPassword } = require('../lib/hashing');
 
+
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, index: { unique: true } },
     password: { type: String, required: true },
     authority: {type: String, enum:['Admin', 'SEDO', 'Treasurer'], default: 'Treasurer', required: true},
-    
-    validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
 
-    //remembered: {type: Boolean, default: false},
+    photo: {type: String},
+
+
+    name:  {
+      firstName: String,
+      middleName: String,
+      lastName: String
+    },
+    
+    mobile: [String],
+    validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
 }, 
     {versionKey: false}
 )
