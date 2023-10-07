@@ -23,6 +23,7 @@ const routesUser = require('./routers/routesUser');
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
 const { rememberMeMiddleware } = require('./lib/middleware');
+const { sidebarMiddleware } = require('./lib/middleware');
 const { hashPassword } = require('./lib/hashing');
 
 //const Loan = require('../models/Loan')
@@ -147,6 +148,7 @@ app.get("/groupLoad",  (req, res) => {
 app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
+app.use(sidebarMiddleware);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);

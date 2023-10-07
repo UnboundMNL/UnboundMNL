@@ -19,9 +19,6 @@
     <!-- JSCODE -->
     <script>
         authCheck(" <%=authority%> ")
-        document.addEventListener('DOMContentLoaded', function() {
-            open('partsButton'); // Call the 'open' function with the button ID as an argument
-        });
     </script>
 </head>
 
@@ -33,8 +30,11 @@
         <!-- Top navigation bar -->
         <div class="top-bar">
             <!-- Navigation bar collapse button -->
-            <i class="bx bx-list-ul toggle" onclick="toggleNav()"></i>
-            
+            <i class="bx bx-list-ul toggle" onclick="toggleNav(true)"></i>
+            <% if (!sidebar){ %>
+                <script>toggleNav(false)</script>
+            <%}%>
+
             <!-- Logo -->
             <div class="logo">
                 <span class="image">
@@ -45,7 +45,8 @@
                     <span class="name">UNBOUND</span>
                 </span>
             </div>
-            
+            <script>open('partsButton')</script>
+
             <!-- Profile -->
             <div class="profile toggle">
                 <i class="bx bx-user-circle"></i>

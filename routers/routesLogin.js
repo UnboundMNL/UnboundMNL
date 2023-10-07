@@ -16,6 +16,7 @@ router.post("/login", loginController.login);
   
 router.post("/logout", loginController.logout);
 
+router.post("/sidebarChange", loginController.sidebarChange);
 // Server-side route to clear the session
 router.post("/clear-session", loginController.clearSession);
 
