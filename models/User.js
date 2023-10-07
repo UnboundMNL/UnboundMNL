@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
     },
     
     mobile: [String],
-    validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
+    //validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
 }, 
     {versionKey: false}
 )
