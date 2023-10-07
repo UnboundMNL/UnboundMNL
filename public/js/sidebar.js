@@ -1,3 +1,4 @@
+// sidebar button
 function toggleNav(bool) {
     // Refresh page when window is resized
     window.addEventListener('resize', function() {
@@ -48,6 +49,7 @@ function toggleNav(bool) {
     }
 }
 
+// middleware
 function toggleMiddle(){
     fetch('/sidebarChange', {
         method: 'POST',
@@ -70,6 +72,7 @@ function toggleMiddle(){
     });
 }
 
+// logout button
 $(document).on('click', '#logoutButton', function() {
     fetch('/logout', {
         method: 'POST',
@@ -94,7 +97,7 @@ $(document).on('click', '#logoutButton', function() {
 
 });
 
-
+// authority checking
 function authCheck(authority){
     if(authority=="Admin"){
         console.log(authority)
@@ -105,11 +108,13 @@ function authCheck(authority){
     }
 }
 
+// button highlight
 function open(button) {
     var anchor = document.getElementById(button);
     anchor.style.color = "rgb(49, 118, 214)";
 }
 
+// profile button
 function profile(){
     var profile = document.querySelector(".profile");
     profile.onclick = function() {

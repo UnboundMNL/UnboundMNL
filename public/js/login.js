@@ -1,3 +1,4 @@
+// login button
 $(document).on('click', '#login', function() {
 	var username = document.getElementById("username").value;
     var password = document.getElementById("pw").value;

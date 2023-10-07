@@ -77,7 +77,7 @@ const userController = {
                 orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
 
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, orgParts, username, dashbuttons,sidebar });
+                res.render("group", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
