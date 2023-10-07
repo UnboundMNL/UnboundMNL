@@ -19,6 +19,7 @@ const router = express.Router();
 const routesRegister = require('./routers/routesRegister');
 const routesLogin = require('./routers/routesLogin');
 const routesUser = require('./routers/routesUser');
+const routesSidebar = require('./routers/routesSidebar');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
@@ -154,6 +155,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);
 app.use(routesLogin);
 app.use(routesUser);
+app.use(routesSidebar);
+
 
 
 

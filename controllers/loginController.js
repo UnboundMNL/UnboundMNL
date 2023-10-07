@@ -28,6 +28,7 @@ const loginController = {
                 req.session.isLoggedIn = true;
                 req.session.userId = user._id;
                 req.session.sidebar = true;
+                
                 if (!remember) {
                   console.log("no remember!");
                   //req.expires = false;
@@ -75,15 +76,6 @@ const loginController = {
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Server error." });
-        }
-    },
-
-    sidebarChange: (req,res) => {
-        try{
-            req.session.sidebar = !req.session.sidebar
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
-        }catch(error){
-            console.error(error);
         }
     }
 }
