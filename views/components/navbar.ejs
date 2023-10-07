@@ -14,7 +14,7 @@
     <div class="menu-bar">
         <div class="menu ">
             <!-- DASHBOARD BUTTON -->
-            <a href="/dashboard" class="nav-link d-flex " id="dashboard">
+            <a href="/dashboard" class="nav-link d-flex " id="dashboardButton">
                 <i class='bx bx-home icon'></i>
                 <div>
                     <span class="text nav-text">Dashboard</span>
@@ -26,18 +26,18 @@
                 let href
                 if (authority === "Admin") {
                     orgPart = 'Clusters'
-                    href = '/clusters'
+                    href = '/clusterLoad'
                 } else if (authority === "SEDO") {
                     orgPart = 'Projects'
-                    href = '/cluster'
+                    href = '/projectLoad'
                 } else {
                     orgPart = 'Members'
-                    href = '/group'
+                    href = '/groupLoad'
                 } 
             %>
 
             <!-- CLUSTER BUTTON -->
-            <a href=<%=href%> class="nav-link d-flex">
+            <a href=<%=href%> class="nav-link d-flex" id="partsButton">
                 <i class='bx bx-grid-alt icon'></i>
                 <div>
                     <span class="text nav-text"><%=orgPart%></span>
@@ -46,14 +46,14 @@
 
 
             <!-- MEMBERS MASTERLIST BUTTON -->
-            <a href="#" class="nav-link d-flex">
+            <a href="#" class="nav-link d-flex" id="membersButton">
                 <i class='bx bxs-user-account icon'></i>
                 <div>
                     <span class="text nav-text">Members Masterlist</span>
                 </div>
             </a>
             <!-- SAVINGS AND MATCHING GRANT BUTTON -->
-            <a href="#" class="nav-link d-flex">
+            <a href="#" class="nav-link d-flex" id="savingsButton">
                 <i class='bx bxs-bank icon'></i>
                 <div>
                     <span class="text nav-text">Savings & Matching Grant</span>
@@ -79,7 +79,7 @@
             <% } %>
         </div>
 
-        <a class="nav-link d-flex" id="logout">
+        <a class="nav-link d-flex" id="logoutButton">
             <i class='bx bx-log-out icon'></i>
             <div>
                 <span class="text nav-text">Logout</span>

@@ -6,12 +6,19 @@
 
         <% for (let i = 0; i < buttons.length; i++) {%>
         <!-- CLUSTERS BUTTON -->
-        <div class="container col">
+        <div class="container col" id="<%=i%>">
             <i class='bx <%=buttons[i].icon%> icon'></i>
+            <script>
+                var div = document.getElementById(<%=i%>);
+                div.onclick = function() {
+                    location.href = '<%= buttons[i].href %>'; 
+                };
+            </script>
             <div>
                 <span><%=buttons[i].text%></span>
             </div>
         </div>
+
         <% } %>
     </div>
 

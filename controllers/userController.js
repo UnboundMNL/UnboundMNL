@@ -96,8 +96,7 @@ const userController = {
                 if(authority !== "SEDO"){
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                 }
-                orgParts = await Cluster.find({ validTreasurers: userID }).populate('project').populate('group').populate('members').populate('savings');
-
+                orgParts = await Project.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
                 dashbuttons = dashboardButtons(authority);
                 res.render("project", { authority, orgParts, username, dashbuttons });
             } else {
@@ -139,7 +138,7 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Clusters",
-                href: "/clusters",
+                href: "/clusterLoad",
                 icon: "bxs-folder-open"
             },
             {
@@ -162,7 +161,7 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Projects",
-                href: "/projects",
+                href: "/projectLoad",
                 icon: "bxs-folder-open"
             },
             {
@@ -185,7 +184,7 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Members",
-                href: "/members",
+                href: "/memberLoad",
                 icon: "bx-group"
             },
             {

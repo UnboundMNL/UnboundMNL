@@ -47,7 +47,7 @@ function toggleNav() {
 }
 
 
-$(document).on('click', '#logout', function() {
+$(document).on('click', '#logoutButton', function() {
     fetch('/logout', {
         method: 'POST',
         headers: {

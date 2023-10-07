@@ -95,12 +95,16 @@ app.get("/", async (req, res) => {
   }
 });
 
-
-
-app.get("/index", (req, res)=>{
-  res.redirect("/")
+app.get("/clusterLoad",  (req, res) => { 
+  res.redirect("/cluster");
 })
 
+app.get("/projectLoad",  (req, res) => { 
+  res.redirect("/project");
+})
+app.get("/groupLoad",  (req, res) => { 
+  res.redirect("/group");
+})
 // app.get('*', function(req, res){
 //   res.redirect('/dashboard');
 // });
