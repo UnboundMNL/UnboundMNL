@@ -11,6 +11,8 @@ const User = require('../models/User');
 
 const partController = require('../controllers/partController.js');
 
-//router.get("/dashboard", userController.dashboard);
+router.get("/newGroup", partController.newGroup);
+router.get("/newProject", partController.newProject);
+router.get("/newCluster", partController.newCluster);
 
 module.exports = router;  

@@ -13,4 +13,8 @@ const userController = require('../controllers/userController');
 
 router.get("/dashboard", userController.dashboard);
 
+router.get("/group", userController.group);
+router.get("/project", userController.project);
+router.get("/cluster", userController.cluster);
+
 module.exports = router;  

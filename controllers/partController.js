@@ -90,11 +90,11 @@ const partController = {
                 const { name } = req.body;
             
                 let projects = [];
-                const newProject = new Project({
+                const newCluster = new Cluster({
                     name,
                     projects,
                 });
-                await newProject.save();
+                await newCluster.save();
 
                 //redirecting to dashboard rn cuz idk where else to redirect to
                 res.redirect("/dashboard");

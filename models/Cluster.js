@@ -11,6 +11,7 @@ const ClusterSchema = new mongoose.Schema({
     totalKaban: {type: Number, default: 0},
     //totalLoans: Number,
     
+    validSEDOs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}]
 }, {versionKey: false}
 );
 
