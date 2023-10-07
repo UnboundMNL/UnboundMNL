@@ -1,9 +1,8 @@
-function toggleNav() {
+function toggleNav(bool) {
     // Refresh page when window is resized
     window.addEventListener('resize', function() {
         window.location.reload();
     });
-    
     if (window.matchMedia("(min-width: 769px)").matches) {
         const nav = document.getElementById("collapsibleNavbar");
         const navHeader = document.getElementsByClassName("header-text")[0];
@@ -44,8 +43,32 @@ function toggleNav() {
             nav.style.display = 'none';
         }
     }
+    if (bool){
+        toggleMiddle()
+    }
 }
 
+function toggleMiddle(){
+    fetch('/sidebarChange', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+        } else {
+            return response.json().then(data => {
+                // var errorDiv = document.getElementById("error");
+                // errorDiv.style.display="block";
+                // errorDiv.textContent=data.error;
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
 $(document).on('click', '#logoutButton', function() {
     fetch('/logout', {
@@ -56,7 +79,6 @@ $(document).on('click', '#logoutButton', function() {
     })
     .then(response => {
         if (response.ok) {
-            console.log("here")
             location.href="/";
         } else {
             return response.json().then(data => {
@@ -86,4 +108,11 @@ function authCheck(authority){
 function open(button) {
     var anchor = document.getElementById(button);
     anchor.style.color = "rgb(49, 118, 214)";
+}
+
+function profile(){
+    var profile = document.querySelector(".profile");
+    profile.onclick = function() {
+        location.href = '#'; 
+    };
 }

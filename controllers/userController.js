@@ -13,11 +13,11 @@ const userController = {
         try {
             if (req.session.isLoggedIn) {
                 const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
                 let orgParts;
-                
                 //admin can see from cluster
                 //SEDO can see from project
                 //treasurer can see from group
@@ -49,7 +49,7 @@ const userController = {
                 dashbuttons = dashboardButtons(authority);
 
                 // res.render("dashboard", { authority, orgParts, partWithMembersAndSavings, username  });
-                res.render("dashboard", { authority, orgParts, username, dashbuttons });
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
@@ -63,6 +63,7 @@ const userController = {
         try {
             if (req.session.isLoggedIn) {
                 const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
@@ -76,7 +77,7 @@ const userController = {
                 orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
 
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, orgParts, username, dashbuttons });
+                res.render("group", { authority, orgParts, username, dashbuttons,sidebar });
             } else {
                 res.redirect("/");
             }
@@ -90,6 +91,7 @@ const userController = {
         try {
             if (req.session.isLoggedIn) {
                 const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
@@ -100,7 +102,7 @@ const userController = {
                 orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
 
                 dashbuttons = dashboardButtons(authority);
-                res.render("project", { authority, orgParts, username, dashbuttons });
+                res.render("project", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
@@ -114,6 +116,7 @@ const userController = {
         try {
             if (req.session.isLoggedIn) {
                 const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
@@ -146,7 +149,7 @@ const userController = {
                 orgParts = await Cluster.find().populate('project').populate('group').populate('members').populate('savings');
 
                 dashbuttons = dashboardButtons(authority);
-                res.render("clusters", { authority, orgParts, username, dashbuttons });
+                res.render("clusters", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
