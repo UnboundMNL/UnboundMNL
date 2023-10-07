@@ -109,3 +109,10 @@ function open(button) {
     var anchor = document.getElementById(button);
     anchor.style.color = "rgb(49, 118, 214)";
 }
+
+function profile(){
+    var profile = document.querySelector(".profile");
+    profile.onclick = function() {
+        location.href = '#'; 
+    };
+}
