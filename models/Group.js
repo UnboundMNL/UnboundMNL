@@ -29,8 +29,8 @@ const GroupSchema = new mongoose.Schema({
     
     member: [{ type: mongoose.Schema.Types.ObjectId, ref: 'member' }],
    
-    totalMembers: Number,
-    totalKaban: Number,
+    totalMembers: {type: Number, default: 0},
+    totalKaban: {type: Number, default: 0},
     //totalLoans: Number,
     
 }, {versionKey: false}

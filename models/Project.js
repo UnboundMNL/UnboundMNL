@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    
+    name: {type: String, required: true}, 
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'group' }],
 
     totalGroups: {type: Number, default: null},
    
-    totalMembers: Number,
-    totalKaban: Number,
+    totalMembers: {type: Number, default: 0},
+    totalKaban: {type: Number, default: 0},
     //totalLoans: Number,
     
 }, {versionKey: false}

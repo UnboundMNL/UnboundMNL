@@ -7,8 +7,8 @@ const ClusterSchema = new mongoose.Schema({
     totalProjects: {type: Number, default: null},
     totalGroups: {type: Number, default: null},
    
-    totalMembers: Number,
-    totalKaban: Number,
+    totalMembers: {type: Number, default: 0},
+    totalKaban: {type: Number, default: 0},
     //totalLoans: Number,
     
 }, {versionKey: false}
