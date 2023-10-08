@@ -20,6 +20,7 @@ const routesRegister = require('./routers/routesRegister');
 const routesLogin = require('./routers/routesLogin');
 const routesUser = require('./routers/routesUser');
 const routesSidebar = require('./routers/routesSidebar');
+const routesSavings = require('./routers/routesSavings');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
@@ -104,9 +105,27 @@ app.get("/clusterLoad",  (req, res) => {
 app.get("/projectLoad",  (req, res) => { 
   res.redirect("/project");
 })
+
 app.get("/groupLoad",  (req, res) => { 
   res.redirect("/group");
 })
+
+app.get("/savingsLoad",  (req, res) => { 
+  res.redirect("/savings");
+})
+
+app.get("/memberLoad",  (req, res) => { 
+  res.redirect("/member");
+})
+
+app.get("/registrationLoad",  (req, res) => { 
+  res.redirect("/registration");
+})
+
+app.get("/profileLoad",  (req, res) => { 
+  res.redirect("/profile");
+})
+
 // app.get('*', function(req, res){
 //   res.redirect('/dashboard');
 // });
@@ -156,7 +175,7 @@ app.use(routesRegister);
 app.use(routesLogin);
 app.use(routesUser);
 app.use(routesSidebar);
-
+app.use(routesSavings);
 
 
 

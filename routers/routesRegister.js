@@ -12,5 +12,6 @@ const User = require('../models/User');
 const registerController = require('../controllers/registerController');
 
 router.post("/register", registerController.register);
+router.get("/registration", registerController.registration);
 
 module.exports = router;  

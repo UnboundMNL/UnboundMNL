@@ -7,6 +7,8 @@ const Cluster = require('../models/Cluster');
 const Project = require('../models/Project');
 const Group = require('../models/Group');
 
+const { dashboardButtons } = require('../controllers/functions/buttons');
+
 const userController = {
     
     dashboard: async (req, res) => {
@@ -133,75 +135,44 @@ const userController = {
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
     },
+    member: async (req,res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+
+                dashbuttons = dashboardButtons(authority);
+                res.render("member", { authority, username, dashbuttons, sidebar });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+    profile: async (req,res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+
+                dashbuttons = dashboardButtons(authority);
+                res.render("profile", { authority, username, dashbuttons, sidebar });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    }
 }
 
-function dashboardButtons(authority){
-    let buttons ;
-    if (authority === "Admin"){
-        buttons = [
-            {
-                text: "Clusters",
-                href: "/clusterLoad",
-                icon: "bxs-folder-open"
-            },
-            {
-                text: "Account Registration",
-                href: "#",
-                icon: "bxs-user-plus"
-            },
-            {
-                text: "Manage Organization",
-                href: "#",
-                icon: "bx-building-house"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "#",
-                icon: "bxs-bank"
-            }
-        ]
-    } else if (authority === "SEDO"){
-        buttons = [
-            {
-                text: "Projects",
-                href: "/projectLoad",
-                icon: "bxs-folder-open"
-            },
-            {
-                text: "Manage Cluster",
-                href: "/manage-cluster",
-                icon: "bx-grid-alt"
-            },
-            {
-                text: "Account Registration",
-                href: "#",
-                icon: "bxs-user-plus"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "#",
-                icon: "bxs-bank"
-            }
-        ]
-    } else if (authority === "Treasurer"){
-        buttons = [
-            {
-                text: "Members",
-                href: "/memberLoad",
-                icon: "bx-group"
-            },
-            {
-                text: "Manage Group",
-                href: "#",
-                icon: "bx-building-house"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "#",
-                icon: "bxs-bank"
-            }
-        ]
-    }
-    return buttons;
-}
 module.exports = userController;

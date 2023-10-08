@@ -118,6 +118,6 @@ function open(button) {
 function profile(){
     var profile = document.querySelector(".profile");
     profile.onclick = function() {
-        location.href = '#'; 
+        location.href = '/profile'; 
     };
 }

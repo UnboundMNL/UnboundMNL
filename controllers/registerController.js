@@ -1,6 +1,7 @@
 const User = require('../models/User');
 
 const mongoose = require('mongoose')
+const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const registerController = {
 
@@ -69,7 +70,26 @@ const registerController = {
           }else{
             res.redirect("/") //res.render("/") , redirect back to homepage (aka login page)
           }
-        }
+        },
+        registration: async (req,res) => {
+          try {
+              if (req.session.isLoggedIn) {
+                  const userID = req.session.userId;
+                  const sidebar = req.session.sidebar;
+                  const user = await User.findById(userID);
+                  const authority = user.authority;
+                  const username = user.username;
+  
+                  dashbuttons = dashboardButtons(authority);
+                  res.render("registration", { authority, username, dashbuttons, sidebar });
+              } else {
+                  res.redirect("/");
+              }
+          } catch (error) {
+              console.error(error);
+              return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+          }
+      }
 }
 
 module.exports = registerController;
