@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Cluster = require('../models/Cluster');
 const Project = require('../models/Project');
 const Group = require('../models/Group');
+const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
 
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
@@ -19,8 +20,12 @@ const savingsController = {
                 const authority = user.authority;
                 const username = user.username;
 
+                const updatedParts = [];
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
+
                 dashbuttons = dashboardButtons(authority);
-                res.render("savings", { authority, username, dashbuttons, sidebar });
+                res.render("savings", { authority, username, dashbuttons, sidebar, orgParts });
             } else {
                 res.redirect("/");
             }

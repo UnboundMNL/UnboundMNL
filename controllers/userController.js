@@ -1,3 +1,5 @@
+let sharedData = {};
+
 const Member = require('../models/Member');
 // const Part = require('../models/Part');
 const Saving = require('../models/Saving');
@@ -8,6 +10,25 @@ const Project = require('../models/Project');
 const Group = require('../models/Group');
 
 const { dashboardButtons } = require('../controllers/functions/buttons');
+const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
+
+const updateSharedData = async (userID, authority) => {
+    switch (authority) {
+        case "Admin":
+            sharedData.orgParts = await Cluster.find();
+            break;
+        case "SEDO":
+            sharedData.orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+            break;
+        case "Treasurer":
+            sharedData.orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
+            break;
+        default:
+            sharedData.orgParts = null; // Handle the case for an unknown authority
+            break;
+    }
+};
+
 
 const userController = {
     
@@ -76,7 +97,14 @@ const userController = {
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                 }
 
-                orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
+                //sharedData.orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
+
+                // await updateSharedData();
+                // let orgParts = sharedData.orgParts;
+
+                const updatedParts = [];
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
 
                 dashbuttons = dashboardButtons(authority);
                 res.render("group", { authority, orgParts, username, dashbuttons, sidebar });
@@ -101,7 +129,14 @@ const userController = {
                     //return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                     return res.status({ error: "You are not authorized to view this page." });
                 }
-                orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+                //sharedData.orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+
+                // await updateSharedData();
+                // let orgParts = sharedData.orgParts;
+
+                const updatedParts = [];
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
 
                 dashbuttons = dashboardButtons(authority);
                 res.render("project", { authority, orgParts, username, dashbuttons, sidebar });
@@ -125,7 +160,14 @@ const userController = {
                 if(authority !== "Admin"){
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                 }
-                orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+                //sharedData.orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+
+                // await updateSharedData();
+                // let orgParts = sharedData.orgParts;
+
+                const updatedParts = [];
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
 
                 dashbuttons = dashboardButtons(authority);
                 res.render("cluster", { authority, orgParts, username, dashbuttons });
@@ -169,8 +211,15 @@ const userController = {
                 const authority = user.authority;
                 const username = user.username;
 
+                // await updateSharedData();
+                // let orgParts = sharedData.orgParts;
+
+                const updatedParts = [];
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
+                
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, username, dashbuttons, sidebar });
+                res.render("member", { authority, username, dashbuttons, sidebar, orgParts });
             } else {
                 res.redirect("/");
             }
