@@ -122,7 +122,7 @@ const userController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-                if(authority !== "SEDO"){
+                if(authority !== "Admin"){
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                 }
                 orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
@@ -138,28 +138,28 @@ const userController = {
         }
     },
 
-    clusters: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                const userID = req.session.userId;
-                const user = await User.findById(userID);
-                const authority = user.authority;
-                const username = user.username;
-                if(authority !== "Admin"){
-                    return res.status(403).render("fail", { error: "You are not authorized to view this page." });
-                }
-                orgParts = await Cluster.find().populate('project').populate('group').populate('members').populate('savings');
+    // clusters: async (req, res) => {
+    //     try {
+    //         if (req.session.isLoggedIn) {
+    //             const userID = req.session.userId;
+    //             const user = await User.findById(userID);
+    //             const authority = user.authority;
+    //             const username = user.username;
+    //             if(authority !== "Admin"){
+    //                 return res.status(403).render("fail", { error: "You are not authorized to view this page." });
+    //             }
+    //             orgParts = await Cluster.find().populate('project').populate('group').populate('members').populate('savings');
 
-                dashbuttons = dashboardButtons(authority);
-                res.render("clusters", { authority, orgParts, username, dashbuttons, sidebar });
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
-        }
-    },
+    //             dashbuttons = dashboardButtons(authority);
+    //             res.render("clusters", { authority, orgParts, username, dashbuttons, sidebar });
+    //         } else {
+    //             res.redirect("/");
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //         return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+    //     }
+    // },
     member: async (req,res) => {
         try {
             if (req.session.isLoggedIn) {
