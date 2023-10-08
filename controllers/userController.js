@@ -98,9 +98,11 @@ const userController = {
                 const authority = user.authority;
                 const username = user.username;
                 if(authority !== "SEDO"){
-                    return res.status(403).render("fail", { error: "You are not authorized to view this page." });
+                    //return res.status(403).render("fail", { error: "You are not authorized to view this page." });
+                    return res.status({ error: "You are not authorized to view this page." });
                 }
-                orgParts = await Project.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+                orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+
                 dashbuttons = dashboardButtons(authority);
                 res.render("project", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
@@ -120,13 +122,36 @@ const userController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
+                if(authority !== "SEDO"){
+                    return res.status(403).render("fail", { error: "You are not authorized to view this page." });
+                }
+                orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+
+                dashbuttons = dashboardButtons(authority);
+                res.render("cluster", { authority, orgParts, username, dashbuttons });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+
+    clusters: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
                 if(authority !== "Admin"){
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                 }
                 orgParts = await Cluster.find().populate('project').populate('group').populate('members').populate('savings');
 
                 dashbuttons = dashboardButtons(authority);
-                res.render("cluster", { authority, orgParts, username, dashbuttons, sidebar });
+                res.render("clusters", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
