@@ -12,22 +12,22 @@ const Group = require('../models/Group');
 const { dashboardButtons } = require('../controllers/functions/buttons');
 const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
 
-const updateSharedData = async (userID, authority) => {
-    switch (authority) {
-        case "Admin":
-            sharedData.orgParts = await Cluster.find();
-            break;
-        case "SEDO":
-            sharedData.orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
-            break;
-        case "Treasurer":
-            sharedData.orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
-            break;
-        default:
-            sharedData.orgParts = null; // Handle the case for an unknown authority
-            break;
-    }
-};
+// const updateSharedData = async (userID, authority) => {
+//     switch (authority) {
+//         case "Admin":
+//             sharedData.orgParts = await Cluster.find();
+//             break;
+//         case "SEDO":
+//             sharedData.orgParts = await Cluster.find({ validSEDOs: userID }).populate('project').populate('group').populate('members').populate('savings');
+//             break;
+//         case "Treasurer":
+//             sharedData.orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
+//             break;
+//         default:
+//             sharedData.orgParts = null; // Handle the case for an unknown authority
+//             break;
+//     }
+// };
 
 
 const userController = {
