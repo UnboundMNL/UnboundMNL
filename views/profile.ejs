@@ -28,33 +28,7 @@
     
     <main>
         <!-- Top navigation bar -->
-        <div class="top-bar">
-            <!-- Navigation bar collapse button -->
-            <i class="bx bx-list-ul toggle" onclick="toggleNav(true)"></i>
-            <% if (!sidebar){ %>
-                <script>toggleNav(false)</script>
-            <%}%>
-
-            <!-- Logo -->
-            <div class="logo">
-                <span class="image">
-                    <img src="../img/Unbound_icon.png" alt="Unbound Logo">
-                </span>
-                
-                <span class="text text-muted header-text">
-                    <span class="name">UNBOUND</span>
-                </span>
-            </div>
-
-            <!-- Profile -->
-            <div class="profile toggle" id="profileButton">
-                <i class="bx bx-user-circle"></i>
-                <span class="text m-1" id="topbar-name"><%=username%></span>
-            </div>
-            <script>profile()</script>
-            
-            <script>open('profileButton')</script>
-        </div>
+        <%- include('components/topNavbar.ejs')%>
     </main>
 </body>
 </html>

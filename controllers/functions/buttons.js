@@ -20,7 +20,7 @@ function dashboardButtons(authority){
             {
                 text: "Total Savings & Matching Grant",
                 href: "/savingsLoad",
-                icon: "bxs-bank"
+                icon: "bx-money"
             }
         ]
     } else if (authority === "SEDO"){
@@ -43,7 +43,7 @@ function dashboardButtons(authority){
             {
                 text: "Total Savings & Matching Grant",
                 href: "/savingsLoad",
-                icon: "bxs-bank"
+                icon: "bx-money"
             }
         ]
     } else if (authority === "Treasurer"){
@@ -61,7 +61,7 @@ function dashboardButtons(authority){
             {
                 text: "Total Savings & Matching Grant",
                 href: "/savingsLoad",
-                icon: "bxs-bank"
+                icon: "bx-money"
             }
         ]
     }
