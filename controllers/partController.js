@@ -200,7 +200,8 @@ const partController = {
                 // idk if this works will fix in future
     
                 const project = await Project.findById(projectId)
-                    // .populate('groups').populate('members').populate('savings');
+                    // .populate('groups')
+                    //.populate('members').populate('savings');
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
                 if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
@@ -211,13 +212,13 @@ const partController = {
                     return res.status(404).render("fail", { error: "Project not found." });
                 }
 
-                res.render("editGroup", { group });
+                res.render("editProject", { project });
             } else {
                 res.redirect("/");
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+            return res.status(500).render("fail", { error: "An error occurred while retrieving project information." });
         }
     },
 
@@ -235,7 +236,7 @@ const partController = {
                     return res.status(403).json({ error: "You are not authorized to edit this project." });
                 }
 
-                const { name } = req.body;
+                const { name, location } = req.body;
                 
                 const existingProject = await Project.findOne({ name });
                 if (existingProject) {
@@ -260,22 +261,72 @@ const partController = {
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while editing the group." });
+            return res.status(500).render("fail", { error: "An error occurred while editing the project." });
         }
     },
 
+    deleteProject: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const projectId = req.params.id;
     
+                // Find the project by ID
+                const project = await Project.findById(projectId);
+    
+                // Check if the logged-in user is authorized to delete the project
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!project.validSEDOs.includes(loggedInUserId) && user.authority !== "admin") {
+                    return res.status(403).json({ error: "You are not authorized to delete this project." });
+                }
+
+
+                //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT  
+                //delete savings
+                    for (const group of project.groups) {
+                        for (const member of group.members) {
+                            await Saving.deleteMany({ member: member });
+                        }
+                    }
+                //delete members
+                    for (const group of project.groups) {
+                        await Member.deleteMany({ _id: { $in: group.members } });
+                    }
+                //delete groups
+                    await Group.deleteMany({ _id: { $in: project.groups } });
+                
+                // 4. Delete projects in cluster
+
+                
+                const deletedProject = await Project.findByIdAndDelete(projectId);
+    
+                // If the project was successfully deleted, delete associated groups, members, and savings
+                if (deletedProject) {
+                    return res.json(deletedProject);
+                } else {
+                    return res.status(404).json({ error: "Delete error! Project not found." });
+                }
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
+        }
+    },
+
 
     //create a new cluster
     newCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
                 // idk what this form will have
-                const { name } = req.body;
+                const { name, location } = req.body;
             
                 let projects = [];
                 const newCluster = new Cluster({
                     name,
+                    location,
                     projects,
                 });
                 await newCluster.save();
@@ -290,6 +341,130 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while creating a new group." });
         }
     },
+
+
+    //retrieve cluster
+    retreiveCluster: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const clusterId = req.params.id; 
+                // idk if this works will fix in future
+    
+                const cluster = await Cluster.findById(clusterId)
+                    // .populate('projects')
+                    // .populate('groups').populate('members').populate('savings');
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
+                    return res.status(403).json({ error: "You are not authorized to edit this cluster." });
+                }
+
+                if (!cluster) {
+                    return res.status(404).render("fail", { error: "Cluster not found." });
+                }
+
+                res.render("editCluster", { cluster });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    },
+
+
+    // edit project
+    editCluster: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const clusterId = req.params.id;
+                const cluster = await Cluster.findById(clusterId);
+
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
+                    return res.status(403).json({ error: "You are not authorized to edit this cluster." });
+                }
+
+                const { name, location } = req.body;
+                
+                const existingCluster = await Cluster.findOne({ name });
+                if (existingCluster) {
+                    return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                }
+
+                updateData = req.body;
+    
+                // either should work... i think. as long as the group id is passed in the url
+                //const updateCluster = await Cluster.findOneAndUpdate({ _id: projectId }, updateData, { new: true });
+                const updateCluster = await Cluster.findOneAndUpdate({name: cluster.name}, updateData,{ new: true });
+
+                if (updateCluster) {
+                    return res.json(updateCluster);
+                  } else {
+                    return res.status(404).json( { error: "Update error!"});
+                }
+
+                //res.redirect("/dashboard");
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while editing the group." });
+        }
+    },
+
+    deleteCluster: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const clusterId = req.params.id;
+                const cluster = await Cluster.findById(clusterId);
+    
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
+                    return res.status(403).json({ error: "You are not authorized to delete this cluster." });
+                }
+                
+                //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT
+                // 1. Delete savings for members in groups
+                for (const project of cluster.projects) {
+                    for (const group of project.groups) {
+                        for (const member of group.members) {
+                            await Saving.deleteMany({ member: member });
+                        }
+                    }
+                }
+                // 2. Delete members in groups
+                for (const project of cluster.projects) {
+                    for (const group of project.groups) {
+                        await Member.deleteMany({ _id: { $in: group.members } });
+                    }
+                }
+                // 3. Delete groups in projects
+                for (const project of cluster.projects) {
+                    await Group.deleteMany({ _id: { $in: project.groups } });
+                }
+                // 4. Delete projects in cluster
+                await Project.deleteMany({ _id: { $in: cluster.projects } });
+                
+                const deletedCluster = await Cluster.findByIdAndDelete(clusterId);
+    
+                if (deletedCluster) {
+                    return res.json(deletedCluster);
+                } else {
+                    return res.status(404).json({ error: "Delete error!" });
+                }
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while deleting the cluster." });
+        }
+    }
 
     
 

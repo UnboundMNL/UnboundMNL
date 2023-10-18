@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const ClusterSchema = new mongoose.Schema({
     name: {type: String, required: true},
+    location: {type: String, required: true},
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'project' }],
 
     totalProjects: {type: Number, default: null},
