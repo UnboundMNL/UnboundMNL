@@ -1,17 +1,26 @@
 const mongoose = require('mongoose');
+
+
 const MemberSchema = new mongoose.Schema({
   partID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part', required: true }],
-  nameFirst: {type: String, required: true},
-  nameMiddle: String,
-  nameLast: {type: String, required: true},
-  
-  nameFatherFirst: String,
-  nameFatherMiddle: String,
-  nameFatherLast: String,
+  name: {
+    firstName: String,
+    middleName: String,
+    lastName: String
+  },
+  id: String,
+  photo: { type: String },
 
-  nameMotherFirst: String,
-  nameMotherMiddle: String,
-  nameMotherLast: String,
+  nameFather: {
+    firstName: String,
+    middleName: String,
+    lastName: String
+  },
+  nameMother: {
+    firstName: String,
+    middleName: String,
+    lastName: String
+  },
 
   age: Number, //this is a derivable field!
   sex: String,
@@ -22,7 +31,11 @@ const MemberSchema = new mongoose.Schema({
   totalSaving: Number, 
   totalMatch: Number, 
 
-  //id: String, ? i know they have ids dun sa unbound but mongoose auto puts ids (as you all know :) )
+                      //Active, Retired with Savings, Retired w/o Savings
+  status: {type: String, enum:['Active', 'RwS', 'RwoS'], default: 'Active', required: true},
+
+  
+
   // loans: [{ type: mongoose.Schema.Types.ObjectId, ref: 'loan' }],
   // totalLoanBal: Number, 
 }, {versionKey: false}

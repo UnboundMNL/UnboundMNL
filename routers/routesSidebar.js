@@ -9,14 +9,8 @@ const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
 
-const userController = require('../controllers/userController');
+const sidebarController = require('../controllers/sidebarController');
 
-router.get("/dashboard", userController.dashboard);
-
-router.get("/group", userController.group);
-router.get("/project", userController.project);
-router.get("/cluster", userController.cluster);
-router.get("/member", userController.member);
-router.get("/profile", userController.profile);
+router.post("/sidebarChange", sidebarController.sidebarChange);
 
 module.exports = router;  

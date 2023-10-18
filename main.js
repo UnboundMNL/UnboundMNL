@@ -1,34 +1,44 @@
-//TODO: Add the rest of get and renders.
-
 require('dotenv').config();
 const link = process.env.DB_URL;
-const routesRegister = require('./routers/routesRegister');
-const routesLogin = require('./routers/routesLogin');
-const routesUser = require('./routers/routesUser');
 
-
-const { isLoggedInMiddleware } = require('./lib/middleware');
-const { userIDMiddleware } = require('./lib/middleware');
-const { rememberMeMiddleware } = require('./lib/middleware');
-const { hashPassword } = require('./lib/hashing');
-
+// FOR LOCAL TESTING
+//const link = "mongodb://localhost:27017/Unbound"
 
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser')
 const ejs = require('ejs-async');
 const cors = require('cors');
-const he = require("he");
 //const MongoStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongodb-session')(session, mongoose);
 //const MongoStore = require('connect-mongo');
 //const MongoStore = require('express-mongoose-store')(session, mongoose);
-const cheerio = require('cheerio');
 const router = express.Router();
 
-const app = express();
+const routesRegister = require('./routers/routesRegister');
+const routesLogin = require('./routers/routesLogin');
+const routesUser = require('./routers/routesUser');
+const routesSidebar = require('./routers/routesSidebar');
+const routesSavings = require('./routers/routesSavings');
 
+const { isLoggedInMiddleware } = require('./lib/middleware');
+const { userIDMiddleware } = require('./lib/middleware');
+const { rememberMeMiddleware } = require('./lib/middleware');
+const { sidebarMiddleware } = require('./lib/middleware');
+const { hashPassword } = require('./lib/hashing');
+
+//const Loan = require('../models/Loan')
+const Member = require('./models/Member');
+const Part = require('./models/Part');
+const Saving = require('./models/Saving');
+const User = require('./models/User');
+
+const Cluster = require('./models/Cluster');
+const Project = require('./models/Project');
+const Group = require('./models/Group');
+
+const app = express();
 app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}));
@@ -42,9 +52,10 @@ const mongoOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
+
 const store = new MongoStore({
   uri: link,
-  databaseName: 'SnaccOverflow',
+  databaseName: 'Unbound',
   collection: 'sessions',
   ttl: 21*24*60*60,
   autoRemove: 'native',
@@ -54,7 +65,7 @@ app.use(session({
   key: 'user._id',
   secret: process.env.SesSECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   rolling: true,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 21,
@@ -73,24 +84,12 @@ app.listen(port, ()=>{
   console.log(`Listening to Port ${port}`)
 });
 
-//const Loan = require('../models/Loan')
-const Member = require('./models/Member');
-const Part = require('./models/Part');
-const Saving = require('./models/Saving');
-const User = require('./models/User');
-
-app.use(isLoggedInMiddleware);
-app.use(userIDMiddleware);
-app.use(rememberMeMiddleware);
-
-
-
 app.get("/", async (req, res) => {
   try {
     if(req.session.isLoggedIn){
-      res.render("dashboard");
+      res.redirect("/dashboard");
     }else{
-    res.render("login");
+      res.render("login");
     }
   } catch (error) {
     console.error(error);
@@ -99,13 +98,37 @@ app.get("/", async (req, res) => {
   }
 });
 
-// app.get("/", (req, res)=>{
-//   res.redirect("/")
-// })
+app.get("/clusterLoad",  (req, res) => { 
+  res.redirect("/cluster");
+})
 
-// app.get("/", (req, res)=>{
-//     res.sendFile("index")
-// })
+app.get("/projectLoad",  (req, res) => { 
+  res.redirect("/project");
+})
+
+app.get("/groupLoad",  (req, res) => { 
+  res.redirect("/group");
+})
+
+app.get("/savingsLoad",  (req, res) => { 
+  res.redirect("/savings");
+})
+
+app.get("/memberLoad",  (req, res) => { 
+  res.redirect("/member");
+})
+
+app.get("/registrationLoad",  (req, res) => { 
+  res.redirect("/registration");
+})
+
+app.get("/profileLoad",  (req, res) => { 
+  res.redirect("/profile");
+})
+
+// app.get('*', function(req, res){
+//   res.redirect('/dashboard');
+// });
 
 // app.get("/register", (req, res)=>{
 //   if(req.session.isLoggedIn){
@@ -142,11 +165,17 @@ app.get("/", async (req, res) => {
 //   res.render("success");
 // });
 
+app.use(isLoggedInMiddleware);
+app.use(userIDMiddleware);
+app.use(rememberMeMiddleware);
+app.use(sidebarMiddleware);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);
 app.use(routesLogin);
 app.use(routesUser);
+app.use(routesSidebar);
+app.use(routesSavings);
 
 
 
