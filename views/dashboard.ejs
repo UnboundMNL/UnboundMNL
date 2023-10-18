@@ -17,6 +17,9 @@
 
     <!-- FUNCTIONS -->
     <script src="../js/sidebar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/chart.js"></script>
+    
     <script>
         authCheck(" <%=authority%> ")
     </script>
@@ -28,33 +31,9 @@
     
     <main>
         <!-- Top navigation bar -->
-        <div class="top-bar">
-            <!-- Navigation bar collapse button -->
-            <i class="bx bx-list-ul toggle" onclick="toggleNav(true)"></i>
-            <% if (!sidebar){ %>
-                <script>toggleNav(false)</script>
-            <%}%>
+        <%- include('components/topNavbar.ejs')%>
 
-            <!-- Logo -->
-            <div class="logo">
-                <span class="image">
-                    <img src="../img/Unbound_icon.png" alt="Unbound Logo">
-                </span>
-                
-                <span class="text text-muted header-text">
-                    <span class="name">UNBOUND</span>
-                </span>
-            </div>
-            <script>open('dashboardButton')</script>
-
-            <!-- Profile -->
-            <div class="profile toggle">
-                <i class="bx bx-user-circle"></i>
-                <span class="text m-1" id="topbar-name"><%=username%></span>
-            </div>
-            <script>profile()</script>
-        </div>
-        
+        <!-- Dashboard content -->        
         <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons})%>
     
     </main>

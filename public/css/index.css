@@ -115,6 +115,7 @@
     top: 0;
     background-color: rgb(255, 255, 255);
     border-left: 2px solid var(--body-color);
+    border-bottom: 2px solid var(--body-color);
     padding: 1rem 15rem 1rem 1rem;
 }
 
@@ -163,6 +164,7 @@ main {
     padding: 0;
 }
 
+.dashboard-stats,
 .dashboard-actions {
     display: flex;
     gap: 0.5rem;
@@ -195,6 +197,29 @@ main {
     font-weight: 600;
 }
 
+.dashboard-stats .col .row {
+    gap: 0.5rem;
+}
+
+.dashboard-stats .container div {
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-stats .container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.dashboard-stats .container h5 {
+    color: var(--primary-color);
+}
+
+#myChart {
+    min-width: 100%;
+    height: auto;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
     #collapsibleNavbar {
@@ -219,7 +244,6 @@ main {
 
     .top-bar {
         padding-right: 1rem;
-        border-bottom: 2px solid var(--body-color);
     }
 
     .top-bar .logo {
