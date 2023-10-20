@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 
 const MemberSchema = new mongoose.Schema({
-  partID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part', required: true }],
   name: {
     firstName: String,
     middleName: String,
