@@ -21,6 +21,8 @@ const routesLogin = require('./routers/routesLogin');
 const routesUser = require('./routers/routesUser');
 const routesSidebar = require('./routers/routesSidebar');
 const routesSavings = require('./routers/routesSavings');
+const routesForms = require('./routers/routesForms');
+const routesPart = require('./routers/routesPart');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
@@ -176,6 +178,5 @@ app.use(routesLogin);
 app.use(routesUser);
 app.use(routesSidebar);
 app.use(routesSavings);
-
-
-
+app.use(routesForms);
+app.use(routesPart);

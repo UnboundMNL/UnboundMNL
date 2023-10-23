@@ -172,30 +172,19 @@ const partController = {
         try {
             if (req.session.isLoggedIn) {
                 const groupId = req.params.id;
-    
-                // Find the project by ID
                 const group = await Group.findById(groupId);
-    
-                // Check if the logged-in user is authorized to delete the project
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
                 if (!group.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
                     return res.status(403).json({ error: "You are not authorized to delete this project." });
                 }
-
-
-                //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT  
                 //delete savings
                 for (const member of group.members) {
                     await Saving.deleteMany({ member: member });
                 }
                 //delete members
                 await Member.deleteMany({ _id: { $in: group.members } });
-                //delete groups
-                
-                // 4. Delete projects in cluster
-
-                
+                //delete groups                
                 const deletedGroup = await Group.findByIdAndDelete(groupId);
     
                 // If the project was successfully deleted, delete associated groups, members, and savings
@@ -601,8 +590,38 @@ const partController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
-    }
+    },
 
+    SHGChoices: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                let { project } = req.body;
+                console.log(project)
+                const SHG = await Group.find({});
+                res.json({ SHG });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    },
+
+    projectChoices: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                let { cluster } = req.body;
+                const project = await Project.find({});
+                res.json({ project });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    }
     
 
 }
