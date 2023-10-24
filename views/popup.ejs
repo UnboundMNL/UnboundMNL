@@ -25,10 +25,11 @@
 
 <body class="body-bg">
 
-<!-- Button trigger modal -->
-
-	<%-include('components/addUserModal.ejs'), {authority, clusters} %>
-	<%-include('components/addClusterModal.ejs'), {authority} %>
-	<%-include('components/addSHGModal.ejs'), {authority, clusters} %>
+    <%-include('components/addPartModal.ejs', {authority, partname: "User", clusters}) %>
+    <%-include('components/addPartModal.ejs', {authority, partname: "SHG", clusters}) %>
+    <%-include('components/addPartModal.ejs', {authority, partname: "Sub-Project", clusters}) %>
+    <%-include('components/addPartModal.ejs', {authority, partname: "Cluster"}) %>
+    <%-include('components/addPartModal.ejs', {authority, partname: "Member"}) %>
+    
 </body>
 </html>

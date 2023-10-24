@@ -1,22 +1,8 @@
 
-<%- include('clusterSelect.ejs') %>
+<%- include('clusterSelect.ejs', {clusters}) %>
+<%- include('projectSelect.ejs') %>
+<%- include('shgSelect.ejs') %>
 
-    <div class = "mb-3">
-        <label for="groupSelect" class="form-label">Self Help Group</label>
-        <select class="form-select" id = "groupSelect" name = "groupSelect" aria-describedby="Select Self Help Group" autocomplete="off" required>
-            <option selected disabled hidden value = "">Select Self Help Group</option>
-            <option disabled>
-                <% if (authority === "Admin") { %>
-                    No Cluster Selected
-                <% } else if (authority === "SEDO") { %>
-                    Error
-                <% } %>
-            </option>
-        </select>
-        <div class="invalid-feedback">
-            Please select a SHG.
-        </div>      
-    </div>
     <div class = "mb-3">
         <label for="firstName" class="form-label">First Name</label>
         <input class="form-control" id = "firstName" name = "firstName" type="text" placeholder="Bronya" aria-describedby="FirstName">

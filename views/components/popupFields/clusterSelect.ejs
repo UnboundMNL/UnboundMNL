@@ -2,7 +2,7 @@
     <div class = "mb-3">
         <label for="clusterSelect" class="form-label">Cluster</label>
         <select class="form-select" id = "clusterSelect" name = "clusterSelect" aria-describedby="Select Cluster" autocomplete="off" required>
-            <option selected disabled hidden value = "">Select Cluster</option>
+            <option selected disabled default hidden value = "">Select Cluster</option>
             <!-- INSERT OPTIONS FROM DB HERE -->
             <% for (let i = 0; i < clusters.length; i++) { %>
                 <option value="<%= clusters[i].name %>"><%= clusters[i].name %></option>

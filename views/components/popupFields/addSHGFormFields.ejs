@@ -1,31 +1,6 @@
 <%- include('clusterSelect.ejs'), {authority} %>
+<%- include('projectSelect.ejs'), {authority} %>
 
-<div class = "mb-3">
-    <label for="projectSelect" class="form-label">Project</label>
-    <select 
-        class="form-select" 
-        id = "projectSelect" 
-        name = "projectSelect" 
-        aria-describedby="Select Project" 
-        autocomplete="off" 
-        required
-        <% if (authority === 'Treasurer') {%>
-            disabled
-        <% } %>>
-        
-        <% if (authority === 'Treasurer') {%>
-            <option selected disabled value = "" > *PROJECT NAME* </option>
-        <% } else { %>
-            <option selected disabled hidden value="">Select Project</option>
-            <!-- INSERT OPTIONS FROM DB HERE -->
-            <!-- NOTE: use similar JS as the one in addUser.js -->
-        <% } %>
-    </select>
-    <div class="invalid-feedback">
-        Please select a project.
-    </div>
-  
-</div>
 <div class = "mb-3">
     <label for="SHGName" class="form-label">Self Help Group Name</label>
     <input class="form-control" id = "SHGName" name = "SHGName" type="text" placeholder="High Cloud Quintet" aria-describedby="SHGName" required>
@@ -43,7 +18,7 @@
 </div>
 <div class = "mb-3">
     <label for="SEDPChairName" class="form-label">SEDP Chairman Name</label>
-    <div class = "input-group has-Validation">
+    <div class = "input-group">
         <input class="form-control" id = "SEDPChairName" name = "SEDPChairName" type="text" placeholder="Jing Yuan" aria-describedby="SEDPChairName" required>
         <span class = "input-group-text">Phone Number</span>
         <input class="form-control" id = "SEDPChairPhone" name = "SEDPChairPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="SEDPChairPhoneNumber">
@@ -54,7 +29,7 @@
 </div>
 <div class = "mb-3">
     <label for="KabanTreasurer" class="form-label">Kaban Treasurer Name</label>
-    <div class = "input-group has-Validation">
+    <div class = "input-group">
         <input class="form-control" id = "KabanTreasurer" name = "KabanTreasurer" type="text" placeholder="Baiheng" aria-describedby="KabanTreasurer" required>
         <span class = "input-group-text">Phone Number</span>
         <input class="form-control" id = "KabanTreasurerPhone" name = "KabanTreasurerPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="KabanTreasurerPhoneNumber">
@@ -65,7 +40,7 @@
 </div>
 <div class = "mb-3">
     <label for="KabanAuditor" class="form-label">Kaban Auditor Name</label>
-    <div class = "input-group has-Validation">
+    <div class = "input-group">
         <input class="form-control" id = "KabanAuditor" name = "KabanAuditor" type="text" placeholder="Yingxing" aria-describedby="KabanAuditor" required>
         <span class = "input-group-text">Phone Number</span>
         <input class="form-control" id = "KabanAuditorPhone" name = "KabanAuditorPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="KabanAuditorPhoneNumber">

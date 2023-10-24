@@ -1,0 +1,16 @@
+<div class = "mb-3">
+    <label for="groupSelect" class="form-label">Self Help Group</label>
+    <select class="form-select" id = "groupSelect" name = "groupSelect" aria-describedby="Select Self Help Group" autocomplete="off" required>
+        <option selected disabled default hidden value = "">Select Self Help Group</option>
+        <option disabled value = "">
+            <% if (authority != "Treasurer") { %>
+                No Project Selected
+            <% } else { %>
+                Error
+            <% } %>
+        </option>
+    </select>
+    <div class="invalid-feedback">
+        Please select a SHG.
+    </div>      
+</div>

@@ -1,0 +1,37 @@
+
+<%- include('clusterSelect.ejs') %>
+<%- include('projectSelect.ejs') %>
+<%- include('shgSelect.ejs') %>
+
+<% 
+    const nameFields = ["Child", "Parent"]
+    const placeholder = [["Kiana", "Kaslana"],["Siegfried", "Kaslana"]]
+
+    for (let i = 0; i < nameFields.length; i++) {
+%>
+        <div class = "mb-3">
+            <label for="<%=nameFields[i]%>Name" class="form-label"><%=nameFields[i]%> Name</label>
+            <div class = "input-group" id = "<%=nameFields[i]%>Name">
+                <span class = "input-group-text">First Name</span>
+                <input class="form-control"
+                        id = "<%=nameFields[i]%>FirstName"
+                        name = "<%=nameFields[i]%>FirstName"
+                        type="text" 
+                        placeholder="<%=placeholder[i][0]%>"
+                        aria-describedby="<%=nameFields[i]%>FirstName"
+                        required>
+                <span class = "input-group-text">Last Name</span>
+                <input class="form-control"
+                        id = "<%=nameFields[i]%>LastName"
+                        name = "<%=nameFields[i]%>LastName"
+                        type="text"
+                        placeholder="<%=placeholder[i][1]%>"
+                        aria-describedby="<%=nameFields[i]%>LastName"
+                        required>
+                <div class="invalid-feedback">
+                    Full child name required.
+                </div>  
+            </div>
+        </div>
+
+<% } %>
