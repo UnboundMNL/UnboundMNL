@@ -35,11 +35,12 @@
         <!-- Note: Temporary number of containers -->
         <% const containers = 6; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters"]; %>
+            <% const path = ["Cluster"]; %>
             <!-- const path = ["Clusters", "Cluster 1"]; -->
             <div class="custom-path">
                 <% path.forEach((item) => { %>
-                    <li><a href="/<%= item.toLowerCase() %>"><%= item %></a></li>
+                    <% load= item.toLowerCase()+"Load" %>
+                    <li><a href="/<%= load%>"+><%= item %></a></li>
                 <% }); %>
             </div>
             
