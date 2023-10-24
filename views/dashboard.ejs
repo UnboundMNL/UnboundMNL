@@ -37,6 +37,7 @@
         <!-- Dashboard content -->        
         <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons})%>
         <script>open('dashboardButton')</script>
+        <%-include('components/logoutPopup.ejs') %>
     </main>
 </body>
 </html>
