@@ -19,52 +19,53 @@
 </div>
 
 <div>
-    <% for (let i = 0; i < containers; i++) { %>
+    <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
-        <div>
-            <div class="container container-style mb-3">
-                <h5>SHG <%=i%></h5>
-                
-                <div>
-                    <i class='bx bxs-map'></i>
-                    <span>Address</span>
+        <div class="container container-style mb-3">
+            <h5>SHG <%= pageParts[i].name %></h5>
+
+            <div>
+                <i class='bx bxs-map'></i>
+                <span><%= pageParts[i].area %></span>
+            </div>
+
+            <div class="container-bottom">
+                <div class="d-flex align-items-end">
+                    <button type="button" class="btn btn-secondary btn-sm toggle-details" data-target="details-container<%= i %>">
+                        <i class='bx bxs-chevron-down'></i> View Details
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>">Delete</button>
                 </div>
-    
-                <div class="container-bottom">
-                    <div class="d-flex align-items-end">
-                        <button type="button" class="btn btn-secondary btn-sm toggle-details" data-target="details-container<%= i %>">
-                            <i class='bx bxs-chevron-down'></i> View Details
-                        </button>
-                        <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>">Delete</button>
-                    </div>
-    
-                    <div>
-                        <span>Total Savings:</span>
-                        <h3>P1,000</h3>
-                    </div>
+
+                <div>
+                    <span>Total Savings:</span>
+                    <h3>P <%= pageParts[i].totalKaban %></h3>
                 </div>
             </div>
-            
-            <% const SHGDetail = ["ABC", "DEF", "GHI", "JKL", "MNO", "PQR", "STU", "VWX", "YZ"]; %>
-            <div class="d-none container details-container" id="details-container<%= i %>">
-                <h6>SHG <%=i%> Details</h6>
-                <div class="row">
-                    <div class="col-6">
-                        <span><strong>SPU:</strong> <%= SHGDetail[0] %></span><br>
-                        <span><strong>Total SMs/SHG:</strong> <%= SHGDetail[1] %></span><br>
-                        <span><strong>SHG Signatories:</strong> <%= SHGDetail[2] %></span><br>
-                    </div>
-                    <div class="col-6">
-                        <span><strong>Depository Bank:</strong> <%= SHGDetail[3] %></span><br>
-                        <span><strong>Account Type:</strong> <%= SHGDetail[4] %></span><br>
-                        <span><strong>Account Number:</strong> <%= SHGDetail[5] %></span><br>
-                        <span><strong>Treasurer:</strong> <%= SHGDetail[6] %></span><br>
-                        <span><strong>Treasurer Mobile No.:</strong> <%= SHGDetail[7] %></span>
-                    </div>
+        </div>
+
+        <div class="d-none container details-container" id="details-container<%= i %>">
+            <h6>SHG <%= pageParts[i].name %> Details</h6>
+            <div class="row">
+                <div class="col-6">
+                    <span><strong>SPU:</strong> <%= pageParts[i].SPU %></span><br>
+                    <span><strong>Total SMs/SHG:</strong> <%= pageParts[i].totalMembers %></span><br>
+                    <span><strong>SHG Signatories:</strong>
+                        <% for (let j = 0; j < pageParts[i].signatories.length; j++) { %>
+                            <%= `${pageParts[i].signatories[j].firstName} ${pageParts[i].signatories[j].middleName} ${pageParts[i].signatories[j].lastName}` %>
+                            <% if (j < pageParts[i].signatories.length - 1) { %>,
+                            <% } %>
+                        <% } %>
+                        </span><br>
                 </div>
-            </div>            
+                <div class="col-6">
+                    <span><strong>Depository Bank:</strong> <%= pageParts[i].depositoryBank %></span><br>
+                    <span><strong>Account Type:</strong> <%= pageParts[i].bankAccountType %></span><br>
+                    <span><strong>Account Number:</strong> <%= pageParts[i].bankAccountNum %></span><br>
+                    <!-- Add treasurer details here -->
+                </div>
+            </div>
         </div>
     <% } %>
-    
 </div>

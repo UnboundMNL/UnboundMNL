@@ -28,6 +28,7 @@ const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
 const { rememberMeMiddleware } = require('./lib/middleware');
 const { sidebarMiddleware } = require('./lib/middleware');
+const { idMiddleware } = require('./lib/middleware');
 const { hashPassword } = require('./lib/hashing');
 
 //const Loan = require('../models/Loan')
@@ -100,14 +101,6 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/cluster",  (req, res) => { 
-  res.redirect("/cluster/1");
-})
-
-// app.get("/project",  (req, res) => { 
-//   res.redirect("/project");
-// })
-
 // app.get("/group",  (req, res) => { 
 //   res.redirect("/group");
 // })
@@ -171,6 +164,7 @@ app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
+app.use(idMiddleware)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);

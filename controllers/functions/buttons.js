@@ -1,10 +1,10 @@
-function dashboardButtons(authority){
+function dashboardButtons(authority,redirect){
     let buttons ;
     if (authority === "Admin"){
         buttons = [
             {
                 text: "Clusters",
-                href: "/cluster",
+                href: redirect,
                 icon: "bxs-folder-open"
             },
             {
@@ -27,7 +27,7 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Projects",
-                href: "/project",
+                href: redirect,
                 icon: "bxs-folder-open"
             },
             {
@@ -50,13 +50,8 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Members",
-                href: "/group",
+                href: redirect,
                 icon: "bx-group"
-            },
-            {
-                text: "Members Masterlist",
-                href: "/member",
-                icon: "bx-building-house"
             },
             {
                 text: "Total Savings & Matching Grant",

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard | Unbound MNL</title>
-    <link rel="icon" href="../img/Unbound_icon.png">
+    <link rel="icon" href="/img/Unbound_icon.png">
 
     <!-- JQUERY -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -17,15 +17,16 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- FUNCTIONS -->
-    <script src="../js/sidebar.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/card.js"></script>
     <script>
-        authCheck(" <%=authority%> ")
+        authCheck(" <%=authority%> ");
     </script>
 </head>
 
 <body class="body-bg">
     
-    <%- include('components/navbar.ejs', {authority: authority})%>
+    <%- include('components/navbar.ejs', {authority: authority, redirect})%>
     
     <main>
         <!-- Top navigation bar -->
@@ -35,11 +36,15 @@
         <!-- Note: Temporary number of containers -->
         <% const containers = 9; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters", "Cluster #"]; %>
+            <% const path = ["Cluster", "Sub-Projects"]; %>
             <div class="custom-path">
-                <% path.forEach((item) => { %>
-                    <li><a href="/<%= item.toLowerCase() %>"><%= item %></a></li>
-                <% }); %>
+                <% path.forEach((item) => { 
+                    if (item=='Sub-Projects'){ %>
+                        <li><a href="/project"><%= item %></a></li>
+                    <% } else { %>
+                        <li><a href="/<%= item.toLowerCase() %>"><%= item %></a></li>
+                    <% }
+                }); %>
             </div>
 
             <div class="mt-3 page-title">
@@ -50,7 +55,7 @@
             <%- include('components/cardPages.ejs', { pageParts, type }) %>
         </div>
 
-        <%- include('components/pagination.ejs')%>
+        <%- include('components/pagination.ejs', {page, totalPages})%>
         <%- include('components/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/logoutPopup.ejs') %>

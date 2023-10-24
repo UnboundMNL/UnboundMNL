@@ -1,4 +1,4 @@
-// Add group
+// // Add group
 
 // var SPU = "SampleSPU";
 // var name = "SampleSHG";
@@ -88,6 +88,28 @@
 //         return response.json().then(data => {
 //             // Handle errors here if needed
 //             console.error('Error:', data.error);
+//         });
+//     }
+// })
+// .catch(error => {
+//     console.error('Error:', error);
+// });
+
+
+// fetch('/logout', {
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json'
+//     },
+// })
+// .then(response => {
+//     if (response.ok) {
+//         location.href="/";
+//     } else {
+//         return response.json().then(data => {
+//             // var errorDiv = document.getElementById("error");
+//             // errorDiv.style.display="block";
+//             // errorDiv.textContent=data.error;
 //         });
 //     }
 // })

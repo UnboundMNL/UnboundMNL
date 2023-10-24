@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard | Unbound MNL</title>
-    <link rel="icon" href="../img/Unbound_icon.png">
+    <link rel="icon" href="/img/Unbound_icon.png">
 
     <!-- JQUERY -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -17,8 +17,9 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- FUNCTIONS -->
-    <script src="../js/sidebar.js"></script>
-    <script src="../js/viewDetails.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/viewDetails.js"></script>
+    <script src="/js/card.js"></script>
     <script>
         authCheck(" <%=authority%> ")
     </script>
@@ -26,7 +27,7 @@
 
 <body class="body-bg">
     
-    <%- include('components/navbar.ejs', {authority: authority})%>
+    <%- include('components/navbar.ejs', {authority: authority, redirect})%>
     
     <main>
         <!-- Top navigation bar -->
@@ -36,7 +37,7 @@
         <!-- Note: Temporary number of containers -->
         <% const containers = 6; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters", "Cluster #"]; %>
+            <% const path = ["Clusters", "Sub-Projects", "SHG"]; %>
             <div class="custom-path">
                 <% path.forEach((item) => { %>
                     <li><a href="/<%= item.toLowerCase() %>"><%= item %></a></li>
@@ -48,12 +49,12 @@
                 <h4>Self-Help Groups</h4>
             </div>
              
-
-            <%- include('components/shgContent.ejs', { containers: containers }) %>
+            <% var type = "SHG";  %>
+            <%- include('components/shgContent.ejs', { pageParts }) %>
         </div>
 
-        <%- include('components/pagination.ejs')%>
-        <%- include('components/deletePopup.ejs', { containers: containers })%>
+        <%- include('components/pagination.ejs', {page, totalPages})%>
+        <%- include('components/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/logoutPopup.ejs') %>
     </main>
