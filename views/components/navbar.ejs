@@ -81,11 +81,13 @@
             <% } %>
         </div>
 
-        <a class="nav-link d-flex" id="logoutButton">
+        <a class="nav-link d-flex" id="logoutButton" data-bs-toggle="modal" data-bs-target="#logoutModal">
             <i class='bx bx-log-out icon'></i>
             <div>
                 <span class="text nav-text">Logout</span>
             </div>
+            
         </a>
+        <%-include('logoutPopup.ejs') %>
     </div>
 </nav>
