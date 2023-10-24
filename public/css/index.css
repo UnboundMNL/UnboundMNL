@@ -1,56 +1,29 @@
 /* --------------- REUSABLE STYLES --------------- */
 @import url('https://fonts.googleapis.com/css?family=Montserrat Alternates');
 
-:root {
+/* :root {
     --body-color: #f2f2f2;
     --primary-color: #0097b2;
     --secondary-color: #0cc0df;
     --tertiary-color: rgb(49, 118, 214);
+    --button-color: #007bff;
     --text-color: #555151;
     --sidebar-hover-color: #c7e5eb;
+} */
+
+:root {
+    --body-color: #F2F4F3;
+    --primary-color: #0092E0;
+    --secondary-color: #0077B8;
+    --tertiary-color: #ADE2FF;
+    --text-color: #2E4057;
+    --red-color: #DC3545;
 }
 
 .body-bg {
     background-color: var(--body-color);
 }
 
-/* --------------- LANDING PAGE --------------- */
-.landing-bg {
-    background-image: radial-gradient(rgb(154, 225, 238), white);
-}
-
-.landing-bg .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-}
-
-.card { 
-    border: none;
-    padding: 3rem 1rem;
-    box-shadow: 0 4px 8px 0 rgba(94, 105, 157, 0.2), 0 4px 8px 0 rgba(94, 105, 157, 0.2);
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.btn.default-btn {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-}
-
-.btn.default-btn:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
-
-.fine-print {
-    font-size: 0.8rem;
-}
-
-/* --------------- DASHBOARD PAGE --------------- */
 /* SIDEBAR */
 .sidebar {
     position: fixed;
@@ -78,6 +51,7 @@
 .sidebar .text {
     font-size: 1rem;
     font-weight: 600;
+    margin-left: 0.5rem;
     font-family: 'Montserrat Alternates';
 }
 
@@ -89,12 +63,11 @@
 .sidebar a:hover {
     cursor: pointer;
     color: var(--text-color);
-    background-color: var(--sidebar-hover-color);
+    background-color: var(--tertiary-color);
 }
 
 .sidebar .icon {
     font-size: 1.5rem;
-    margin-right: 0.5rem;
 }
 
 .sidebar .menu-bar {
@@ -127,7 +100,7 @@
 
 .top-bar .toggle:hover {
     cursor: pointer;
-    background-color: var(--sidebar-hover-color);
+    background-color: var(--tertiary-color);
     border-radius: 5px;
 }
 
@@ -164,60 +137,40 @@ main {
     padding: 0;
 }
 
-.dashboard-stats,
-.dashboard-actions {
+/* MODALS */
+.modal-buttons {
     display: flex;
+    justify-content: center;
     gap: 0.5rem;
 }
 
-.dashboard-actions .container {
-    background-color: white;
-    border-radius: 10px;
+.modal-buttons button {
+    width: 10rem;
+}
+
+#logout-i {
+    color: black;
+}
+
+/* PATH */
+.custom-path {
     display: flex;
-    align-items: center;
-    padding: 1rem;
+    list-style: none;
 }
 
-.dashboard-actions .container:hover {
-    cursor: pointer;
-    background-color: var(--sidebar-hover-color);
+.custom-path li a {
+    text-decoration: none;
+    padding-right: 5px;
+    color: var(--text-color);
 }
 
-.dashboard-actions .container i {
-    margin-right: 1rem;
-    padding: 0.5rem;
-    font-size: 2rem;
-    color: var(--primary-color);
-    background-color: var(--sidebar-hover-color);
-    border-radius: 50%;
-}
-
-.dashboard-actions .container span {
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.dashboard-stats .col .row {
-    gap: 0.5rem;
-}
-
-.dashboard-stats .container div {
-    margin-bottom: 0.5rem;
-}
-
-.dashboard-stats .container {
-    background-color: white;
-    border-radius: 10px;
-    padding: 1rem;
-}
-
-.dashboard-stats .container h5 {
+.custom-path li a:hover {
     color: var(--primary-color);
 }
 
-#myChart {
-    min-width: 100%;
-    height: auto;
+.custom-path li::before {
+    content: "›";
+    margin-right: 5px;
 }
 
 /* MOBILE */

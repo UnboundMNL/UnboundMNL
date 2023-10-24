@@ -1,0 +1,35 @@
+/* --------------- LANDING PAGE --------------- */
+.landing-bg {
+    background-image: radial-gradient(rgb(154, 225, 238), white);
+}
+
+.landing-bg .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.card { 
+    border: none;
+    padding: 3rem 1rem;
+    box-shadow: 0 4px 8px 0 rgba(94, 105, 157, 0.2), 0 4px 8px 0 rgba(94, 105, 157, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.btn.default-btn {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn.default-btn:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.fine-print {
+    font-size: 0.8rem;
+}
