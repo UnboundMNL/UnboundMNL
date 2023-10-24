@@ -25,6 +25,21 @@
 
 <body class="body-bg">
 
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUser">
+        Add User
+    </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSHG">
+        Add SHG
+    </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSub-Project">
+        Add Sub-Project
+    </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCluster">
+        Add Cluster
+    </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMember">
+        Add Member
+    </button>
     <%-include('components/addPartModal.ejs', {authority, partname: "User", clusters}) %>
     <%-include('components/addPartModal.ejs', {authority, partname: "SHG", clusters}) %>
     <%-include('components/addPartModal.ejs', {authority, partname: "Sub-Project", clusters}) %>

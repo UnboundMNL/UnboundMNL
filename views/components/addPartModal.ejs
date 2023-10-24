@@ -1,8 +1,3 @@
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=partname%>">
-	Add <%=partname%>
-</button>
-
-<!-- Modal -->
 <div class="modal modal-lg fade" id="add<%=partname%>" tabindex="-1" aria-labelledby="add<%=partname%>ModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -15,8 +10,12 @@
 				
                 <div class="modal-body">
 					<div id = "add<%=partname%>FormDiv">
-                        <% const partialURL = "popupFields/add" + partname + "FormFields.ejs"%>
-						<%- include(partialURL, {authority, clusters}) %>
+						<% const partialURL = "popupFields/" + partname + "FormFields.ejs"%>
+						<% if(partname !== "Cluster") { %>
+						 	<%-include(partialURL, {authority, clusters})%> 
+						<%} else {%>
+							<%-include(partialURL, {authority})%>
+						<%}%>
 					</div>
 				</div>
 				<div class="modal-footer">

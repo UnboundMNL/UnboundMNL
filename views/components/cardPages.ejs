@@ -10,13 +10,16 @@
     <!-- Add button -->
     <div class="d-flex align-items-center p-2">
         <div>
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=type%>">
                 <i class='bx bx-plus'></i>
                 <span class="d-none d-sm-inline">Add <%=type%></span>
             </button>
         </div>
     </div>
 </div>
+
+<%-include('addPartModal.ejs', {authority, partname: type}) %>
+<%-include('editPopup.ejs', {partname: type}) %>
 
 <div css="row">
     <% for (let i = 0; i < pageParts.length; i++) { %>
@@ -32,7 +35,7 @@
 
                 <div class="container-bottom mt-4">
                     <div class="d-flex align-items-end">
-                        <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>">Edit</button>
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>">Delete</button>
                     </div>
 

@@ -7,6 +7,8 @@ const Saving = require('../models/Saving');
 const User = require('../models/User');
 const Cluster = require('../models/Cluster');
 
+const formsController = require('../controllers/formsController');
+
 //This is one just to render the forms in a separate page
 router.get("/addUser", async (req, res) => {
     if(req.session.isLoggedIn){
@@ -30,4 +32,7 @@ router.post("/addUser", async (req, res) => {
     res.render("components/addUser", { userType: req.body.userType });
 });
 
+
+//ACTUAL ROUTES TO BE USED
+router.get('/editClusterForm/:clusterName', formsController.loadEditClusterForm);
 module.exports = router;
