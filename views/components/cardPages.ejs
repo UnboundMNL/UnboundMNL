@@ -47,11 +47,11 @@
             </div>
         </div>
         <script>
-            <% if (type == "cluster") { %>
+            if (type == "cluster") {
                 cardLink("project", "<%=pageParts[i]._id%>");
-            <% } else if (type == "Sub-Projects") { %>
+            } else if (type == "Sub-Projects") {
                 cardLink("group", "<%=pageParts[i]._id%>");
-            <% } %>
+            }
         </script>
     <% } %>
 </div>
