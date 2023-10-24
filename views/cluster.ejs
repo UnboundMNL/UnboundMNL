@@ -33,24 +33,21 @@
 
         <!-- Cluster Content -->
         <!-- Note: Temporary number of containers -->
-        <% const containers = 6; %>
         <div class="p-4 mt-5">
             <% const path = ["Cluster"]; %>
             <!-- const path = ["Clusters", "Cluster 1"]; -->
             <div class="custom-path">
                 <% path.forEach((item) => { %>
-                    <% load= item.toLowerCase()+"Load" %>
-                    <li><a href="/<%= load%>"+><%= item %></a></li>
+                    <li><a href="/<%=item%>"+><%= item %></a></li>
                 <% }); %>
             </div>
-            
+            <% var type = "Cluster";  %>
             <h4 class="mt-3">Clusters</h4>
-
-            <%- include('components/cardPages.ejs', { containers: containers }) %>
+            <%- include('components/cardPages.ejs', { pageParts, type }) %>
         </div>
 
-        <%- include('components/pagination.ejs')%>
-        <%- include('components/deletePopup.ejs', { containers: containers })%>
+        <%- include('components/pagination.ejs', {page, totalPages})%>
+        <%- include('components/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/logoutPopup.ejs') %>
     </main>

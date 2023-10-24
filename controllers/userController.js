@@ -152,6 +152,7 @@ const userController = {
     cluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                const page = req.params.page;
                 const userID = req.session.userId;
                 const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
@@ -168,11 +169,20 @@ const userController = {
                 const updatedParts = await Cluster.find({});
                 await updateOrgParts(updatedParts); 
                 const orgParts = getOrgParts();
-                console.log(orgParts);
-                var perPage = 6;
-                
+                var pageParts=[]
+                var perPage = 6; // change to how many cluster per page
+                if (orgParts.length> perPage){
+                    var startPage = perPage * page;
+                    for (var i=0;i<perPage;i++){
+                        pageParts.append(startPage+i);
+                    }
+                } else{
+                    pageParts=orgParts;
+                }
+                var totalPages = Math.ceil(orgParts.length/perPage);
+
                 dashbuttons = dashboardButtons(authority);
-                res.render("cluster", { authority, orgParts, username, dashbuttons });
+                res.render("cluster", { authority, pageParts, username, dashbuttons, page, totalPages });
             } else {
                 res.redirect("/");
             }

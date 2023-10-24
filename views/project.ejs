@@ -46,12 +46,12 @@
                 <p>Cluster #</p>
                 <h4>Sub-Projects</h4>
             </div>
-
-            <%- include('components/cardPages.ejs', { containers: containers }) %>
+            <% var type = "Sub-Projects"; %>
+            <%- include('components/cardPages.ejs', { pageParts, type }) %>
         </div>
 
         <%- include('components/pagination.ejs')%>
-        <%- include('components/deletePopup.ejs', { containers: containers })%>
+        <%- include('components/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/logoutPopup.ejs') %>
     </main>

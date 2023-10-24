@@ -4,22 +4,22 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Clusters",
-                href: "/clusterLoad",
+                href: "/cluster",
                 icon: "bxs-folder-open"
             },
             {
                 text: "Account Registration",
-                href: "/registrationLoad",
+                href: "/registration",
                 icon: "bxs-user-plus"
             },
             {
                 text: "Manage Organization",
-                href: "#",
+                href: "/member",
                 icon: "bx-building-house"
             },
             {
                 text: "Total Savings & Matching Grant",
-                href: "/savingsLoad",
+                href: "/savings",
                 icon: "bx-money"
             }
         ]
@@ -27,22 +27,22 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Projects",
-                href: "/projectLoad",
+                href: "/project",
                 icon: "bxs-folder-open"
             },
             {
                 text: "Manage Cluster",
-                href: "#",
+                href: "/member",
                 icon: "bx-grid-alt"
             },
             {
                 text: "Account Registration",
-                href: "/registrationLoad",
+                href: "/registration",
                 icon: "bxs-user-plus"
             },
             {
                 text: "Total Savings & Matching Grant",
-                href: "/savingsLoad",
+                href: "/savings",
                 icon: "bx-money"
             }
         ]
@@ -50,17 +50,17 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Members",
-                href: "/groupLoad",
+                href: "/group",
                 icon: "bx-group"
             },
             {
-                text: "Manage Group",
-                href: "#",
+                text: "Members Masterlist",
+                href: "/member",
                 icon: "bx-building-house"
             },
             {
                 text: "Total Savings & Matching Grant",
-                href: "/savingsLoad",
+                href: "/savings",
                 icon: "bx-money"
             }
         ]

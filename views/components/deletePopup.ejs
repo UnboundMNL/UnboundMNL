@@ -1,4 +1,4 @@
-<% for (let i = 0; i < containers; i++) { %>
+<% for (let i = 0; i < pageParts.length; i++) { %>
     <div class="modal fade" id="deleteModal<%= i %>" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-3">
@@ -9,7 +9,7 @@
                     <i class='bx bx-x-circle'></i>
                     <div>
                         <h4 class="text-center p-2">Delete Confirmation</h4>
-                        <h6 class="text-center p-2">Are you sure you want to delete Container <%= i %>?</h6> 
+                        <h6 class="text-center p-2">Are you sure you want to delete <%= type %> <%= pageParts[i].name %>?</h6> 
                     </div>
                     <div class="modal-buttons p-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

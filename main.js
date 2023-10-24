@@ -100,33 +100,33 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/clusterLoad",  (req, res) => { 
-  res.redirect("/cluster");
+app.get("/cluster",  (req, res) => { 
+  res.redirect("/cluster/1");
 })
 
-app.get("/projectLoad",  (req, res) => { 
-  res.redirect("/project");
-})
+// app.get("/project",  (req, res) => { 
+//   res.redirect("/project");
+// })
 
-app.get("/groupLoad",  (req, res) => { 
-  res.redirect("/group");
-})
+// app.get("/group",  (req, res) => { 
+//   res.redirect("/group");
+// })
 
-app.get("/savingsLoad",  (req, res) => { 
-  res.redirect("/savings");
-})
+// app.get("/savings",  (req, res) => { 
+//   res.redirect("/savings");
+// })
 
-app.get("/memberLoad",  (req, res) => { 
-  res.redirect("/member");
-})
+// app.get("/member",  (req, res) => { 
+//   res.redirect("/member");
+// })
 
-app.get("/registrationLoad",  (req, res) => { 
-  res.redirect("/registration");
-})
+// app.get("/registration",  (req, res) => { 
+//   res.redirect("/registration");
+// })
 
-app.get("/profileLoad",  (req, res) => { 
-  res.redirect("/profile");
-})
+// app.get("/profile",  (req, res) => { 
+//   res.redirect("/profile");
+// })
 
 // app.get('*', function(req, res){
 //   res.redirect('/dashboard');

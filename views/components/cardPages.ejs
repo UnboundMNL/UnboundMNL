@@ -6,7 +6,7 @@
             <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
         </div>
     </div>
-
+    
     <!-- Add button -->
     <div class="d-flex align-items-center p-2">
         <div>
@@ -18,16 +18,16 @@
     </div>
 </div>
 
-<div class="row">
-    <% for (let i = 0; i < containers; i++) { %>
+<div css="row">
+    <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
         <div class="col-md-4">
             <div class="container container-style">
-                <h5>Cluster <%=i%></h5>
+                <h5><%=type%> <%=pageParts[i].name%></h5>
                 
                 <div>
                     <i class='bx bxs-map'></i>
-                    <span>Address</span>
+                    <span><%=pageParts[i].location%></span>
                 </div>
 
                 <div class="container-bottom mt-4">
@@ -38,7 +38,7 @@
 
                     <div>
                         <span>Total Savings:</span>
-                        <h3>P1,000</h3>
+                        <h3>P <%=pageParts[i].totalKaban%></h3>
                     </div>
                 </div>
             </div>
