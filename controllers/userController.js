@@ -165,10 +165,12 @@ const userController = {
                 // await updateSharedData();
                 // let orgParts = sharedData.orgParts;
 
-                const updatedParts = [];
+                const updatedParts = await Cluster.find({});
                 await updateOrgParts(updatedParts); 
                 const orgParts = getOrgParts();
-
+                console.log(orgParts);
+                var perPage = 6;
+                
                 dashbuttons = dashboardButtons(authority);
                 res.render("cluster", { authority, orgParts, username, dashbuttons });
             } else {
