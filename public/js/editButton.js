@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     const editCluster = document.getElementById('editcluster')
-    console.log(editCluster)
     if (editCluster) {
     editCluster.addEventListener('show.bs.modal', event => {
         // Button that triggered the modal

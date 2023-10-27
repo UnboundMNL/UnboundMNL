@@ -101,6 +101,10 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/cluster",  (req, res) => { 
+  res.redirect("/cluster/view/1");
+})
+
 // app.get("/group",  (req, res) => { 
 //   res.redirect("/group");
 // })

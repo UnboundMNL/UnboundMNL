@@ -66,7 +66,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while creating a new group." });
         }
     },
-
+    
     retrieveGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -380,7 +380,10 @@ const partController = {
             if (req.session.isLoggedIn) {
                 // idk what this form will have
                 const { name, location } = req.body;
-            
+                const existingCluster = await Cluster.findOne({ name });
+                if (existingCluster) {
+                    return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                }
                 let projects = [];
                 const newCluster = new Cluster({
                     name,
@@ -390,13 +393,13 @@ const partController = {
                 await newCluster.save();
 
                 //redirecting to dashboard rn cuz idk where else to redirect to
-                res.redirect("/dashboard");
+                res.redirect("/cluster");
             } else {
                 res.redirect("/");
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while creating a new group." });
+            return res.status(500).render("fail", { error: "An error occurred while creating a new cluster." });
         }
     },
 
@@ -464,13 +467,13 @@ const partController = {
                     return res.status(403).json({ error: "You are not authorized to edit this cluster." });
                 }
 
-                const { name, location } = req.body;
-                
-                const existingCluster = await Cluster.findOne({ name });
-                if (existingCluster) {
-                    return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                const { name, location, oldName } = req.body;
+                if (oldName !== name){
+                    const existingCluster = await Cluster.findOne({ name });
+                    if (existingCluster) {
+                        return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                    }
                 }
-
                 updateData = req.body;
     
                 // either should work... i think. as long as the group id is passed in the url
@@ -478,12 +481,12 @@ const partController = {
                 const updateCluster = await Cluster.findOneAndUpdate({name: cluster.name}, updateData,{ new: true });
 
                 if (updateCluster) {
-                    return res.json(updateCluster);
+                    res.redirect("/cluster");
                   } else {
-                    return res.status(404).json( { error: "Update error!"});
+                    return res.status(500).render("fail", { error: "Update error!" });
                 }
 
-                //res.redirect("/dashboard");
+                // res.redirect("/cluster");
             } else {
                 res.redirect("/");
             }

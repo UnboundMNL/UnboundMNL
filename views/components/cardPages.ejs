@@ -35,8 +35,14 @@
 
                 <div class="container-bottom mt-4">
                     <div class="d-flex align-items-end">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>">Edit</button>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>">Delete</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">Edit</button>
+                        <script>
+                            var editButton = document.getElementById("<%=pageParts[i]._id%>");
+                            editButton.onclick = function() {
+                                changeForm("<%=pageParts[i]._id%>","<%=type%>");
+                            };
+                        </script>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>" id ="<%=pageParts[i]._id%>">Delete</button>
                     </div>
 
                     <div>
@@ -47,11 +53,11 @@
             </div>
         </div>
         <script>
-            if (type == "cluster") {
+          <%  if (type == "cluster") { %>
                 cardLink("project", "<%=pageParts[i]._id%>");
-            } else if (type == "Sub-Projects") {
+           <% } else if (type == "Sub-Projects") { %>
                 cardLink("group", "<%=pageParts[i]._id%>");
-            }
+          <%  } %>
         </script>
     <% } %>
 </div>
