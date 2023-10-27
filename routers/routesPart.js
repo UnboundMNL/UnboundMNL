@@ -11,22 +11,28 @@ const User = require('../models/User');
 
 const partController = require('../controllers/partController.js');
 
-router.post("/group", partController.newGroup);
-router.post("/project", partController.newProject);
-router.post("/cluster", partController.newCluster);
+router.post("/newGroup", partController.newGroup);
+router.post("/newProject", partController.newProject);
+router.post("/newCluster", partController.newCluster);
+router.post('/newMember', partController.newMember);
 
-router.get('/groups/:id', partController.retrieveGroup);
-router.post('/groups/:id/edit', partController.editGroup);
-router.post('/groups/:id/delete', partController.deleteGroup);
+router.get('/group/:id', partController.retrieveGroup);
+router.post('/group/:id/edit', partController.editGroup);
+router.post('/group/:id/delete', partController.deleteGroup);
 
-router.get('/projects/:id', partController.retrieveProject);
-router.post('/projects/:id/edit', partController.editProject);
-router.post('/projects/:id/delete', partController.deleteProject);
+router.get('/group/:id/view/:page', partController.retrieveProject);
+router.post('/project/:id/edit', partController.editProject);
+router.post('/project/:id/delete', partController.deleteProject);
 
-router.get('/clusters/:id', partController.retrieveCluster);
-router.post('/clusters/:id/edit', partController.editCluster);
-router.post('/clusters/:id/delete', partController.deleteCluster);
+router.get('/project/:id/view/:page', partController.retrieveCluster);
+router.post('/cluster/:id/edit', partController.editCluster);
+router.post('/cluster/:id/delete', partController.deleteCluster);
 
+router.post('/member/:id/edit', partController.editMember);
+router.post('/member/:id/delete', partController.deleteMember);
+
+router.post('/SHGChoices',partController.SHGChoices);
+router.post('/projectChoices',partController.projectChoices);
 //alternative if we want to do it by name. will have to change some code in the controllers
 // router.post("/group", partController.newGroup);
 // router.post("/project", partController.newProject);

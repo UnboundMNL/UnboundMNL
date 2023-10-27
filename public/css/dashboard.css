@@ -1,0 +1,56 @@
+/* --------------- DASHBOARD PAGE --------------- */
+.dashboard-stats,
+.dashboard-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dashboard-actions .container {
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.dashboard-actions .container:hover {
+    cursor: pointer;
+    background-color: var(--tertiary-color);
+}
+
+.dashboard-actions .container i {
+    margin-right: 1rem;
+    padding: 0.5rem;
+    font-size: 2rem;
+    color: var(--secondary-color);
+    background-color: var(--tertiary-color);
+    border-radius: 50%;
+}
+
+.dashboard-actions .container span {
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.dashboard-stats .col .row {
+    gap: 0.5rem;
+}
+
+.dashboard-stats .container div {
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-stats .container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.dashboard-stats .container h5 {
+    color: var(--secondary-color);
+}
+
+#myChart {
+    min-width: 100%;
+    height: auto;
+}

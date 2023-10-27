@@ -1,0 +1,27 @@
+<% if (authority != "Treasurer") {%>
+    <div class = "mb-3">
+        <label for="projectSelect" class="form-label">Sub-Project</label>
+        <select 
+            class="form-select" 
+            id = "projectSelect" 
+            name = "projectSelect" 
+            aria-describedby="Select Sub-Project" 
+            autocomplete="off" 
+            required>
+            
+            <option selected disabled default hidden value="">Select Sub-Project</option>
+                <!-- INSERT OPTIONS FROM DB HERE -->
+            <option disabled value = "">
+                <% if(authority === "Admin") { %>No Cluster Selected
+                <%} else { %> Error <% } %>
+            </option>
+                <!-- NOTE: use similar JS as the one in addUser.js -->
+        </select>
+        <div class="invalid-feedback">
+            Please select a sub-project.
+        </div>
+    </div>
+<% } else {%>
+    <!-- INSERT Project INTO VALUE -->
+    <input type = "hidden" value = "" id = "clusterSelect" name = "clusterSelect">
+<% } %>

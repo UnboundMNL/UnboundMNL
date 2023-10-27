@@ -5,8 +5,8 @@ const ClusterSchema = new mongoose.Schema({
     location: {type: String, required: true},
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'project' }],
 
-    totalProjects: {type: Number, default: null},
-    totalGroups: {type: Number, default: null},
+    totalProjects: {type: Number, default: 0},
+    totalGroups: {type: Number, default: 0},
    
     totalMembers: {type: Number, default: 0},
     totalKaban: {type: Number, default: 0},

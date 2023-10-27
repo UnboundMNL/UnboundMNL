@@ -21,11 +21,14 @@ const routesLogin = require('./routers/routesLogin');
 const routesUser = require('./routers/routesUser');
 const routesSidebar = require('./routers/routesSidebar');
 const routesSavings = require('./routers/routesSavings');
+const routesForms = require('./routers/routesForms');
+const routesPart = require('./routers/routesPart');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
 const { rememberMeMiddleware } = require('./lib/middleware');
 const { sidebarMiddleware } = require('./lib/middleware');
+const { idMiddleware } = require('./lib/middleware');
 const { hashPassword } = require('./lib/hashing');
 
 //const Loan = require('../models/Loan')
@@ -98,33 +101,25 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/clusterLoad",  (req, res) => { 
-  res.redirect("/cluster");
-})
+// app.get("/group",  (req, res) => { 
+//   res.redirect("/group");
+// })
 
-app.get("/projectLoad",  (req, res) => { 
-  res.redirect("/project");
-})
+// app.get("/savings",  (req, res) => { 
+//   res.redirect("/savings");
+// })
 
-app.get("/groupLoad",  (req, res) => { 
-  res.redirect("/group");
-})
+// app.get("/member",  (req, res) => { 
+//   res.redirect("/member");
+// })
 
-app.get("/savingsLoad",  (req, res) => { 
-  res.redirect("/savings");
-})
+// app.get("/registration",  (req, res) => { 
+//   res.redirect("/registration");
+// })
 
-app.get("/memberLoad",  (req, res) => { 
-  res.redirect("/member");
-})
-
-app.get("/registrationLoad",  (req, res) => { 
-  res.redirect("/registration");
-})
-
-app.get("/profileLoad",  (req, res) => { 
-  res.redirect("/profile");
-})
+// app.get("/profile",  (req, res) => { 
+//   res.redirect("/profile");
+// })
 
 // app.get('*', function(req, res){
 //   res.redirect('/dashboard');
@@ -169,6 +164,7 @@ app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
+app.use(idMiddleware)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);
@@ -176,6 +172,5 @@ app.use(routesLogin);
 app.use(routesUser);
 app.use(routesSidebar);
 app.use(routesSavings);
-
-
-
+app.use(routesForms);
+app.use(routesPart);

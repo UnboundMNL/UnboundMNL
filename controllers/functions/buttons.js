@@ -1,25 +1,25 @@
-function dashboardButtons(authority){
+function dashboardButtons(authority,redirect){
     let buttons ;
     if (authority === "Admin"){
         buttons = [
             {
                 text: "Clusters",
-                href: "/clusterLoad",
+                href: redirect,
                 icon: "bxs-folder-open"
             },
             {
                 text: "Account Registration",
-                href: "/registrationLoad",
+                href: "/registration",
                 icon: "bxs-user-plus"
             },
             {
                 text: "Manage Organization",
-                href: "#",
+                href: "/member",
                 icon: "bx-building-house"
             },
             {
                 text: "Total Savings & Matching Grant",
-                href: "/savingsLoad",
+                href: "/savings",
                 icon: "bx-money"
             }
         ]
@@ -27,22 +27,22 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Projects",
-                href: "/projectLoad",
+                href: redirect,
                 icon: "bxs-folder-open"
             },
             {
                 text: "Manage Cluster",
-                href: "#",
+                href: "/member",
                 icon: "bx-grid-alt"
             },
             {
                 text: "Account Registration",
-                href: "/registrationLoad",
+                href: "/registration",
                 icon: "bxs-user-plus"
             },
             {
                 text: "Total Savings & Matching Grant",
-                href: "/savingsLoad",
+                href: "/savings",
                 icon: "bx-money"
             }
         ]
@@ -50,17 +50,12 @@ function dashboardButtons(authority){
         buttons = [
             {
                 text: "Members",
-                href: "/groupLoad",
+                href: redirect,
                 icon: "bx-group"
             },
             {
-                text: "Manage Group",
-                href: "#",
-                icon: "bx-building-house"
-            },
-            {
                 text: "Total Savings & Matching Grant",
-                href: "/savingsLoad",
+                href: "/savings",
                 icon: "bx-money"
             }
         ]

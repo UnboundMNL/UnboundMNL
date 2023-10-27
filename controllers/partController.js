@@ -6,6 +6,8 @@ const Cluster = require('../models/Cluster');
 const Project = require('../models/Project');
 const Group = require('../models/Group');
 const { project } = require('./userController');
+const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
+const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const partController = {
     //create a new group
@@ -167,6 +169,41 @@ const partController = {
         }
     },
 
+    // delete a group
+    deleteGroup: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const groupId = req.params.id;
+                const group = await Group.findById(groupId);
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!group.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
+                    return res.status(403).json({ error: "You are not authorized to delete this project." });
+                }
+                //delete savings
+                for (const member of group.member) {
+                    await Saving.deleteMany({ member: member });
+                }
+                //delete members
+                await Member.deleteMany({ _id: { $in: group.member } });
+                //delete groups                
+                const deletedGroup = await Group.findByIdAndDelete(groupId);
+    
+                // If the project was successfully deleted, delete associated groups, members, and savings
+                if (deletedGroup) {
+                    return res.json(deletedGroup);
+                } else {
+                    return res.status(404).json({ error: "Delete error! Project not found." });
+                }
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
+        }
+    },
+
     //create a new project
     newProject: async (req, res) => {
         try {
@@ -196,29 +233,50 @@ const partController = {
     retrieveProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const projectId = req.params.id; 
-                // idk if this works will fix in future
-    
-                const project = await Project.findById(projectId)
-                    // .populate('groups')
-                    //.populate('members').populate('savings');
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
-                if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this project." });
-                }
+                const sidebar = req.session.sidebar;
+                const page = req.params.page;
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+                // const project = await Project.findById(projectId)
+                //     // .populate('groups')
+                //     //.populate('members').populate('savings');
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
+                // if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
+                //     return res.status(403).json({ error: "You are not authorized to edit this project." });
+                // }
 
-                if (!project) {
-                    return res.status(404).render("fail", { error: "Project not found." });
+                // if (!project) {
+                //     return res.status(404).render("fail", { error: "Project not found." });
+                // }
+                const updatedParts = await Group.find({}); //to be change
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
+                var pageParts = [];
+                var perPage = 6; // change to how many clusters per page
+                var totalPages;
+                if (orgParts.length > perPage) {
+                    var startPage = perPage * (page-1);
+                    for (var i = 0; i < perPage && (startPage + i < orgParts.length); i++) {
+                        pageParts.push(orgParts[startPage + i]);
+                    }
+                    totalPages = Math.ceil(orgParts.length / perPage);
+                } else {
+                    pageParts = orgParts;
+                    totalPages = 1;
                 }
-
-                res.render("editProject", { project });
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                const redirect = req.session.redirect;
+                dashbuttons = dashboardButtons(authority, redirect);
+                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, redirect  });
             } else {
                 res.redirect("/");
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while retrieving project information." });
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
 
@@ -276,7 +334,7 @@ const partController = {
                 // Check if the logged-in user is authorized to delete the project
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!project.validSEDOs.includes(loggedInUserId) && user.authority !== "admin") {
+                if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
                     return res.status(403).json({ error: "You are not authorized to delete this project." });
                 }
 
@@ -344,26 +402,45 @@ const partController = {
 
 
     //retrieve cluster
-    retreiveCluster: async (req, res) => {
+    retrieveCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const clusterId = req.params.id; 
-                // idk if this works will fix in future
-    
-                const cluster = await Cluster.findById(clusterId)
-                    // .populate('projects')
-                    // .populate('groups').populate('members').populate('savings');
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
-                if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this cluster." });
-                }
+                const sidebar = req.session.sidebar;
+                const page = req.params.page;
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+                // const clusterId = req.params.id; 
+                // const cluster = await Cluster.findById({}); // to be fixed
+                // const loggedInUserId = req.session.userId;
+                // if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
+                //     return res.status(403).json({ error: "You are not authorized to edit this cluster." });
+                // }
+                // if (!cluster) {
+                //     return res.status(404).render("fail", { error: "Cluster not found." });
+                // }
 
-                if (!cluster) {
-                    return res.status(404).render("fail", { error: "Cluster not found." });
+                const updatedParts = await Project.find({}); //to be change
+                await updateOrgParts(updatedParts); 
+                const orgParts = getOrgParts();
+                var pageParts = [];
+                var perPage = 6; // change to how many clusters per page
+                var totalPages;
+                if (orgParts.length > perPage) {
+                    var startPage = perPage * (page-1);
+                    for (var i = 0; i < perPage && (startPage + i < orgParts.length); i++) {
+                        pageParts.push(orgParts[startPage + i]);
+                    }
+                    totalPages = Math.ceil(orgParts.length / perPage);
+                } else {
+                    pageParts = orgParts;
+                    totalPages = 1;
                 }
-
-                res.render("editCluster", { cluster });
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                const redirect = req.session.redirect;
+                dashbuttons = dashboardButtons(authority, redirect);
+                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, redirect  });
             } else {
                 res.redirect("/");
             }
@@ -464,8 +541,129 @@ const partController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while deleting the cluster." });
         }
-    }
+    },
+    newMember: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                // idk what this form will have
+                const { name, id, photo, nameFather, nameMother, age, sex, birthdate, address } = req.body;
+                
+                let savings = [];
+                const newMember = new Member({
+                    name,
+                    id,
+                    photo,
+                    nameFather,
+                    nameMother,
+                    age,
+                    sex,
+                    birthdate,
+                    address,
+                    savings
+                });
+                await newMember.save();
 
+                //redirecting to dashboard rn cuz idk where else to redirect to
+                res.redirect("/dashboard");
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while creating a new group." });
+        }
+    },
+
+    editMember: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const memberId = req.params.id;
+                const member = await Member.findById(memberId);
+                const group = await Group.find({ members: member._id });
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!group.validSEDOs.includes(loggedInUserId) && !group.validTreasurers.includes(loggedInUserId) && !(user.authority != "admin")) {
+                    return res.status(403).json({ error: "You are not authorized to edit this member." });
+                }
+
+                updateData = req.body;
+                
+                const updateMember = await Member.findOneAndUpdate({id: memberId}, updateData,{ new: true });
+
+                if (updateMember) {
+                    return res.json(updateMember);
+                  } else {
+                    return res.status(404).json( { error: "Update error!"});
+                }
+
+                //res.redirect("/dashboard");
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while editing the group." });
+        }
+    },
+
+    deleteMember: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const memberId = req.params.id;
+                const member = await Group.findById(memberId);
+                const group = await Group.find({ members: member._id });
+                const loggedInUserId = req.session.userId;
+                const user = await User.findById(loggedInUserId);
+                if (!group.validSEDOs.includes(loggedInUserId) && !group.validTreasurers.includes(loggedInUserId) && !(user.authority != "admin")) {
+                    return res.status(403).json({ error: "You are not authorized to edit this member." });
+                }
+                await Saving.deleteMany({ member: member });
+                await Member.deleteMany({ _id: { $in: group.members } });
+                const deletedMember = await Member.findByIdAndDelete(memberId);
+                if (deletedMember) {
+                    return res.json(deletedMember);
+                } else {
+                    return res.status(404).json({ error: "Delete error! Project not found." });
+                }
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
+        }
+    },
+
+    SHGChoices: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                let { project } = req.body;
+                console.log(project)
+                const SHG = await Group.find({});
+                res.json({ SHG });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    },
+
+    projectChoices: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                let { cluster } = req.body;
+                const project = await Project.find({});
+                res.json({ project });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    }
     
 
 }

@@ -1,0 +1,76 @@
+<nav>
+    <ul class="pagination justify-content-center mt-4">
+        <!-- Jump to first page button -->
+        <% 
+            var link;
+            link = 1;
+        %>
+        <li class="page-item">
+            <a class="page-link" id="first-page-btn" href="<%=link%>" aria-label="First Page">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+            </a>
+        </li>
+        <!-- Go to previous page -->
+        <li class="page-item">
+            <% link;
+            if (page==1){
+                link = 1;
+            } else{
+                link = page-1;
+            }%> 
+            <a class="page-link" href="<%=link%>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <!-- Maximum of 5 visible pages -->
+        <% if (totalPages <= 5) {
+            for (var i = 0; i < totalPages; i++) {
+                if (page == i+1) { %>
+                    <li class="page-item active"><a class="page-link" href="<%=i+1%>"> <%= i+1 %></a></li>
+                <% } else { %>
+                    <li class="page-item"><a class="page-link" href="<%=i+1%>"> <%= i+1 %></a></li>
+                <% }
+            }
+        } else if (totalPages < page+2){
+            var startingPage = page - (4 - (totalPages-page));
+            for (var i = 0; i < 5; i++) {
+                if (page == startingPage + i) { %>
+                    <li class="page-item active"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                <% } else { %>
+                    <li class="page-item"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                <% }
+            }
+        } else {
+            var startingPage = page - 2; %>
+            <% for (var i = 0; i < 5; i++) {
+                if (page == startingPage + i) { %>
+                    <li class="page-item active"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                <% } else { %>
+                    <li class="page-item"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                <% }
+            }
+        } %>
+        <!-- Go to next page -->
+        <% link;
+        if (page==totalPages){
+            link = page;
+        } else{
+            link = page+1
+        }%> 
+        <li class="page-item">
+            <a class="page-link" href="<%=link%>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <!-- Jump to last page button -->
+        <% 
+            var link;
+            link = totalPages;
+        %>
+        <li class="page-item">
+            <a class="page-link" id="last-page-btn" href="<%=link%>" aria-label="Last Page">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

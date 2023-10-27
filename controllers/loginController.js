@@ -20,7 +20,13 @@ const loginController = {
                 // doesnt work for me - isnt this comparing the content of password to the hashed password in the db?
                 // my local db doesnt have paswords hashed so I use this instead
 
-
+                if (user.authority=="Admin"){
+                    req.session.redirect = "/cluster/view/1"
+                } else if (user.authority=="SEDO"){
+                    req.session.redirect = "/project/65379313eb38d2f4380a1a7e/view/1" // to be changed
+                } else if (user.authority=="Treasurer"){
+                    req.session.redirect = "/group/6536397bedaaf442fd410f6d/view/1" // to be changed
+                }
                 if (!isPasswordMatch ) {
                     return res.status(401).json({ error: "Wrong Username or Password." });
                 }
