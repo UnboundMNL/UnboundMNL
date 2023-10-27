@@ -18,6 +18,7 @@
 
     <!-- FUNCTIONS -->
     <script src="/js/sidebar.js"></script>
+    <script src="/js/editButton.js"></script>
     <script src="/js/viewDetails.js"></script>
     <script src="/js/card.js"></script>
     <script>
@@ -50,7 +51,7 @@
             </div>
              
             <% var type = "SHG";  %>
-            <%- include('components/shgContent.ejs', { pageParts }) %>
+            <%- include('components/shgContent.ejs', { pageParts, type }) %>
         </div>
 
         <%- include('components/pagination.ejs', {page, totalPages})%>
