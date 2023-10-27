@@ -19,6 +19,7 @@
     <!-- FUNCTIONS -->
     <script src="/js/sidebar.js"></script>
     <script src="/js/card.js"></script>
+    <script src="/js/editButton.js"></script>
     <script>
         authCheck(" <%=authority%> ");
     </script>
@@ -52,7 +53,7 @@
                 <h4>Sub-Projects</h4>
             </div>
             <% var type = "Sub-Projects"; %>
-            <%- include('components/cardPages.ejs', { pageParts, type }) %>
+            <%- include('components/cardPages.ejs', { pageParts, type}) %>
         </div>
 
         <%- include('components/pagination.ejs', {page, totalPages})%>

@@ -1,8 +1,14 @@
 <div class = "mb-3">
     <label for="projectName" class="form-label">Sub-Project Name</label>
-    <input class="form-control" id = "projectName" name = "projectName" type="text" placeholder="Operation Stryx" aria-describedby="SubProjectName" required>
+    <input class="form-control" id = "projectName" name = "projectName" type="text" placeholder="Operation Stryx" aria-describedby="SubProjectName" required
+    <% if (locals.project) { %>
+        value = "<%=locals.project.name%>"
+    <% } %>
+    >
     <div class="invalid-feedback">
         Please enter a sub-project name.
     </div>  
 </div>
+<% if (locals.authority) { %>
 <%-include('clusterSelect', {authority})%>
+<% } %>
