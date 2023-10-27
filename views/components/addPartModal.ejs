@@ -18,18 +18,14 @@
                 <div class="modal-body">
 					<div id = "add<%=partname%>FormDiv">
 						<% const partialURL = "popupFields/" + partname + "FormFields.ejs"%>
-						<% if(partname !== "Cluster") { %>
-						 	<%-include(partialURL, {authority, clusters:pageParts})%> 
-						<%} else {%>
-							<%-include(partialURL, {authority})%>
-						<%}%>
+						<%-include(partialURL, {authority})%>
 					</div>
 				</div>
 				<% var id = "add"+ partname; %>
 				<div class="modal-footer">
 					<button type="reset" class="btn btn-danger" onclick="ResetAll(authority)">Reset</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary" id="Add">Save</button>
+					<button type="submit" class="btn btn-primary">Add <%=partname%></button>
 				</div>
 			</form>
 

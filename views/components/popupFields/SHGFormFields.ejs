@@ -1,51 +1,90 @@
-<%- include('clusterSelect.ejs'), {authority} %>
-<%- include('projectSelect.ejs'), {authority} %>
-
 <div class = "mb-3">
     <label for="SHGName" class="form-label">Self Help Group Name</label>
-    <input class="form-control" id = "SHGName" name = "SHGName" type="text" placeholder="High Cloud Quintet" aria-describedby="SHGName" required>
+    <input class="form-control" id = "SHGName" name = "SHGName" type="text" placeholder="High Cloud Quintet" aria-describedby="SHGName" 
+    <% if (locals.shg) { %>
+        value = "<%=locals.shg.name%>"
+    <% } %>
+    required>
 </div>
-<div class = "mb-3">
-    <label for="SHGLeaderName" class="form-label">SHG Leader Name</label>
-    <div class = "input-group">
-        <input class="form-control" id = "SHGLeaderName" name = "SHGLeaderName" type="text" placeholder="Jingliu" aria-describedby="SHGLeaderName" required>
-        <span class = "input-group-text">Phone Number</span>
-        <input class="form-control" id = "SHGLeaderPhone" name = "SHGLeaderPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="SHGLeaderPhoneNumber">
-        <div class="invalid-feedback">
-            SHG Leader name required.
+
+<%  let people = ['SHG Leader','SEDP Chairman', 'Kaban Treasurer', 'Kaban Auditor']
+    let ids = ['SHG Leader', 'SEDPChair', 'KabanTreasurer', 'KabanAuditor']
+    let otherPeopleLen = 0
+    if (locals.shg) {
+        otherPeopleLen = locals.shg.otherPeople.length
+    }
+    
+    for (let i = 0; i < people.length; i++) {
+        let otherPersonExists = false
+        if (otherPeopleLen > i) {
+            otherPersonExists = true
+        }
+%>
+    <div class = "mb-3">
+        <label for="<%=ids[i]%>Name" class="form-label"><%=people[i]%> Name</label>
+        <div class = "input-group">
+            <span class = "input-group-text">First Name</span>
+            <input class="form-control" id = "<%=ids[i]%>FirstName" name = "<%=ids[i]%>FirstName" type="text" placeholder="Jose" aria-describedby="<%=ids[i]%>FirstName" 
+            <% if (locals.shg && otherPersonExists) { %>
+                    value = "<%=locals.shg.otherPeople[i].firstName%>"
+            <% } %>
+            >
+            <span class = "input-group-text">Last Name</span>
+            <input class="form-control" id = "<%=ids[i]%>LastName" name = "<%=ids[i]%>LastName" type="text" placeholder="Rizal" aria-describedby="<%=ids[i]%>LastName" 
+            <% if (locals.shg && otherPersonExists) { %>
+                value = "<%=locals.shg.otherPeople[i].lastName%>"
+            <% } %>
+            >
+            <div class="invalid-feedback">
+                <%=people[i]%> name required.
+            </div>
+        </div>
+        <div class = "input-group">
+            <span class = "input-group-text">Phone Number</span>
+            <input class="form-control" id = "<%=ids[i]%>Phone" name = "<%=ids[i]%>Phone" type="tel" placeholder="09171234567" pattern="[0-9]{11}" 
+            aria-describedby="<%=ids[i]%>PhoneNumber"
+            <% if (locals.shg && otherPersonExists) { %>
+                value = "<%=locals.shg.otherPeople[i].phoneNumber%>"
+            <% } %>
+            >
         </div>
     </div>
-</div>
+<% } %>
+
 <div class = "mb-3">
-    <label for="SEDPChairName" class="form-label">SEDP Chairman Name</label>
-    <div class = "input-group">
-        <input class="form-control" id = "SEDPChairName" name = "SEDPChairName" type="text" placeholder="Jing Yuan" aria-describedby="SEDPChairName" required>
-        <span class = "input-group-text">Phone Number</span>
-        <input class="form-control" id = "SEDPChairPhone" name = "SEDPChairPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="SEDPChairPhoneNumber">
-        <div class="invalid-feedback">
-            SEDP Chairman name required.
-        </div>
-    </div>
+    <label for="depositoryBank" class="form-label"> Depository Bank </label>
+    <input class="form-control" id = "depositoryBank" name = "depositoryBank" type="text" placeholder="BDO" aria-describedby="depositoryBank"
+    <% if (locals.shg) { %>
+        value = "<%=locals.shg.depositoryBank%>"
+    <% } %>
+    >
 </div>
-<div class = "mb-3">
-    <label for="KabanTreasurer" class="form-label">Kaban Treasurer Name</label>
-    <div class = "input-group">
-        <input class="form-control" id = "KabanTreasurer" name = "KabanTreasurer" type="text" placeholder="Baiheng" aria-describedby="KabanTreasurer" required>
-        <span class = "input-group-text">Phone Number</span>
-        <input class="form-control" id = "KabanTreasurerPhone" name = "KabanTreasurerPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="KabanTreasurerPhoneNumber">
-        <div class="invalid-feedback">
-            Kaban Treasurer name required.
-        </div>  
-    </div>
+
+<div class="mb-3">
+    <label for="bankAccountType" class="form-label"> Bank Account Type </label>
+    <select class="form-select" id="bankAccountType" name="bankAccountType" aria-label="bankAccountType">
+        <% if (!locals.shg) { %>
+            <option selected default value="">No bank account type selected</option>
+        <% } %>
+        <option value="Savings"
+        <% if (locals.shg) { %>
+            <% if (locals.shg.bankAccountType == "Savings") { %>
+                selected
+                default
+            <% } %>
+        <% } %>
+        >Savings</option>
+        <option value="Checking" 
+        <% if (locals.shg) { %>
+            <% if (locals.shg.bankAccountType == "Checking") { %>
+                selected
+                default
+            <% } %>
+        <% } %>>Checking</option>
+    </select>    
 </div>
+
 <div class = "mb-3">
-    <label for="KabanAuditor" class="form-label">Kaban Auditor Name</label>
-    <div class = "input-group">
-        <input class="form-control" id = "KabanAuditor" name = "KabanAuditor" type="text" placeholder="Yingxing" aria-describedby="KabanAuditor" required>
-        <span class = "input-group-text">Phone Number</span>
-        <input class="form-control" id = "KabanAuditorPhone" name = "KabanAuditorPhone" type="tel" pattern = "[0-9]{11}" aria-describedby="KabanAuditorPhoneNumber">
-        <div class="invalid-feedback">
-            Kaban Auditor name required.
-        </div>
-    </div> 
+    <label for="bankAccountNum" class="form-label"> Bank Account Number </label>
+    <input class="form-control" id = "bankAccountNum" name = "bankAccountNum" type="number" aria-describedby="bankAccountNum">
 </div>

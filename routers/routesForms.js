@@ -27,13 +27,9 @@ router.get("/addUser", async (req, res) => {
         res.redirect("/");
 });
 
-//This one changes the form depending on the user type selected
-router.post("/addUser", async (req, res) => {
-    res.render("components/addUser", { userType: req.body.userType });
-});
-
 
 //ACTUAL ROUTES TO BE USED
-router.get('/editClusterForm/:clusterName', formsController.loadEditClusterForm);
-router.get('/editSubProjectsForm/:projectName', formsController.loadEditSubProjectsForm);
+router.get('/editClusterForm/:clusterId', formsController.loadEditClusterForm);
+router.get('/editSubProjectsForm/:projectId', formsController.loadEditSubProjectsForm);
+router.get('/editSHGForm/:shgId', formsController.loadEditSHGForm);
 module.exports = router;
