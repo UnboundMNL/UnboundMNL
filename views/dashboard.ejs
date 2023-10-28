@@ -28,14 +28,14 @@
 
 <body class="body-bg">
     
-    <%- include('components/navbar.ejs', {authority: authority, redirect})%>
+    <%- include('components/navbar.ejs', {authority: authority})%>
     
     <main>
         <!-- Top navigation bar -->
         <%- include('components/topNavbar.ejs')%>
 
         <!-- Dashboard content -->        
-        <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons})%>
+        <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons, nCluster, nProject, nGroup, nMember})%>
         <script>open('dashboardButton')</script>
         <%-include('components/logoutPopup.ejs') %>
     </main>

@@ -47,9 +47,16 @@ const userController = {
 
                 // needs additional conditions
                 // needs update to new schemas 
+                var nCluster=0;
+                var nProject=0;
+                var nGroup=0;
+                var nMember=0;
                 switch (authority) {
                     case "Admin":
-                        orgParts = await Cluster.find();
+                         nCluster = await Cluster.countDocuments();
+                         nProject = await Project.countDocuments();
+                         nGroup = await Group.countDocuments();
+                         nMember = await Member.countDocuments();
                         break;
                     case "SEDO":
                         orgParts = await Cluster.find({ validSEDOs: userID });
@@ -68,12 +75,10 @@ const userController = {
                 //     orgPartsMembers.push(partWithMembersAndSavings);
                 // }
                 //might be matakaw sa memory.
-                // const redirect = req.session.redirect;
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
+                dashbuttons = dashboardButtons(authority);
 
                 // res.render("dashboard", { authority, orgParts, partWithMembersAndSavings, username  });
-                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, redirect });
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember });
             } else {
                 res.redirect("/");
             }
@@ -107,9 +112,8 @@ const userController = {
                 await updateOrgParts(updatedParts); 
                 const orgParts = getOrgParts();
 
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
-                res.render("group", { authority, orgParts, username, dashbuttons, sidebar, redirect });
+                dashbuttons = dashboardButtons(authority);
+                res.render("group", { authority, orgParts, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
@@ -138,7 +142,8 @@ const userController = {
 
                 const updatedParts = await Cluster.find({});
                 await updateOrgParts(updatedParts); 
-                const orgParts = getOrgParts();
+                // const orgParts = getOrgParts();
+                const orgParts = updatedParts
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
                 var totalPages;
@@ -153,9 +158,8 @@ const userController = {
                     totalPages = 1;
                 }
                 var totalPages = Math.ceil(orgParts.length/perPage);
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
-                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, redirect });
+                dashbuttons = dashboardButtons(authority);
+                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
             } else {
                 res.redirect("/");
             }
@@ -203,9 +207,8 @@ const userController = {
                 await updateOrgParts(updatedParts); 
                 const orgParts = getOrgParts();
                 
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
-                res.render("member", { authority, username, dashbuttons, sidebar, orgParts, redirect });
+                dashbuttons = dashboardButtons(authority);
+                res.render("member", { authority, username, dashbuttons, sidebar, orgParts });
             } else {
                 res.redirect("/");
             }
@@ -223,15 +226,30 @@ const userController = {
                 const authority = user.authority;
                 const username = user.username;
 
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
-                res.render("profile", { authority, username, dashbuttons, sidebar,redirect });
+                dashbuttons = dashboardButtons(authority);
+                res.render("profile", { authority, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
         } catch (error) {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+    clusterMiddle: async(req,res) => {
+        try{
+            req.session.clusterId = req.body.id;
+            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+        }catch(error){
+            console.error(error);
+        }
+    },
+    projectMiddle: async(req,res) => {
+        try{
+            req.session.projectId = req.body.id;
+            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+        }catch(error){
+            console.error(error);
         }
     }
 }

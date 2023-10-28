@@ -28,7 +28,7 @@ const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
 const { rememberMeMiddleware } = require('./lib/middleware');
 const { sidebarMiddleware } = require('./lib/middleware');
-const { idMiddleware } = require('./lib/middleware');
+
 const { clusteridMiddleware } = require('./lib/middleware');
 const { projectidMiddleware } = require('./lib/middleware');
 const { groupidMiddleware } = require('./lib/middleware');
@@ -112,9 +112,59 @@ app.get("/cluster",  (req, res) => {
   res.redirect("/cluster/view/1");
 })
 
-// app.get("/group",  (req, res) => { 
-//   res.redirect("/group");
-// })
+app.get("/project",  (req, res) => { 
+  res.redirect("/project/view/1");
+})
+
+app.get("/group",  (req, res) => { 
+  res.redirect("/group/view/1");
+})
+
+// app.get("/manual", async (req, res) => {
+//   const newGroup = new Group({
+//     SPU: 'SPU',
+//     name: 'Group Name',
+//     area: 'Group Area',
+//     depositoryBank: 'Depository Bank Name',
+//     bankAccountType: 'Savings', // or 'Checking'
+//     bankAccountNum: 1234567890, // Replace with the actual account number
+//     SHGLeader: {
+//       firstName: 'SHG Leader First Name',
+//       lastName: 'SHG Leader Last Name',
+//       contatNo: 'SHG Leader Contact Number'
+//     },
+//     SEDPChairman: {
+//       firstName: 'SEDP Chairman First Name',
+//       lastName: 'SEDP Chairman Last Name',
+//       contatNo: 'SEDP Chairman Contact Number'
+//     },
+//     kabanTreasurer: {
+//       firstName: 'Kaban Treasurer First Name',
+//       lastName: 'Kaban Treasurer Last Name',
+//       contatNo: 'Kaban Treasurer Contact Number'
+//     },
+//     kabanAuditor: {
+//       firstName: 'Kaban Auditor First Name',
+//       lastName: 'Kaban Auditor Last Name',
+//       contatNo: 'Kaban Auditor Contact Number'
+//     },
+//     member: [], // You can add member IDs here
+//     totalMembers: 0, // Initial value
+//     totalKaban: 0 // Initial value
+//   });
+
+//   try {
+//     // Save the new document to the database
+//     const savedGroup = await newGroup.save();
+//     res.status(201).json({ message: 'Group created successfully', group: savedGroup });
+//   } catch (error) {
+//     console.error('Error creating Group:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+
 
 // app.get("/savings",  (req, res) => { 
 //   res.redirect("/savings");
@@ -175,7 +225,7 @@ app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
-app.use(idMiddleware);
+
 app.use(clusteridMiddleware);
 app.use(projectidMiddleware);
 app.use(groupidMiddleware);

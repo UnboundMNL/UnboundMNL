@@ -17,14 +17,15 @@ const partController = {
                 // im imagining what the form will have
                 // i think we can get SPU from projects? or maybe we can just have a dropdown of SPUs? or manually input?
 
-                const projectId = req.params.projectId; // [TO UPDATE MAYBE]
+                const projectId = req.session.projectId; // [TO UPDATE MAYBE]
+                console.log(projectId);
                 let project = await Project.findById(projectId);
 
                 const { SPU, name, area, depositoryBank, bankAccountType, bankAccountNum, 
                     signatory_firstName, signatory_middleName, signatory_lastName, 
                     other_firstName, other_middleName, other_lastName, other_contactNo } = req.body;
 
-                req.body.SPU = project.name; //maybe change this to project name?
+                // req.body.SPU = project.name; //maybe change this to project name?
 
                 const existingGroup = await Group.findOne({ SPU, name, area });
                 if (existingGroup) {
@@ -88,9 +89,7 @@ const partController = {
                     // this is for like preloading current info into the edit form, then the function below is for actually editing the group (editGroup)
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!group.validSEDOs.includes(loggedInUserId) && !group.validTreasurers.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this group." });
-                }
+
 
                 if (!group) {
                     return res.status(404).render("fail", { error: "Group not found." });
@@ -115,9 +114,6 @@ const partController = {
                 const group = await Group.findById(groupId);
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!group.validSEDOs.includes(loggedInUserId) && !group.validTreasurers.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this group." });
-                }
 
 
                 const { SPU, name, area, depositoryBank, bankAccountType, bankAccountNum, 
@@ -186,9 +182,7 @@ const partController = {
                 const group = await Group.findById(groupId);
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!group.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to delete this project." });
-                }
+
                 //delete savings
                 for (const member of group.member) {
                     await Saving.deleteMany({ member: member });
@@ -217,14 +211,11 @@ const partController = {
     newProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const clusterId = req.session.clusterId; // [TO UPDATE MAYBE]
     
                 // idk what the form will have
                 const { name } = req.body;
             
-                if (!cluster) {
-                    return res.status(400).render("fail", { error: "Invalid cluster selected." });
-                }
+ 
     
                 let groups = [];
                 const newProject = new Project({
@@ -234,12 +225,13 @@ const partController = {
                 });
                 await newProject.save();
 
-                const cluster = await Cluster.findById(clusterId);
+                const cluster = await Cluster.findById(req.session.clusterId);
                 cluster.projects.push(newProject._id);
+                cluster.totalProjects+=1;
                 await cluster.save();
     
                 //redirecting to dashboard rn cuz idk where else to redirect to
-                res.redirect("/dashboard");
+                res.redirect("/project");
             } else {
                 res.redirect("/");
             }
@@ -265,16 +257,16 @@ const partController = {
                 //     //.populate('members').populate('savings');
                 // const loggedInUserId = req.session.userId;
                 // const user = await User.findById(loggedInUserId);
-                // if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
-                //     return res.status(403).json({ error: "You are not authorized to edit this project." });
-                // }
+
 
                 // if (!project) {
                 //     return res.status(404).render("fail", { error: "Project not found." });
                 // }
-                const updatedParts = await Group.find({}); //to be change
+                const project = await Project.findOne({ _id: req.session.projectId });
+                const updatedParts = await Group.find({_id: { $in: project.groups } }); //to be change
                 await updateOrgParts(updatedParts); 
-                const orgParts = getOrgParts();
+                // const orgParts = getOrgParts();
+                const orgParts = updatedParts;
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
                 var totalPages;
@@ -289,9 +281,8 @@ const partController = {
                     totalPages = 1;
                 }
                 var totalPages = Math.ceil(orgParts.length/perPage);
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
-                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, redirect  });
+                dashbuttons = dashboardButtons(authority);
+                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages  });
             } else {
                 res.redirect("/");
             }
@@ -311,9 +302,6 @@ const partController = {
 
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this project." });
-                }
 
                 const { name, location } = req.body;
                 
@@ -374,9 +362,6 @@ const partController = {
                 // Check if the logged-in user is authorized to delete the project
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!project.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to delete this project." });
-                }
 
 
                 //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT  
@@ -463,10 +448,11 @@ const partController = {
                 // if (!cluster) {
                 //     return res.status(404).render("fail", { error: "Cluster not found." });
                 // }
-
-                const updatedParts = await Project.find({}); //to be change
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                const updatedParts = await Project.find({ _id: { $in: cluster.projects } });
                 await updateOrgParts(updatedParts); 
-                const orgParts = getOrgParts();
+                // const orgParts = getOrgParts();
+                const orgParts = updatedParts;
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
                 var totalPages;
@@ -481,9 +467,8 @@ const partController = {
                     totalPages = 1;
                 }
                 var totalPages = Math.ceil(orgParts.length/perPage);
-                const redirect = req.session.redirect;
-                dashbuttons = dashboardButtons(authority, redirect);
-                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, redirect  });
+                dashbuttons = dashboardButtons(authority);
+                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages  });
             } else {
                 res.redirect("/");
             }
@@ -503,9 +488,7 @@ const partController = {
 
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this cluster." });
-                }
+
 
                 const { name, location, oldName } = req.body;
                 if (oldName !== name){
@@ -544,23 +527,28 @@ const partController = {
     
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority !== "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to delete this cluster." });
-                }
                 
                 //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT
                 // 1. Delete savings for members in groups
                 for (const project of cluster.projects) {
-                    for (const group of project.groups) {
-                        for (const member of group.members) {
-                            await Saving.deleteMany({ member: member });
+                    if (Array.isArray(project.groups)) {
+                        for (const group of project.groups) {
+                            if (Array.isArray(group.members)) {
+                                for (const member of group.members) {
+                                    await Saving.deleteMany({ member: member });
+                                }
+                            }
                         }
                     }
-                }
+                }                
                 // 2. Delete members in groups
                 for (const project of cluster.projects) {
-                    for (const group of project.groups) {
-                        await Member.deleteMany({ _id: { $in: group.members } });
+                    if (Array.isArray(project.groups)) {
+                        for (const group of project.groups) {
+                            if (Array.isArray(group.members)) {
+                                await Member.deleteMany({ _id: { $in: group.members } });
+                            }
+                        }
                     }
                 }
                 // 3. Delete groups in projects
@@ -625,9 +613,7 @@ const partController = {
                 const group = await Group.find({ members: member._id });
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!group.validSEDOs.includes(loggedInUserId) && !group.validTreasurers.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this member." });
-                }
+
 
                 updateData = req.body;
                 
@@ -657,9 +643,7 @@ const partController = {
                 const group = await Group.find({ members: member._id });
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
-                if (!group.validSEDOs.includes(loggedInUserId) && !group.validTreasurers.includes(loggedInUserId) && !(user.authority != "admin")) {
-                    return res.status(403).json({ error: "You are not authorized to edit this member." });
-                }
+
                 await Saving.deleteMany({ member: member });
                 await Member.deleteMany({ _id: { $in: group.members } });
                 const deletedMember = await Member.findByIdAndDelete(memberId);

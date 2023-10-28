@@ -17,5 +17,6 @@ router.get("/group", userController.group);
 router.get("/cluster/view/:page", userController.cluster);
 router.get("/member", userController.member);
 router.get("/profile", userController.profile);
-
+router.post("/clusterMiddle",userController.clusterMiddle);
+router.post("/projectMiddle",userController.projectMiddle);
 module.exports = router;  

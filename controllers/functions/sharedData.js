@@ -2,13 +2,13 @@ let sharedData = {
   orgParts: null
 };
 
-const Member = require('../models/Member');
-const Saving = require('../models/Saving');
-const User = require('../models/User');
+const Member = require('../../models/Member');
+const Saving = require('../../models/Saving');
+const User = require('../../models/User');
 
-const Cluster = require('../models/Cluster');
-const Project = require('../models/Project');
-const Group = require('../models/Group');
+const Cluster = require('../../models/Cluster');
+const Project = require('../../models/Project');
+const Group = require('../../models/Group');
 
 const updateOrgParts = async (authority, userId) => {
   try {

@@ -20,7 +20,6 @@ const { savingidMiddleware } = require('../lib/middleware');
 
 const partController = require('../controllers/partController.js');
 
-router.use(idMiddleware);
 router.use(clusteridMiddleware);
 router.use(projectidMiddleware);
 router.use(groupidMiddleware);
@@ -38,11 +37,11 @@ router.get('/group/:id', partController.retrieveGroup);
 router.post('/group/:id/edit', partController.editGroup);
 router.post('/group/:id/delete', partController.deleteGroup);
 
-router.get('/group/:id/view/:page', partController.retrieveProject);
+router.get('/group/view/:page', partController.retrieveProject);
 router.post('/project/:id/edit', partController.editProject);
 router.post('/project/:id/delete', partController.deleteProject);
 
-router.get('/project/:id/view/:page', partController.retrieveCluster);
+router.get('/project/view/:page', partController.retrieveCluster);
 router.post('/cluster/:id/edit', partController.editCluster);
 router.post('/cluster/:id/delete', partController.deleteCluster);
 

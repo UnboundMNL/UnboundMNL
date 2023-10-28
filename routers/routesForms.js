@@ -30,7 +30,7 @@ router.get("/addUser", async (req, res) => {
 
 //ACTUAL ROUTES TO BE USED
 router.get('/editClusterForm/:clusterId', formsController.loadEditClusterForm);
-router.get('/editSubProjectsForm/:projectName', formsController.loadEditSubProjectsForm);
+// router.get('/editSubProjectsForm/:projectName', formsController.loadEditSubProjectsForm);
 router.get('/editSubProjectsForm/:projectId', formsController.loadEditSubProjectsForm);
 router.get('/editSHGForm/:shgId', formsController.loadEditSHGForm);
 module.exports = router;
