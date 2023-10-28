@@ -16,9 +16,15 @@ const partController = {
             if (req.session.isLoggedIn) {
                 // im imagining what the form will have
                 // i think we can get SPU from projects? or maybe we can just have a dropdown of SPUs? or manually input?
+
+                const projectId = req.params.projectId; // [TO UPDATE MAYBE]
+                let project = await Project.findById(projectId);
+
                 const { SPU, name, area, depositoryBank, bankAccountType, bankAccountNum, 
                     signatory_firstName, signatory_middleName, signatory_lastName, 
                     other_firstName, other_middleName, other_lastName, other_contactNo } = req.body;
+
+                req.body.SPU = project.name; //maybe change this to project name?
 
                 const existingGroup = await Group.findOne({ SPU, name, area });
                 if (existingGroup) {
@@ -55,6 +61,9 @@ const partController = {
                     otherPeople
                 });
                 await newGroup.save();
+
+                project.groups.push(newGroup._id);
+                await project.save();
 
                 //redirecting to dashboard rn cuz idk where else to redirect to
                 res.redirect("/dashboard");
@@ -208,16 +217,27 @@ const partController = {
     newProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                const clusterId = req.session.clusterId; // [TO UPDATE MAYBE]
+    
                 // idk what the form will have
                 const { name } = req.body;
             
+                if (!cluster) {
+                    return res.status(400).render("fail", { error: "Invalid cluster selected." });
+                }
+    
                 let groups = [];
                 const newProject = new Project({
                     name,
                     groups,
+                    //anything else to add?
                 });
                 await newProject.save();
 
+                const cluster = await Cluster.findById(clusterId);
+                cluster.projects.push(newProject._id);
+                await cluster.save();
+    
                 //redirecting to dashboard rn cuz idk where else to redirect to
                 res.redirect("/dashboard");
             } else {
@@ -225,9 +245,10 @@ const partController = {
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while creating a new group." });
+            return res.status(500).render("fail", { error: "An error occurred while creating a new project." });
         }
     },
+    
     
     //retrieve project
     retrieveProject: async (req, res) => {
@@ -302,6 +323,25 @@ const partController = {
                 }
 
                 updateData = req.body;
+                /*
+                //IF MOVING THE PROJECT FROM ONE CLUSTER TO ANOTHER
+
+                //Assuming u can move the project from... anywhere ig (ie destination cluster)
+                //const oldCluster = await Cluster.findOne({ projects: project._id });
+                //const newCluster = await Cluster.findById(req.session.clusterId); //cuz the currently open cluster Id would be stored in middleware na
+
+                //Assuming that the project is moved from one (the currently open) cluster to another (not open), the following code should work.
+                //To add: only admin can do this?
+                const oldClusterId = req.session.clusterId;
+                const oldCluster = await Cluster.findById(oldClusterId);
+                oldCluster.projects = oldCluster.projects.filter(id => id.toString() !== projectId);
+                await oldCluster.save();
+
+
+                clusterId = req.params.clusterId; 
+                const newCluster = await Cluster.findById(clusterId);
+                newCluster.projects.push(project._id);
+                */ 
     
                 // either should work... i think. as long as the group id is passed in the url
                 //const updateProject = await Project.findOneAndUpdate({ _id: projectId }, updateData, { new: true });
@@ -454,7 +494,7 @@ const partController = {
     },
 
 
-    // edit project
+    // edit cluster
     editCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {

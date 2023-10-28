@@ -29,7 +29,14 @@ const { userIDMiddleware } = require('./lib/middleware');
 const { rememberMeMiddleware } = require('./lib/middleware');
 const { sidebarMiddleware } = require('./lib/middleware');
 const { idMiddleware } = require('./lib/middleware');
+const { clusteridMiddleware } = require('./lib/middleware');
+const { projectidMiddleware } = require('./lib/middleware');
+const { groupidMiddleware } = require('./lib/middleware');
+const { memberidMiddleware } = require('./lib/middleware');
+const { savingidMiddleware } = require('./lib/middleware');
+
 const { hashPassword } = require('./lib/hashing');
+
 
 //const Loan = require('../models/Loan')
 const Member = require('./models/Member');
@@ -168,7 +175,13 @@ app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
-app.use(idMiddleware)
+app.use(idMiddleware);
+app.use(clusteridMiddleware);
+app.use(projectidMiddleware);
+app.use(groupidMiddleware);
+app.use(memberidMiddleware);
+app.use(savingidMiddleware);
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);

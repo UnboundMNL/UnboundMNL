@@ -8,8 +8,26 @@ const Member = require('../models/Member');
 const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
+const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
+
+const { clusteridMiddleware } = require('../lib/middleware');
+const { projectidMiddleware } = require('../lib/middleware');
+const { groupidMiddleware } = require('../lib/middleware');
+const { memberidMiddleware } = require('../lib/middleware');
+const { savingidMiddleware } = require('../lib/middleware');
 
 const partController = require('../controllers/partController.js');
+
+router.use(idMiddleware);
+router.use(clusteridMiddleware);
+router.use(projectidMiddleware);
+router.use(groupidMiddleware);
+router.use(memberidMiddleware);
+router.use(savingidMiddleware);
+
+//TO ADD: Midleware for cluster/project/group IDs
 
 router.post("/newGroup", partController.newGroup);
 router.post("/newProject", partController.newProject);
