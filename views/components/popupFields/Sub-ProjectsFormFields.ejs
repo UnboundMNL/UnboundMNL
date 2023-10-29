@@ -11,9 +11,9 @@
 </div>
 <div class = "mb-3">
     <label for="projectName" class="form-label">Area</label>
-    <input class="form-control" id = "projectName" name = "location" type="text" placeholder="Los Angeles" aria-describedby="SubProjectName" required
+    <input class="form-control" id = "projectName" name = "location" type="text" placeholder="Los Angeles" aria-describedby="SubProjectArea" required
     <% if (locals.project) { %>
-        value = "<%=locals.project.SPU%>"
+        value = "<%=locals.project.location%>"
     <% } %>
     >
     <div class="invalid-feedback">
@@ -22,9 +22,9 @@
 </div>
 <div class = "mb-3">
     <label for="projectName" class="form-label">SPU</label>
-    <input class="form-control" id = "projectName" name = "SPU" type="text" placeholder="AP" aria-describedby="SubProjectName" required
+    <input class="form-control" id = "projectName" name = "SPU" type="text" placeholder="AP" aria-describedby="SubProjectAP" required
     <% if (locals.project) { %>
-        value = "<%=locals.project.area%>"
+        value = "<%=locals.project.SPU%>"
     <% } %>
     >
     <div class="invalid-feedback">

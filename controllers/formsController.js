@@ -16,7 +16,7 @@ const formsController = {
     loadEditSubProjectsForm: async (req, res) => {
         const projectId = req.params.projectId;
         const project = await Project.findOne({_id: projectId});
-        res.render('components/popupFields/Sub-ProjectsFormFields', {project});
+        res.render('components/popupFields/Sub-ProjectsFormField    s', {project});
     },
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;

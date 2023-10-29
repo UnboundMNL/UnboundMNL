@@ -21,13 +21,13 @@
             <span class = "input-group-text">First Name</span>
             <input class="form-control" id = "<%=ids[i]%>FirstName" name = "<%=ids[i]%>FirstName" type="text" placeholder="Jose" aria-describedby="<%=ids[i]%>FirstName" 
             <% if (locals.shg && locals.shg[ids[i]]) { %>
-                value = "<%= locals.shg[ids[1]].firstName %>"
+                value = "<%= locals.shg[ids[i]].firstName %>"
             <% } %>
             >
             <span class = "input-group-text">Last Name</span>
             <input class="form-control" id = "<%=ids[i]%>LastName" name = "<%=ids[i]%>LastName" type="text" placeholder="Rizal" aria-describedby="<%=ids[i]%>LastName" 
             <% if (locals.shg && locals.shg[ids[i]] ) { %>
-                value = "<%= locals.shg[ids[1]].lastName %>"
+                value = "<%= locals.shg[ids[i]].lastName %>"
             <% } %>
             >
             <div class="invalid-feedback">
@@ -81,8 +81,13 @@
 
 <div class = "mb-3">
     <label for="bankAccountNum" class="form-label"> Bank Account Number </label>
-    <input class="form-control" id = "bankAccountNum" name = "bankAccountNum" type="number" aria-describedby="bankAccountNum">
+    <input class="form-control" id = "bankAccountNum" name = "bankAccountNum" type="number" aria-describedby="bankAccountNum"
+    <% if (locals.shg) { %>
+        value = "<%=locals.shg.bankAccountNum%>"
+    <% } %>
+    >
 </div>
+
 
 <input type="hidden" name="location" value="<%=location%>">
 <input type="hidden" name="SPU" value="<%=SPU%>">

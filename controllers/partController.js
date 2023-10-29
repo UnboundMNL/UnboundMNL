@@ -66,8 +66,11 @@ const partController = {
                     kabanTreasurer,
                     kabanAuditor
                 });
+                const cluster = await Cluster.findOne({_id: req.session.clusterId});
+                cluster.totalGroups+=1;
+                await cluster.save();
+                project.totalGroups+=1;
                 await newGroup.save();
-
                 project.groups.push(newGroup._id);
                 await project.save();
 
@@ -126,9 +129,11 @@ const partController = {
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone, 
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone  } = req.body;
                 
-                const existingGroup = await Group.findOne({ SPU, name, location });
-                if (existingGroup) {
-                    return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
+                if(group.name != name){
+                    const existingGroup = await Group.findOne({ SPU, name, location });
+                    if (existingGroup) {
+                        return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
+                    }
                 }
               
                 let SHGLeader = {
@@ -193,18 +198,31 @@ const partController = {
             if (req.session.isLoggedIn) {
                 const groupId = req.params.id;
                 const group = await Group.findById(groupId);
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
 
-                //delete savings
-                for (const member of group.member) {
-                    await Saving.deleteMany({ member: member });
+                const cluster = await Cluster.findById(req.session.ClusterId);
+                const project = await Project.findById(req.session.ProjectId);
+                var kaban;
+                if (Array.isArray(group.members)){
+                    for (const member of group.members) {
+                        kaban = await Saving.findMany({member: member});
+                        for (const item of kaban){
+                            cluster.totalKaban-=item.totalSavings;
+                            project.totalKaban-=item.totalSavings;
+                        }
+                        await Saving.deleteMany({ member: member });
+                        await Member.deleteOne({_id:  member });
+                        cluster.totalMembers-=1;
+                        project.totalMembers-=1;
+                    }
                 }
-                //delete members
-                await Member.deleteMany({ _id: { $in: group.member } });
-                //delete groups                
+                
                 const deletedGroup = await Group.findByIdAndDelete(groupId);
-    
+                cluster.totalGroups -=1;
+                project.totalGroups -=1;
+                await cluster.save();
+                await project.save();
                 // If the project was successfully deleted, delete associated groups, members, and savings
                 if (deletedGroup) {
                     return res.json(deletedGroup);
@@ -226,7 +244,7 @@ const partController = {
             if (req.session.isLoggedIn) {
     
                 // idk what the form will have
-                const { name, SPU, location} = req.body;
+                const { name, location, SPU} = req.body;
             
  
     
@@ -277,11 +295,15 @@ const partController = {
                 // if (!project) {
                 //     return res.status(404).render("fail", { error: "Project not found." });
                 // }
+                
                 const project = await Project.findOne({ _id: req.session.projectId });
-                const updatedParts = await Group.find({_id: { $in: project.groups } }); //to be change
-                await updateOrgParts(updatedParts); 
+                console.log("ID in retreive project is: ", req.session.projectId)
+                let updatedParts = [] 
+                updatedParts = await Group.find({_id: { $in: project.groups } }); //to be change
+                //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
                 const orgParts = updatedParts;
+                //console.log(orgParts);
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
                 var totalPages;
@@ -318,13 +340,14 @@ const partController = {
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
 
-                const { name, location } = req.body;
-                
-                const existingProject = await Project.findOne({ name });
-                if (existingProject) {
-                    return res.status(400).json({ error: "A project with the same name already exists." });
-                }
+                const { name, location, SPU } = req.body;
 
+                if(project.name != name){
+                    const existingProject = await Project.findOne({ name });
+                    if (existingProject) {
+                        return res.status(400).json({ error: "A project with the same name already exists." });
+                    }
+                }
                 updateData = req.body;
                 /*
                 //IF MOVING THE PROJECT FROM ONE CLUSTER TO ANOTHER
@@ -375,29 +398,38 @@ const partController = {
                 const project = await Project.findById(projectId);
     
                 // Check if the logged-in user is authorized to delete the project
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
-
-
-                //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT  
-                //delete savings
-                    for (const group of project.groups) {
-                        for (const member of group.members) {
-                            await Saving.deleteMany({ member: member });
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
+                const cluster = await Cluster.findById(req.session.ClusterId);
+                var kaban;
+                if (Array.isArray(project.groups)){
+                    for (const groupId of project.groups) {
+                        group = await Group.findById(groupId);
+                        if (Array.isArray(group.members)){
+                            for (const member of group.members) {
+                                kaban = await Saving.findMany({member: member});
+                                for (const item of kaban){
+                                    cluster.totalKaban-=item.totalSavings;
+                                }
+                                await Saving.deleteMany({ member: member });
+                                cluster.totalMembers-=1;
+                                await Member.deleteOne({_id:  member });
+                            }
                         }
+                        await Group.deleteOne({_id:  group });
+                        cluster.totalGroups-=1;
                     }
-                //delete members
-                    for (const group of project.groups) {
-                        await Member.deleteMany({ _id: { $in: group.members } });
-                    }
-                //delete groups
-                    await Group.deleteMany({ _id: { $in: project.groups } });
+                }
+
+                            
                 
                 // 4. Delete projects in cluster
 
                 
                 const deletedProject = await Project.findByIdAndDelete(projectId);
-    
+                
+                cluster.totalProjects-=1;
+                await cluster.save();
                 // If the project was successfully deleted, delete associated groups, members, and savings
                 if (deletedProject) {
                     return res.json(deletedProject);
@@ -454,20 +486,20 @@ const partController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-                // const clusterId = req.params.id; 
-                // const cluster = await Cluster.findById({}); // to be fixed
-                // const loggedInUserId = req.session.userId;
-                // if (!cluster.validSEDOs.includes(loggedInUserId) && !(user.authority != "admin")) {
-                //     return res.status(403).json({ error: "You are not authorized to edit this cluster." });
-                // }
-                // if (!cluster) {
-                //     return res.status(404).render("fail", { error: "Cluster not found." });
-                // }
-                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+
+                let cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                if(authority == "SEDO"){
+                    id = user.validCluster;
+                    cluster = await Cluster.findOne({ _id: id });
+                }
+                //console.log(cluster.name);
                 const updatedParts = await Project.find({ _id: { $in: cluster.projects } });
-                await updateOrgParts(updatedParts); 
+                //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
+
                 const orgParts = updatedParts;
+                //console.log(orgParts)
+
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
                 var totalPages;
@@ -540,38 +572,29 @@ const partController = {
                 const clusterId = req.params.id;
                 const cluster = await Cluster.findById(clusterId);
     
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
-                
-                //THIS IS PROBABLY SLOW IDK HOW TO OPTIMIZE IT
-                // 1. Delete savings for members in groups
-                for (const project of cluster.projects) {
-                    if (Array.isArray(project.groups)) {
-                        for (const group of project.groups) {
-                            if (Array.isArray(group.members)) {
-                                for (const member of group.members) {
-                                    await Saving.deleteMany({ member: member });
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
+                var project;
+                var group;
+                if (Array.isArray(cluster.projects)){
+                    for (const projectId of cluster.projects) {
+                        project = await Project.findById(projectId);
+                        if (Array.isArray(project.groups)){
+                            for (const groupId of project.groups) {
+                                group = await Group.findById(groupId);
+                                if (Array.isArray(group.members)){
+                                    for (const member of group.members) {
+                                        await Saving.deleteMany({ member: member });
+                                        await Member.deleteOne({_id:  member });
+                                    }
                                 }
+                                await Group.deleteOne({_id:  group });
                             }
                         }
+
+                            await Project.deleteOne({_id: project})
                     }
-                }                
-                // 2. Delete members in groups
-                for (const project of cluster.projects) {
-                    if (Array.isArray(project.groups)) {
-                        for (const group of project.groups) {
-                            if (Array.isArray(group.members)) {
-                                await Member.deleteMany({ _id: { $in: group.members } });
-                            }
-                        }
-                    }
-                }
-                // 3. Delete groups in projects
-                for (const project of cluster.projects) {
-                    await Group.deleteMany({ _id: { $in: project.groups } });
-                }
-                // 4. Delete projects in cluster
-                await Project.deleteMany({ _id: { $in: cluster.projects } });
+                }               
                 
                 const deletedCluster = await Cluster.findByIdAndDelete(clusterId);
     

@@ -51,18 +51,29 @@ const userController = {
                 var nProject=0;
                 var nGroup=0;
                 var nMember=0;
+                var savings=0;
                 switch (authority) {
                     case "Admin":
+                        var allSaving = await Saving.findMany({});
+                        for (item in allSaving){
+                            savings+=item.totalSavings;
+                        }
                          nCluster = await Cluster.countDocuments();
                          nProject = await Project.countDocuments();
                          nGroup = await Group.countDocuments();
                          nMember = await Member.countDocuments();
                         break;
                     case "SEDO":
-                        orgParts = await Cluster.find({ validSEDOs: userID });
+                        var cluster = await Cluster.findOne({ _id: user.validCluster });
+                        nProject = cluster.totalProjects;
+                        nGroup = cluster.totalGroups;
+                        nMember = cluster.totalMembers;
+                        savings = cluster.totalSavings
                         break;
                     case "Treasurer":
-                        orgParts = await Group.find({ validTreasurers: userID });
+                        var group = await Group.find({ _id: user.validGroup });
+                        nMember = group.totalMembers;
+                        savings = group.totalSavings;
                         break;
                     default:
                         break;
@@ -78,7 +89,7 @@ const userController = {
                 dashbuttons = dashboardButtons(authority);
 
                 // res.render("dashboard", { authority, orgParts, partWithMembersAndSavings, username  });
-                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember });
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember,savings });
             } else {
                 res.redirect("/");
             }
@@ -132,6 +143,15 @@ const userController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
+
+                // req.session.projectId = null;
+                // req.session.clusterId = null;
+                // req.session.groupId = null;
+                // req.session.memberId = null;
+                // req.session.savingId = null;
+                // await req.session.save();
+
+
                 if(authority !== "Admin"){
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
                 }
@@ -141,7 +161,7 @@ const userController = {
                 // let orgParts = sharedData.orgParts;
 
                 const updatedParts = await Cluster.find({});
-                await updateOrgParts(updatedParts); 
+                //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
                 const orgParts = updatedParts
                 var pageParts = [];
@@ -239,6 +259,8 @@ const userController = {
     clusterMiddle: async(req,res) => {
         try{
             req.session.clusterId = req.body.id;
+            console.log("Cluster Middle: " , req.session.clusterId);
+            await req.session.save();
             res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
         }catch(error){
             console.error(error);
@@ -247,6 +269,8 @@ const userController = {
     projectMiddle: async(req,res) => {
         try{
             req.session.projectId = req.body.id;
+            console.log("Project Middle: " , req.session.projectId);
+            await req.session.save();
             res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
         }catch(error){
             console.error(error);

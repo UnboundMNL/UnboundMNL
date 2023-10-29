@@ -118,7 +118,7 @@ app.get("/project",  (req, res) => {
 
 app.get("/group",  (req, res) => { 
   res.redirect("/group/view/1");
-})
+});
 
 // app.get("/manual", async (req, res) => {
 //   const newGroup = new Group({
@@ -211,11 +211,13 @@ app.get("/group",  (req, res) => {
 //   res.render("login");
 // })
 
-// app.get("/logout", async(req, res)=>{
-//   await req.session.destroy();
-//   console.log("not logged in");
-//   res.render("logout")
-// })
+app.get("/logout", async(req, res)=>{
+  req.session.destroy();
+  res.json()
+  //await req.session.destroy();
+  console.log("not logged in");
+  res.render("/")
+})
 
 // app.get("/success", (req, res) => {
 //   res.render("success");

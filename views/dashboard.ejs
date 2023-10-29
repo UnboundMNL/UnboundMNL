@@ -35,7 +35,7 @@
         <%- include('components/topNavbar.ejs')%>
 
         <!-- Dashboard content -->        
-        <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons, nCluster, nProject, nGroup, nMember})%>
+        <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons, nCluster, nProject, nGroup, nMember, savings})%>
         <script>open('dashboardButton')</script>
         <%-include('components/logoutPopup.ejs') %>
     </main>

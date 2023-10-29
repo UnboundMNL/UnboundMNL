@@ -16,7 +16,7 @@ function cardLink(type,id){
             })
             .then(response => {
                 if (response.ok) {
-
+                    window.location.href = "/project";
                 } else {
                     return response.json().then(data => {
                         // var errorDiv = document.getElementById("error");
@@ -28,7 +28,7 @@ function cardLink(type,id){
             .catch(error => {
                 console.error('Error:', error);
             });
-            window.location.href = "/project";
+            
         } else if (type == "group"){
             fetch('/projectMiddle', {
                 method: 'POST',
@@ -39,7 +39,7 @@ function cardLink(type,id){
             })
             .then(response => {
                 if (response.ok) {
-
+                    window.location.href = "/group";
                 } else {
                     return response.json().then(data => {
                         // var errorDiv = document.getElementById("error");
@@ -51,7 +51,7 @@ function cardLink(type,id){
             .catch(error => {
                 console.error('Error:', error);
             });
-            window.location.href = "/group";
+            
         }
         
         
