@@ -21,7 +21,8 @@ const formsController = {
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;
         const shg = await SHG.findOne({_id: shgId});
-        res.render('components/popupFields/SHGFormFields', {shg});
+        const project = await Project.findOne({_id: req.session.projectId});
+        res.render('components/popupFields/SHGFormFields', {shg, SPU:project.SPU, location:project.location});
     },
 }
 

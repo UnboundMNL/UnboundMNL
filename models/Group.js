@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const GroupSchema = new mongoose.Schema({
     SPU: {type: String},
     name: {type: String, required: true},
-    area: {type: String},
+    location: {type: String},
 
     depositoryBank: String,
     bankAccountType: {type: String, enum:['Savings', 'Checking']},

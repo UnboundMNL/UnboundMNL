@@ -27,12 +27,12 @@
         <div class="col-md-4" id = "<%=pageParts[i]._id%>">
             <div class="container container-style">
                 <h5><%=type%> <%=pageParts[i].name%></h5>
-                <% if (type !== "Sub-Projects") { %>
+
                     <div>
                         <i class='bx bxs-map'></i>
                         <span><%=pageParts[i].location%></span>
                     </div>
-                 <% } %> <!-- added this since there is no location.-->
+   
                 <div class="container-bottom mt-4">
                     <div class="d-flex align-items-end">
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">Edit</button>

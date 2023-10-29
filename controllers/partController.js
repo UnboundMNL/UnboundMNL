@@ -18,48 +18,53 @@ const partController = {
                 // i think we can get SPU from projects? or maybe we can just have a dropdown of SPUs? or manually input?
 
                 const projectId = req.session.projectId; // [TO UPDATE MAYBE]
-                console.log(projectId);
                 let project = await Project.findById(projectId);
 
-                const { SPU, name, area, depositoryBank, bankAccountType, bankAccountNum, 
-                    signatory_firstName, signatory_middleName, signatory_lastName, 
-                    other_firstName, other_middleName, other_lastName, other_contactNo } = req.body;
-
+                const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum, 
+                    SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone, 
+                    SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone, 
+                    kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone, 
+                    kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone  } = req.body;
+                
                 // req.body.SPU = project.name; //maybe change this to project name?
 
-                const existingGroup = await Group.findOne({ SPU, name, area });
+                const existingGroup = await Group.findOne({ SPU, name, location });
                 if (existingGroup) {
                     return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
                 }
-            
-                const signatories = [];
-                for (let i = 0; i < signatory_firstName.length; i++) {
-                    signatories.push({
-                        firstName: signatory_firstName[i],
-                        middleName: signatory_middleName[i],
-                        lastName: signatory_lastName[i]
-                    });
+                let SHGLeader = {
+                    firstName: SHGLeaderFirstName,
+                    lastName: SHGLeaderLastName,
+                    contatNo: SHGLeaderPhone
                 }
-                
-                const otherPeople = [];
-                for (let i = 0; i < other_firstName.length; i++) {
-                    otherPeople.push({
-                        firstName: other_firstName[i],
-                        middleName: other_middleName[i],
-                        lastName: other_lastName[i],
-                        contactNo: [other_contactNo[i]]
-                    });
+
+                let SEDPChairman = {
+                    firstName: SEDPChairmanFirstName,
+                    lastName: SEDPChairmanLastName,
+                    contatNo: SEDPChairmanPhone
                 }
-                
+
+                let kabanTreasurer = {
+                    firstName: kabanTreasurerFirstName,
+                    lastName: kabanTreasurerLastName,
+                    contatNo: kabanTreasurerPhone
+                }
+                let kabanAuditor = {
+                    firstName: kabanAuditorFirstName,
+                    lastName: kabanAuditorLastName,
+                    contatNo: kabanAuditorPhone
+                }
                 const newGroup = new Group({
                     SPU,
                     name,
-                    area,
+                    location,
                     depositoryBank,
                     bankAccountType,
                     bankAccountNum,
-                    signatories,
-                    otherPeople
+                    SHGLeader,
+                    SEDPChairman,
+                    kabanTreasurer,
+                    kabanAuditor
                 });
                 await newGroup.save();
 
@@ -67,7 +72,7 @@ const partController = {
                 await project.save();
 
                 //redirecting to dashboard rn cuz idk where else to redirect to
-                res.redirect("/dashboard");
+                res.redirect("/group");
             } else {
                 res.redirect("/");
             }
@@ -113,45 +118,53 @@ const partController = {
                 const groupId = req.params.id;
                 const group = await Group.findById(groupId);
                 const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
 
 
-                const { SPU, name, area, depositoryBank, bankAccountType, bankAccountNum, 
-                    signatory_firstName, signatory_middleName, signatory_lastName, 
-                    other_firstName, other_middleName, other_lastName, other_contactNo } = req.body;
+                const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum, 
+                    SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone, 
+                    SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone, 
+                    kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone, 
+                    kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone  } = req.body;
                 
-                const existingGroup = await Group.findOne({ SPU, name, area });
+                const existingGroup = await Group.findOne({ SPU, name, location });
                 if (existingGroup) {
                     return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
                 }
-                
-                const signatories = [];
-                for (let i = 0; i < signatory_firstName.length; i++) {
-                    signatories.push({
-                        firstName: signatory_firstName[i],
-                        middleName: signatory_middleName[i],
-                        lastName: signatory_lastName[i]
-                    });
+              
+                let SHGLeader = {
+                    firstName: SHGLeaderFirstName,
+                    lastName: SHGLeaderLastName,
+                    contatNo: SHGLeaderPhone
                 }
-                    
-                const otherPeople = [];
-                for (let i = 0; i < other_firstName.length; i++) {
-                    otherPeople.push({
-                        firstName: other_firstName[i],
-                        middleName: other_middleName[i],
-                        lastName: other_lastName[i],
-                        contactNo: [other_contactNo[i]]
-                    });
+
+                let SEDPChairman = {
+                    firstName: SEDPChairmanFirstName,
+                    lastName: SEDPChairmanLastName,
+                    contatNo: SEDPChairmanPhone
+                }
+
+                let kabanTreasurer = {
+                    firstName: kabanTreasurerFirstName,
+                    lastName: kabanTreasurerLastName,
+                    contatNo: kabanTreasurerPhone
+                }
+                let kabanAuditor = {
+                    firstName: kabanAuditorFirstName,
+                    lastName: kabanAuditorLastName,
+                    contatNo: kabanAuditorPhone
                 }
 
                 const updateData = {
+                    SPU,
                     name,
-                    area,
+                    location,
                     depositoryBank,
                     bankAccountType,
                     bankAccountNum,
-                    signatories,
-                    otherPeople
+                    SHGLeader,
+                    SEDPChairman,
+                    kabanTreasurer,
+                    kabanAuditor
                 };
     
                 // either should work... i think. as long as the group id is passed in the url
@@ -159,12 +172,12 @@ const partController = {
                 const updatedGroup = await Group.findOneAndUpdate({SPU: group.SPU, name: group.name, area: group.area}, updateData,{ new: true });
 
                 if (updatedGroup) {
-                    return res.json(updatedGroup);
+                    res.redirect("/group");
                   } else {
                     return res.status(404).json( { error: "Update error!"});
                 }
 
-                //res.redirect("/dashboard");
+                
             } else {
                 res.redirect("/");
             }
@@ -213,7 +226,7 @@ const partController = {
             if (req.session.isLoggedIn) {
     
                 // idk what the form will have
-                const { name } = req.body;
+                const { name, SPU, location} = req.body;
             
  
     
@@ -221,6 +234,8 @@ const partController = {
                 const newProject = new Project({
                     name,
                     groups,
+                    SPU,
+                    location
                     //anything else to add?
                 });
                 await newProject.save();
@@ -282,7 +297,7 @@ const partController = {
                 }
                 var totalPages = Math.ceil(orgParts.length/perPage);
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages  });
+                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages,SPU:project.SPU, location:project.location  });
             } else {
                 res.redirect("/");
             }
@@ -336,7 +351,7 @@ const partController = {
                 const updateProject = await Project.findOneAndUpdate({name: project.name}, updateData,{ new: true });
 
                 if (updateProject) {
-                    return res.json(updateProject);
+                    res.redirect("/project");
                   } else {
                     return res.status(404).json( { error: "Update error!"});
                 }

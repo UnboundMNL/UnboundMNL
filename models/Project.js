@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const ProjectSchema = new mongoose.Schema({
     name: {type: String, required: true}, 
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'group' }],
-
+    SPU: {type: String},
+    location: {type: String},
     totalGroups: {type: Number, default: 0},
    
     totalMembers: {type: Number, default: 0},

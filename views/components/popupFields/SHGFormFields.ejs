@@ -1,6 +1,6 @@
 <div class = "mb-3">
     <label for="SHGName" class="form-label">Self Help Group Name</label>
-    <input class="form-control" id = "SHGName" name = "SHGName" type="text" placeholder="High Cloud Quintet" aria-describedby="SHGName" 
+    <input class="form-control" id = "SHGName" name = "name" type="text" placeholder="High Cloud Quintet" aria-describedby="SHGName" 
     <% if (locals.shg) { %>
         value = "<%=locals.shg.name%>"
     <% } %>
@@ -8,31 +8,26 @@
 </div>
 
 <%  let people = ['SHG Leader','SEDP Chairman', 'Kaban Treasurer', 'Kaban Auditor']
-    let ids = ['SHG Leader', 'SEDPChair', 'KabanTreasurer', 'KabanAuditor']
+    let ids = ['SHGLeader', 'SEDPChairman', 'kabanTreasurer', 'kabanAuditor']
     let otherPeopleLen = 0
-    if (locals.shg) {
-        otherPeopleLen = locals.shg.otherPeople.length
-    }
+
     
-    for (let i = 0; i < people.length; i++) {
-        let otherPersonExists = false
-        if (otherPeopleLen > i) {
-            otherPersonExists = true
-        }
+    for (let i = 0; i < 4; i++) {
+
 %>
     <div class = "mb-3">
         <label for="<%=ids[i]%>Name" class="form-label"><%=people[i]%> Name</label>
         <div class = "input-group">
             <span class = "input-group-text">First Name</span>
             <input class="form-control" id = "<%=ids[i]%>FirstName" name = "<%=ids[i]%>FirstName" type="text" placeholder="Jose" aria-describedby="<%=ids[i]%>FirstName" 
-            <% if (locals.shg && otherPersonExists) { %>
-                    value = "<%=locals.shg.otherPeople[i].firstName%>"
+            <% if (locals.shg && locals.shg[ids[i]]) { %>
+                value = "<%= locals.shg[ids[1]].firstName %>"
             <% } %>
             >
             <span class = "input-group-text">Last Name</span>
             <input class="form-control" id = "<%=ids[i]%>LastName" name = "<%=ids[i]%>LastName" type="text" placeholder="Rizal" aria-describedby="<%=ids[i]%>LastName" 
-            <% if (locals.shg && otherPersonExists) { %>
-                value = "<%=locals.shg.otherPeople[i].lastName%>"
+            <% if (locals.shg && locals.shg[ids[i]] ) { %>
+                value = "<%= locals.shg[ids[1]].lastName %>"
             <% } %>
             >
             <div class="invalid-feedback">
@@ -43,8 +38,8 @@
             <span class = "input-group-text">Phone Number</span>
             <input class="form-control" id = "<%=ids[i]%>Phone" name = "<%=ids[i]%>Phone" type="tel" placeholder="09171234567" pattern="[0-9]{11}" 
             aria-describedby="<%=ids[i]%>PhoneNumber"
-            <% if (locals.shg && otherPersonExists) { %>
-                value = "<%=locals.shg.otherPeople[i].phoneNumber%>"
+            <% if (locals.shg && locals.shg[ids[1]]) { %>
+                value = "<%= locals.shg[ids[i]].contatNo %>"
             <% } %>
             >
         </div>
@@ -88,3 +83,6 @@
     <label for="bankAccountNum" class="form-label"> Bank Account Number </label>
     <input class="form-control" id = "bankAccountNum" name = "bankAccountNum" type="number" aria-describedby="bankAccountNum">
 </div>
+
+<input type="hidden" name="location" value="<%=location%>">
+<input type="hidden" name="SPU" value="<%=SPU%>">

@@ -25,9 +25,9 @@
         <!-- Containers -->
         <div class="container container-style mb-3">
             <h5>SHG <%=pageParts[i].name%></h5>
-
+            <script>console.log("<%=pageParts[i].area%>")</script>
             <div>
-                <i class='bx bxs-map'><%=pageParts[i].area%></i>
+                <i class='bx bxs-map'> <%=pageParts[i].location%></i>
                 <span></span>
             </div>
 
@@ -37,6 +37,12 @@
                         <i class='bx bxs-chevron-down'></i> View Details
                     </button>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">Edit</button>
+                    <script>
+                        var editButton = document.getElementById("<%=pageParts[i]._id%>");
+                        editButton.onclick = function() {
+                            changeForm("<%=pageParts[i]._id%>","<%=type%>");
+                        };
+                    </script>
                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>">Delete</button>
                 </div>
 

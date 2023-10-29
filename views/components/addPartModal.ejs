@@ -12,7 +12,10 @@
 			 <% if (partname=="Sub-Projects") { 
 				addAction = "/newProject"
 				} %>
-			<script>console.log("<%=partname%>");</script>
+
+			<% if (partname=="SHG") { 
+				addAction = "/newGroup"
+				} %>
 			<form id = "add<%=partname%>Form" class = "needs-validation" name = "add<%=partname%>Form" method = "POST" action = "<%=addAction%>" novalidate>
 				
                 <div class="modal-body">
