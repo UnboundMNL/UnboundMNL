@@ -1,0 +1,79 @@
+<select>
+    <option value="2023">2023</option>
+    <option value="2022">2022</option>
+    <option value="2021">2021</option>
+    <option value="2020">2020</option>
+</select>
+
+<table id="membersTable" class="table table-striped table-hover table-bordered table-responsive" style="width:100%">
+    <thead>
+        <tr>
+            <!-- Adjust colspan to fit the number of cols of data needed -->
+            <th colspan = "5" class = "text-center">YEAR *update based on choice*</th>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>ID</th>
+            <!-- For each year make -->
+            <th class = "2023">Savings</th>
+            <th class = "2023">Grant</th>
+            <th class = "2022">Savings</th>
+            <th class = "2022">Grant</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Last</td>
+            <td>first</td>
+            <td>12111111</td>
+            <!-- For each year/month? Make both of the tds below -->
+            <td class = "2023">100000</td>
+            <td class = "2023">1</td>
+
+            <!-- TEMP: adding separate years(?) NOTE: these will be hidden-->
+            <td class = "2022">100000</td>
+            <td class = "2022">1</td>
+        </tr>
+        <tr>
+            <td>Last2</td>
+            <td>first2</td>
+            <td>121111211</td>
+            <td class = "2023">1000020</td>
+            <td class = "2023">12</td>
+            <td class = "2022">100000</td>
+            <td class = "2022">1</td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    //Get database data
+    //Get columns associated with each year
+    //Hide all columns except for the selected year
+    //Show all columns associated with the selected year
+    //Update the table
+
+    new DataTable('#membersTable', {
+        columnDefs:[
+        {
+            targets: [0,1,2],
+            visible: true,
+            searchable: true
+        },
+        //place the supposed to be visible columns here
+        {
+            targets: [],
+            visible: true,
+            searchable: false
+        },
+        //hide everything else
+        {
+            targets: '_all',
+            visible: false,
+            searchable: false
+        },
+        ]
+    })
+
+</script>
