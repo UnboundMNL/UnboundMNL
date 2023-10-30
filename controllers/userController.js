@@ -54,7 +54,7 @@ const userController = {
                 var savings=0;
                 switch (authority) {
                     case "Admin":
-                        var allSaving = await Saving.findMany({});
+                        var allSaving = await Saving.find({});
                         for (item in allSaving){
                             savings+=item.totalSavings;
                         }
@@ -68,12 +68,12 @@ const userController = {
                         nProject = cluster.totalProjects;
                         nGroup = cluster.totalGroups;
                         nMember = cluster.totalMembers;
-                        savings = cluster.totalSavings
+                        savings = cluster.totalKaban;
                         break;
                     case "Treasurer":
                         var group = await Group.find({ _id: user.validGroup });
                         nMember = group.totalMembers;
-                        savings = group.totalSavings;
+                        savings = group.totalKaban;
                         break;
                     default:
                         break;
