@@ -1,6 +1,6 @@
 <div class = "mb-3">
     <label for="projectName" class="form-label">Sub-Project Name</label>
-    <input class="form-control" id = "projectName" name = "projectName" type="text" placeholder="Operation Stryx" aria-describedby="SubProjectName" required
+    <input class="form-control" id = "projectName" name = "name" type="text" placeholder="Operation Stryx" aria-describedby="SubProjectName" required
     <% if (locals.project) { %>
         value = "<%=locals.project.name%>"
     <% } %>
@@ -8,4 +8,26 @@
     <div class="invalid-feedback">
         Please enter a sub-project name.
     </div>  
+</div>
+<div class = "mb-3">
+    <label for="projectName" class="form-label">Area</label>
+    <input class="form-control" id = "projectName" name = "location" type="text" placeholder="Los Angeles" aria-describedby="SubProjectArea" required
+    <% if (locals.project) { %>
+        value = "<%=locals.project.location%>"
+    <% } %>
+    >
+    <div class="invalid-feedback">
+        Please enter a Project Zone.
+    </div>
+</div>
+<div class = "mb-3">
+    <label for="projectName" class="form-label">SPU</label>
+    <input class="form-control" id = "projectName" name = "SPU" type="text" placeholder="AP" aria-describedby="SubProjectAP" required
+    <% if (locals.project) { %>
+        value = "<%=locals.project.SPU%>"
+    <% } %>
+    >
+    <div class="invalid-feedback">
+        Please enter a SPU.
+    </div>
 </div>

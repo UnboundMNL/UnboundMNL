@@ -8,11 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = event.relatedTarget
 
         // Extract info from data-bs-name attribute
-        const clusterName = button.getAttribute('data-bs-name')
+
+        //const clusterName = button.getAttribute('data-bs-name')
+        const clusterId = button.getAttribute('id')
 
 
         // Update the modal's content.
-        $('#editclusterFormDiv').load(`/editClusterForm/${clusterName}`)
+        $('#editclusterFormDiv').load(`/editClusterForm/${clusterId}`)
     })
     }
 
@@ -24,10 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = event.relatedTarget
 
         // Extract info from data-bs-name attribute
-        const projectName = button.getAttribute('data-bs-name')
+        //const projectName = button.getAttribute('data-bs-name')
 
+        const projectId = button.getAttribute('id')
+        console.log(projectId);
         // Update the modal's content.
-        $('#editSub-ProjectsFormDiv').load(`/editSubProjectsForm/${projectName}`)
+        $('#editSub-ProjectsFormDiv').load(`/editSubProjectsForm/${projectId}`)
     })
     }
 
@@ -39,10 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = event.relatedTarget
 
         // Extract info from data-bs-name attribute
-        const shgName = button.getAttribute('data-bs-name')
-
+        //const shgName = button.getAttribute('data-bs-name')
+        const shgId = button.getAttribute('id')
+        
         // Update the modal's content.
-        $('#editSHGFormDiv').load(`/editSHGForm/${shgName}`)
+        $('#editSHGFormDiv').load(`/editSHGForm/${shgId}`)
     })
     }
 });

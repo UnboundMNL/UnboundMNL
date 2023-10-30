@@ -21,6 +21,7 @@
     <script src="/js/editButton.js"></script>
     <script src="/js/viewDetails.js"></script>
     <script src="/js/card.js"></script>
+    <script src="/js/IDchecker.js"></script>
     <script>
         authCheck(" <%=authority%> ")
     </script>
@@ -28,7 +29,7 @@
 
 <body class="body-bg">
     
-    <%- include('components/navbar.ejs', {authority: authority, redirect})%>
+    <%- include('components/navbar.ejs', {authority: authority})%>
     
     <main>
         <!-- Top navigation bar -->
@@ -38,10 +39,19 @@
         <!-- Note: Temporary number of containers -->
         <% const containers = 6; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters", "Sub-Projects", "SHG"]; %>
+            <% const path = ["Clusters", "Sub-Projects", "SHG"]; 
+                var pathLink; %>
+
             <div class="custom-path">
-                <% path.forEach((item) => { %>
-                    <li><a href="/<%= item.toLowerCase() %>"><%= item %></a></li>
+                <% path.forEach((item) => { 
+                    if (item=="Clusters"){
+                        pathLink="/cluster"
+                    } else if (item=="Sub-Projects"){
+                        pathLink="/project"
+                    } else if (item=="SHG"){
+                        pathLink="/group"
+                    }%>
+                    <li><a href="<%=pathLink%>"><%= item %></a></li>
                 <% }); %>
             </div>
             

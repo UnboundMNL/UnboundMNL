@@ -18,8 +18,12 @@ const UserSchema = new mongoose.Schema({
       lastName: String
     },
     
-    mobile: [String],
-    //validPart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part' }] 
+    mobile: String,
+    
+    validCluster: { type: mongoose.Schema.Types.ObjectId, ref: 'cluster' },
+    validGroup: { type: mongoose.Schema.Types.ObjectId, ref: 'group' }
+    
+  
 }, 
     {versionKey: false}
 )

@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 const ProjectSchema = new mongoose.Schema({
     name: {type: String, required: true}, 
     groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'group' }],
-
-    totalGroups: {type: Number, default: null},
+    SPU: {type: String},
+    location: {type: String},
+    totalGroups: {type: Number, default: 0},
    
     totalMembers: {type: Number, default: 0},
     totalKaban: {type: Number, default: 0},
     //totalLoans: Number,
-
-    validSEDOs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}]
     
 }, {versionKey: false}
 );

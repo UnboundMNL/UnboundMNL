@@ -2,8 +2,11 @@
     <!-- Search bar -->
     <div class="col-11 col-md-10">
         <div class="search-bar d-flex">
-            <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search" aria-describedby="button-addon2">
+            <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search" aria-describedby="button-addon2" id="searchBar">
             <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
+            <script>
+                search("<%=type%>");
+            </script>
         </div>
     </div>
     
@@ -27,16 +30,22 @@
         <div class="col-md-4" id = "<%=pageParts[i]._id%>">
             <div class="container container-style">
                 <h5><%=type%> <%=pageParts[i].name%></h5>
-                
-                <div>
-                    <i class='bx bxs-map'></i>
-                    <span><%=pageParts[i].location%></span>
-                </div>
 
+                    <div>
+                        <i class='bx bxs-map'></i>
+                        <span><%=pageParts[i].location%></span>
+                    </div>
+   
                 <div class="container-bottom mt-4">
                     <div class="d-flex align-items-end">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].id%>">Edit</button>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>">Delete</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">Edit</button>
+                        <script>
+                            var editButton = document.getElementById("<%=pageParts[i]._id%>");
+                            editButton.onclick = function() {
+                                changeForm("<%=pageParts[i]._id%>","<%=type%>");
+                            };
+                        </script>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>" id ="<%=pageParts[i]._id%>">Delete</button>
                     </div>
 
                     <div>

@@ -26,13 +26,13 @@
                 let href
                 if (authority === "Admin") {
                     orgPart = 'Clusters'
-                    href = redirect
+                    href = "/cluster"
                 } else if (authority === "SEDO") {
                     orgPart = 'Projects'
-                    href = redirect
+                    href = "/project"
                 } else {
                     orgPart = 'Members'
-                    href = redirect
+                    href = "/member"
                 } 
             %>
             

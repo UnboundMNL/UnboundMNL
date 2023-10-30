@@ -3,38 +3,48 @@ const mongoose = require('mongoose');
 const GroupSchema = new mongoose.Schema({
     SPU: {type: String},
     name: {type: String, required: true},
-    area: {type: String},
+    location: {type: String},
 
     depositoryBank: String,
     bankAccountType: {type: String, enum:['Savings', 'Checking']},
-    bankAccountNum: String,
+    bankAccountNum: Number,
 
-    signatories: [
+    SHGLeader: 
         {
           firstName: String,
-          middleName: String,
-          lastName: String
-        }
-      ],
-
-      //SHG Leader, SEDP Chairman, Kaban Treasurer, Kaban Auditor
-    otherPeople:[
-        {
-          firstName: String,
-          middleName: String,
           lastName: String,
-          contatNo: [String],
+          contatNo: String
         }
-      ],
+      ,
+        
+      //SHG Leader, SEDP Chairman, Kaban Treasurer, Kaban Auditor
+      SEDPChairman: 
+      {
+        firstName: String,
+        lastName: String,
+        contatNo: String
+      }
+    ,
+    kabanTreasurer: 
+      {
+        firstName: String,
+        lastName: String,
+        contatNo: String
+      }
+    ,
+    kabanAuditor: 
+      {
+        firstName: String,
+        lastName: String,
+        contatNo: String
+      }
+    ,
     
     member: [{ type: mongoose.Schema.Types.ObjectId, ref: 'member' }],
    
     totalMembers: {type: Number, default: 0},
-    totalKaban: {type: Number, default: 0},
+    totalKaban: {type: Number, default: 0}
     //totalLoans: Number,
-
-    validSEDOs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
-    validTreasurers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user'}]
     
 }, {versionKey: false}
 );

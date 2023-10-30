@@ -1,11 +1,60 @@
 function cardLink(type,id){
+    var data;
     const div = document.getElementById(id);
     div.addEventListener('click', function(event) {
         if (event.target.tagName.toLowerCase() === 'button') {
             return;
         }
-        const newUrl = "/"+type+'/'+id+'/view/1'; 
-        window.location.href = newUrl;
+        data={id};
+        if (type=="project"){
+            fetch('/clusterMiddle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/project";
+                } else {
+                    return response.json().then(data => {
+                        // var errorDiv = document.getElementById("error");
+                        // errorDiv.style.display="block";
+                        // errorDiv.textContent=data.error;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
+        } else if (type == "group"){
+            fetch('/projectMiddle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/group";
+                } else {
+                    return response.json().then(data => {
+                        // var errorDiv = document.getElementById("error");
+                        // errorDiv.style.display="block";
+                        // errorDiv.textContent=data.error;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
+        }
+        
+        
     });
 }
 

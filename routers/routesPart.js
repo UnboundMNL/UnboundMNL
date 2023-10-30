@@ -8,8 +8,25 @@ const Member = require('../models/Member');
 const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
+const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
+
+const { clusteridMiddleware } = require('../lib/middleware');
+const { projectidMiddleware } = require('../lib/middleware');
+const { groupidMiddleware } = require('../lib/middleware');
+const { memberidMiddleware } = require('../lib/middleware');
+const { savingidMiddleware } = require('../lib/middleware');
 
 const partController = require('../controllers/partController.js');
+
+router.use(clusteridMiddleware);
+router.use(projectidMiddleware);
+router.use(groupidMiddleware);
+router.use(memberidMiddleware);
+router.use(savingidMiddleware);
+
+//TO ADD: Midleware for cluster/project/group IDs
 
 router.post("/newGroup", partController.newGroup);
 router.post("/newProject", partController.newProject);
@@ -20,11 +37,11 @@ router.get('/group/:id', partController.retrieveGroup);
 router.post('/group/:id/edit', partController.editGroup);
 router.post('/group/:id/delete', partController.deleteGroup);
 
-router.get('/group/:id/view/:page', partController.retrieveProject);
+router.get('/group/view/:page', partController.retrieveProject);
 router.post('/project/:id/edit', partController.editProject);
 router.post('/project/:id/delete', partController.deleteProject);
 
-router.get('/project/:id/view/:page', partController.retrieveCluster);
+router.get('/project/view/:page', partController.retrieveCluster);
 router.post('/cluster/:id/edit', partController.editCluster);
 router.post('/cluster/:id/delete', partController.deleteCluster);
 

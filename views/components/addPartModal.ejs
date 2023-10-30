@@ -5,8 +5,18 @@
 				<h1 class="modal-title fs-5" id="add<%=partname%>ModalLabel">Add <%=partname%></h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
+			<% var addAction = null %>
+			<% if (partname=="cluster") { 
+			 addAction = "/newCluster"
+			 } %>
+			 <% if (partname=="Sub-Projects") { 
+				addAction = "/newProject"
+				} %>
 
-			<form id = "add<%=partname%>Form" class = "needs-validation" name = "add<%=partname%>Form" method = "POST" action = "/" novalidate>
+			<% if (partname=="SHG") { 
+				addAction = "/newGroup"
+				} %>
+			<form id = "add<%=partname%>Form" class = "needs-validation" name = "add<%=partname%>Form" method = "POST" action = "<%=addAction%>" novalidate>
 				
                 <div class="modal-body">
 					<div id = "add<%=partname%>FormDiv">
@@ -14,6 +24,7 @@
 						<%-include(partialURL, {authority})%>
 					</div>
 				</div>
+				<% var id = "add"+ partname; %>
 				<div class="modal-footer">
 					<button type="reset" class="btn btn-danger" onclick="ResetAll(authority)">Reset</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
