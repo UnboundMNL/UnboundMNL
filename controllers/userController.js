@@ -159,11 +159,16 @@ const userController = {
 
                 // await updateSharedData();
                 // let orgParts = sharedData.orgParts;
-
-                const updatedParts = await Cluster.find({});
+                var updatedParts;
+                if (req.query.search){
+                    updatedParts = await Cluster.find({name: { $regex : req.query.search }});
+                } else{
+                    updatedParts = await Cluster.find({});
+                }
+                
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
-                const orgParts = updatedParts
+                const orgParts = updatedParts;
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
                 var totalPages;

@@ -297,9 +297,26 @@ const partController = {
                 // }
                 
                 const project = await Project.findOne({ _id: req.session.projectId });
-                console.log("ID in retreive project is: ", req.session.projectId)
+
                 let updatedParts = [] 
-                updatedParts = await Group.find({_id: { $in: project.groups } }); //to be change
+
+
+
+                // var updatedParts;
+                if (req.query.search){
+                    updatedParts = await Group.find({
+                        $and: [
+                          { name: { $regex: req.query.search, $options: 'i' } }, 
+                          { _id: { $in: project.groups } } 
+                        ]
+                      });
+                } else{
+                    updatedParts = await Group.find({_id: { $in: project.groups } });
+                }
+
+
+
+
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
                 const orgParts = updatedParts;
@@ -493,7 +510,17 @@ const partController = {
                     cluster = await Cluster.findOne({ _id: id });
                 }
                 //console.log(cluster.name);
-                const updatedParts = await Project.find({ _id: { $in: cluster.projects } });
+                var updatedParts;
+                if (req.query.search){
+                    updatedParts = await Project.find({
+                        $and: [
+                          { name: { $regex: req.query.search, $options: 'i' } }, 
+                          { _id: { $in: cluster.projects } } 
+                        ]
+                      });
+                } else{
+                    updatedParts = await Project.find({ _id: { $in: cluster.projects } });
+                }
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
 

@@ -16,7 +16,7 @@ const GroupSchema = new mongoose.Schema({
           contatNo: String
         }
       ,
-
+        
       //SHG Leader, SEDP Chairman, Kaban Treasurer, Kaban Auditor
       SEDPChairman: 
       {
