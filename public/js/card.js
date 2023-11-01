@@ -52,6 +52,30 @@ function cardLink(type,id){
                 console.error('Error:', error);
             });
             
+        } else if (type == "member"){
+
+            fetch('/groupMiddle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/member";
+                } else {
+                    return response.json().then(data => {
+                        // var errorDiv = document.getElementById("error");
+                        // errorDiv.style.display="block";
+                        // errorDiv.textContent=data.error;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+            
         }
         
         

@@ -24,7 +24,7 @@
 <%-include('addPartModal.ejs', {authority, partname: type}) %>
 <%-include('editPopup.ejs', {partname: type}) %>
 
-<div css="row">
+<div class="row">
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
         <div class="col-md-4" id = "<%=pageParts[i]._id%>">

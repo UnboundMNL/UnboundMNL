@@ -280,6 +280,16 @@ const userController = {
         }catch(error){
             console.error(error);
         }
+    },
+    groupMiddle: async(req,res) => {
+        try{
+            req.session.groupId = req.body.id;
+            console.log("Group Middle: " , req.session.groupId);
+            await req.session.save();
+            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+        }catch(error){
+            console.error(error);
+        }
     }
 }
 

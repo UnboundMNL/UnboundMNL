@@ -17,6 +17,9 @@
 
     <!-- FUNCTIONS -->
     <script src="/js/sidebar.js"></script>
+    <script src="/js/editButton.js"></script>
+    <script src="/js/card.js"></script>
+    <script src="/js/IDchecker.js"></script>
     <script>
         authCheck(" <%=authority%> ")
     </script>
@@ -29,8 +32,10 @@
     <main>
         <!-- Top navigation bar -->
         <%- include('components/topNavbar.ejs')%>
-        <script>open('memberButton')</script>
+        <script>open('partsButton')</script>
         <%-include('components/logoutPopup.ejs') %>
+        
+
     </main>
 </body>
 </html>

@@ -13,10 +13,10 @@ const userController = require('../controllers/userController');
 
 router.get("/dashboard", userController.dashboard);
 
-router.get("/group", userController.group);
 router.get("/cluster/view/:page", userController.cluster);
-router.get("/member", userController.member);
+// router.get("/member", userController.member);
 router.get("/profile", userController.profile);
 router.post("/clusterMiddle",userController.clusterMiddle);
 router.post("/projectMiddle",userController.projectMiddle);
+router.post("/groupMiddle",userController.groupMiddle);
 module.exports = router;  

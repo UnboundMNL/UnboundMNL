@@ -88,22 +88,46 @@ const partController = {
     retrieveGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const groupId = req.params.id; 
-                // idk if this works will fix in future
-    
-                const group = await Group.findById(groupId)
-                    // .populate('members').populate('savings');
-                    // im thinking this only loads the actual group info and not the members and savings yet
-                    // this is for like preloading current info into the edit form, then the function below is for actually editing the group (editGroup)
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
+                const sidebar = req.session.sidebar;
+                const page = req.params.page;
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+                // const project = await Project.findById(projectId)
+                //     // .populate('groups')
+                //     //.populate('members').populate('savings');
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
 
 
-                if (!group) {
-                    return res.status(404).render("fail", { error: "Group not found." });
+                // if (!project) {
+                //     return res.status(404).render("fail", { error: "Project not found." });
+                // }
+                
+                const group = await Group.findOne({ _id: req.session.groupId });
+
+                let updatedParts = [] 
+
+                // var updatedParts;
+                if (req.query.search){
+                    updatedParts = await Member.find({
+                        $and: [
+                          { name: { $regex: req.query.search, $options: 'i' } }, 
+                          { _id: { $in: project.groups } } 
+                        ]
+                      });
+                } else{
+                    updatedParts = await Group.find({_id: { $in: group.member } });
                 }
 
-                res.render("editGroup", { group });
+                //await updateOrgParts(updatedParts); 
+                // const orgParts = getOrgParts();
+                const pageParts = updatedParts;
+                //console.log(orgParts);
+ 
+                dashbuttons = dashboardButtons(authority);
+                res.render("member", { authority, pageParts, username, sidebar, dashbuttons});
             } else {
                 res.redirect("/");
             }
@@ -111,9 +135,8 @@ const partController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
+
     },
-
-
     // edit group
     editGroup: async (req, res) => {
         try {
