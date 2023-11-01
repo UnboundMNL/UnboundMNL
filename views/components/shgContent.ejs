@@ -20,8 +20,8 @@
         </div>
     </div>
 </div>
-<%-include('addPartModal.ejs', {partname: type}) %>
-<%-include('editPopup.ejs', {partname: type}) %>
+<%-include('popups/addPartModal.ejs', {partname: type}) %>
+<%-include('popups/editPopup.ejs', {partname: type}) %>
 
 <div>
     <% for (let i = 0; i < pageParts.length; i++) { %>

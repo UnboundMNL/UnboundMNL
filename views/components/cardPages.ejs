@@ -1,28 +1,13 @@
 <div class="d-flex mt-4 mb-4 justify-content-between align-items-center">
     <!-- Search bar -->
-    <div class="col-11 col-md-10">
-        <div class="search-bar d-flex">
-            <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search" aria-describedby="button-addon2" id="searchBar">
-            <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
-            <script>
-                search("<%=type%>");
-            </script>
-        </div>
-    </div>
+    <%-include('orgPartViews/searchBar.ejs', {type})%>
     
     <!-- Add button -->
-    <div class="d-flex align-items-center p-2">
-        <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=type%>">
-                <i class='bx bx-plus'></i>
-                <span class="d-none d-sm-inline">Add <%=type%></span>
-            </button>
-        </div>
-    </div>
+    <%-include('orgPartViews/addButton.ejs', {type})%>
 </div>
 
-<%-include('addPartModal.ejs', {authority, partname: type}) %>
-<%-include('editPopup.ejs', {partname: type}) %>
+<%-include('popups/addPartModal.ejs', {authority, partname: type}) %>
+<%-include('popups/editPopup.ejs', {partname: type}) %>
 
 <div class="row">
     <% for (let i = 0; i < pageParts.length; i++) { %>
