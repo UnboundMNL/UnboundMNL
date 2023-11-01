@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         //const projectName = button.getAttribute('data-bs-name')
 
         const projectId = button.getAttribute('id')
-        console.log(projectId);
+
         // Update the modal's content.
         $('#editSub-ProjectsFormDiv').load(`/editSubProjectsForm/${projectId}`)
     })

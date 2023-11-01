@@ -5,10 +5,10 @@ const MemberSchema = new mongoose.Schema({
   name: {
     firstName: String,
     middleName: String,
-    lastName: String
+    lastName: String, required: true
   },
-  id: String,
-  photo: { type: String },
+  id: {type: String, required: true},
+  photo: { type: String, required: true, default: 'something' },
 
   nameFather: {
     firstName: String,
@@ -21,9 +21,8 @@ const MemberSchema = new mongoose.Schema({
     lastName: String
   },
 
-  age: Number, //this is a derivable field!
-  sex: String,
-  birthdate: {type: String, required: true},
+  sex: {type: String, required: true},
+  birthdate: {type: Date, required: true},
   address: {type: String, required: true},
 
   savings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'saving' }],

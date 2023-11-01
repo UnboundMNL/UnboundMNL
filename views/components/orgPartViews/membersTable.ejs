@@ -1,83 +1,46 @@
-<select>
-    <option value="2023">2023</option>
-    <option value="2022">2022</option>
-    <option value="2021">2021</option>
-    <option value="2020">2020</option>
-</select>
 
-<!-- NOTE: just put all the data into the table. Instead of using a GET or something when changing option
-just change visible columns (see script at the bottom) -->
-<table id="membersTable" class="table table-striped table-hover table-bordered table-responsive" style="width:100%">
+<table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
     <thead>
         <tr>
             <!-- Adjust colspan to fit the number of cols of data needed -->
-            <th colspan = "5" class = "text-center">YEAR *update based on choice*</th>
+            <th colspan = "3" class = "text-center">YEAR *update based on choice*</th>
+            <% const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']%>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <th colspan = "2" class = "text-center"><%=months[i]%></th>
+            <% } %>
+            <th>Year</th>
         </tr>
         <tr>
             <th>Last Name</th>
             <th>First Name</th>
             <th>ID</th>
-            <!-- For each year make -->
-            <th>Savings</th>
-            <th>Grant</th>
-            <th>Savings</th>
-            <th>Grant</th>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <th>Savings</th>
+                <th>Grant</th>
+            <% } %>
+            <th>Total Savings</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Last</td>
+            <td>Montoya de la cruz</td>
             <td>first</td>
             <td>12111111</td>
-            <!-- For each year/month? Make both of the tds below -->
-            <td>100000</td>
-            <td >1</td>
-
-            <!-- TEMP: adding separate years(?) NOTE: these will be hidden-->
-            <td>100000</td>
-            <td>1</td>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <td>--</td>
+                <td>--</td>
+            <% } %>
+            <td>--</td>
         </tr>
         <tr>
             <td>Last2</td>
             <td>first2</td>
             <td>121111211</td>
-            <td>1000020</td>
-            <td>12</td>
-            <td>100000</td>
-            <td>1</td>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <td>--</td>
+                <td>--</td>
+            <% } %>
+            <td>--</td>
         </tr>
     </tbody>
 </table>
-
-<!-- There might be a better way to do this but this what i got so far -->
-<script>
-    //Get database data
-    //Get columns associated with each year
-    //Hide all columns except for the selected year
-    //Show all columns associated with the selected year
-    //Update the table
-
-    new DataTable('#membersTable', {
-        columnDefs:[
-        //stuff on top = more priority
-        {
-            targets: [0,1,2],
-            visible: true,
-            searchable: true
-        },
-        //place the supposed to be visible columns here
-        {
-            targets: [],
-            visible: true,
-            searchable: false
-        },
-        //hide everything else
-        {
-            targets: '_all',
-            visible: false,
-            searchable: false
-        },
-        ]
-    })
-
-</script>
