@@ -35,7 +35,7 @@ const registerController = {
                 return res.status(400).json( { error:"Username already exists"});
               }
               
-              const user = new User({ username, password, authority, validParts });
+              const user = new User({ username, password, authority, validPart });
               const savedUser = await user.save();
               savedUser.userId = savedUser._id;
               await savedUser.save();
