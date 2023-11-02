@@ -1,0 +1,55 @@
+<div class="container-profile">
+    <div>
+        <button class="btn btn-outline-secondary btn-sm mb-2" onclick="backProfile()"><i class='bx bx-arrow-back'></i> Back to Profile</button>
+    </div>
+    <div class="d-flex justify-content-between mt-3">
+        <div class="align-items-center">
+            <div class="d-flex align-items-center flex-wrap">
+                <div class="d-flex flex-column">
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
+                </div>
+                <h4>Full Name</h4>
+            </div>
+            <button class="btn btn-secondary btn-sm">Upload Photo</button>
+        </div>
+        <div class="align-items-right">
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteMemberModal">Delete Member</button>
+        </div>
+    </div>
+    <hr>
+
+    <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
+    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
+    <!-- Hannah: Temporary Info -->
+    <% const personalInfo = ["1234", "Juan Too", "Cluster 1", "SPU 1", "SHG 1", "Earth 1",
+                "Maria Ya", "Juan Wan", "01/01/2011", "Female", "Active"]; %>
+
+    <div class="d-flex mt-4" id="infoContainer">
+        <div class="row d-flex flex-grow-1">
+            <div class="d-flex flex-column col-12 col-md-6 mb-4">
+                <h6><u>GENERAL INFORMATION</u></h6>
+                <% for (let i = 0; i < Math.ceil(info.length / 2); i++) { %>
+                    <div class="row mt-2 align-items-center">
+                        <h6 class="col-4 m-0"><%- info[i] %></h6>
+                        <input type="text" class="col form-control" value="<%- personalInfo[i] %>"/>
+                    </div>
+                <% } %>                
+            </div>
+            
+            <div class="d-flex flex-column col-12 col-md-6">
+                <h6><u>PERSONAL INFORMATION</u></h6>         
+                <% for (let i = Math.ceil(info.length / 2); i < info.length; i++) { %>
+                    <div class="row mt-2 align-items-center">
+                        <h6 class="col-4 m-0"><%- info[i] %></h6>
+                        <input type="text" class="col form-control" value="<%- personalInfo[i] %>"/>
+                    </div>
+                <% } %>    
+            </div>  
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4 button-gap">
+        <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(<%- JSON.stringify(personalInfo) %>)'>Cancel</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save</button>
+    </div>
+</div>

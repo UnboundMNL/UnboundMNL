@@ -137,6 +137,19 @@ main {
     padding: 0;
 }
 
+.button-gap {
+    gap: 0.5rem;
+}
+
+.container-profile {
+    background-color: white;
+    padding: 2rem;
+}
+
+.container-profile img {
+    margin-right: 1rem;
+}
+
 /* MODALS */
 .modal-buttons {
     display: flex;
@@ -148,8 +161,20 @@ main {
     width: 10rem;
 }
 
+.modal-body i {
+    font-size: 4rem;
+}
+
 #logout-i {
     color: black;
+}
+
+#save-i {
+    color: green;
+}
+
+#delete-i {
+    color: var(--red-color);
 }
 
 /* PATH */
