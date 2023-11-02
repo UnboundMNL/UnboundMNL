@@ -20,15 +20,15 @@
         </div>
     </div>
 </div>
-<%-include('addPartModal.ejs', {partname: type}) %>
-<%-include('editPopup.ejs', {partname: type}) %>
+<%-include('popups/addPartModal.ejs', {partname: type}) %>
+<%-include('popups/editPopup.ejs', {partname: type}) %>
 
 <div>
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
-        <div class="container-style mb-3">
+        <div class="container container-style mb-3" id = <%=pageParts[i]._id%>>
             <h5>SHG <%=pageParts[i].name%></h5>
-            <script>console.log("<%=pageParts[i].area%>")</script>
+            <script>console.log("<%=pageParts[i].location%>")</script>
             <div>
                 <i class='bx bxs-map'></i>
                 <span><%=pageParts[i].location%></span>
@@ -84,5 +84,8 @@
                 </div>
             </div>
         </div>
+        <script>
+            cardLink("member", "<%=pageParts[i]._id%>");
+        </script>
     <% } %>
 </div>

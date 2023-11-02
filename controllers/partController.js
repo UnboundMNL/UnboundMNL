@@ -88,22 +88,46 @@ const partController = {
     retrieveGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const groupId = req.params.id; 
-                // idk if this works will fix in future
-    
-                const group = await Group.findById(groupId)
-                    // .populate('members').populate('savings');
-                    // im thinking this only loads the actual group info and not the members and savings yet
-                    // this is for like preloading current info into the edit form, then the function below is for actually editing the group (editGroup)
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
+                const sidebar = req.session.sidebar;
+                const page = req.params.page;
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+                // const project = await Project.findById(projectId)
+                //     // .populate('groups')
+                //     //.populate('members').populate('savings');
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
 
 
-                if (!group) {
-                    return res.status(404).render("fail", { error: "Group not found." });
+                // if (!project) {
+                //     return res.status(404).render("fail", { error: "Project not found." });
+                // }
+                
+                const group = await Group.findOne({ _id: req.session.groupId });
+
+                let updatedParts = [] 
+
+                // var updatedParts;
+                if (req.query.search){
+                    updatedParts = await Member.find({
+                        $and: [
+                          { name: { $regex: req.query.search, $options: 'i' } }, 
+                          { _id: { $in: group.member } } 
+                        ]
+                      });
+                } else{
+                    updatedParts = await Member.find({_id: { $in: group.member } });
                 }
 
-                res.render("editGroup", { group });
+                //await updateOrgParts(updatedParts); 
+                // const orgParts = getOrgParts();
+                const pageParts = updatedParts;
+                //console.log(orgParts);
+ 
+                dashbuttons = dashboardButtons(authority);
+                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name});
             } else {
                 res.redirect("/");
             }
@@ -111,9 +135,8 @@ const partController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
+
     },
-
-
     // edit group
     editGroup: async (req, res) => {
         try {
@@ -636,93 +659,6 @@ const partController = {
         } catch (error) {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while deleting the cluster." });
-        }
-    },
-    newMember: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                // idk what this form will have
-                const { name, id, photo, nameFather, nameMother, age, sex, birthdate, address } = req.body;
-                
-                let savings = [];
-                const newMember = new Member({
-                    name,
-                    id,
-                    photo,
-                    nameFather,
-                    nameMother,
-                    age,
-                    sex,
-                    birthdate,
-                    address,
-                    savings
-                });
-                await newMember.save();
-
-                //redirecting to dashboard rn cuz idk where else to redirect to
-                res.redirect("/dashboard");
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while creating a new group." });
-        }
-    },
-
-    editMember: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                const memberId = req.params.id;
-                const member = await Member.findById(memberId);
-                const group = await Group.find({ members: member._id });
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
-
-
-                updateData = req.body;
-                
-                const updateMember = await Member.findOneAndUpdate({id: memberId}, updateData,{ new: true });
-
-                if (updateMember) {
-                    return res.json(updateMember);
-                  } else {
-                    return res.status(404).json( { error: "Update error!"});
-                }
-
-                //res.redirect("/dashboard");
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while editing the group." });
-        }
-    },
-
-    deleteMember: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                const memberId = req.params.id;
-                const member = await Group.findById(memberId);
-                const group = await Group.find({ members: member._id });
-                const loggedInUserId = req.session.userId;
-                const user = await User.findById(loggedInUserId);
-
-                await Saving.deleteMany({ member: member });
-                await Member.deleteMany({ _id: { $in: group.members } });
-                const deletedMember = await Member.findByIdAndDelete(memberId);
-                if (deletedMember) {
-                    return res.json(deletedMember);
-                } else {
-                    return res.status(404).json({ error: "Delete error! Project not found." });
-                }
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
 

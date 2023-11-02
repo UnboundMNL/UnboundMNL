@@ -1,0 +1,48 @@
+
+<table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
+    <thead>
+        <tr>
+            <!-- Adjust colspan to fit the number of cols of data needed -->
+            <th colspan = "3" class = "text-center">YEAR *update based on choice*</th>
+            <% const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']%>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <th colspan = "2" class = "text-center"><%=months[i]%></th>
+            <% } %>
+            <th>Year</th>
+        </tr>
+        <tr>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>ID</th>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <th>Savings</th>
+                <th>Grant</th>
+            <% } %>
+            <th>Total Savings</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let i = 0; i < months.length; i++) { %>
+        <tr>
+            <td>Montoya de la cruz</td>
+            <td>first</td>
+            <td>12111111</td>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <td>--</td>
+                <td>--</td>
+            <% } %>
+            <td>--</td>
+        </tr>
+        <tr>
+            <td>Last2</td>
+            <td>first2</td>
+            <td>121111211</td>
+            <% for(let i = 0; i < months.length; i++) { %>
+                <td>--</td>
+                <td>--</td>
+            <% } %>
+            <td>--</td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>

@@ -13,7 +13,7 @@ const loginController = {
                 let { username, password, remember } = req.body;
                 const user = await User.findOne({ username: username });
                 if (!user) {
-                    return res.status(401).json({ error: "That user does not exist." });
+                    return res.status(401).json({ error: "That User Does Not Exist." });
                 }
                 const isPasswordMatch = await user.comparePassword(password);
                 // const isPasswordMatch = (password == user.password);
@@ -29,7 +29,7 @@ const loginController = {
                     console.log(user.validGroup)
                 }
                 if (!isPasswordMatch ) {
-                    return res.status(401).json({ error: "Wrong Username or Password." });
+                    return res.status(401).json({ error: "Wrong Password." });
                 }
             
                 req.session.isLoggedIn = true;

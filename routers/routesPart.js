@@ -31,9 +31,8 @@ router.use(savingidMiddleware);
 router.post("/newGroup", partController.newGroup);
 router.post("/newProject", partController.newProject);
 router.post("/newCluster", partController.newCluster);
-router.post('/newMember', partController.newMember);
 
-router.get('/group/:id', partController.retrieveGroup);
+router.get('/member', partController.retrieveGroup);
 router.post('/group/:id/edit', partController.editGroup);
 router.post('/group/:id/delete', partController.deleteGroup);
 
@@ -45,8 +44,6 @@ router.get('/project/view/:page', partController.retrieveCluster);
 router.post('/cluster/:id/edit', partController.editCluster);
 router.post('/cluster/:id/delete', partController.deleteCluster);
 
-router.post('/member/:id/edit', partController.editMember);
-router.post('/member/:id/delete', partController.deleteMember);
 
 router.post('/SHGChoices',partController.SHGChoices);
 router.post('/projectChoices',partController.projectChoices);
