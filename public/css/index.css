@@ -150,6 +150,28 @@ main {
     margin-right: 1rem;
 }
 
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.container-rounded {
+    background-color: var(--tertiary-color);
+    color: var(--text-color);
+    padding: 0.3rem 1rem;
+    border-radius: 10px;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.container-rounded h3 {
+    color: var(--text-color);
+    margin: 0;
+}
+
 /* MODALS */
 .modal-buttons {
     display: flex;
@@ -230,6 +252,10 @@ main {
 
     .top-bar #topbar-name {
         display: none;
+    }
+
+    .member-total {
+        flex-direction: column;
     }
 
     main {
