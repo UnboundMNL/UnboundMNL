@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/profile.css">
     <%-include('components/headers.ejs', {authority, pageName: "Registration"})%>
 </head>
 
@@ -11,6 +13,10 @@
     <main>
         <!-- Top navigation bar -->
         <%- include('components/navbars/topNavbar.ejs')%>
+
+        <!-- Registration form -->
+        <%- include('components/registrationContent.ejs', {authority: authority})%>
+
         <script>open('registrationButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
     </main>
