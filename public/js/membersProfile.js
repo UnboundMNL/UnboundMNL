@@ -32,15 +32,31 @@ function backProfile() {
 
 }
 
-function cancelChanges(personalInfo) {
+function cancelChanges(personalInfoJSON) {
+    const personalInfo = JSON.parse(personalInfoJSON)
     // Clear the input fields
     const inputFields = document.querySelectorAll("input[type='text']");
     for (let i = 0; i < inputFields.length; i++) {
-        inputFields[i].value = '';
+        inputFields[i].value = "";
     }
 
     // Restore the original values
-    for (let i = 0; i < personalInfo.length; i++) {
+    for (let i = 0; i < inputFields.length; i++) {
+        console.log("Personal Info: " + personalInfo);
         inputFields[i].value = personalInfo[i];
+    }
+}
+
+/* KABAN */
+function setKabanStatusRadio(status) {
+    const radios = {
+        'Active': 'activeRadio',
+        'Retired (w/o Savings)': 'retiredNoSavingsRadio',
+        'Retired (w/ Savings)': 'retiredWithSavingsRadio'
+    };
+
+    if (radios[status]) {
+        document.getElementById(radios[status]).checked = true;
+        document.getElementById(radios[status]).disabled = false;
     }
 }
