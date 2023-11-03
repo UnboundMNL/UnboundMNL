@@ -16,6 +16,10 @@
 			<% if (partname=="SHG") { 
 				addAction = "/newGroup"
 				} %>
+
+			<% if (partname=="Member") { 
+				addAction = "/newMember"
+				} %>
 			<form id = "add<%=partname%>Form" class = "needs-validation" name = "add<%=partname%>Form" method = "POST" action = "<%=addAction%>" novalidate>
 				
                 <div class="modal-body">

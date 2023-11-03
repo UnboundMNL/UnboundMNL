@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    
     <!-- CSS -->
     <link rel="stylesheet" href="/css/cardPages.css" />
     
@@ -11,7 +9,6 @@
     <script src="/js/card.js"></script>
     <script src="/js/IDchecker.js"></script>
     <%-include('components/headers.ejs', {authority, pageName: "Clusters"})%>
-   
 </head>
 
 <body class="body-bg">
@@ -23,21 +20,13 @@
         <%- include('components/navbars/topNavbar.ejs')%>
 
         <!-- Cluster Content -->
-        <!-- Note: Temporary number of containers -->
         <div class="p-4 mt-5">
-            <% const path = ["Cluster"]; %>
-            <!-- const path = ["Clusters", "Cluster 1"]; -->
-            <div class="custom-path">
-                <% path.forEach((item) => { %>
-                    <li><a href="/<%=item%>"+><%= item %></a></li>
-                <% }); %>
-            </div>
             <% var type = "cluster";  %>
             <h4 class="mt-3">Clusters</h4>
             <%- include('components/cardPages.ejs', { pageParts, type, authority}) %>
+            <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
-        <%- include('components/pagination.ejs', {page, totalPages})%>
         <%- include('components/popups/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>

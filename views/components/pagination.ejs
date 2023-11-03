@@ -1,4 +1,4 @@
-<nav>
+<nav class="position-relative z-1">
     <ul class="pagination justify-content-center mt-4">
         <!-- Jump to first page button -->
         <% 
@@ -31,7 +31,7 @@
                     <li class="page-item"><a class="page-link" href="<%=i+1%>"> <%= i+1 %></a></li>
                 <% }
             }
-        } else if (totalPages < page+2){
+        } else if (totalPages < page+2){ 
             var startingPage = page - (4 - (totalPages-page));
             for (var i = 0; i < 5; i++) {
                 if (page == startingPage + i) { %>

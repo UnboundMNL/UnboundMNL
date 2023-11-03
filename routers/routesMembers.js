@@ -32,7 +32,7 @@ router.get('/memberInfo', membersController.retrieveMember);
 router.post('/newMember', membersController.newMember);
 router.post('/member/:id/edit', membersController.editMember);
 router.post('/member/:id/delete', membersController.deleteMember);
-
+router.get('/masterlist', membersController.retrieveMasterlist)
 
 
 module.exports = router;  

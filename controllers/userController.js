@@ -99,40 +99,7 @@ const userController = {
         }
     },
 
-    group: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                const userID = req.session.userId;
-                const sidebar = req.session.sidebar;
-                const user = await User.findById(userID);
-                const authority = user.authority;
-                const username = user.username;
 
-                // I assume that we'll make different controllers for each authority
-                // so like ibang controller for admin when they acccess a project/group?
-                if(authority !== "Treasurer"){
-                    return res.status(403).render("fail", { error: "You are not authorized to view this page." });
-                }
-
-                //sharedData.orgParts = await Group.find({ validTreasurers: userID }).populate('members').populate('savings');
-
-                // await updateSharedData();
-                // let orgParts = sharedData.orgParts;
-
-                const updatedParts = [];
-                await updateOrgParts(updatedParts); 
-                const orgParts = getOrgParts();
-
-                dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, orgParts, username, dashbuttons, sidebar });
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
-        }
-    },
 
     cluster: async (req, res) => {
         try {

@@ -1,0 +1,88 @@
+
+<div class="container-profile">
+    <div>
+        <button class="btn btn-outline-secondary btn-sm mb-2" onclick="backProfile()"><i class='bx bx-arrow-back'></i> Back to Profile</button>
+    </div>
+    <div class="d-flex justify-content-between mt-3">
+        <div class="align-items-center">
+            <div class="d-flex align-items-center flex-wrap">
+                <div class="d-flex flex-column">
+                    <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
+                </div>
+                <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
+            </div>
+            <button class="btn btn-secondary btn-sm">Change Photo</button>
+        </div>
+        <div class="align-items-right">
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteMemberModal">Delete Member</button>
+        </div>
+    </div>
+    <hr>
+
+    <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
+    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
+    <!-- Hannah: Temporary Info -->
+    <% const personalInfo = [member.id, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
+    member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
+
+    <% const fieldNames = ["id", "MemberName", "cluster", "project", "group", "address",
+    "MotherName", "FatherName", "birthdate", "sex", "status"]; %>
+
+    <div class="d-flex mt-4" id="infoContainer">
+        <div class="row d-flex flex-grow-1">
+            <div class="d-flex flex-column col-12 col-md-6 mb-4">
+                <h6><u>GENERAL INFORMATION</u></h6>
+                <% for (let i = 0; i < Math.ceil(info.length / 2); i++) { %>
+                        <% if (i==2 || i==3 || i==4){
+                            continue;
+                        } %>
+                    <div class="row mt-2 align-items-center">
+                        <h6 class="col-4 m-0"><%- info[i] %></h6>
+                    <% if (fieldNames[i]=="MemberName") { %>
+                        <input type="text" class="col form-control" value="<%- member.name.firstName %>" id="MemberFirstName"/>
+                        <input type="text" class="col form-control" value="<%- member.name.lastName %>" id="MemberLastName"/>
+                    <% } else { %>
+                        <input type="text" class="col form-control" value="<%- personalInfo[i] %>" id="<%- fieldNames[i]%>"/>
+                        <% }%>
+                    </div>
+                <% } %>                
+            </div>
+            
+            <div class="d-flex flex-column col-12 col-md-6">
+                <h6><u>PERSONAL INFORMATION</u></h6>         
+                <% for (let i = Math.ceil(info.length / 2); i < info.length; i++) { %>
+                    <div class="row mt-2 align-items-center">
+                        <h6 class="col-4 m-0"><%- info[i] %></h6>
+                        <% if (fieldNames[i]=="birthdate") { %> 
+                            <input type="date" class="col form-control" value="<%- editDate %>" id="birthdate"/>
+                        <% } else if (fieldNames[i]=="MotherName"){ %>
+                            <input type="text" class="col form-control" value="<%- member.nameMother.firstName %>" id="MotherFirstName"/>
+                            <input type="text" class="col form-control" value="<%- member.nameMother.lastName %>" id="MotherLastName"/>
+                        <% } else if (fieldNames[i]=="FatherName"){ %>
+                            <input type="text" class="col form-control" value="<%- member.nameFather.firstName %>" id="FatherFirstName"/>
+                            <input type="text" class="col form-control" value="<%- member.nameFather.lastName %>" id="FatherLastName"/>
+                        <% } else if (fieldNames[i]=="sex"){%>
+                            <select class="col form-control" id="sex" name="sex" aria-label="sex">
+                                <option <% if  (member.sex=="Male"){ %> selected <% } %> value="Male">Male</option>
+                                <option <% if  (member.sex=="Female"){ %> selected <% } %> value="Female">Female</option>
+                                <option <% if  (member.sex=="Other"){ %> selected <% } %> value="Other">Other</option>
+                            </select>  
+                        <% } else if (fieldNames[i]=="status"){%>
+                            <select class="col form-control" id="status" name="status" aria-label="status">
+                                <option selected default hidden value="">Choose a Status</option>
+                                <option <% if  (member.status=="Active"){ %> selected <% } %> value="Active">Active</option>
+                                <option <% if  (member.status=="RwS"){ %> selected <% } %> value="RwS">Retired with Savings</option>
+                                <option <% if  (member.status=="RwoS"){ %> selected <% } %> value="RwoS">Retired w/o Savings</option>
+                            </select>  
+                        <% }%>%>
+                    </div>
+                <% } %>    
+            </div>  
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4 button-gap">
+        <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(`<%- JSON.stringify(personalInfo) %>`)'>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveEdit">Save Changes</button>
+    </div>  
+</div>

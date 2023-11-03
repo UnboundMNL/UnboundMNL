@@ -1,0 +1,44 @@
+<!-- Member's Profile -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- FUNCTIONS -->
+    <script src="/js/membersProfile.js"></script>
+    <script src="/js/saveEdit.js"></script>
+    <%-include('components/headers.ejs', {authority, pageName: "Member's Profile"})%>
+</head>
+
+<body class="body-bg">
+    
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
+    
+    <main>
+        <!-- Top navigation bar -->
+        <%- include('components/navbars/topNavbar.ejs')%>
+
+        <!-- Member Profile Content -->
+        <div class="p-4 mt-5">
+            <% const path = ["Cluster"]; %>
+            <!-- const path = ["Clusters", "Cluster 1"]; -->
+            <div class="custom-path">
+                <% path.forEach((item) => { %>
+                    <li><a href="/<%=item%>"+><%= item %></a></li>
+                <% }); %>
+            </div>
+
+            <h4 class="mt-3">Member's Profile</h4>
+            <%- include('components/memProfileContent.ejs') %>
+        </div>
+
+        <!-- Pop-ups -->
+        <%-include('components/popups/savePopup.ejs') %>
+        <%-include('components/popups/deleteMemberModal.ejs') %>
+        <% const actionForm = "/member/"+memberId+"/edit"; %>
+        <script>
+            open('partsButton');
+            saveEdit("/memberInfo","<%=actionForm%>","saveEdit",)
+        </script>
+        <%-include('components/popups/logoutPopup.ejs') %> 
+    </main>
+</body>
+</html>
