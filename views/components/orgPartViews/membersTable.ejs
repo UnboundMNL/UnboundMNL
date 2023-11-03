@@ -22,27 +22,18 @@
         </tr>
     </thead>
     <tbody>
-        <% for(let i = 0; i < months.length; i++) { %>
         <tr>
-            <td>Montoya de la cruz</td>
-            <td>first</td>
-            <td>12111111</td>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <td>--</td>
-                <td>--</td>
+            <% var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']; %>
+            <% for (let i = 0; i < pageParts.length; i++) { %>
+                <td><%=pageParts[i].name.lastname%></td>
+                <td><%=pageParts[i].name.firstname%></td>
+                <td><%=pageParts[i].id%></td>
+                    <% for(var j=0; j<months.length; j++) { %>
+                        <td><%= memberSavings[i][month[j]].savings %></td>
+                        <td><%= memberSavings[i][month[j]].match %></td>
+                    <% } %>
+                <td><%= memberSavings[i].totalSavings %></td>
             <% } %>
-            <td>--</td>
         </tr>
-        <tr>
-            <td>Last2</td>
-            <td>first2</td>
-            <td>121111211</td>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <td>--</td>
-                <td>--</td>
-            <% } %>
-            <td>--</td>
-        </tr>
-        <% } %>
     </tbody>
 </table>

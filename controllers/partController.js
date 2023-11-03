@@ -121,13 +121,18 @@ const partController = {
                     updatedParts = await Member.find({_id: { $in: group.member } });
                 }
 
+                const date = new Date().getFullYear();
+                const memberSavings = []
+                for (const member of updatedParts){
+                     memberSavings.push(await Saving.find({member: member._id, year: date}));   
+                }
+
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
                 const pageParts = updatedParts;
                 //console.log(orgParts);
- 
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name});
+                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name, memberSavings});
             } else {
                 res.redirect("/");
             }
