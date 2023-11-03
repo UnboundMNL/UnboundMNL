@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById('editAccount').style.display = 'none';
+
+    // Disable text input fields
+    const inputContainer = document.getElementById("inputContainer");
+    const inputFields = inputContainer.querySelectorAll("input:not([type='checkbox'])");
+    for (let i = 0; i < inputFields.length; i++) {
+        inputFields[i].disabled = true;
+    }
 });
 
 function editAccount() {
@@ -13,45 +20,66 @@ function backAccount() {
 }
 
 function validatePassword() {
-    var pass = document.getElementById('pass').value;
-    var confirm_pass = document.getElementById('confirm_pass').value;
-    var matching_alert = document.getElementById('matching_alert');
+    var newPass = document.getElementById('newPass').value;
+    var confirmPass = document.getElementById('confirmPass').value;
+    var matchingAlert2 = document.getElementById('matchingAlert2');
     var saveChanges = document.getElementById('saveChanges');
 
     // TBD: Temp minimum length of password
-    var min_length = 1;
+    var minLength = 8;
 
-    if (pass.length > min_length && confirm_pass.length > min_length) {
-        if (pass !== confirm_pass) {
-            matching_alert.style.color = 'red';
-            matching_alert.innerHTML = '✕ Use the same password';
-            // saveChanges.disabled = true;
-            // saveChanges.style.opacity = 0.4;
-        } else {
-            matching_alert.style.color = 'lime';
-            matching_alert.innerHTML = '✓ Password Matched';
-            // saveChanges.disabled = false;
-            // saveChanges.style.opacity = 1;
+    if (newPass.length === 0 && confirmPass.length === 0) {
+        matchingAlert2.innerHTML = '';
+    } else if (newPass !== confirmPass || newPass.length < minLength) {
+        matchingAlert2.style.color = 'red';
+        if (newPass !== confirmPass && confirmPass.length > 0) {
+            matchingAlert2.innerHTML = '✕ Use the same password';
+        } else if (newPass.length >= minLength && confirmPass.length === 0) {
+            matchingAlert2.innerHTML = '✕ Confirm your password';
+        } else if (newPass.length < minLength) {
+            matchingAlert2.innerHTML = '✕ Password must be at least ' + minLength + ' characters';
         }
-    } else if (pass.length == 0 && confirm_pass.length == 0) {
-        matching_alert.innerHTML = '';
-        // saveChanges.disabled = false;
-        // saveChanges.style.opacity = 1;
+        // Add code to disable the save button if needed
     } else {
-        matching_alert.style.color = 'red';
-        matching_alert.innerHTML = '✕ Password too short';
-        // saveChanges.disabled = true;
-        // saveChanges.style.opacity = 0.4;
+        matchingAlert2.style.color = 'lime';
+        matchingAlert2.innerHTML = '✓ Password Matched';
+        // Add code to enable the save button if needed
     }
 }
 
+function clearAlert() {
+    var matchingAlert2 = document.getElementById('matchingAlert2');
+    matchingAlert2.innerHTML = '';
+}
+
 function cancelChanges(user) {
-    // Clear the input fields
-    const inputFields = document.querySelectorAll("input");
+    const inputContainer = document.getElementById("inputContainer");
+    const inputFields = inputContainer.querySelectorAll("input[type='text'], input[type='password']");
     for (let i = 0; i < inputFields.length; i++) {
-        inputFields[i].value = '';
-        if (i == 0) {
+        if (inputFields[i].type === 'text') {
             inputFields[i].value = user;
+        } else {
+            inputFields[i].value = '';
         }
     }
+}
+
+// Hannah: I made it so that the checkbox is disabled when the other checkbox is checked 
+// and it clears the text fields when the checkbox is unchecked
+function toggleFields(targetId, checkbox, user) {
+    const target = document.getElementById(targetId);
+    const inputs = target.querySelectorAll('input');
+
+    if (!checkbox.checked) {
+        cancelChanges(user);
+        clearAlert();
+    }
+    
+    for (const input of inputs) {
+        input.disabled = !checkbox.checked;
+    }
+
+    const otherCheckboxId = checkbox.id === 'checkUsername' ? 'checkPassword' : 'checkUsername';
+    const otherCheckbox = document.getElementById(otherCheckboxId);
+    otherCheckbox.disabled = checkbox.checked;
 }
