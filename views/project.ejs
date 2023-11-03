@@ -42,9 +42,9 @@
             </div>
             <% var type = "Sub-Projects"; %>
             <%- include('components/cardPages.ejs', { pageParts, type}) %>
+            <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
-        <%- include('components/pagination.ejs', {page, totalPages})%>
         <%- include('components/popups/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>

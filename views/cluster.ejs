@@ -24,9 +24,9 @@
             <% var type = "cluster";  %>
             <h4 class="mt-3">Clusters</h4>
             <%- include('components/cardPages.ejs', { pageParts, type, authority}) %>
+            <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
-        <%- include('components/pagination.ejs', {page, totalPages})%>
         <%- include('components/popups/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>

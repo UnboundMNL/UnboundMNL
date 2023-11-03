@@ -48,9 +48,9 @@
              
             <% var type = "SHG";  %>
             <%- include('components/shgContent.ejs', { pageParts, type }) %>
+            <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
-        <%- include('components/pagination.ejs', {page, totalPages})%>
         <%- include('components/popups/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
