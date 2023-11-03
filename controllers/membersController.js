@@ -20,13 +20,42 @@ const membersController = {
                 const page = req.params.page;
                 const userID = req.session.userId;
                 const user = await User.findById(userID);
-
+                const username = user.username;
+                const authority = user.authority;
                 //let member = await Member.findById(req.params.memberId).populate("savings");
-                let member = await Member.findById(req.params.memberId);
+                // let member = await Member.findById(req.session.memberId);
+                var member = await Member.findById("65450abcd05ecf1638e34996");
+                var memberId = member._id; //to change
+                var cluster = (await Cluster.findById(member.clusterId)).name;
+                var project = (await Project.findById(member.projectId)).name;
+                var group = (await Group.findById(member.groupId)).name; 
+                dashbuttons = dashboardButtons(authority);
 
-                dashbuttons = dashboardButtons(user.authority);
 
-                res.render("member", { member, dashbuttons, sidebar, page }); //page parts?
+
+                const originalDate = new Date(member.birthdate);
+                originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
+                const options = {
+                    month: 'short',
+                    day: '2-digit',
+                    year: 'numeric',
+                };
+
+                fixedBirthdate= new Intl.DateTimeFormat('en-US', options).format(originalDate);
+
+
+
+                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                var parts = fixedBirthdate.split(' ');
+                var editDate;
+                if (parts.length === 3) {
+                    var monthIndex = months.indexOf(parts[0]) + 1;
+                    var day = parts[1].replace(',', '');
+                    var year = parts[2];
+                    editDate =  year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                }
+
+                res.render("memberprofile", { member, dashbuttons, sidebar, page, authority, username, cluster, project, group, fixedBirthdate, editDate, memberId }); //page parts?
 
             }
             else {
@@ -43,49 +72,50 @@ const membersController = {
             if(req.session.isLoggedIn) {
                 const userID = req.session.userId;
                 
-                const { memberFirstname, memberMiddlename, memberLastname, id, 
-                    memberFatherFirstname, memberFatherMiddlename, memberFatherLastname,
-                    memberMotherFirstname, memberMotherMiddlename, memberMotherLastname,
+                const { MemberFirstName, MemberLastName, id, 
+                    FatherFirstName, FatherLastName,
+                    MotherFirstName, MotherLastName,
                     sex, birthdate, address, status } = req.body;
                     // might remove status from here in future idk. leaving it in case they wanna track non-Active members but yeah.
                 
                 let name = {
-                    firstName: memberFirstname,
-                    middleName: memberMiddlename,
-                    lastName: memberLastname
+                    firstName: MemberFirstName,
+                    lastName: MemberLastName
                 }
     
                 let nameFather = {
-                    firstName: memberFatherFirstname,
-                    middleName: memberFatherMiddlename,
-                    lastName: memberFatherLastname
+                    firstName: FatherFirstName,
+                    lastName: FatherLastName
                 }
-    
+                console.log(nameFather)
                 let nameMother = {
-                    firstName: memberMotherFirstname,
-                    middleName: memberMotherMiddlename,
-                    lastName: memberMotherLastname
+                    firstName: MotherFirstName,
+                    lastName: MotherLastName
                 }
                 let savings = [];
+                let projectId = req.session.projectId;
+                let groupId = req.session.groupId;
+                let clusterId = req.session.clusterId;
+                
                 const newMember = new Member({
-                    name, id, nameFather, nameMother, sex, birthdate, address, savings, status
+                    name, id, nameFather, nameMother, sex, birthdate, address, savings, status, projectId, groupId, clusterId
                 })
                 await newMember.save();
 
-                let group = await Group.findById(req.params.groupId);
+                let group = await Group.findById(req.session.groupId);
                 group.member.push(newMember);
                 group.totalMembers += 1;
                 await group.save();
 
-                let project = await Project.findById(req.params.projectId);
+                let project = await Project.findById(req.session.projectId);
                 project.totalMembers += 1;
                 await project.save();
 
-                let cluster = await Cluster.findById(req.params.clusterId);
+                let cluster = await Cluster.findById(req.session.clusterId);
                 cluster.totalMembers += 1;
                 await cluster.save();
 
-                res.redirect("/members");
+                res.redirect("/member");
             }
             else {
                 res.redirect("/");
@@ -100,42 +130,41 @@ const membersController = {
         try {
             if(req.session.isLoggedIn) {
                 const userID = req.session.userId;
-                
-                const { memberFirstname, memberMiddlename, memberLastname, id, 
-                    memberFatherFirstname, memberFatherMiddlename, memberFatherLastname,
-                    memberMotherFirstname, memberMotherMiddlename, memberMotherLastname,
+                const { MemberFirstName, MemberLastName, id, 
+                    FatherFirstName, FatherLastName,
+                    MotherFirstName, MotherLastName,
                     sex, birthdate, address, status } = req.body;
+
+                // const { memberFirstname, memberMiddlename, memberLastname, id, 
+                //     memberFatherFirstname, memberFatherMiddlename, memberFatherLastname,
+                //     memberMotherFirstname, memberMotherMiddlename, memberMotherLastname,
+                //     sex, birthdate, address, status } = req.body;
                     // might remove status from here in future idk. leaving it in case they wanna track non-Active members but yeah.
                 
                 let name = {
-                    firstName: memberFirstname,
-                    middleName: memberMiddlename,
-                    lastName: memberLastname
+                    firstName: MemberFirstName,
+                    lastName: MemberLastName
                 }
     
                 let nameFather = {
-                    firstName: memberFatherFirstname,
-                    middleName: memberFatherMiddlename,
-                    lastName: memberFatherLastname
+                    firstName: FatherFirstName,
+                    lastName: FatherLastName
                 }
     
                 let nameMother = {
-                    firstName: memberMotherFirstname,
-                    middleName: memberMotherMiddlename,
-                    lastName: memberMotherLastname
+                    firstName: MotherFirstName,
+                    lastName: MotherLastName
                 }
-
+                console.log(req.params.id);
                 const updateData = {name, id, nameFather, nameMother, sex, birthdate, address, status};
-
-                const updateMember = Member.findOneAndUpdate({
-                    _id: req.params.memberId}, updateData, {new: true})
-                
+                const updateMember = await Member.findOneAndUpdate({
+                    _id: req.params.id}, updateData, {new: true})
                 if(updateMember) {
                     console.log("Member updated successfully.")
-                    res.redirect("/members");
+                    res.json();
                 }
                 else {
-                    console.log("Member update failed.")
+                    res.status(500).render("fail", { error: "An error occurred while editing data." });
                 }
             }
             else {
@@ -209,7 +238,23 @@ const membersController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
+    retrieveMasterlist: async (req,res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+                res.render("masterlist",{authority, username});
+            } else{
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
+        }
 
+    }
 }
 
 module.exports = membersController;
