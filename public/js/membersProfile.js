@@ -1,6 +1,6 @@
-window.onload = function() {
-    displayContent('profile');
-}
+document.addEventListener("DOMContentLoaded", (event) => {
+    displayContent("profile");
+});
 
 function displayContent(section) {
     console.log("Displaying " + section);
