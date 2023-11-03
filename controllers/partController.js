@@ -121,10 +121,28 @@ const partController = {
                     updatedParts = await Member.find({_id: { $in: group.member } });
                 }
 
+                console.log(updatedParts)
                 const date = new Date().getFullYear();
-                const memberSavings = []
-                for (const member of updatedParts){
-                     memberSavings.push(await Saving.find({member: member._id, year: date}));   
+
+                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
+                for (let i = 0; i < updatedParts.length; i++){
+                    let memberSavings = await Saving.find({member: updatedParts[i]._id, year: date});
+                    console.log(memberSavings)
+                    updatedParts[i].totalMatch = "--";
+                    updatedParts[i].totalSavings = "--";
+                    if(memberSavings.length != 0){
+                        
+                        for(let j = 0; j < months.length; j++){
+                            updatedParts[i][months[j]].savings = memberSavings[0][months[j]].savings
+                            updatedParts[i][months[j]].match = memberSavings[0][months[j]].match
+                        }
+
+                        if(memberSavings[0].totalSavings)
+                            updatedParts[i].totalSavings = memberSavings.totalSavings;
+                
+                        if(memberSavings[0].totalMatch)
+                            updatedParts[i].totalMatch = memberSavings.totalMatch;
+                    }
                 }
 
                 //await updateOrgParts(updatedParts); 
@@ -132,7 +150,7 @@ const partController = {
                 const pageParts = updatedParts;
                 //console.log(orgParts);
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name, memberSavings});
+                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name});
             } else {
                 res.redirect("/");
             }

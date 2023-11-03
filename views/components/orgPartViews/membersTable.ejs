@@ -25,14 +25,19 @@
         <tr>
             <% var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']; %>
             <% for (let i = 0; i < pageParts.length; i++) { %>
-                <td><%=pageParts[i].name.lastname%></td>
-                <td><%=pageParts[i].name.firstname%></td>
+                <td><%=pageParts[i].name.lastName%></td>
+                <td><%=pageParts[i].name.firstName%></td>
                 <td><%=pageParts[i].id%></td>
                     <% for(var j=0; j<months.length; j++) { %>
-                        <td><%= memberSavings[i][month[j]].savings %></td>
-                        <td><%= memberSavings[i][month[j]].match %></td>
+                        <% if(pageParts[i][month[j]]) {%>
+                            <td><%= pageParts[i][month[j]].savings %></td>
+                            <td><%= pageParts[i][month[j]].match %></td>
+                        <% } else {%>
+                            <td>--</td>
+                            <td>--</td>
+                        <% } %>
                     <% } %>
-                <td><%= memberSavings[i].totalSavings %></td>
+                <td><%= pageParts[i].totalSavings %></td>
             <% } %>
         </tr>
     </tbody>
