@@ -18,6 +18,15 @@
     --tertiary-color: #ADE2FF;
     --text-color: #2E4057;
     --red-color: #DC3545;
+    --translucent-tertiary-color: rgba(173, 226, 255, 0.5);
+}
+
+html {
+    height: 100vh;
+}
+
+body {
+    height: calc(100% - 4rem);
 }
 
 .body-bg {
@@ -133,12 +142,14 @@
 
 /* MAIN */
 main {
+    margin-top: 4rem;
     margin-left: 14rem;
     padding: 0;
+    height: 100%;
 }
 
 .button-gap {
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .container-profile {
