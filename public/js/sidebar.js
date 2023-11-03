@@ -73,7 +73,7 @@ function toggleMiddle(){
 }
 
 // logout button
-$(document).on('click', '#logoutButton', function() {
+$(document).on('click', '#logout', function() {
     fetch('/logout', {
         method: 'POST',
         headers: {

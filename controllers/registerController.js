@@ -34,30 +34,8 @@ const registerController = {
               if (existingUser) {
                 return res.status(400).json( { error:"Username already exists"});
               }
-      
-              let validParts = [];
-              //get the children of validPart (if SEDO)
-              if (authority === "SEDO") {
-                    const cluster = await Part.findById(validPart);
-      
-                    validParts.push(cluster._id);
-      
-                    const projects = await Part.find({ parentPart: cluster._id, type: 'Project' });
-                    projects.forEach(project => {
-                        // Add Project IDs
-                        validParts.push(project._id);
-      
-                        // Retrieve groups that belong to the project
-                        const groups = project.childPart.filter(partId => partId.type === 'Group');
-                        // Add Group IDs
-                        validParts.push(group._id);
-                    });
-                    
-              }else{
-                validParts = validPart;
-              }
               
-              const user = new User({ username, password, authority, validParts });
+              const user = new User({ username, password, authority, validPart });
               const savedUser = await user.save();
               savedUser.userId = savedUser._id;
               await savedUser.save();

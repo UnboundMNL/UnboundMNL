@@ -8,25 +8,45 @@ const Member = require('../models/Member');
 const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
+const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
+
+const { clusteridMiddleware } = require('../lib/middleware');
+const { projectidMiddleware } = require('../lib/middleware');
+const { groupidMiddleware } = require('../lib/middleware');
+const { memberidMiddleware } = require('../lib/middleware');
+const { savingidMiddleware } = require('../lib/middleware');
 
 const partController = require('../controllers/partController.js');
 
-router.post("/group", partController.newGroup);
-router.post("/project", partController.newProject);
-router.post("/cluster", partController.newCluster);
+router.use(clusteridMiddleware);
+router.use(projectidMiddleware);
+router.use(groupidMiddleware);
+router.use(memberidMiddleware);
+router.use(savingidMiddleware);
 
-router.get('/groups/:id', partController.retrieveGroup);
-router.post('/groups/:id/edit', partController.editGroup);
-router.post('/groups/:id/delete', partController.deleteGroup);
+//TO ADD: Midleware for cluster/project/group IDs
 
-router.get('/projects/:id', partController.retrieveProject);
-router.post('/projects/:id/edit', partController.editProject);
-router.post('/projects/:id/delete', partController.deleteProject);
+router.post("/newGroup", partController.newGroup);
+router.post("/newProject", partController.newProject);
+router.post("/newCluster", partController.newCluster);
 
-router.get('/clusters/:id', partController.retrieveCluster);
-router.post('/clusters/:id/edit', partController.editCluster);
-router.post('/clusters/:id/delete', partController.deleteCluster);
+router.get('/member', partController.retrieveGroup);
+router.post('/group/:id/edit', partController.editGroup);
+router.post('/group/:id/delete', partController.deleteGroup);
 
+router.get('/group/view/:page', partController.retrieveProject);
+router.post('/project/:id/edit', partController.editProject);
+router.post('/project/:id/delete', partController.deleteProject);
+
+router.get('/project/view/:page', partController.retrieveCluster);
+router.post('/cluster/:id/edit', partController.editCluster);
+router.post('/cluster/:id/delete', partController.deleteCluster);
+
+
+router.post('/SHGChoices',partController.SHGChoices);
+router.post('/projectChoices',partController.projectChoices);
 //alternative if we want to do it by name. will have to change some code in the controllers
 // router.post("/group", partController.newGroup);
 // router.post("/project", partController.newProject);

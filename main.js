@@ -20,13 +20,24 @@ const routesRegister = require('./routers/routesRegister');
 const routesLogin = require('./routers/routesLogin');
 const routesUser = require('./routers/routesUser');
 const routesSidebar = require('./routers/routesSidebar');
+const routesMembers = require('./routers/routesMembers');
 const routesSavings = require('./routers/routesSavings');
+const routesForms = require('./routers/routesForms');
+const routesPart = require('./routers/routesPart');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
 const { rememberMeMiddleware } = require('./lib/middleware');
 const { sidebarMiddleware } = require('./lib/middleware');
+
+const { clusteridMiddleware } = require('./lib/middleware');
+const { projectidMiddleware } = require('./lib/middleware');
+const { groupidMiddleware } = require('./lib/middleware');
+const { memberidMiddleware } = require('./lib/middleware');
+const { savingidMiddleware } = require('./lib/middleware');
+
 const { hashPassword } = require('./lib/hashing');
+
 
 //const Loan = require('../models/Loan')
 const Member = require('./models/Member');
@@ -98,33 +109,79 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/clusterLoad",  (req, res) => { 
-  res.redirect("/cluster");
+app.get("/cluster",  (req, res) => { 
+  res.redirect("/cluster/view/1");
 })
 
-app.get("/projectLoad",  (req, res) => { 
-  res.redirect("/project");
+app.get("/project",  (req, res) => { 
+  res.redirect("/project/view/1");
 })
 
-app.get("/groupLoad",  (req, res) => { 
-  res.redirect("/group");
-})
+app.get("/group",  (req, res) => { 
+  res.redirect("/group/view/1");
+});
 
-app.get("/savingsLoad",  (req, res) => { 
-  res.redirect("/savings");
-})
+// app.get("/manual", async (req, res) => {
+//   const newGroup = new Group({
+//     SPU: 'SPU',
+//     name: 'Group Name',
+//     area: 'Group Area',
+//     depositoryBank: 'Depository Bank Name',
+//     bankAccountType: 'Savings', // or 'Checking'
+//     bankAccountNum: 1234567890, // Replace with the actual account number
+//     SHGLeader: {
+//       firstName: 'SHG Leader First Name',
+//       lastName: 'SHG Leader Last Name',
+//       contatNo: 'SHG Leader Contact Number'
+//     },
+//     SEDPChairman: {
+//       firstName: 'SEDP Chairman First Name',
+//       lastName: 'SEDP Chairman Last Name',
+//       contatNo: 'SEDP Chairman Contact Number'
+//     },
+//     kabanTreasurer: {
+//       firstName: 'Kaban Treasurer First Name',
+//       lastName: 'Kaban Treasurer Last Name',
+//       contatNo: 'Kaban Treasurer Contact Number'
+//     },
+//     kabanAuditor: {
+//       firstName: 'Kaban Auditor First Name',
+//       lastName: 'Kaban Auditor Last Name',
+//       contatNo: 'Kaban Auditor Contact Number'
+//     },
+//     member: [], // You can add member IDs here
+//     totalMembers: 0, // Initial value
+//     totalKaban: 0 // Initial value
+//   });
 
-app.get("/memberLoad",  (req, res) => { 
-  res.redirect("/member");
-})
+//   try {
+//     // Save the new document to the database
+//     const savedGroup = await newGroup.save();
+//     res.status(201).json({ message: 'Group created successfully', group: savedGroup });
+//   } catch (error) {
+//     console.error('Error creating Group:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 
-app.get("/registrationLoad",  (req, res) => { 
-  res.redirect("/registration");
-})
 
-app.get("/profileLoad",  (req, res) => { 
-  res.redirect("/profile");
-})
+
+
+// app.get("/savings",  (req, res) => { 
+//   res.redirect("/savings");
+// })
+
+// app.get("/member",  (req, res) => { 
+//   res.redirect("/member");
+// })
+
+// app.get("/registration",  (req, res) => { 
+//   res.redirect("/registration");
+// })
+
+// app.get("/profile",  (req, res) => { 
+//   res.redirect("/profile");
+// })
 
 // app.get('*', function(req, res){
 //   res.redirect('/dashboard');
@@ -155,11 +212,13 @@ app.get("/profileLoad",  (req, res) => {
 //   res.render("login");
 // })
 
-// app.get("/logout", async(req, res)=>{
-//   await req.session.destroy();
-//   console.log("not logged in");
-//   res.render("logout")
-// })
+app.get("/logout", async(req, res)=>{
+  req.session.destroy();
+  res.json()
+  //await req.session.destroy();
+  console.log("not logged in");
+  res.render("/")
+})
 
 // app.get("/success", (req, res) => {
 //   res.render("success");
@@ -170,12 +229,19 @@ app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
 
+app.use(clusteridMiddleware);
+app.use(projectidMiddleware);
+app.use(groupidMiddleware);
+app.use(memberidMiddleware);
+app.use(savingidMiddleware);
+
+
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);
 app.use(routesLogin);
 app.use(routesUser);
 app.use(routesSidebar);
+app.use(routesMembers);
 app.use(routesSavings);
-
-
-
+app.use(routesForms);
+app.use(routesPart);

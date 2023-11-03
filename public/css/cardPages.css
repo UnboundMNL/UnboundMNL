@@ -1,0 +1,52 @@
+/* --------------- SEARCH BAR --------------- */
+.search-bar input {
+    border-radius: 8px 0 0 8px;
+}
+
+.search-bar button {
+    border-radius: 0 8px 8px 0;
+}
+
+/* --------------- CARDS --------------- */
+.container-style {
+    background-color: white;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.container-style button {
+    margin-right: 0.5rem;
+}
+
+.container-style h3 {
+    color: var(--primary-color);
+}
+
+.container-style:hover {
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+.container-bottom {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+}
+
+.details-container {
+    background-image: linear-gradient(whitesmoke, white 15%);
+    margin: -0.8rem 0 1rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.page-title p {
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.modal-body i {
+    font-size: 4rem;
+    color: var(--red-color);
+}

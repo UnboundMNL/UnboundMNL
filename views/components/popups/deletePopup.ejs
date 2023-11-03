@@ -1,0 +1,33 @@
+<% for (let i = 0; i < pageParts.length; i++) { %>
+    <div class="modal fade" id="deleteModal<%= i %>" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class='bx bx-x-circle'></i>
+                    <div>
+                        <h4 class="text-center p-2">Delete Confirmation</h4>
+                        <h6 class="text-center p-2">Are you sure you want to delete <%= type %> <%= pageParts[i].name %>?</h6> 
+                    </div>
+                    <div class="modal-buttons p-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <% var deleteID= "delete_"+pageParts[i]._id ; %>
+                        <button type="button" class="btn btn-danger" id="<%=deleteID%>">Delete</button>
+                        <script>
+                            <% if (type == "cluster") { %>
+                                cardDelete("cluster", "<%= pageParts[i]._id %>");
+                            <% } else if (type == "Sub-Projects") { %>
+                                cardDelete("project", "<%= pageParts[i]._id %>");
+                            <% } else if (type == "SHG") { %>
+                                cardDelete("group", "<%= pageParts[i]._id %>");
+                            <% }%>
+                        </script>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>

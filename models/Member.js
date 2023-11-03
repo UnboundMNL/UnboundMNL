@@ -2,14 +2,13 @@ const mongoose = require('mongoose');
 
 
 const MemberSchema = new mongoose.Schema({
-  partID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'part', required: true }],
   name: {
     firstName: String,
     middleName: String,
-    lastName: String
+    lastName: {type: String, required: true}
   },
-  id: String,
-  photo: { type: String },
+  id: {type: String, required: true},
+  photo: { type: String, required: true, default: 'something' },
 
   nameFather: {
     firstName: String,
@@ -22,14 +21,13 @@ const MemberSchema = new mongoose.Schema({
     lastName: String
   },
 
-  age: Number, //this is a derivable field!
-  sex: String,
-  birthdate: {type: String, required: true},
+  sex: {type: String, required: true},
+  birthdate: {type: Date, required: true},
   address: {type: String, required: true},
 
   savings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'saving' }],
-  totalSaving: Number, 
-  totalMatch: Number, 
+  totalSaving: {type: Number, default: 0}, 
+  totalMatch: {type: Number, default: 0}, 
 
                       //Active, Retired with Savings, Retired w/o Savings
   status: {type: String, enum:['Active', 'RwS', 'RwoS'], default: 'Active', required: true},

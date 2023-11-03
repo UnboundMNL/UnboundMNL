@@ -1,71 +1,159 @@
 const mongoose = require('mongoose');
 
-const YearSchema = new mongoose.Schema({
-    year: {type: Number, required: true},
-
-    //di na ako magsasalita goodbye
-    //im not fixing this this isnt my problem anymore
-
-    //option 1
-    months: [{type: mongoose.Schema.Types.ObjectId, ref: 'month'}],
-
-    //option2
-    // jan: {type: mongoose.Schema.Types.ObjectId, ref: 'month'},
-    // feb: {type: mongoose.Schema.Types.ObjectId, ref: 'month'},
-    // ...
-
-    //{jan : [savings, match]}
-
-    //option 3 - I have no idea if this works
-
-    // months: { //keys are always strings
-    //     type: Map,
-    //     of: [BigInt], //variable type of the value
-    // }
-
-    // {'Jan' : [savings, match], 'Feb' : [savings, match], ...}
-
-    totalSavings: {type: Number, default: -1},
-    totalMatchingGrant: {type: Number, default: -1}
-})
-
-// const MonthSchema = new mongoose.Schema({ //only if option 1 is used
-//     month: {type: Number, required: true},
-//     savings: {type: Number, default: -1},
-//     matchingGrant: {type: Number, default: -1}
-// })
-
 const SavingSchema = new mongoose.Schema({
-    memberID: { type: mongoose.Schema.Types.ObjectId, ref: 'member', required: true },
-    // year: {type: Number, required: true}, //may improve later on
-    //key value pair
 
-    savings: {
-        type: [YearSchema],
-        default: [],
-        required:true
+    //there is already a FK for this schema in Member.js, choose one nalang
+    memberID: { type: mongoose.Schema.Types.ObjectId, ref: 'member', required: true },
+
+    savings: {type: Number, default: 0},
+    matchingGrant: {type: Number, default: 0},
+
+    year: {type: Number, required: true},
+    jan: {
+        savings: {
+          type: Number,
+          default: 0
+        },
+        match: {
+          type: Number,
+          default: 0
+        }
+      },
+    
+    feb: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
     },
 
-    // structure: Savings = [ year, year.months[i].[month, month.savings, month.matchingGrant] ]
-    // or 
+    mar: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
 
-    // {'year' : {'jan' : [savings, grant] , 'feb' : [savings, grant], ...} , 'year' : {'jan' : [savings, grant] , 'feb' : [savings, grant], ...} , ...}
+    apr: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
 
-    // jan: [{type: Number, default: -1}], [savings, matchingGrant]
-    // feb: [{type: Number, default: -1}],
-    // mar: [{type: Number, default: -1}],
-    // apr: [{type: Number, default: -1}],
-    // may: [{type: Number, default: -1}],
-    // jun: [{type: Number, default: -1}],
-    // jul: [{type: Number, default: -1}],
-    // aug: [{type: Number, default: -1}],
-    // sep: [{type: Number, default: -1}],
-    // oct: [{type: Number, default: -1}],
-    // nov: [{type: Number, default: -1}],
-    // dec: [{type: Number, default: -1}],
+    may: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
 
-    savingsArr: [{type: Number}],
-    matchingArr: [{type: Number}],
+    jun: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    jul: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    aug: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    sep: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    oct: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+
+    },
+
+    nov: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+
+    },
+
+    dec: {
+        savings: {
+            type: Number,
+            default: 0
+        },
+        match: {
+            type: Number,
+            default: 0
+        }
+
+    },
+
+    totalSavings: {
+        type: Number,
+        default: 0
+    },
+
+    totalMatch: {
+        type: Number,
+        default: 0
+    },
+
 }, {versionKey: false}
 );
 
