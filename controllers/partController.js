@@ -140,7 +140,7 @@ const partController = {
                 const pageParts = updatedParts;
                 //console.log(orgParts);
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name});
+                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name, date});
             } else {
                 res.redirect("/");
             }
