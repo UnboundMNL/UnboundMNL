@@ -5,9 +5,6 @@ const SavingSchema = new mongoose.Schema({
     //there is already a FK for this schema in Member.js, choose one nalang
     memberID: { type: mongoose.Schema.Types.ObjectId, ref: 'member', required: true },
 
-    savings: {type: Number, default: 0},
-    matchingGrant: {type: Number, default: 0},
-
     year: {type: Number, required: true},
     jan: {
         savings: {
