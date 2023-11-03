@@ -94,16 +94,6 @@ const partController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-                // const project = await Project.findById(projectId)
-                //     // .populate('groups')
-                //     //.populate('members').populate('savings');
-                // const loggedInUserId = req.session.userId;
-                // const user = await User.findById(loggedInUserId);
-
-
-                // if (!project) {
-                //     return res.status(404).render("fail", { error: "Project not found." });
-                // }
                 
                 const group = await Group.findOne({ _id: req.session.groupId });
 

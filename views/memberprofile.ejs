@@ -4,6 +4,7 @@
 <head>
     <!-- FUNCTIONS -->
     <script src="/js/membersProfile.js"></script>
+    <script src="/js/saveEdit.js"></script>
     <%-include('components/headers.ejs', {authority, pageName: "Member's Profile"})%>
 </head>
 
@@ -32,8 +33,11 @@
         <!-- Pop-ups -->
         <%-include('components/popups/savePopup.ejs') %>
         <%-include('components/popups/deleteMemberModal.ejs') %>
-
-        <script>open('partsButton')</script>
+        <% const actionForm = "/member/"+memberId+"/edit"; %>
+        <script>
+            open('partsButton');
+            saveEdit("/memberInfo","<%=actionForm%>","saveEdit",)
+        </script>
         <%-include('components/popups/logoutPopup.ejs') %> 
     </main>
 </body>
