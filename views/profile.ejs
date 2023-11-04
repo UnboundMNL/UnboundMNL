@@ -10,7 +10,20 @@
     
     <main>
         <!-- Top navigation bar -->
-        <%- include('components/navbars/topNavbar.ejs')%>
+        <%- include('components/navbars/topNavbar.ejs') %>
+        
+        <!-- Temporary user -->
+        <% let user = user1 %>
+
+        <!-- Account Profile -->
+        <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user.username}) %>
+        <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
+
+        <!-- Modals -->
+        <%-include('components/popups/savePopup.ejs') %>
+        <%-include('components/popups/deleteMemberModal.ejs') %>
+
+        <!-- Others -->
         <script>open('profileButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
     </main>

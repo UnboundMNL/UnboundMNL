@@ -490,8 +490,10 @@ const partController = {
     newCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                // idk what this form will have
+                // idk what this form will have 
                 const { name, location } = req.body;
+                //console.log(req.body);
+                console.log(location);
                 const existingCluster = await Cluster.findOne({ name });
                 if (existingCluster) {
                     return res.status(400).json({ error: "A Cluster with the same name already exists." });
@@ -510,8 +512,9 @@ const partController = {
                 res.redirect("/");
             }
         } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while creating a new cluster." });
+            //console.error(error);
+            return res.status(500).json({ error: "An error occurred while creating a new cluster    ." });
+            //return res.status(500).render("fail", { error: "An error occurred while creating a new cluster." });
         }
     },
 
