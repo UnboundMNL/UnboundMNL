@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
     <%-include('components/headers.ejs', {authority, pageName: "Profile"})%>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/profile.css" />
+
+    <!-- Functions -->
+    <script src="/js/accountProfile.js"></script>
 </head>
 
 <body class="body-bg">
@@ -11,6 +17,7 @@
     <main>
         <!-- Top navigation bar -->
         <%- include('components/navbars/topNavbar.ejs') %>
+
         
         <!-- Temporary user -->
         <% let user = user1 %>
@@ -18,6 +25,7 @@
         <!-- Account Profile -->
         <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user.username}) %>
         <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
+
 
         <!-- Modals -->
         <%-include('components/popups/savePopup.ejs') %>

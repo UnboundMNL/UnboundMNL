@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dashboard | Unbound MNL</title>
+    <link rel="icon" href="../img/Unbound_icon.png">
+
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/index.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- FUNCTIONS -->
+    <script src="../js/sidebar.js"></script>
+    <script>
+        authCheck(" <%=authority%> ")
+    </script>
+</head>
+
+<body class="body-bg">
+    
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
+    
+    <main>
+        <!-- Top navigation bar -->
+        <div class="top-bar">
+            <!-- Navigation bar collapse button -->
+            <i class="bx bx-list-ul toggle" onclick="toggleNav(true)"></i>
+            <% if (!sidebar){ %>
+                <script>toggleNav(false)</script>
+            <%}%>
+
+            <!-- Logo -->
+            <div class="logo">
+                <span class="image">
+                    <img src="/img/Unbound_icon.png" alt="Unbound Logo">
+                </span>
+                
+                <span class="text text-muted header-text">
+                    <span class="name">UNBOUND</span>
+                </span>
+            </div>
+            <script>open('memberButton')</script>
+
+            <!-- Profile -->
+            <div class="profile toggle">
+                <i class="bx bx-user-circle"></i>
+                <span class="text m-1" id="topbar-name"><%=username%></span>
+            </div>
+            <script>profile()</script>
+        </div>
+    </main>
+</body>
+</html>

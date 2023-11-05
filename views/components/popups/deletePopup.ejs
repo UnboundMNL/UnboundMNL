@@ -9,7 +9,12 @@
                     <i class='bx bx-x-circle'></i>
                     <div>
                         <h4 class="text-center p-2">Delete Confirmation</h4>
-                        <h6 class="text-center p-2">Are you sure you want to delete <%= type %> <%= pageParts[i].name %>?</h6> 
+                        <h6 class="text-center pt-2">Are you sure you want to delete "<%= type %> <%= pageParts[i].name %>"?</h6>
+                        <h6 class="text-center text-danger">Warning: This action cannot be undone.</h6>
+                    </div>
+                    <div class="p-4">
+                        <h6 class="text-center p-2">Type DELETE to confirm.</h6>
+                        <input type="text" class="form-control text-center">
                     </div>
                     <div class="modal-buttons p-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

@@ -82,6 +82,7 @@ function toggleFields(targetId, checkbox, user) {
     const otherCheckboxId = checkbox.id === 'checkUsername' ? 'checkPassword' : 'checkUsername';
     const otherCheckbox = document.getElementById(otherCheckboxId);
     otherCheckbox.disabled = checkbox.checked;
+
 }
 
 function updateUserInformation() {
@@ -121,3 +122,4 @@ function updateUserInformation() {
         console.error('An error occurred:', error);
     });
 }
+

@@ -14,7 +14,7 @@ function dashboardButtons(authority){
             },
             {
                 text: "Manage Organization",
-                href: "/member",
+                href: "/masterlist",
                 icon: "bx-building-house"
             },
             {

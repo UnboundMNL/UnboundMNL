@@ -94,6 +94,7 @@ const partController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
+
                 // const project = await Project.findById(projectId)
                 //     // .populate('groups')
                 //     //.populate('members').populate('savings');
@@ -104,6 +105,7 @@ const partController = {
                 // if (!project) {
                 //     return res.status(404).render("fail", { error: "Project not found." });
                 // }
+
                 
                 const group = await Group.findOne({ _id: req.session.groupId });
 
@@ -114,11 +116,12 @@ const partController = {
                     updatedParts = await Member.find({
                         $and: [
                           { name: { $regex: req.query.search, $options: 'i' } }, 
-                          { _id: { $in: project.groups } } 
+
+                          { _id: { $in: group.member } } 
                         ]
                       });
                 } else{
-                    updatedParts = await Group.find({_id: { $in: group.member } });
+                    updatedParts = await Member.find({_id: { $in: group.member } });
                 }
 
                 //await updateOrgParts(updatedParts); 
@@ -127,7 +130,8 @@ const partController = {
                 //console.log(orgParts);
  
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, pageParts, username, sidebar, dashbuttons});
+
+                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name});
             } else {
                 res.redirect("/");
             }
