@@ -82,4 +82,44 @@ function toggleFields(targetId, checkbox, user) {
     const otherCheckboxId = checkbox.id === 'checkUsername' ? 'checkPassword' : 'checkUsername';
     const otherCheckbox = document.getElementById(otherCheckboxId);
     otherCheckbox.disabled = checkbox.checked;
+
 }
+
+function updateUserInformation() {
+    // Get the user input values that you want to update
+    const newUsername = document.getElementById('usernameChange').value; // Example field for username
+    const newPassword = document.getElementById('newPass').value; // Example field for password
+
+    // Define the request body (data to be sent to the server)
+    const requestBody = {
+        username: newUsername,
+        password: newPassword,
+        // Add more properties as needed
+    };
+
+    // Define the URL for your server endpoint that handles user updates
+    const updateUserUrl = '/updateUser'; // Replace with the actual endpoint URL
+
+    // Send a POST request with the updated user information
+    fetch(updateUserUrl, {
+        method: 'POST', // You can use PUT if it's more appropriate for your use case
+        headers: {
+            'Content-Type': 'application/json', // Adjust the content type if needed
+        },
+        body: JSON.stringify(requestBody),
+    })
+    .then((response) => {
+        if (response.ok) {
+            // User information updated successfully
+            // You can add code to handle success, such as displaying a success message
+            console.log('User information updated successfully');
+        } else {
+            // Handle errors or display error messages if needed
+            console.error('Failed to update user information');
+        }
+    })
+    .catch((error) => {
+        console.error('An error occurred:', error);
+    });
+}
+

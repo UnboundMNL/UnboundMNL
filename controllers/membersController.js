@@ -20,6 +20,7 @@ const membersController = {
                 const page = req.params.page;
                 const userID = req.session.userId;
                 const user = await User.findById(userID);
+
                 const username = user.username;
                 const authority = user.authority;
                 //let member = await Member.findById(req.params.memberId).populate("savings");
@@ -72,6 +73,7 @@ const membersController = {
             if(req.session.isLoggedIn) {
                 const userID = req.session.userId;
                 
+
                 const { MemberFirstName, MemberLastName, id, 
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
@@ -106,6 +108,7 @@ const membersController = {
                 group.member.push(newMember);
                 group.totalMembers += 1;
                 await group.save();
+
 
                 let project = await Project.findById(req.session.projectId);
                 project.totalMembers += 1;
@@ -238,6 +241,7 @@ const membersController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
+
     retrieveMasterlist: async (req,res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -255,6 +259,7 @@ const membersController = {
         }
 
     }
+
 }
 
 module.exports = membersController;

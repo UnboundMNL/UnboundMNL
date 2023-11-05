@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 
 
 const MemberSchema = new mongoose.Schema({
+
     name: {
       firstName: {type: String, required: true},
       lastName: {type: String, required: true}
     },
+
   id: {type: String, required: true},
   photo: { type: String, required: true, default: 'something' },
 

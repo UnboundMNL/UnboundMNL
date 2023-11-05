@@ -31,9 +31,11 @@ function saveEdit(link,actionForm,saveID){
                 saveModal.show();
             } else {
                 return response.json().then(data => {
-                    // var errorDiv = document.getElementById("error");
-                    // errorDiv.style.display="block";
-                    // errorDiv.textContent=data.error;
+
+                    var errorDiv = document.getElementById("error");
+                    errorDiv.style.display="block";
+                    errorDiv.textContent=data.error;
+
                 });
             }
         })

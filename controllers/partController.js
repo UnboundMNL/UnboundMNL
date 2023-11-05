@@ -94,6 +94,18 @@ const partController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
+
+                // const project = await Project.findById(projectId)
+                //     // .populate('groups')
+                //     //.populate('members').populate('savings');
+                // const loggedInUserId = req.session.userId;
+                // const user = await User.findById(loggedInUserId);
+
+
+                // if (!project) {
+                //     return res.status(404).render("fail", { error: "Project not found." });
+                // }
+
                 
                 const group = await Group.findOne({ _id: req.session.groupId });
 
@@ -104,6 +116,7 @@ const partController = {
                     updatedParts = await Member.find({
                         $and: [
                           { name: { $regex: req.query.search, $options: 'i' } }, 
+
                           { _id: { $in: group.member } } 
                         ]
                       });
@@ -117,6 +130,7 @@ const partController = {
                 //console.log(orgParts);
  
                 dashbuttons = dashboardButtons(authority);
+
                 res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name});
             } else {
                 res.redirect("/");
@@ -480,8 +494,10 @@ const partController = {
     newCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                // idk what this form will have
+                // idk what this form will have 
                 const { name, location } = req.body;
+                //console.log(req.body);
+                console.log(location);
                 const existingCluster = await Cluster.findOne({ name });
                 if (existingCluster) {
                     return res.status(400).json({ error: "A Cluster with the same name already exists." });
@@ -500,8 +516,9 @@ const partController = {
                 res.redirect("/");
             }
         } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while creating a new cluster." });
+            //console.error(error);
+            return res.status(500).json({ error: "An error occurred while creating a new cluster    ." });
+            //return res.status(500).render("fail", { error: "An error occurred while creating a new cluster." });
         }
     },
 

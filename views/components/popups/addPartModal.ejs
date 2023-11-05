@@ -28,13 +28,17 @@
 						<% const partialURL = "popupFields/" + partname + "FormFields.ejs"%>
 						<%-include(partialURL, {authority})%>
 					</div>
+
+					<h6 class="fine-print alert alert-danger text-muted" id="error" style="display: none;" > asdasd </h6>
+
 				</div>
 				<% var id = "add"+ partname; %>
 				<div class="modal-footer">
 					<button type="reset" class="btn btn-danger" onclick="ResetAll(authority)">Reset</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Add <%=partname%></button>
+					<button type="submit" class="btn btn-primary" >Add <%=partname%></button>
 				</div>
+				
 			</form>
 
 		</div>
