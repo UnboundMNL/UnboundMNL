@@ -19,4 +19,5 @@ router.get("/profile", userController.profile);
 router.post("/clusterMiddle",userController.clusterMiddle);
 router.post("/projectMiddle",userController.projectMiddle);
 router.post("/groupMiddle",userController.groupMiddle);
+router.post("/memberMiddle",userController.memberMiddle);
 module.exports = router;  
