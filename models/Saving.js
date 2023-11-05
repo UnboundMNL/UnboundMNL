@@ -62,6 +62,7 @@ const SavingSchema = new mongoose.Schema({
     },
 
     jun: {
+
         savings: {
             type: Number,
             default: 0
@@ -71,8 +72,8 @@ const SavingSchema = new mongoose.Schema({
             default: 0
         }
     },
-
     jul: {
+
         savings: {
             type: Number,
             default: 0
@@ -93,6 +94,7 @@ const SavingSchema = new mongoose.Schema({
             default: 0
         }
     },
+
 
     sep: {
         savings: {
@@ -115,6 +117,7 @@ const SavingSchema = new mongoose.Schema({
             default: 0
         }
 
+
     },
 
     nov: {
@@ -126,7 +129,6 @@ const SavingSchema = new mongoose.Schema({
             type: Number,
             default: 0
         }
-
     },
 
     dec: {

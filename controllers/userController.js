@@ -218,8 +218,10 @@ const userController = {
                 const authority = user.authority;
                 const username = user.username;
 
+                let user1 = user
+
                 dashbuttons = dashboardButtons(authority);
-                res.render("profile", { authority, username, dashbuttons, sidebar });
+                res.render("profile", { user1, authority, username, dashbuttons, sidebar });
             } else {
                 res.redirect("/");
             }
@@ -228,6 +230,68 @@ const userController = {
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
     },
+
+    editProfile: async (req,res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+
+                let user = await User.findById(userID);
+                //console.log("profile edit", user);
+                const username = user.username;
+                const newUsername = req.body.username;
+                let newPassword = req.body.password;
+                const updateData = req.body;
+                newPassword = newPassword.toString();
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$/; 
+                if(username === newUsername){
+                    delete updateData.username;
+                }else{
+                let tempUser = await User.findOne({username: newUsername})
+                    if(tempUser){
+                    return res.status(300).json({error: "Username has already been taken. Choose a different username."})
+                    }
+                }
+        
+                if(newPassword !== "" && !passwordRegex.test(newPassword)){
+                console.log("invalid new password");
+                return res.status(400).json( {  error: "Passwod should be at least 6 characters long, and containing only alphanumeric characters"});
+                }
+                if (((newPassword !== "") && (req.body.password === req.body.repassword))) {
+                console.log("valid new password")
+                updateData.password = newPassword;
+                }else{
+                console.log("no new password")
+                delete updateData.password;
+                delete updateData.repassword;
+                req.session.expires = null;
+                }
+        
+                let usernameRegex = /^(?=.{3,15}$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]*$/;
+                if (!usernameRegex.test(newUsername) || newUsername.toLowerCase() === "visitor") {
+                return res.status(401).json( { error: "Username must contain at least one letter or number, and be between 3-15 characters long, and cannot be 'visitor!"});
+                }
+        
+
+                console.log(updateData);
+                user = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
+        
+                if (user) {
+                    return res.redirect("/profile");;
+                } else {
+                    return res.status(404).json( { error: "User not found"});
+                }
+                
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+
     clusterMiddle: async(req,res) => {
         try{
             req.session.clusterId = req.body.id;

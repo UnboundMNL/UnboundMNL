@@ -1,17 +1,37 @@
 const Member = require('../models/Member');
-// const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
-
 const Cluster = require('../models/Cluster');
 const Project = require('../models/Project');
 const Group = require('../models/Group');
 const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
-
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
+async function getAuthorizedMembers(user, authority) {
+    let orgParts;
+
+    if (authority === "Admin") {
+        orgParts = await Member.find({}).populate("savings");
+    } else if (authority === "SEDO") {
+        const accessibleProjects = await Project.find({ cluster: user.validCluster });
+        const accessibleGroups = await Group.find({ project: { $in: accessibleProjects.map(project => project._id) } });
+        orgParts = await Member.find({ group: { $in: accessibleGroups.map(group => group._id) } }).populate("savings");
+    } else if (authority === "Treasurer") {
+        const accessibleGroup = await Group.findById(user.validGroup);
+        if (accessibleGroup) {
+            orgParts = await Member.find({ group: accessibleGroup._id }).populate("savings");
+        } else {
+            orgParts = [];
+        }   
+    } else {
+        orgParts = [];
+    }
+
+    return orgParts;
+}
+
 const savingsController = {
-    savings: async (req,res) => {
+    savings: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
                 const userID = req.session.userId;
@@ -20,9 +40,7 @@ const savingsController = {
                 const authority = user.authority;
                 const username = user.username;
 
-                const updatedParts = [];
-                await updateOrgParts(updatedParts); 
-                const orgParts = getOrgParts();
+                const orgParts = await getAuthorizedMembers(user, authority);
 
                 dashbuttons = dashboardButtons(authority);
                 res.render("savings", { authority, username, dashbuttons, sidebar, orgParts });
@@ -33,11 +51,102 @@ const savingsController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
-    }
+    },
+
+    newYear: async (req, res) => {
+        try {
+            if(req.session.isLoggedIn) {
+                // add a new blank savings document to all members
+                const user = await User.findById(req.session.userId);
+                let authority = user.authority;
+                //memberList;
+                //const orgParts = await getAuthorizedMembers(user, authority);
+                // can this just retreive a json of all member ids that are already displayed :)
+
+                // const 
+
+                //const year = req.body.year; //to change
+                
+
+
+                res.redirect("/savings");
+            }
+            else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while saving data." });
+        }
+    },
+
+    newYear: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const user = await User.findById(req.session.userId);
+                const authority = user.authority;
+    
+                const orgParts = await getAuthorizedMembers(user, authority);
+                const memberIDs = orgParts.map(member => member._id);
+                //might change this to only retreive the member ids instead of the whole member object (including thhe savings)
+                // alternatively maybe could just pass a json of member ids from the frontend?
+                // or migt just middleware the array of accesible members. idk. will update.
+
+                const year = req.body.year; //might change to auto detect ?
+    
+                for (const memberId of memberIDs) {
+                    const newSaving = new Saving({
+                        //memberID: memberId, (i think it'll be better to save it from members rather than savings) -c
+                        year: year
+                     });
+                    await newSaving.save();
+                    let updateMember = await Member.findById(memberId);
+                    updateMember.savings.push(newSaving);
+                    await updateMember.save();
+                }
+    
+                res.redirect("/savings");
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while saving data." });
+        }
+    },
+    
+
+    newSaving: async (req, res) => { //maybe more apt to call this "edit saving" then the previous as "new saving"
+        try {
+            if(req.session.isLoggedIn) {
+                const user = await User.findById(req.session.userId);
+                const authority = user.authority;
+                const updates = req.body;
+
+                // parse the sent info into correct format
+
+                for (const memberId of memberIDs) {
+                    let updateSaving = await Saving.findById(); // to update
+                    // to update mont stuff - will do after correct formatting stuff
+                    await updateSaving.save();
+                    let updateMember = await Member.findById(memberId);
+                    updateMember.totalSavings += newSaving.savings;
+                    updateMember.totalMatch += newSaving.match;
+                    await updateMember.save();
+                }
+
+
+            }else {
+                res.redirect("/");
+            }
+
+            res.redirect("/savings");
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while saving data." });
+        }
+    },
+
 }
 
 module.exports = savingsController;
-
-
-
-

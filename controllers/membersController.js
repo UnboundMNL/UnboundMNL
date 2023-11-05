@@ -20,14 +20,15 @@ const membersController = {
                 const page = req.params.page;
                 const userID = req.session.userId;
                 const user = await User.findById(userID);
+
                 const username = user.username;
                 const authority = user.authority;
                 //let member = await Member.findById(req.params.memberId).populate("savings");
                 // let member = await Member.findById(req.session.memberId);
                 var member = await Member.findById("65450abcd05ecf1638e34996");
                 var memberId = member._id; //to change
-                var cluster = (await Cluster.findById(member.clusterId)).name;
-                var project = (await Project.findById(member.projectId)).name;
+                var cluster = await Cluster.findById(member.clusterId);
+                var project = await Project.findById(member.projectId);
                 var group = (await Group.findById(member.groupId)).name; 
                 dashbuttons = dashboardButtons(authority);
 
@@ -55,7 +56,14 @@ const membersController = {
                     editDate =  year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
                 }
 
-                res.render("memberprofile", { member, dashbuttons, sidebar, page, authority, username, cluster, project, group, fixedBirthdate, editDate, memberId }); //page parts?
+                var clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
+                clusterChoices = clusterChoices.map(cluster => cluster.name);
+                var projectChoices = await Project.find({ _id: { $in: cluster.projects } });
+                projectChoices = projectChoices.map(project => project.name);
+                var groupChoices = await Group.find({ _id: { $in: project.groups } });
+                groupChoices = groupChoices.map(group => group.name);
+                res.render("memberprofile", { member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group, 
+                    fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices }); //page parts?
 
             }
             else {
@@ -72,6 +80,7 @@ const membersController = {
             if(req.session.isLoggedIn) {
                 const userID = req.session.userId;
                 
+
                 const { MemberFirstName, MemberLastName, id, 
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
@@ -107,6 +116,7 @@ const membersController = {
                 group.totalMembers += 1;
                 await group.save();
 
+
                 let project = await Project.findById(req.session.projectId);
                 project.totalMembers += 1;
                 await project.save();
@@ -133,7 +143,8 @@ const membersController = {
                 const { MemberFirstName, MemberLastName, id, 
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
-                    sex, birthdate, address, status } = req.body;
+                    sex, birthdate, address, status,
+                    projectId, groupId, clusterId } = req.body;
 
                 // const { memberFirstname, memberMiddlename, memberLastname, id, 
                 //     memberFatherFirstname, memberFatherMiddlename, memberFatherLastname,
@@ -156,7 +167,7 @@ const membersController = {
                     lastName: MotherLastName
                 }
                 console.log(req.params.id);
-                const updateData = {name, id, nameFather, nameMother, sex, birthdate, address, status};
+                const updateData = {name, id, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId};
                 const updateMember = await Member.findOneAndUpdate({
                     _id: req.params.id}, updateData, {new: true})
                 if(updateMember) {
@@ -238,6 +249,7 @@ const membersController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
+
     retrieveMasterlist: async (req,res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -255,6 +267,7 @@ const membersController = {
         }
 
     }
+
 }
 
 module.exports = membersController;
