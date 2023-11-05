@@ -672,10 +672,10 @@ const partController = {
     SHGChoices: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                let { project } = req.body;
-                console.log(project)
-                const SHG = await Group.find({});
-                res.json({ SHG });
+                let { projectName } = req.body;
+                const project = await Project.findOne({ name: projectName });
+                const shg = await Group.find({ _id: { $in: project.groups } });
+                res.json({ shg });
             } else {
                 res.redirect("/");
             }
@@ -688,8 +688,12 @@ const partController = {
     projectChoices: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                let { cluster } = req.body;
-                const project = await Project.find({});
+                let { clusterName } = req.body;
+                const cluster = await Cluster.findOne({ name: clusterName });
+                const project = await Project.find({
+                    _id: { $in: cluster.projects },
+                    totalGroups: { $gt: 0 }
+                  });
                 res.json({ project });
             } else {
                 res.redirect("/");
