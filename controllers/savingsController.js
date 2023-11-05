@@ -119,33 +119,50 @@ const savingsController = {
     newSaving: async (req, res) => { //maybe more apt to call this "edit saving" then the previous as "new saving"
         try {
             if(req.session.isLoggedIn) {
-                const user = await User.findById(req.session.userId);
-                const authority = user.authority;
-                const updates = req.body;
+                const { id, year, updateData  } = req.body;
+                const saving = await Saving.findOne({ memberID: id, year });
+                if (saving){
+                    var updatedData = {};
 
-                // parse the sent info into correct format
+                    var months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
-                for (const memberId of memberIDs) {
-                    let updateSaving = await Saving.findById(); // to update
-                    // to update mont stuff - will do after correct formatting stuff
-                    await updateSaving.save();
-                    let updateMember = await Member.findById(memberId);
-                    updateMember.totalSavings += newSaving.savings;
-                    updateMember.totalMatch += newSaving.match;
-                    await updateMember.save();
+                    months.forEach(month => {
+                    updatedData[month] = {
+                        match: updateData[month]?.match === '' ? 0 : updateData[month]?.match || saving[month]?.match,
+                        savings: updateData[month]?.savings === '' ? 0 : updateData[month]?.savings || saving[month]?.savings
+                    };
+                    });
+                      
+                    const updatedSaving = await Saving.findOneAndUpdate(
+                        { memberID: id, year },
+                        updatedData,
+                        { new: true }
+                    );  
+                    if (updatedSaving){
+                        res.json();
+                    }
+                } else{
+                    const newSaving = new Saving({ memberID: id, year });
+                    await newSaving.save();
+                    const member = await Member.findOne({ _id: id });
+                    member.savings.push(newSaving._id)
+                    member.save();
+                    const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updateData, { new: true });
+                    if (updatedSaving) {
+                      res.json();
+                    }
                 }
-
 
             }else {
                 res.redirect("/");
             }
-
-            res.redirect("/savings");
+            
         } catch (error) {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while saving data." });
         }
     },
+    
 
 }
 

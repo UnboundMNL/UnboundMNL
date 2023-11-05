@@ -12,6 +12,7 @@ const User = require('../models/User');
 const savingsController = require('../controllers/savingsController');
 
 router.get("/savings", savingsController.savings);
+router.post("/newSaving",savingsController.newSaving)
 
 module.exports = router;  
 

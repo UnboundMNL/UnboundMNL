@@ -96,7 +96,6 @@ const membersController = {
                     firstName: FatherFirstName,
                     lastName: FatherLastName
                 }
-                console.log(nameFather)
                 let nameMother = {
                     firstName: MotherFirstName,
                     lastName: MotherLastName
