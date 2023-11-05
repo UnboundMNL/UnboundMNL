@@ -4,7 +4,7 @@
     <%-include('components/headers.ejs', {authority, pageName: "Members"})%>
     
     <script src="/js/IDchecker.js"></script>
-    <script src="/js/membersTable.js"></script>
+    
 
     
     
@@ -68,7 +68,7 @@
                 <%-include('components/orgPartViews/addButton.ejs', {type})%>
             </div>
 
-            <div>
+            <!-- <div>
                 <select onchange="reloadTable(this.value)" autocomplete="off">
                     <option value="2023" selected default>this year</option>
                     <option value="2023">prev year</option>
@@ -76,15 +76,25 @@
                     <option value="2021">a</option>
                     <option value="2020">1</option>
                 </select>
+            </div> -->
+
+            <div>
+                <input type="number" value="<%=year%>" aria-label="Search" aria-describedby="button-addon2" onchange="reloadTable(this.value)">
             </div>
             <div id = "table_div">
-                <%- include('components/orgPartViews/membersTable.ejs', { pageParts, type, date}) %>
+                <button class="btn btn-primary" id="save" onclick="save()">Save All Changes</button>
+                <div>
+                    <div class = "text-center">
+                        <h2>Savings and Matching Grant for <%=year%></h2>
+                    </div>
+                <%- include('components/orgPartViews/membersTable.ejs', { memberList, type, year}) %>
+            </div>
             </div>
         </div>
 
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
         <%-include('components/popups/addPartModal.ejs', {authority, partname: type}) %>
-
+        <script src="/js/membersTable.js"></script>
 </body>
 </html>

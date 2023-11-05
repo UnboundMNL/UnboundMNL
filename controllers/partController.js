@@ -94,66 +94,44 @@ const partController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-
-                // const project = await Project.findById(projectId)
-                //     // .populate('groups')
-                //     //.populate('members').populate('savings');
-                // const loggedInUserId = req.session.userId;
-                // const user = await User.findById(loggedInUserId);
-
-
-                // if (!project) {
-                //     return res.status(404).render("fail", { error: "Project not found." });
-                // }
-
-                
+                var memberList=[];
                 const group = await Group.findOne({ _id: req.session.groupId });
-
-                let updatedParts = [] 
-
-                // var updatedParts;
-                if (req.query.search){
-                    updatedParts = await Member.find({
-                        $and: [
-                          { name: { $regex: req.query.search, $options: 'i' } }, 
-
-                          { _id: { $in: group.member } } 
-                        ]
-                      });
-                } else{
-                    updatedParts = await Member.find({_id: { $in: group.member } });
-                }
-
-                console.log(updatedParts)
-                const date = new Date().getFullYear();
-
+                const year = new Date().getFullYear();
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
-                for (let i = 0; i < updatedParts.length; i++){
-                    let memberSavings = await Saving.find({member: updatedParts[i]._id, year: date});
-                    console.log(memberSavings)
-                    updatedParts[i].totalMatch = "--";
-                    updatedParts[i].totalSavings = "--";
-                    if(memberSavings.length != 0){
-                        
-                        for(let j = 0; j < months.length; j++){
-                            updatedParts[i][months[j]].savings = memberSavings[0][months[j]].savings
-                            updatedParts[i][months[j]].match = memberSavings[0][months[j]].match
-                        }
-
-                        if(memberSavings[0].totalSavings)
-                            updatedParts[i].totalSavings = memberSavings.totalSavings;
+                const members = await Member.find({_id : { $in: group.member }});
+                for (const member of members) {
+                    const savings = await Saving.findOne({
+                        _id: { $in: member.savings },
+                        year: year 
+                      });
+                   
+                    const data = {
+                        name: {
+                            firstName: member.name.firstName,
+                            lastName: member.name.lastName
+                        },
+                        id: member._id,
+                    };
                 
-                        if(memberSavings[0].totalMatch)
-                            updatedParts[i].totalMatch = memberSavings.totalMatch;
+                    if (savings) {  
+                        for (const month of months) {
+                            data[month] = {
+                                savings: savings[month]?.savings || "",
+                                match: savings[month]?.match || ""
+                            };
+                        }
+                    } else {
+                        for (const month of months) {
+                            data[month] = {
+                                savings: "",
+                                match: ""
+                            };
+                        }
                     }
+                    memberList.push(data);
                 }
-
-                //await updateOrgParts(updatedParts); 
-                // const orgParts = getOrgParts();
-                const pageParts = updatedParts;
-                //console.log(orgParts);
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, pageParts, username, sidebar, dashbuttons, grpName: group.name, date});
+                res.render("member", { authority, username, sidebar, dashbuttons, grpName: group.name, year, memberList});
             } else {
                 res.redirect("/");
             }
@@ -162,6 +140,58 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
 
+    },
+    reloadTable: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                var memberList=[];
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const group = await Group.findOne({ _id: req.session.groupId });
+                const year = req.params.year;
+                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
+                const members = await Member.find({_id : { $in: group.member }});
+                for (const member of members) {
+                    const savings = await Saving.findOne({
+                        _id: { $in: member.savings },
+                        year: year 
+                      });
+                   
+                    const data = {
+                        name: {
+                            firstName: member.name.firstName,
+                            lastName: member.name.lastName
+                        },
+                        id: member._id,
+                    };
+                
+                    if (savings) {  
+                        for (const month of months) {
+                            data[month] = {
+                                savings: savings[month]?.savings || "",
+                                match: savings[month]?.match || ""
+                            };
+                        }
+                    } else {
+                        for (const month of months) {
+                            data[month] = {
+                                savings: "",
+                                match: ""
+                            };
+                        }
+                    }
+                    memberList.push(data);
+                }
+                dashbuttons = dashboardButtons(authority);
+                res.render("components/orgPartViews/membersTable", {  authority, memberList, year});
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
     },
     // edit group
     editGroup: async (req, res) => {
