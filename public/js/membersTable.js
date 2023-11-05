@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     var isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+    let table
     switch(isMobile){
         case true:
-            loadMobileTable();
+            table = loadMobileTable();
             break;
         case false:
-            loadDesktopTable();
+            table = loadDesktopTable();
             break;
     }
     const search = document.getElementById("searchBar");
@@ -43,6 +44,8 @@ function loadDesktopTable(){
         paging: false,
         dom: 'lrtip',
     })
+
+    return table;
 };
 
 function loadMobileTable(){
@@ -69,6 +72,8 @@ function loadMobileTable(){
         paging: false,
         dom: 'lrtip',
     })
+
+    return table;
 };
 
 function reloadTable(value){

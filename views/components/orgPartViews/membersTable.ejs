@@ -1,48 +1,48 @@
+<button onclick="" class="btn btn-primary">Save All Changes</button>
+<div>
+    <div class = "text-center">
+        <h2>Savings and Matching Grant for <%=date%></h2>
+    </div>
+    <table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th rowspan="2" class = "align-middle">Last Name</th>
+                <th rowspan="2" class = "align-middle">First Name</th>
+                <th rowspan="2" class = "align-middle">ID</th>
+                <% const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']%>
+                <% for(let i = 0; i < months.length; i++) { %>
+                    <th colspan = "2" class = "text-center"><%=months[i]%></th>
+                <% } %>
+                <th rowspan="2" class = "align-middle">Total Savings</th>
+            </tr>
+            <tr>
+                
+                <% for(let i = 0; i < months.length; i++) { %>
+                    <th>Savings</th>
+                    <th>Grant</th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <% var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']; %>
+                <% for (let i = 0; i < pageParts.length; i++) { %>
+                    <td><%=pageParts[i].name.lastName%></td>
+                    <td><%=pageParts[i].name.firstName%></td>
+                    <td><%=pageParts[i].id%></td>
+                        <% for(var j=0; j<months.length; j++) { %>
+                            <% if(pageParts[i][month[j]]) {%>
+                                <td><%= pageParts[i][month[j]].savings %></td>
+                                <td><%= pageParts[i][month[j]].match %></td>
+                            <% } else {%>
+                                <td>--</td>
+                                <td>--</td>
+                            <% } %>
+                        <% } %>
+                    <td><%= pageParts[i].totalSavings %></td>
+                <% } %>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-<table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
-    <thead>
-        <tr>
-            <!-- Adjust colspan to fit the number of cols of data needed -->
-            <th colspan = "3" class = "text-center">YEAR *update based on choice*</th>
-            <% const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']%>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <th colspan = "2" class = "text-center"><%=months[i]%></th>
-            <% } %>
-            <th>Year</th>
-        </tr>
-        <tr>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>ID</th>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <th>Savings</th>
-                <th>Grant</th>
-            <% } %>
-            <th>Total Savings</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for(let i = 0; i < months.length; i++) { %>
-        <tr>
-            <td>Montoya de la cruz</td>
-            <td>first</td>
-            <td>12111111</td>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <td>--</td>
-                <td>--</td>
-            <% } %>
-            <td>--</td>
-        </tr>
-        <tr>
-            <td>Last2</td>
-            <td>first2</td>
-            <td>121111211</td>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <td>--</td>
-                <td>--</td>
-            <% } %>
-            <td>--</td>
-        </tr>
-        <% } %>
-    </tbody>
-</table>
