@@ -33,6 +33,7 @@ router.post("/newProject", partController.newProject);
 router.post("/newCluster", partController.newCluster);
 
 router.get('/member', partController.retrieveGroup);
+router.get('/membersTable/:year', partController.reloadTable);
 router.post('/group/:id/edit', partController.editGroup);
 router.post('/group/:id/delete', partController.deleteGroup);
 
