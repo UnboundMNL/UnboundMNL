@@ -106,10 +106,7 @@ const partController = {
                       });
                    
                     const data = {
-                        name: {
-                            firstName: member.name.firstName,
-                            lastName: member.name.lastName
-                        },
+                        name: member.name.firstName + ' ' + member.name.lastName,
                         id: member._id,
                     };
                 
@@ -120,6 +117,8 @@ const partController = {
                                 match: savings[month]?.match || ""
                             };
                         }
+                        data.totalMatch = savings.totalMatch;
+                        data.totalSavings = savings.totalSavings;
                     } else {
                         for (const month of months) {
                             data[month] = {
@@ -127,6 +126,8 @@ const partController = {
                                 match: ""
                             };
                         }
+                        data.totalMatch = 0;
+                        data.totalSavings = 0;
                     }
                     memberList.push(data);
                 }
@@ -145,9 +146,6 @@ const partController = {
         try {
             if (req.session.isLoggedIn) {
                 var memberList=[];
-                const userID = req.session.userId;
-                const user = await User.findById(userID);
-                const authority = user.authority;
                 const group = await Group.findOne({ _id: req.session.groupId });
                 const year = req.params.year;
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
@@ -159,10 +157,7 @@ const partController = {
                       });
                    
                     const data = {
-                        name: {
-                            firstName: member.name.firstName,
-                            lastName: member.name.lastName
-                        },
+                        name: member.name.firstName + ' ' + member.name.lastName,
                         id: member._id,
                     };
                 
@@ -173,6 +168,8 @@ const partController = {
                                 match: savings[month]?.match || ""
                             };
                         }
+                        data.totalMatch = savings.totalMatch;
+                        data.totalSavings = savings.totalSavings;
                     } else {
                         for (const month of months) {
                             data[month] = {
@@ -180,13 +177,14 @@ const partController = {
                                 match: ""
                             };
                         }
+                        data.totalMatch = 0;
+                        data.totalSavings = 0;
                     }
                     memberList.push(data);
                 }
-                dashbuttons = dashboardButtons(authority);
-                res.render("components/orgPartViews/membersTable", {  authority, memberList, year});
+                res.status(200).json({memberList});
             } else {
-                res.redirect("/");
+                res.status(400).json({ error: "An error occurred while retrieving group information." });
             }
         } catch (error) {
             console.error(error);
