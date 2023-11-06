@@ -6,7 +6,6 @@
                     name = "id"
                     type="text" 
                     aria-describedby="id"
-                    placeholder = "123456789"
                     required>
             <div class="invalid-feedback">
                 ID required.
@@ -16,7 +15,6 @@
 
 <% 
     const nameFields = ["Member", "Mother", "Father"]
-    const placeholder = [["Kiana", "Kaslana"], ["Cecilia", "Schariac"], ["Siegfried", "Kaslana"]]
 
     for (let i = 0; i < nameFields.length; i++) {
 %>
@@ -28,7 +26,6 @@
                         id = "<%=nameFields[i]%>FirstName"
                         name = "<%=nameFields[i]%>FirstName"
                         type="text" 
-                        placeholder="<%=placeholder[i][0]%>"
                         aria-describedby="<%=nameFields[i]%>FirstName"
                         required>
                 <span class = "input-group-text">Last Name</span>
@@ -36,7 +33,6 @@
                         id = "<%=nameFields[i]%>LastName"
                         name = "<%=nameFields[i]%>LastName"
                         type="text"
-                        placeholder="<%=placeholder[i][1]%>"
                         aria-describedby="<%=nameFields[i]%>LastName"
                         required>
                 <div class="invalid-feedback">
@@ -80,7 +76,6 @@
                     name = "address"
                     type="text" 
                     aria-describedby="address"
-                    placeholder = "1234 Taft ave."
                     required>
             <div class="invalid-feedback">
                 Address required.

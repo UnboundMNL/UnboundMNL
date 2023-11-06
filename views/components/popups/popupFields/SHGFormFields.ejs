@@ -1,6 +1,6 @@
 <div class = "mb-3">
     <label for="SHGName" class="form-label">Self Help Group Name</label>
-    <input class="form-control" id = "SHGName" name = "name" type="text" placeholder="High Cloud Quintet" aria-describedby="SHGName" 
+    <input class="form-control" id = "SHGName" name = "name" type="text" aria-describedby="SHGName" 
     <% if (locals.shg) { %>
         value = "<%=locals.shg.name%>"
     <% } %>
@@ -19,13 +19,13 @@
         <label for="<%=ids[i]%>Name" class="form-label"><%=people[i]%> Name</label>
         <div class = "input-group">
             <span class = "input-group-text">First Name</span>
-            <input class="form-control" id = "<%=ids[i]%>FirstName" name = "<%=ids[i]%>FirstName" type="text" placeholder="Jose" aria-describedby="<%=ids[i]%>FirstName" 
+            <input class="form-control" id = "<%=ids[i]%>FirstName" name = "<%=ids[i]%>FirstName" type="text" aria-describedby="<%=ids[i]%>FirstName" 
             <% if (locals.shg && locals.shg[ids[i]]) { %>
                 value = "<%= locals.shg[ids[i]].firstName %>"
             <% } %>
             >
             <span class = "input-group-text">Last Name</span>
-            <input class="form-control" id = "<%=ids[i]%>LastName" name = "<%=ids[i]%>LastName" type="text" placeholder="Rizal" aria-describedby="<%=ids[i]%>LastName" 
+            <input class="form-control" id = "<%=ids[i]%>LastName" name = "<%=ids[i]%>LastName" type="text" aria-describedby="<%=ids[i]%>LastName" 
             <% if (locals.shg && locals.shg[ids[i]] ) { %>
                 value = "<%= locals.shg[ids[i]].lastName %>"
             <% } %>
@@ -36,7 +36,7 @@
         </div>
         <div class = "input-group">
             <span class = "input-group-text">Phone Number</span>
-            <input class="form-control" id = "<%=ids[i]%>Phone" name = "<%=ids[i]%>Phone" type="tel" placeholder="09171234567" pattern="[0-9]{11}" 
+            <input class="form-control" id = "<%=ids[i]%>Phone" name = "<%=ids[i]%>Phone" type="tel" pattern="[0-9]{11}" 
             aria-describedby="<%=ids[i]%>PhoneNumber"
             <% if (locals.shg && locals.shg[ids[1]]) { %>
                 value = "<%= locals.shg[ids[i]].contatNo %>"
@@ -48,7 +48,7 @@
 
 <div class = "mb-3">
     <label for="depositoryBank" class="form-label"> Depository Bank </label>
-    <input class="form-control" id = "depositoryBank" name = "depositoryBank" type="text" placeholder="BDO" aria-describedby="depositoryBank"
+    <input class="form-control" id = "depositoryBank" name = "depositoryBank" type="text" aria-describedby="depositoryBank"
     <% if (locals.shg) { %>
         value = "<%=locals.shg.depositoryBank%>"
     <% } %>
