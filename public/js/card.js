@@ -72,7 +72,7 @@ function cardDelete(type, id){
 
 function linkMemberPage(id){
     var data;
-    const divs = document.querySelectorAll("#memberPage");
+    const divs = document.querySelectorAll(".memberPage");
     divs.forEach(div => {
         div.addEventListener('click', function(event) {
             data={id};
