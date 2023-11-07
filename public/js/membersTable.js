@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
             break;
     }
     const search = document.getElementById("searchBar");
-    
+    console.log(search)
     search.addEventListener('keyup', function() {
-        table.search(search.value).draw();
+        datatable.search(search.value).draw();
     })
 
 	//LOAD YEAR
