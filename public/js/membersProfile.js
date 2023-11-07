@@ -73,3 +73,17 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoices, 
     const contentEdit = document.getElementById("editContent");
     contentEdit.style.display = "none";
 }
+
+/* KABAN */
+function setKabanStatusRadio(status) {
+    const radios = {
+        'Active': 'activeRadio',
+        'Retired (w/o Savings)': 'retiredNoSavingsRadio',
+        'Retired (w/ Savings)': 'retiredWithSavingsRadio'
+    };
+
+    if (radios[status]) {
+        document.getElementById(radios[status]).checked = true;
+        document.getElementById(radios[status]).disabled = false;
+    }
+}
