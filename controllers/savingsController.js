@@ -123,16 +123,27 @@ const savingsController = {
                 const saving = await Saving.findOne({ memberID: id, year });
                 if (saving){
                     var updatedData = {};
-
+                    var totalSavings = 0;
+                    var totalMatch = 0;
                     var months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
                     months.forEach(month => {
-                    updatedData[month] = {
-                        match: updateData[month]?.match === '' ? 0 : updateData[month]?.match || saving[month]?.match,
-                        savings: updateData[month]?.savings === '' ? 0 : updateData[month]?.savings || saving[month]?.savings
-                    };
+                        const match = parseInt(updateData[month]?.match || saving[month]?.match || 0, 10);
+                        const savings = parseInt(updateData[month]?.savings || saving[month]?.savings || 0, 10);
+                    
+                        // Accumulate savings and match for the whole year
+                        totalMatch += match;
+                        totalSavings += savings;
+                    
+                        updatedData[month] = {
+                            match: match,
+                            savings: savings
+                        };
                     });
-                      
+                    
+                    updatedData.totalSavings = totalSavings;
+                    updatedData.totalMatch = totalMatch;
+                    console.log(updatedData);
                     const updatedSaving = await Saving.findOneAndUpdate(
                         { memberID: id, year },
                         updatedData,

@@ -41,8 +41,8 @@
                             id="<%= i === 2 ? 'clusterSelect' : i === 3 ? 'projectSelect' : 'groupSelect' %>">
                             <% const choices = (i === 2) ? clusterChoices : (i === 3) ? projectChoices : groupChoices; %>
                             <% for (let j = 0; j < choices.length; j++) { %>
-                                <option value="<%= choices[j] %>" <%= choices[j] === (i === 2 ? cluster : i === 3 ? project : group) ? 'selected' : '' %>>
-                                    <%= choices[j] %>
+                                <option value="<%= choices[j]._id %>" <%= choices[j].name === (i === 2 ? cluster : i === 3 ? project : group) ? 'selected' : '' %>>
+                                    <%= choices[j].name %>
                                 </option>
                             <% } %>
                         </select>
@@ -92,20 +92,29 @@
     <script>
         var inputFields = ["<%=member.id %>","<%=member.name.firstName%>", "<%=member.name.lastName %>", "<%=member.address %>", "<%=member.nameMother.firstName %>", "<%=member.nameMother.lastName %>", "<%=member.nameFather.firstName %>", "<%=member.nameFather.lastName %>"];
         var dropdownFields = ["<%=cluster %>","<%=project %>","<%=group %>",'<%=member.sex%>','<%=member.status%>'];
-        var projectChoices = [
+        var projectChoicesName = [
             <% for (let i = 0; i < projectChoices.length; i++) { %>
-                    "<%= projectChoices[i] %>"<%= i < projectChoices.length - 1 ? ',' : '' %>
+                    "<%= projectChoices[i].name %>"<%= i < projectChoices.length - 1 ? ',' : '' %>
                 <% } %>
             ];
-        var groupChoices = [
+        var projectChoicesId = [
+            <% for (let i = 0; i < projectChoices.length; i++) { %>
+                    "<%= projectChoices[i]._id %>"<%= i < projectChoices.length - 1 ? ',' : '' %>
+                <% } %>
+            ];
+        var groupChoicesName = [
             <% for (let i = 0; i < groupChoices.length; i++) { %>
-                    "<%= groupChoices[i] %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
+                    "<%= groupChoices[i].name %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
+                <% } %>
+            ];
+        var groupChoicesId = [
+            <% for (let i = 0; i < groupChoices.length; i++) { %>
+                    "<%= groupChoices[i]._id %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
                 <% } %>
             ];
     </script>
     <div class="d-flex justify-content-center mt-4 button-gap">
-        <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(JSON.stringify(inputFields), "<%=editDate%>",JSON.stringify(dropdownFields), JSON.stringify(projectChoices), JSON.stringify(groupChoices))'>Cancel</button>
-        
+        <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(JSON.stringify(inputFields), "<%=editDate%>",JSON.stringify(dropdownFields), JSON.stringify(projectChoicesName), JSON.stringify(projectChoicesId), JSON.stringify(groupChoicesName), JSON.stringify(groupChoicesId))'>Cancel</button>
         <button type="submit" class="btn btn-primary" id="saveEdit">Save Changes</button>
     </div>  
 </div>

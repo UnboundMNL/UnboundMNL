@@ -4,7 +4,8 @@
     <%-include('components/headers.ejs', {authority, pageName: "Members"})%>
     
     <script src="/js/IDchecker.js"></script>
-
+    <script src="/js/card.js"></script>
+    <script src="/js/back.js"></script>
     <!-- DATATABLES -->
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/fc-4.3.0/datatables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/fc-4.3.0/datatables.min.js"></script>
@@ -48,7 +49,7 @@
                 <div class="align-items-end">
                     <div class="container-rounded">
                         <span>Total:</span>
-                        <h3>P 1000</h3>
+                        <h3>P <span id="totalSavings"><%=totalSavings%></span></h3>
                     </div>
                 </div>
             </div>

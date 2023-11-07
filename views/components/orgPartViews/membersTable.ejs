@@ -28,8 +28,11 @@
             <% var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec']; %>
             <% for (let i = 0; i < memberList.length; i++) { %>
                 <tr>
-                    <td><%= memberList[i].name %></td>
-                    <td><%= memberList[i].id %></td>
+                    <td id="memberIdentifier"><%= memberList[i].name %></td>
+                    <td id="memberIdentifier"><%= memberList[i].id %></td>
+                    <script>
+                        linkMemberPage("<%= memberList[i].id %>")
+                    </script>
                     <% for (let j = 0; j < month.length; j++) { %>
                         <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_savings"><%= memberList[i][month[j]].savings %></td>
                         <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_match"><%= memberList[i][month[j]].match %></td>

@@ -32,7 +32,7 @@ function backProfile() {
 
 }
 
-function cancelChanges(inputValues, dateValues, dropdownValues, projectChoices, groupChoices) {
+function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesName, projectChoicesId, groupChoicesName, groupChoicesId) {
     inputValues = JSON.parse(inputValues);
     //  Restore the original values of input Fields
     const inputFields = document.querySelectorAll("input[type='text']");
@@ -45,17 +45,19 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoices, 
         dateFields[i].value = dateValues;
     }
 
-    projectChoices = JSON.parse(projectChoices);
+    projectChoicesName = JSON.parse(projectChoicesName);
+    projectChoicesId = JSON.parse(projectChoicesId);
     $("#projectSelect").empty();
-    projectChoices.forEach(project => {
-        $("#projectSelect").append(`<option value="${project}">${project}</option>`)
-    });
+    for (let i=0;i<projectChoicesName.length;i++){
+        $("#projectSelect").append(`<option value="${projectChoicesId[i]}">${projectChoicesName[i]}</option>`)
+    }
 
-    groupChoices = JSON.parse(groupChoices);
+    groupChoicesName = JSON.parse(groupChoicesName);
+    groupChoicesId = JSON.parse(groupChoicesId);
     $("#groupSelect").empty();
-    groupChoices.forEach(group => {
-        $("#groupSelect").append(`<option value="${group}">${group}</option>`)
-    });
+    for (let i=0;i<groupChoicesName.length;i++){
+        $("#groupSelect").append(`<option value="${groupChoicesId[i]}">${groupChoicesName[i]}</option>`)
+    }
 
     dropdownValues = JSON.parse(dropdownValues);
     const dropdownFields = document.querySelectorAll("select");

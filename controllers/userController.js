@@ -110,7 +110,12 @@ const userController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-
+                if (req.session.authority == "SEDO"){
+                    res.redirect("/project")
+                }
+                if (req.session.authority == "Treasurer"){
+                    res.redirect("/member")
+                }
                 // req.session.projectId = null;
                 // req.session.clusterId = null;
                 // req.session.groupId = null;
@@ -295,6 +300,9 @@ const userController = {
     clusterMiddle: async(req,res) => {
         try{
             req.session.clusterId = req.body.id;
+            delete req.session.projectId;
+            delete req.session.groupId;
+            delete req.session.memberId;
             console.log("Cluster Middle: " , req.session.clusterId);
             await req.session.save();
             res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
@@ -305,6 +313,8 @@ const userController = {
     projectMiddle: async(req,res) => {
         try{
             req.session.projectId = req.body.id;
+            delete req.session.groupId;
+            delete req.session.memberId;
             console.log("Project Middle: " , req.session.projectId);
             await req.session.save();
             res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
@@ -315,9 +325,19 @@ const userController = {
     groupMiddle: async(req,res) => {
         try{
             req.session.groupId = req.body.id;
+            delete req.session.memberId;
             console.log("Group Middle: " , req.session.groupId);
             await req.session.save();
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+            res.status(200).json({ success: true, message: 'group ID saved' });
+        }catch(error){
+            console.error(error);
+        }
+    },
+    memberMiddle: async(req,res) => {
+        try{
+            req.session.memberId = req.body.id;
+            await req.session.save();
+            res.status(200).json({ success: true, message: 'member ID saved' });
         }catch(error){
             console.error(error);
         }
