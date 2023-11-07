@@ -65,7 +65,7 @@ function loadDesktopTable(){
         columnDefs:[
         //stuff on top = more priority
         {
-            target: 0,
+            targets: [0,1],
             searchable: true
         },
         //place the supposed to be visible columns here
@@ -93,7 +93,7 @@ function loadMobileTable(){
         columnDefs:[
         //stuff on top = more priority
         {
-            target: 0,
+            targets: [0,1],
             searchable: true
         },
         //place the supposed to be visible columns here
