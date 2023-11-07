@@ -28,10 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	//SAVE BUTTON
 	const saveButton = document.getElementById("save");
-	saveButton.addEventListener('click', function() {
-		save();
-		window.location.reload();
-	})
 
 	//TABLE EDITING
 	const table = document.querySelector("#membersTable");
@@ -63,7 +59,7 @@ function loadDesktopTable(){
         scrollY:"50vh",
         scrollCollapse:true,
         fixedColumns: {
-            left:3,
+            left:2,
             right:0
         },
         columnDefs:[
@@ -121,6 +117,7 @@ function reloadTable(value, table){
   
 	fetch(`/membersTable/${value}`).then(res => res.json()).then(data => {
 	  data.memberList.forEach(member => {
+		let total = member.totalSavings + member.totalMatch;
 		table.row.add([
 		  member.name,
 		  member.id,
@@ -150,13 +147,14 @@ function reloadTable(value, table){
 		  member.dec.match,
 		  member.totalSavings,
 		  member.totalMatch,
+		  total
 		]).draw();
   
 		//set the just added cells to be editable
 		const rows = table.rows().nodes();
 		const row = rows[rows.length - 1];
 		const cells = row.querySelectorAll('td');
-		for (let i = 2; i < cells.length; i++) {
+		for (let i = 2; i < cells.length - 3; i++) {
 		  const cell = cells[i];
 		  cell.setAttribute('contenteditable', 'true');
 		  cell.setAttribute('id', `${member.id}_${months[i-2]}_${value}_savings`);
@@ -240,10 +238,12 @@ function save() {
 		.then(response => {
 			if (response.ok) {
 				// Handle success
+				const toastLiveExample = document.getElementById('addSuccessToast')
+				const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+				toastBootstrap.show()
+					
 			} else {
-				return response.json().then(data => {
-				// Handle error response
-				});
+				return response.json();
 			}
 		})
 		.catch(error => {

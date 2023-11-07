@@ -1,5 +1,4 @@
-
-<button class="btn btn-primary" id="save">Save All Changes</button>
+<button class="btn btn-primary" id="save" onclick = "save()">Save All Changes</button>
 <div id = "table_div">
     <div class = "text-center">
         <h2>Savings and Matching Grant for <%=year%></h2>
@@ -15,9 +14,9 @@
                 <% } %>
                 <th rowspan="2" class = "align-middle">Total Savings</th>
                 <th rowspan="2" class = "align-middle">Total Match</th>
+                <th rowspan="2" class = "align-middle">Grant Total</th>
             </tr>
             <tr>
-                
                 <% for(let i = 0; i < months.length; i++) { %>
                     <th>Savings</th>
                     <th>Grant</th>
@@ -39,9 +38,27 @@
                     <% } %>
                     <td><%= memberList[i].totalSavings %></td>
                     <td><%= memberList[i].totalMatch %></td>
+                    <% let total = memberList[i].totalMatch + memberList[i].totalSavings%>
+                    <td><%= total %></td>
                 </tr>
             <% } %>
         </tbody>
     </table>
 </div>
 
+<div id="addSuccessToast" class="z-3 
+                                position-absolute 
+                                toast align-items-center 
+                                text-bg-success 
+                                border-0 
+                                start-50 
+                                translate-middle-x" 
+                                style="top:15%;"
+                                role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+        <div class="toast-body align-middle">
+            <h5 class = "m-0">All changes have been saved!</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
