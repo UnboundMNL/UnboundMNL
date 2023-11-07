@@ -68,11 +68,14 @@
                 <%-include('components/orgPartViews/addButton.ejs', {type})%>
             </div>
 
-            <div>
-                <input type="number" value="<%=year%>" id="yearInput" autocomplete="off">
-                <button class = "btn btn-primary" id="yearButton">Change year</button>
+            <div class ="row">
+                <div class = "col-3">
+                    <input type="number" class = "form-control" value="<%=year%>" id="yearInput" autocomplete="off">
+                </div>
+                <div class ="col">
+                    <button class = "btn btn-primary" id="yearButton">Change year</button>
+                </div>
             </div>
-          
             
             <%- include('components/orgPartViews/membersTable.ejs', { memberList, type, year}) %>
         </div>
