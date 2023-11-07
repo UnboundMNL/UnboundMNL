@@ -69,3 +69,40 @@ function cardDelete(type, id){
  
     });
 }
+
+function linkMemberPage(id){
+    var data;
+    const divs = document.querySelectorAll(".memberPage");
+    divs.forEach(div => {
+        div.addEventListener('click', function(event) {
+            data={id};
+    
+            const href = '/memberInfo';
+            let fetchURL = 'memberMiddle';
+    
+            fetch(fetchURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = href;
+                } else {
+                    return response.json().then(data => {
+                        // var errorDiv = document.getElementById("error");
+                        // errorDiv.style.display="block";
+                        // errorDiv.textContent=data.error;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });    
+            
+        });
+    });
+}
+    

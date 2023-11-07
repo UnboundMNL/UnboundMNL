@@ -295,9 +295,8 @@ const userController = {
     clusterMiddle: async(req,res) => {
         try{
             req.session.clusterId = req.body.id;
-            console.log("Cluster Middle: " , req.session.clusterId);
             await req.session.save();
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+            res.status(200).json({ success: true, message: 'cluster ID saved' });
         }catch(error){
             console.error(error);
         }
@@ -305,9 +304,8 @@ const userController = {
     projectMiddle: async(req,res) => {
         try{
             req.session.projectId = req.body.id;
-            console.log("Project Middle: " , req.session.projectId);
             await req.session.save();
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+            res.status(200).json({ success: true, message: 'project ID saved' });
         }catch(error){
             console.error(error);
         }
@@ -315,9 +313,17 @@ const userController = {
     groupMiddle: async(req,res) => {
         try{
             req.session.groupId = req.body.id;
-            console.log("Group Middle: " , req.session.groupId);
             await req.session.save();
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+            res.status(200).json({ success: true, message: 'group ID saved' });
+        }catch(error){
+            console.error(error);
+        }
+    },
+    memberMiddle: async(req,res) => {
+        try{
+            req.session.memberId = req.body.id;
+            await req.session.save();
+            res.status(200).json({ success: true, message: 'member ID saved' });
         }catch(error){
             console.error(error);
         }
