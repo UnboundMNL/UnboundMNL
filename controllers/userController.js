@@ -26,10 +26,11 @@ const userController = {
                 let nGroup = 0;
                 let nMember = 0;
                 let savings = 0;
+                let allSaving;
                 switch (authority) {
                     case "Admin":
-                        const allSaving = await Saving.find({});
-                        for (item in allSaving) {
+                        allSaving = await Saving.find({});
+                        for (const item of allSaving) {
                             savings += item.totalSavings;
                         }
                         nCluster = await Cluster.countDocuments();
@@ -52,8 +53,21 @@ const userController = {
                     default:
                         break;
                 }
+                const monthCounts = {};
+                const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                months.forEach((month) => {
+                    monthCounts[month] = 0;
+                });
+
+                allSaving.forEach((saving) => {
+                    months.forEach((month) => {
+                        if (saving[month].savings > 0) {
+                            monthCounts[month]++;
+                        }
+                    });
+                });
                 dashbuttons = dashboardButtons(authority);
-                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings });
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts });
             } else {
                 res.redirect("/");
             }
