@@ -23,6 +23,10 @@ body {
     background-color: var(--body-color);
 }
 
+.no-padding {
+    padding: 0 !important;
+}
+
 /* SIDEBAR */
 .sidebar {
     position: fixed;

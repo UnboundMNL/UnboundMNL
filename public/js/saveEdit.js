@@ -46,5 +46,7 @@ function saveEdit(link, actionForm, saveID) {
             .catch(error => {
                 console.error('Error:', error);
             });
+
+            validateForm();
     }
 }
