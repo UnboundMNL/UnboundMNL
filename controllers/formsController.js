@@ -22,6 +22,7 @@ const formsController = {
         const project = await Project.findOne({ _id: req.session.projectId });
         res.render('components/popups/popupFields/SHGFormFields', { shg, SPU: project.SPU, location: project.location });
     },
+    
 }
 
 module.exports = formsController;

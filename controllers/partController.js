@@ -10,6 +10,7 @@ const { updateOrgParts, getOrgParts } = require('../controllers/functions/shared
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const partController = {
+
     //create a new group
     newGroup: async (req, res) => {
         try {
@@ -184,6 +185,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
+
     // edit group
     editGroup: async (req, res) => {
         try {
@@ -247,6 +249,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while editing the group." });
         }
     },
+
     // delete a group
     deleteGroup: async (req, res) => {
         try {
@@ -288,6 +291,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
+
     //create a new project
     newProject: async (req, res) => {
         try {
@@ -313,6 +317,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while creating a new project." });
         }
     },
+
     //retrieve project
     retrieveProject: async (req, res) => {
         try {
@@ -364,6 +369,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
+
     // edit project
     editProject: async (req, res) => {
         try {
@@ -435,6 +441,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
+
     //create a new cluster
     newCluster: async (req, res) => {
         try {
@@ -459,6 +466,7 @@ const partController = {
             return res.status(500).json({ error: "An error occurred while creating a new cluster    ." });
         }
     },
+
     //retrieve cluster
     retrieveCluster: async (req, res) => {
         try {
@@ -514,6 +522,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
+    
     // edit cluster
     editCluster: async (req, res) => {
         try {

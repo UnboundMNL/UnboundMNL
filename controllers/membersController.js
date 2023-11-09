@@ -181,6 +181,7 @@ const membersController = {
             return res.status(500).render("fail", { error: "An error occurred while saving data." });
         }
     },
+    
     deleteMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
