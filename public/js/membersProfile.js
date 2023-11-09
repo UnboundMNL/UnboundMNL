@@ -6,13 +6,13 @@ function displayContent(section) {
     console.log("Displaying " + section);
     const containerDisplay = document.getElementById("containerDisplay");
     const contentDisplay = document.getElementById(section + "Content");
-    
+
     // Hide all content divs
     const contentDivs = containerDisplay.getElementsByClassName("content");
     for (let div of contentDivs) {
         div.style.display = "none";
     }
-    
+
     // Show the selected content
     contentDisplay.style.display = "block";
 }
@@ -29,34 +29,45 @@ function backProfile() {
     contentEdit.style.display = "none";
     const contentDisplay = document.getElementById("profileContent");
     contentDisplay.style.display = "block";
-
 }
 
-function cancelChanges(inputValues, dateValues, dropdownValues, projectChoices, groupChoices) {
+/* KABAN */
+function setKabanStatusRadio(status) {
+    const radios = {
+        'Active': 'activeRadio',
+        'Retired (w/o Savings)': 'retiredNoSavingsRadio',
+        'Retired (w/ Savings)': 'retiredWithSavingsRadio'
+    };
+
+    if (radios[status]) {
+        document.getElementById(radios[status]).checked = true;
+        document.getElementById(radios[status]).disabled = false;
+    }
+}
+
+function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesName, projectChoicesId, groupChoicesName, groupChoicesId) {
     inputValues = JSON.parse(inputValues);
     //  Restore the original values of input Fields
     const inputFields = document.querySelectorAll("input[type='text']");
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].value = inputValues[i];
     }
-
     const dateFields = document.querySelectorAll("input[type='date']");
     for (let i = 0; i < dateFields.length; i++) {
         dateFields[i].value = dateValues;
     }
-
-    projectChoices = JSON.parse(projectChoices);
+    projectChoicesName = JSON.parse(projectChoicesName);
+    projectChoicesId = JSON.parse(projectChoicesId);
     $("#projectSelect").empty();
-    projectChoices.forEach(project => {
-        $("#projectSelect").append(`<option value="${project}">${project}</option>`)
-    });
-
-    groupChoices = JSON.parse(groupChoices);
+    for (let i = 0; i < projectChoicesName.length; i++) {
+        $("#projectSelect").append(`<option value="${projectChoicesId[i]}">${projectChoicesName[i]}</option>`)
+    }
+    groupChoicesName = JSON.parse(groupChoicesName);
+    groupChoicesId = JSON.parse(groupChoicesId);
     $("#groupSelect").empty();
-    groupChoices.forEach(group => {
-        $("#groupSelect").append(`<option value="${group}">${group}</option>`)
-    });
-
+    for (let i = 0; i < groupChoicesName.length; i++) {
+        $("#groupSelect").append(`<option value="${groupChoicesId[i]}">${groupChoicesName[i]}</option>`)
+    }
     dropdownValues = JSON.parse(dropdownValues);
     const dropdownFields = document.querySelectorAll("select");
     for (let i = 0; i < dropdownFields.length; i++) {
@@ -67,7 +78,6 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoices, 
             }
         }
     }
-
     const contentDisplay = document.getElementById("profileContent");
     contentDisplay.style.display = "block";
     const contentEdit = document.getElementById("editContent");
