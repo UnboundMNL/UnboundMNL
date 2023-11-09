@@ -73,9 +73,10 @@
     cursor: pointer;
 }
 
-/* .input-group i {
-    position: absolute;
-    right: 0;
-    cursor: pointer;
-    font-size: 1.5rem;
-} */
+/* ACCOUNT REGISTRATION */
+.register-container {
+    background-color: var(--translucent-tertiary-color);
+    min-height: 100%;
+    padding: 1.5rem;
+}
+
