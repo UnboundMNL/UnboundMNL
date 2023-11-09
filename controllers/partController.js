@@ -330,7 +330,7 @@ const partController = {
                 const username = user.username;
                 const project = await Project.findOne({ _id: req.session.projectId });
                 if (!project) {
-                    res.redirect("/cluster");
+                    res.redirect("/project");
                 }
                 let updatedParts = [];
                 if (req.query.search) {

@@ -176,14 +176,12 @@ const userController = {
                     }
                 }
                 if (newPassword !== "" && !passwordRegex.test(newPassword)) {
-                    console.log("invalid new password");
                     return res.status(400).json({ error: "Passwod should be at least 6 characters long, and containing only alphanumeric characters" });
                 }
                 if (((newPassword !== "") && (req.body.password === req.body.repassword))) {
-                    console.log("valid new password")
                     updateData.password = newPassword;
                 } else {
-                    console.log("no new password")
+    
                     delete updateData.password;
                     delete updateData.repassword;
                     req.session.expires = null;
@@ -236,7 +234,6 @@ const userController = {
         try {
             req.session.groupId = req.body.id;
             delete req.session.memberId;
-            console.log("Group Middle: ", req.session.groupId);
             await req.session.save();
             res.status(200).json({ success: true, message: 'group ID saved' });
         } catch (error) {

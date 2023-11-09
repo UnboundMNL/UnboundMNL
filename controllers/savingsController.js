@@ -73,7 +73,6 @@ const savingsController = {
                     });
                     updatedData.totalSavings = totalSavings;
                     updatedData.totalMatch = totalMatch;
-                    console.log(updatedData);
                     const updatedSaving = await Saving.findOneAndUpdate(
                         { memberID: id, year },
                         updatedData,

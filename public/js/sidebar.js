@@ -82,16 +82,6 @@ $(document).on('click', '#logout', function () {
         });
 
 });
-// authority checking
-function authCheck(authority) {
-    if (authority == "Admin") {
-        console.log(authority)
-    } else if (authority == "SEDO") {
-        console.log(authority)
-    } else {
-        console.log(authority)
-    }
-}
 // button highlight
 function open(button) {
     let anchor = document.getElementById(button);

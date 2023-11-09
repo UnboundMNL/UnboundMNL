@@ -196,7 +196,7 @@ function save() {
 		if (existingChange) {
 			existingChange.content.push(new orderedContent(split[1], each.textContent, split[3]));
 		} else {
-			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent, split[3])]));
+			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
 		}
 	}
 	for (const each of constructedChanges) {

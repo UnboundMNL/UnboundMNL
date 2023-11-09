@@ -22,7 +22,7 @@ const membersController = {
                 const username = user.username;
                 const authority = user.authority;
                 if (!req.session.memberId) {
-                    res.redirect("/group")
+                    res.redirect("/member");
                 }
                 const member = await Member.findById(req.session.memberId);
                 const memberId = member._id;
