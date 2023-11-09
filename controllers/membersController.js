@@ -24,11 +24,13 @@ const membersController = {
                 const username = user.username;
                 const authority = user.authority;
                 //let member = await Member.findById(req.params.memberId).populate("savings");
+
                 if (!req.session.memberId){
                     res.redirect("/group")
                 }
                 let member = await Member.findById(req.session.memberId);
                 
+
                 // var member = await Member.findById("65450abcd05ecf1638e34996");
                 var memberId = member._id; //to change
                 var cluster = await Cluster.findById(member.clusterId);
