@@ -6,11 +6,13 @@ function displayContent(section) {
     console.log("Displaying " + section);
     const containerDisplay = document.getElementById("containerDisplay");
     const contentDisplay = document.getElementById(section + "Content");
+
     // Hide all content divs
     const contentDivs = containerDisplay.getElementsByClassName("content");
     for (let div of contentDivs) {
         div.style.display = "none";
     }
+
     // Show the selected content
     contentDisplay.style.display = "block";
 }
@@ -27,6 +29,20 @@ function backProfile() {
     contentEdit.style.display = "none";
     const contentDisplay = document.getElementById("profileContent");
     contentDisplay.style.display = "block";
+}
+
+/* KABAN */
+function setKabanStatusRadio(status) {
+    const radios = {
+        'Active': 'activeRadio',
+        'Retired (w/o Savings)': 'retiredNoSavingsRadio',
+        'Retired (w/ Savings)': 'retiredWithSavingsRadio'
+    };
+
+    if (radios[status]) {
+        document.getElementById(radios[status]).checked = true;
+        document.getElementById(radios[status]).disabled = false;
+    }
 }
 
 function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesName, projectChoicesId, groupChoicesName, groupChoicesId) {

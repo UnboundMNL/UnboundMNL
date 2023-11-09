@@ -67,6 +67,7 @@ function toggleFields(targetId, checkbox, user) {
         cancelChanges(user);
         clearAlert();
     }
+
     for (let input of inputs) {
         input.disabled = !checkbox.checked;
     }

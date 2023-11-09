@@ -142,6 +142,7 @@ main {
     gap: 1rem;
 }
 
+
 .container-profile {
     background-color: white;
     padding: 2rem;
@@ -150,6 +151,7 @@ main {
 .container-profile img {
     margin-right: 1rem;
 }
+
 
 .card-actions {
     display: flex;
