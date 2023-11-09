@@ -401,13 +401,17 @@ const partController = {
                 } else{
                     updatedParts = await Group.find({_id: { $in: project.groups } });
                 }
-
+                const orgParts = updatedParts;
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                if (page>totalPages){
+                    res.redirect("/group")
+                }
 
 
 
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
-                const orgParts = updatedParts;
+                
                 //console.log(orgParts);
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
@@ -422,7 +426,6 @@ const partController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
-                var totalPages = Math.ceil(orgParts.length/perPage);
                 dashbuttons = dashboardButtons(authority);
                 res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU:project.name, location:project.location  });
             } else {
@@ -615,10 +618,15 @@ const partController = {
                 } else{
                     updatedParts = await Project.find({ _id: { $in: cluster.projects } });
                 }
+                const orgParts = updatedParts;
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                if (page>totalPages){
+                    res.redirect("/project")
+                }
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
 
-                const orgParts = updatedParts;
+                
                 //console.log(orgParts)
 
                 var pageParts = [];
@@ -634,7 +642,7 @@ const partController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
-                var totalPages = Math.ceil(orgParts.length/perPage);
+                
                 dashbuttons = dashboardButtons(authority);
                 res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages  });
             } else {

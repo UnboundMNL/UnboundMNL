@@ -31,22 +31,31 @@
                     <li class="page-item"><a class="page-link" href="<%=i+1%>"> <%= i+1 %></a></li>
                 <% }
             }
-        } else if (totalPages < page+2){ 
+        } else if (page <= 2){ 
+            for (var i = 0; i < 5; i++) {
+                if (page ==  i+1) { %>
+                    <li class="page-item active"><a class="page-link" href="<%=i+1%>"> <%=  i+1 %></a></li>
+                <% } else { %>
+                    <li class="page-item"><a class="page-link" href="<%=i+1%>"> <%= i+1 %></a></li>
+                <% }
+            }
+        } 
+        else if (totalPages < parseInt(page)+2){ 
             var startingPage = page - (4 - (totalPages-page));
             for (var i = 0; i < 5; i++) {
                 if (page == startingPage + i) { %>
-                    <li class="page-item active"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                    <li class="page-item active"><a class="page-link" href="<%=startingPage+i%>"> <%= startingPage + i %></a></li>
                 <% } else { %>
-                    <li class="page-item"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                    <li class="page-item"><a class="page-link" href="<%=startingPage+i%>"> <%= startingPage + i %></a></li>
                 <% }
             }
         } else {
             var startingPage = page - 2; %>
             <% for (var i = 0; i < 5; i++) {
                 if (page == startingPage + i) { %>
-                    <li class="page-item active"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                    <li class="page-item active"><a class="page-link" href="<%=startingPage+i%>"> <%= startingPage+i  %></a></li>
                 <% } else { %>
-                    <li class="page-item"><a class="page-link" href="#"> <%= startingPage + i %></a></li>
+                    <li class="page-item"><a class="page-link" href="<%=startingPage+i%>"> <%= startingPage+i  %></a></li>
                 <% }
             }
         } %>
@@ -55,7 +64,7 @@
         if (page==totalPages){
             link = page;
         } else{
-            link = page+1
+            link = parseInt(page)+1
         }%> 
         <li class="page-item">
             <a class="page-link" href="<%=link%>" aria-label="Next">

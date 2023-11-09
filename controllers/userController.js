@@ -104,7 +104,7 @@ const userController = {
     cluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const page = req.params.page;
+                let page = req.params.page;
                 const userID = req.session.userId;
                 const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
@@ -143,7 +143,10 @@ const userController = {
                 const orgParts = updatedParts;
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
-                var totalPages;
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                if (page>totalPages){
+                    res.redirect("/cluster")
+                }
                 if (orgParts.length > perPage) {
                     var startPage = perPage * (page-1);
                     for (var i = 0; i < perPage && (startPage + i < orgParts.length); i++) {
@@ -154,7 +157,6 @@ const userController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
-                var totalPages = Math.ceil(orgParts.length/perPage);
                 dashbuttons = dashboardButtons(authority);
                 res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
             } else {
@@ -305,7 +307,7 @@ const userController = {
             delete req.session.memberId;
             console.log("Cluster Middle: " , req.session.clusterId);
             await req.session.save();
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+            res.status(200).json({ success: true, message: 'cluster ID saved' });
         }catch(error){
             console.error(error);
         }
@@ -317,7 +319,7 @@ const userController = {
             delete req.session.memberId;
             console.log("Project Middle: " , req.session.projectId);
             await req.session.save();
-            res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
+            res.status(200).json({ success: true, message: 'project ID saved' });
         }catch(error){
             console.error(error);
         }
