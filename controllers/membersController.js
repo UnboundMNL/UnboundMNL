@@ -50,9 +50,15 @@ const membersController = {
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
                 const projectChoices = await Project.find({ _id: { $in: cluster.projects } });
                 const groupChoices = await Group.find({ _id: { $in: project.groups } });
+                let allSavings = 0;
+                let totalSavings = null;
+                if (memberId){
+                    allSavings = await Saving.find({memberID:memberId});
+                    totalSavings = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSavings), 0);
+                }
                 res.render("memberprofile", {
                     member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group,
-                    fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices
+                    fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices, allSavings, totalSavings
                 });
             } else {
                 res.redirect("/");

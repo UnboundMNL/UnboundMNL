@@ -1,9 +1,9 @@
 let listOfChanges = [];
+let datatable;
+let year;
 document.addEventListener('DOMContentLoaded', function () {
-
 	//LOAD TABLE
 	const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
-	let datatable;
 	switch (isMobile) {
 		case true:
 			datatable = loadMobileTable();
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		datatable.search(search.value).draw();
 	})
 	//LOAD YEAR
-	const year = document.getElementById("yearInput");
+	year = document.getElementById("yearInput");
 	const yearButton = document.getElementById("yearButton");
 	yearButton.addEventListener('click', function () {
 		listOfChanges = [];
@@ -102,11 +102,13 @@ function loadMobileTable() {
 };
 
 function reloadTable(value, table) {
+	year=value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec'];
 	table.clear().draw();
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())
 		.then((data) => {
+			let j=0, sum=0;
 			data.memberList.forEach((member) => {
 				let total = member.totalSavings + member.totalMatch;
 				const rowData = [
@@ -140,13 +142,17 @@ function reloadTable(value, table) {
 					member.totalMatch,
 					total,
 				];
+				sum+=member.totalSavings;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
 				const cells = row.node().querySelectorAll('td');
+				let className;
 				for (let i = 0; i < 2; i++) {
 					let cell = cells[i];
-					cell.setAttribute('class', 'memberPage');
+					className="memberPage"+j;
+					j++;
+					cell.setAttribute('class', className);
 				}
 
 				for (let i = 2; i < cells.length - 3; i += 2) {
@@ -157,7 +163,11 @@ function reloadTable(value, table) {
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_match`);
 				}
-				linkMemberPage(`${member.id}`);
+				linkMemberPage(`${member.id}`,className);
+				const yearDiv = document.getElementById("memberYear");
+				yearDiv.textContent="Savings and Matching Grant for "+data.year;
+				const totalDiv = document.getElementById("totalSavings");
+				totalDiv.textContent=sum;
 			});
 		});
 }
@@ -231,6 +241,8 @@ function save() {
 					const toastLiveExample = document.getElementById('addSuccessToast')
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
+					console.log(year)
+					reloadTable(year,datatable);
 				} else {
 					return response.json();
 				}

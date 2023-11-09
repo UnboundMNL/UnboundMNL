@@ -35,8 +35,8 @@ function backProfile() {
 function setKabanStatusRadio(status) {
     const radios = {
         'Active': 'activeRadio',
-        'Retired (w/o Savings)': 'retiredNoSavingsRadio',
-        'Retired (w/ Savings)': 'retiredWithSavingsRadio'
+        'RwS': 'retiredNoSavingsRadio',
+        'RwoS': 'retiredWithSavingsRadio'
     };
 
     if (radios[status]) {
@@ -48,7 +48,7 @@ function setKabanStatusRadio(status) {
 function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesName, projectChoicesId, groupChoicesName, groupChoicesId) {
     inputValues = JSON.parse(inputValues);
     //  Restore the original values of input Fields
-    const inputFields = document.querySelectorAll("input[type='text']");
+    const inputFields = document.querySelectorAll("input[type='text']:not([disabled])");
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].value = inputValues[i];
     }
@@ -82,18 +82,4 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesNa
     contentDisplay.style.display = "block";
     const contentEdit = document.getElementById("editContent");
     contentEdit.style.display = "none";
-}
-
-/* KABAN */
-function setKabanStatusRadio(status) {
-    const radios = {
-        'Active': 'activeRadio',
-        'Retired (w/o Savings)': 'retiredNoSavingsRadio',
-        'Retired (w/ Savings)': 'retiredWithSavingsRadio'
-    };
-
-    if (radios[status]) {
-        document.getElementById(radios[status]).checked = true;
-        document.getElementById(radios[status]).disabled = false;
-    }
 }
