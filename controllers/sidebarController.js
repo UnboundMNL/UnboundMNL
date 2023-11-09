@@ -8,11 +8,11 @@ const Project = require('../models/Project');
 const Group = require('../models/Group');
 
 const sidebarController = {
-    sidebarChange: (req,res) => {
-        try{
+    sidebarChange: (req, res) => {
+        try {
             req.session.sidebar = !req.session.sidebar;
             res.status(200).json({ success: true, message: 'Sidebar toggled successfully' });
-        }catch(error){
+        } catch (error) {
             console.error(error);
         }
     }
