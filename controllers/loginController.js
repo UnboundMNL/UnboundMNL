@@ -13,23 +13,23 @@ const loginController = {
                 let { username, password, remember } = req.body;
                 const user = await User.findOne({ username: username });
                 if (!user) {
-                    return res.status(401).json({ error: "That User Does Not Exist." });
+                    return res.status(401).json({ error: "User not found" });
                 }
                 const isPasswordMatch = await user.comparePassword(password);
                 // const isPasswordMatch = (password == user.password);
                 // doesnt work for me - isnt this comparing the content of password to the hashed password in the db?
                 // my local db doesnt have paswords hashed so I use this instead
-
+                req.session.authority = user.authority;
                 if (user.authority=="SEDO"){
   
                     req.session.clusterId = user.validCluster;
                     console.log(user.validCluster)
                 } else if (user.authority=="Treasurer"){
-                    req.session.projectId = user.validGroup;
+                    req.session.groupId = user.validGroup;
                     console.log(user.validGroup)
                 }
                 if (!isPasswordMatch ) {
-                    return res.status(401).json({ error: "Wrong Password." });
+                    return res.status(401).json({ error: "Incorrect Password" });
                 }
             
                 req.session.isLoggedIn = true;

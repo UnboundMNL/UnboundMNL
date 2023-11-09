@@ -12,6 +12,11 @@ function saveEdit(link,actionForm,saveID){
         var MotherLastName = document.getElementById("MotherLastName").value;
         var FatherFirstName = document.getElementById("FatherFirstName").value;
         var FatherLastName = document.getElementById("FatherLastName").value;
+
+        var clusterId = document.getElementById("clusterSelect").value;
+        var projectId = document.getElementById("projectSelect").value;
+        var groupId = document.getElementById("groupSelect").value;
+
         fetch(actionForm, {
             method: 'POST',
             headers: {
@@ -19,7 +24,7 @@ function saveEdit(link,actionForm,saveID){
             },
             body: JSON.stringify({ id, address, birthdate, sex, status, MemberFirstName, 
                 MemberLastName, MotherFirstName, MotherLastName, 
-                FatherFirstName, FatherLastName })
+                FatherFirstName, FatherLastName, clusterId, projectId, groupId })
         })
         .then(response => {
             if (response.ok) {

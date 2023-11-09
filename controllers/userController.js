@@ -104,13 +104,18 @@ const userController = {
     cluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const page = req.params.page;
+                let page = req.params.page;
                 const userID = req.session.userId;
                 const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-
+                if (req.session.authority == "SEDO"){
+                    res.redirect("/project")
+                }
+                if (req.session.authority == "Treasurer"){
+                    res.redirect("/member")
+                }
                 // req.session.projectId = null;
                 // req.session.clusterId = null;
                 // req.session.groupId = null;
@@ -138,7 +143,10 @@ const userController = {
                 const orgParts = updatedParts;
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
-                var totalPages;
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                if (page>totalPages){
+                    res.redirect("/cluster")
+                }
                 if (orgParts.length > perPage) {
                     var startPage = perPage * (page-1);
                     for (var i = 0; i < perPage && (startPage + i < orgParts.length); i++) {
@@ -149,7 +157,6 @@ const userController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
-                var totalPages = Math.ceil(orgParts.length/perPage);
                 dashbuttons = dashboardButtons(authority);
                 res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
             } else {
@@ -295,6 +302,12 @@ const userController = {
     clusterMiddle: async(req,res) => {
         try{
             req.session.clusterId = req.body.id;
+
+            delete req.session.projectId;
+            delete req.session.groupId;
+            delete req.session.memberId;
+            console.log("Cluster Middle: " , req.session.clusterId);
+
             await req.session.save();
             res.status(200).json({ success: true, message: 'cluster ID saved' });
         }catch(error){
@@ -304,6 +317,11 @@ const userController = {
     projectMiddle: async(req,res) => {
         try{
             req.session.projectId = req.body.id;
+
+            delete req.session.groupId;
+            delete req.session.memberId;
+            console.log("Project Middle: " , req.session.projectId);
+
             await req.session.save();
             res.status(200).json({ success: true, message: 'project ID saved' });
         }catch(error){
@@ -313,6 +331,10 @@ const userController = {
     groupMiddle: async(req,res) => {
         try{
             req.session.groupId = req.body.id;
+
+            delete req.session.memberId;
+            console.log("Group Middle: " , req.session.groupId);
+
             await req.session.save();
             res.status(200).json({ success: true, message: 'group ID saved' });
         }catch(error){

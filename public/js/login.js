@@ -9,7 +9,7 @@ $(document).on('click', '#login', function() {
     if (username==''||password==''){
         var errorDiv = document.getElementById("error");
         errorDiv.style.display="block";
-        errorDiv.textContent="No info inputted";
+        errorDiv.textContent="Please fill out all fields";
     }else{
         var data = {
             username,

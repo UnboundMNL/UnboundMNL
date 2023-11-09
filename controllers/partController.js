@@ -96,43 +96,50 @@ const partController = {
                 const username = user.username;
                 var memberList=[];
                 const group = await Group.findOne({ _id: req.session.groupId });
+                if (!group){
+                    res.redirect("/group");
+                }
                 const year = new Date().getFullYear();
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
                 const members = await Member.find({_id : { $in: group.member }});
-                for (const member of members) {
-                    const savings = await Saving.findOne({
-                        _id: { $in: member.savings },
-                        year: year 
-                      });
-                   
-                    const data = {
-                        name: member.name.firstName + ' ' + member.name.lastName,
-                        id: member._id,
-                    };
-                
-                    if (savings) {  
-                        for (const month of months) {
-                            data[month] = {
-                                savings: savings[month]?.savings || "",
-                                match: savings[month]?.match || ""
-                            };
+                let totalSavings=0
+                if (members){
+                    for (const member of members) {
+                        const savings = await Saving.findOne({
+                            _id: { $in: member.savings },
+                            year: year 
+                          });
+                       
+                        const data = {
+                            name: member.name.firstName + ' ' + member.name.lastName,
+                            id: member._id,
+                        };
+                    
+                        if (savings) {  
+                            for (const month of months) {
+                                data[month] = {
+                                    savings: savings[month]?.savings || "",
+                                    match: savings[month]?.match || ""
+                                };
+                            }
+                            data.totalMatch = savings.totalMatch;
+                            data.totalSavings = savings.totalSavings;
+                        } else {
+                            for (const month of months) {
+                                data[month] = {
+                                    savings: "",
+                                    match: ""
+                                };
+                            }
+                            data.totalMatch = 0;
+                            data.totalSavings = 0;
                         }
-                        data.totalMatch = savings.totalMatch;
-                        data.totalSavings = savings.totalSavings;
-                    } else {
-                        for (const month of months) {
-                            data[month] = {
-                                savings: "",
-                                match: ""
-                            };
-                        }
-                        data.totalMatch = 0;
-                        data.totalSavings = 0;
+                        totalSavings+=parseInt(data.totalSavings);
+                        memberList.push(data);
                     }
-                    memberList.push(data);
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, username, sidebar, dashbuttons, grpName: group.name, year, memberList});
+                res.render("member", { authority, username, sidebar, dashbuttons, grpName: group.name, year, memberList, totalSavings});
             } else {
                 res.redirect("/");
             }
@@ -150,6 +157,7 @@ const partController = {
                 const year = req.params.year;
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
                 const members = await Member.find({_id : { $in: group.member }});
+                let totalSavings = 0;
                 for (const member of members) {
                     const savings = await Saving.findOne({
                         _id: { $in: member.savings },
@@ -180,9 +188,10 @@ const partController = {
                         data.totalMatch = 0;
                         data.totalSavings = 0;
                     }
+                    totalSavings+=data.totalSavings;
                     memberList.push(data);
                 }
-                res.status(200).json({memberList});
+                res.status(200).json({memberList,totalSavings,year});
             } else {
                 res.status(400).json({ error: "An error occurred while retrieving group information." });
             }
@@ -278,8 +287,8 @@ const partController = {
                 // const loggedInUserId = req.session.userId;
                 // const user = await User.findById(loggedInUserId);
 
-                const cluster = await Cluster.findById(req.session.ClusterId);
-                const project = await Project.findById(req.session.ProjectId);
+                const cluster = await Cluster.findById(req.session.clusterId);
+                const project = await Project.findById(req.session.projectId);
                 var kaban;
                 if (Array.isArray(group.members)){
                     for (const member of group.members) {
@@ -296,6 +305,7 @@ const partController = {
                 }
                 
                 const deletedGroup = await Group.findByIdAndDelete(groupId);
+                project.groups = project.groups.filter(arrayMembers => !arrayMembers.equals(groupId.toString()));
                 cluster.totalGroups -=1;
                 project.totalGroups -=1;
                 await cluster.save();
@@ -321,7 +331,7 @@ const partController = {
             if (req.session.isLoggedIn) {
     
                 // idk what the form will have
-                const { name, location, SPU} = req.body;
+                const { name, location} = req.body;
             
  
     
@@ -329,7 +339,6 @@ const partController = {
                 const newProject = new Project({
                     name,
                     groups,
-                    SPU,
                     location
                     //anything else to add?
                 });
@@ -374,7 +383,9 @@ const partController = {
                 // }
                 
                 const project = await Project.findOne({ _id: req.session.projectId });
-
+                if (!project){
+                    res.redirect("/cluster");
+                }
                 let updatedParts = [] 
 
 
@@ -390,13 +401,17 @@ const partController = {
                 } else{
                     updatedParts = await Group.find({_id: { $in: project.groups } });
                 }
-
+                const orgParts = updatedParts;
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                if (page>totalPages){
+                    res.redirect("/group")
+                }
 
 
 
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
-                const orgParts = updatedParts;
+                
                 //console.log(orgParts);
                 var pageParts = [];
                 var perPage = 6; // change to how many clusters per page
@@ -411,9 +426,8 @@ const partController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
-                var totalPages = Math.ceil(orgParts.length/perPage);
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages,SPU:project.SPU, location:project.location  });
+                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU:project.name, location:project.location  });
             } else {
                 res.redirect("/");
             }
@@ -434,7 +448,7 @@ const partController = {
                 const loggedInUserId = req.session.userId;
                 const user = await User.findById(loggedInUserId);
 
-                const { name, location, SPU } = req.body;
+                const { name, location } = req.body;
 
                 if(project.name != name){
                     const existingProject = await Project.findOne({ name });
@@ -494,7 +508,7 @@ const partController = {
                 // Check if the logged-in user is authorized to delete the project
                 // const loggedInUserId = req.session.userId;
                 // const user = await User.findById(loggedInUserId);
-                const cluster = await Cluster.findById(req.session.ClusterId);
+                const cluster = await Cluster.findById(req.session.clusterId);
                 var kaban;
                 if (Array.isArray(project.groups)){
                     for (const groupId of project.groups) {
@@ -521,7 +535,7 @@ const partController = {
 
                 
                 const deletedProject = await Project.findByIdAndDelete(projectId);
-                
+                cluster.projects = cluster.projects.filter(arrayMembers => !arrayMembers.equals(projectId.toString()));
                 cluster.totalProjects-=1;
                 await cluster.save();
                 // If the project was successfully deleted, delete associated groups, members, and savings
@@ -577,6 +591,9 @@ const partController = {
     retrieveCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                if (req.session.authority == "Treasurer"){
+                    res.redirect("/group")
+                  }
                 const sidebar = req.session.sidebar;
                 const page = req.params.page;
                 const userID = req.session.userId;
@@ -601,10 +618,15 @@ const partController = {
                 } else{
                     updatedParts = await Project.find({ _id: { $in: cluster.projects } });
                 }
+                const orgParts = updatedParts;
+                var totalPages = Math.ceil(orgParts.length/perPage);
+                if (page>totalPages){
+                    res.redirect("/project")
+                }
                 //await updateOrgParts(updatedParts); 
                 // const orgParts = getOrgParts();
 
-                const orgParts = updatedParts;
+                
                 //console.log(orgParts)
 
                 var pageParts = [];
@@ -620,7 +642,7 @@ const partController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
-                var totalPages = Math.ceil(orgParts.length/perPage);
+                
                 dashbuttons = dashboardButtons(authority);
                 res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages  });
             } else {
@@ -722,8 +744,8 @@ const partController = {
     SHGChoices: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                let { projectName } = req.body;
-                const project = await Project.findOne({ name: projectName });
+                let { projectId } = req.body;
+                const project = await Project.findOne({ _id: projectId });
                 const shg = await Group.find({ _id: { $in: project.groups } });
                 res.json({ shg });
             } else {
@@ -738,8 +760,8 @@ const partController = {
     projectChoices: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                let { clusterName } = req.body;
-                const cluster = await Cluster.findOne({ name: clusterName });
+                let { clusterId } = req.body;
+                const cluster = await Cluster.findOne({ _id: clusterId });
                 const project = await Project.find({
                     _id: { $in: cluster.projects },
                     totalGroups: { $gt: 0 }

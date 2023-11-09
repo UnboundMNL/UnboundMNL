@@ -21,8 +21,8 @@ $(document).ready(function() {
 });
 
 function getSHG() {
-    var projectName = $('#projectSelect').find(":selected").val();
-    var data = { projectName };
+    var projectId = $('#projectSelect').find(":selected").val();
+    var data = { projectId };
     fetch('/SHGchoices', {
         method: 'POST',
         headers: {
@@ -40,7 +40,7 @@ function getSHG() {
     .then(data => {
         $("#groupSelect").empty();
         data.shg.forEach((shg, index) => {
-            var newOption =  `<option value="${shg.name}" ${index === 0 ? 'selected' : ''}>${shg.name}</option>`;
+            var newOption =  `<option value="${shg._id}" ${index === 0 ? 'selected' : ''}>${shg.name}</option>`;
             $("#groupSelect").append(newOption);
         });
     })
@@ -50,8 +50,8 @@ function getSHG() {
 }
 
 function getProject() {
-    var clusterName = $('#clusterSelect').find(":selected").val();
-    var data = { clusterName };
+    var clusterId = $('#clusterSelect').find(":selected").val();
+    var data = { clusterId };
     fetch('/projectChoices', {
         method: 'POST',
         headers: {
@@ -69,7 +69,7 @@ function getProject() {
     .then(data => {
         $("#projectSelect").empty();
         data.project.forEach((project, index) => {
-            var newOption = `<option value="${project.name}" ${index === 0 ? 'selected' : ''}>${project.name}</option>`;
+            var newOption = `<option value="${project._id}" ${index === 0 ? 'selected' : ''}>${project.name}</option>`;
             $("#projectSelect").append(newOption);
         });
         getSHG();

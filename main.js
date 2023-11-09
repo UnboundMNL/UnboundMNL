@@ -35,7 +35,7 @@ const { projectidMiddleware } = require('./lib/middleware');
 const { groupidMiddleware } = require('./lib/middleware');
 const { memberidMiddleware } = require('./lib/middleware');
 const { savingidMiddleware } = require('./lib/middleware');
-
+const { authorityMiddleware } = require('./lib/middleware');
 const { hashPassword } = require('./lib/hashing');
 
 
@@ -121,48 +121,17 @@ app.get("/group",  (req, res) => {
   res.redirect("/group/view/1");
 });
 
-// app.get("/manual", async (req, res) => {
-//   const newGroup = new Group({
-//     SPU: 'SPU',
-//     name: 'Group Name',
-//     area: 'Group Area',
-//     depositoryBank: 'Depository Bank Name',
-//     bankAccountType: 'Savings', // or 'Checking'
-//     bankAccountNum: 1234567890, // Replace with the actual account number
-//     SHGLeader: {
-//       firstName: 'SHG Leader First Name',
-//       lastName: 'SHG Leader Last Name',
-//       contatNo: 'SHG Leader Contact Number'
-//     },
-//     SEDPChairman: {
-//       firstName: 'SEDP Chairman First Name',
-//       lastName: 'SEDP Chairman Last Name',
-//       contatNo: 'SEDP Chairman Contact Number'
-//     },
-//     kabanTreasurer: {
-//       firstName: 'Kaban Treasurer First Name',
-//       lastName: 'Kaban Treasurer Last Name',
-//       contatNo: 'Kaban Treasurer Contact Number'
-//     },
-//     kabanAuditor: {
-//       firstName: 'Kaban Auditor First Name',
-//       lastName: 'Kaban Auditor Last Name',
-//       contatNo: 'Kaban Auditor Contact Number'
-//     },
-//     member: [], // You can add member IDs here
-//     totalMembers: 0, // Initial value
-//     totalKaban: 0 // Initial value
-//   });
+app.get("/manual", async (req, res) => {
+  try {
+    req.session.destroy();
+    res.json()
+} catch (err) {
+    console.error('Error logging out:', err);
+    return new Error('Error logging out');
+}
 
-//   try {
-//     // Save the new document to the database
-//     const savedGroup = await newGroup.save();
-//     res.status(201).json({ message: 'Group created successfully', group: savedGroup });
-//   } catch (error) {
-//     console.error('Error creating Group:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
+res.status(200).send();
+});
 
 
 
@@ -234,7 +203,7 @@ app.use(projectidMiddleware);
 app.use(groupidMiddleware);
 app.use(memberidMiddleware);
 app.use(savingidMiddleware);
-
+app.use(authorityMiddleware);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);

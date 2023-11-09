@@ -20,14 +20,3 @@
         Please enter a Project Zone.
     </div>
 </div>
-<div class = "mb-3">
-    <label for="projectName" class="form-label">SPU</label>
-    <input class="form-control" id = "projectName" name = "SPU" type="text" aria-describedby="SubProjectAP" required
-    <% if (locals.project) { %>
-        value = "<%=locals.project.SPU%>"
-    <% } %>
-    >
-    <div class="invalid-feedback">
-        Please enter a SPU.
-    </div>
-</div>

@@ -14,7 +14,8 @@
                     </div>
                     <div class="p-4">
                         <h6 class="text-center p-2">Type DELETE to confirm.</h6>
-                        <input type="text" class="form-control text-center">
+                        <% const deleteConfirm = pageParts[i]._id+"Confirm"; %>
+                        <input type="text" class="form-control text-center" id="<%=deleteConfirm%>">
                     </div>
                     <div class="modal-buttons p-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

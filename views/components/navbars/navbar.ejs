@@ -37,19 +37,17 @@
             %>
             
             <!-- CLUSTER BUTTON -->
-            <% if (authority !== 'Treasurer') { %>
             <a href="<%=href%>" class="nav-link d-flex" id="partsButton">
                 <i class='bx bx-grid-alt icon'></i>
                 <span class="text nav-text"><%=orgPart%></span>
             </a>
-            <% } %>
-            <!--  if (authority!== "Treasurer"){   --> <!-- I don't kniw if we need this for treaurer but idk just added the if and <% %> ever-->
+            <% if (authority!== "Treasurer"){ %> 
             <!-- MEMBERS MASTERLIST BUTTON -->
             <a href="/masterlist" class="nav-link d-flex" id="memberButton">
                 <i class='bx bxs-user-account icon'></i>
                 <span class="text nav-text">Members Masterlist</span>
             </a>
-            <!--  } -->
+            <% } %>
 
             <!-- SAVINGS AND MATCHING GRANT BUTTON -->
             <a href="/savings" class="nav-link d-flex" id="savingsButton">
