@@ -8,6 +8,7 @@
 
     <!-- Functions -->
     <script src="/js/accountProfile.js"></script>
+    <script src="/js/back.js"></script>
 </head>
 
 <body class="body-bg">
@@ -18,12 +19,14 @@
         <!-- Top navigation bar -->
         <%- include('components/navbars/topNavbar.ejs') %>
 
+        
         <!-- Temporary user -->
-        <% const user = "Jose Rizal" %>
+        <% let user = user1 %>
 
         <!-- Account Profile -->
-        <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user}) %>
-        <%- include('components/accountProfile/editAccount.ejs', {user: user}) %>
+        <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user.username}) %>
+        <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
+
 
         <!-- Modals -->
         <%-include('components/popups/savePopup.ejs') %>

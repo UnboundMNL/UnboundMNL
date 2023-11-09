@@ -1,11 +1,16 @@
+<!-- Member's Profile -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/membersProfile.css" />
-    
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <!-- FUNCTIONS -->
     <script src="/js/membersProfile.js"></script>
+    <script src="/js/saveEdit.js"></script>
+    <script src="/js/editMember.js"></script>
+    <script src="/js/back.js"></script>
+    <script src="/js/card.js"></script>
     <%-include('components/headers.ejs', {authority, pageName: "Member's Profile"})%>
 </head>
 
@@ -34,8 +39,11 @@
         <!-- Pop-ups -->
         <%-include('components/popups/savePopup.ejs') %>
         <%-include('components/popups/deleteMemberModal.ejs') %>
-
-        <script>open('partsButton')</script>
+        <% const actionForm = "/member/"+memberId+"/edit"; %>
+        <script>
+            open('partsButton');
+            saveEdit("/memberInfo","<%=actionForm%>","saveEdit",)
+        </script>
         <%-include('components/popups/logoutPopup.ejs') %> 
     </main>
 </body>

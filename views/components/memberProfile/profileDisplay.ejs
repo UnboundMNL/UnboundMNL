@@ -5,7 +5,8 @@
                 <div class="mx-3">
                     <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
-                <h4>Full Name</h4>
+
+                <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
             </div>
         </div>
         <div>
@@ -15,10 +16,11 @@
     <hr>
 
     <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
-    "Mother's Name", "Father's Name", "Guardian's Name", "Birthdate", "Gender", "Status"]; %>
+    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
     <!-- Hannah: Temporary Info -->
-    <% const personalInfo = ["1234", "Juan Too", "Cluster 1", "SPU 1", "SHG 1", "Earth 1",
-                "Maria Ya", "Juan Wan", "Maria Ya", "01/01/2011", "Female", "Active"]; %>
+    <% const personalInfo = [member.id, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
+    member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
+
 
     <div class="d-flex mt-4">
         <div class="row d-flex flex-grow-1">
@@ -36,7 +38,18 @@
                 <% for (let i = Math.ceil(info.length / 2); i < info.length; i++) { %>
                     <div class="row mt-2">
                         <h6 class="col-4 m-0"><%- info[i] %></h6>
-                        <span class="col"><%- personalInfo[i] %></span>
+
+                        <% if (info[i]=="Status"){ 
+                            if (personalInfo[i]=="RwS") { %>
+                                <span class="col"> Retired with Savings </span>
+                            <% } else if (personalInfo[i]=="RwoS") { %>
+                                <span class="col">Retired without Savings</span>
+                            <% } else{ %>
+                                <span class="col"><%- personalInfo[i] %></span>
+                            <% }
+                        } else{ %>
+                            <span class="col"><%- personalInfo[i] %></span>
+                        <% } %>
                     </div>
                 <% } %>   
             </div>  

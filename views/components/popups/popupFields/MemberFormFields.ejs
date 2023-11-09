@@ -1,6 +1,20 @@
+    <div class = "mb-3">
+        <label for="id" class="form-label">ID</label>
+        <div class = "input-group" id = "ID">
+            <input class="form-control"
+                    id = "id"
+                    name = "id"
+                    type="text" 
+                    aria-describedby="id"
+                    required>
+            <div class="invalid-feedback">
+                ID required.
+            </div>  
+        </div>
+    </div>
+
 <% 
-    const nameFields = ["Child", "Mother", "Father"]
-    const placeholder = [["Kiana", "Kaslana"], ["Cecilia", "Schariac"], ["Siegfried", "Kaslana"]]
+    const nameFields = ["Member", "Mother", "Father"]
 
     for (let i = 0; i < nameFields.length; i++) {
 %>
@@ -12,7 +26,6 @@
                         id = "<%=nameFields[i]%>FirstName"
                         name = "<%=nameFields[i]%>FirstName"
                         type="text" 
-                        placeholder="<%=placeholder[i][0]%>"
                         aria-describedby="<%=nameFields[i]%>FirstName"
                         required>
                 <span class = "input-group-text">Last Name</span>
@@ -20,7 +33,6 @@
                         id = "<%=nameFields[i]%>LastName"
                         name = "<%=nameFields[i]%>LastName"
                         type="text"
-                        placeholder="<%=placeholder[i][1]%>"
                         aria-describedby="<%=nameFields[i]%>LastName"
                         required>
                 <div class="invalid-feedback">
@@ -28,5 +40,55 @@
                 </div>  
             </div>
         </div>
+        
 
 <% } %>
+    <div class="mb-3">
+        <label for="sex" class="form-label"> Gender </label>
+        <select class="form-select" id="sex" name="sex" aria-label="sex">
+            <option selected default hidden value="">Choose a Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>    
+    </div>
+    
+    <div class = "mb-3">
+        <label for="birthdate" class="form-label">Birthday</label>
+        <div class = "input-group" id = "birthdate">
+            <input class="form-control"
+                    id = "birthdate"
+                    name = "birthdate"
+                    type="date" 
+                    aria-describedby="birthdate"
+                    required>
+            <div class="invalid-feedback">
+                Birthday required.
+            </div>  
+        </div>
+    </div>
+
+    <div class = "mb-3">
+        <label for="address" class="form-label">Address</label>
+        <div class = "input-group" id = "birthdate">
+            <input class="form-control"
+                    id = "address"
+                    name = "address"
+                    type="text" 
+                    aria-describedby="address"
+                    required>
+            <div class="invalid-feedback">
+                Address required.
+            </div>  
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="status" class="form-label"> Status </label>
+        <select class="form-select" id="status" name="status" aria-label="status">
+            <option selected default hidden value="">Choose a Status</option>
+            <option value="Active">Active</option>
+            <option value="RwS">Retired with Savings</option>
+            <option value="RwoS">Retired w/o Savings</option>
+        </select>    
+    </div>

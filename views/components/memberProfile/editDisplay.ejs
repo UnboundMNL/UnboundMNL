@@ -1,3 +1,4 @@
+
 <div class="container-profile">
     <div>
         <button class="btn btn-outline-secondary btn-sm mb-2" onclick="backProfile()"><i class='bx bx-arrow-back'></i> Back to Profile</button>
@@ -8,7 +9,7 @@
                 <div class="d-flex flex-column">
                     <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
-                <h4>Full Name</h4>
+                <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
             </div>
             <button class="btn btn-secondary btn-sm">Change Photo</button>
         </div>
@@ -19,11 +20,13 @@
     <hr>
 
     <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
-    "Mother's Name", "Father's Name", "Guardian's Name", "Birthdate", "Gender", "Status"]; %>
+    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
     <!-- Hannah: Temporary Info -->
-    <% const personalInfo = ["1234", "Juan Too", "Cluster 1", "SPU 1", "SHG 1", "Earth 1",
-                "Maria Ya", "Juan Wan", "Maria Ya", "01/01/2011", "Female", "Active"]; %>
+    <% const personalInfo = [member.id, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
+    member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
 
+    <% const fieldNames = ["id", "MemberName", "cluster", "project", "group", "address",
+    "MotherName", "FatherName", "birthdate", "sex", "status"]; %>
     <div class="d-flex mt-4" id="infoContainer">
         <div class="row d-flex flex-grow-1">
             <div class="d-flex flex-column col-12 col-md-6 mb-4">
@@ -31,7 +34,26 @@
                 <% for (let i = 0; i < Math.ceil(info.length / 2); i++) { %>
                     <div class="row mt-2 align-items-center">
                         <h6 class="col-4 m-0"><%- info[i] %></h6>
-                        <input type="text" class="col form-control" value="<%- personalInfo[i] %>"/>
+
+                    <% if (i === 2 || i === 3 || i === 4) { %>
+                        <select class="col form-control" 
+                            aria-label="<%= i === 2 ? 'clusterId' : i === 3 ? 'projectId' : 'groupId' %>" 
+                            name="<%= i === 2 ? 'clusterId' : i === 3 ? 'projectId' : 'groupId' %>"
+                            id="<%= i === 2 ? 'clusterSelect' : i === 3 ? 'projectSelect' : 'groupSelect' %>">
+                            <% const choices = (i === 2) ? clusterChoices : (i === 3) ? projectChoices : groupChoices; %>
+                            <% for (let j = 0; j < choices.length; j++) { %>
+                                <option value="<%= choices[j]._id %>" <%= choices[j].name === (i === 2 ? cluster : i === 3 ? project : group) ? 'selected' : '' %>>
+                                    <%= choices[j].name %>
+                                </option>
+                            <% } %>
+                        </select>
+                        
+                    <% } else if (fieldNames[i]=="MemberName") { %>
+                        <input type="text" class="col form-control" value="<%- member.name.firstName %>" id="MemberFirstName"/>
+                        <input type="text" class="col form-control" value="<%- member.name.lastName %>" id="MemberLastName"/>
+                    <% } else { %>
+                        <input type="text" class="col form-control" value="<%- personalInfo[i] %>" id="<%- fieldNames[i]%>"/>
+                        <% }%>
                     </div>
                 <% } %>                
             </div>
@@ -41,15 +63,61 @@
                 <% for (let i = Math.ceil(info.length / 2); i < info.length; i++) { %>
                     <div class="row mt-2 align-items-center">
                         <h6 class="col-4 m-0"><%- info[i] %></h6>
-                        <input type="text" class="col form-control" value="<%- personalInfo[i] %>"/>
+
+                        <% if (fieldNames[i]=="birthdate") { %> 
+                            <input type="date" class="col form-control" value="<%- editDate %>" id="birthdate"/>
+                        <% } else if (fieldNames[i]=="MotherName"){ %>
+                            <input type="text" class="col form-control" value="<%- member.nameMother.firstName %>" id="MotherFirstName"/>
+                            <input type="text" class="col form-control" value="<%- member.nameMother.lastName %>" id="MotherLastName"/>
+                        <% } else if (fieldNames[i]=="FatherName"){ %>
+                            <input type="text" class="col form-control" value="<%- member.nameFather.firstName %>" id="FatherFirstName"/>
+                            <input type="text" class="col form-control" value="<%- member.nameFather.lastName %>" id="FatherLastName"/>
+                        <% } else if (fieldNames[i]=="sex"){%>
+                            <select class="col form-control" id="sex" name="sex" aria-label="sex">
+                                <option <% if  (member.sex=="Male"){ %> selected <% } %> value="Male">Male</option>
+                                <option <% if  (member.sex=="Female"){ %> selected <% } %> value="Female">Female</option>
+                                <option <% if  (member.sex=="Other"){ %> selected <% } %> value="Other">Other</option>
+                            </select>  
+                        <% } else if (fieldNames[i]=="status"){%>
+                            <select class="col form-control" id="status" name="status" aria-label="status">
+                                <option selected default hidden value="">Choose a Status</option>
+                                <option <% if  (member.status=="Active"){ %> selected <% } %> value="Active">Active</option>
+                                <option <% if  (member.status=="RwS"){ %> selected <% } %> value="RwS">Retired with Savings</option>
+                                <option <% if  (member.status=="RwoS"){ %> selected <% } %> value="RwoS">Retired w/o Savings</option>
+                            </select>  
+                        <% }%>%>
                     </div>
                 <% } %>    
             </div>  
         </div>
     </div>
 
+    <script>
+        var inputFields = ["<%=member.id %>","<%=member.name.firstName%>", "<%=member.name.lastName %>", "<%=member.address %>", "<%=member.nameMother.firstName %>", "<%=member.nameMother.lastName %>", "<%=member.nameFather.firstName %>", "<%=member.nameFather.lastName %>"];
+        var dropdownFields = ["<%=cluster %>","<%=project %>","<%=group %>",'<%=member.sex%>','<%=member.status%>'];
+        var projectChoicesName = [
+            <% for (let i = 0; i < projectChoices.length; i++) { %>
+                    "<%= projectChoices[i].name %>"<%= i < projectChoices.length - 1 ? ',' : '' %>
+                <% } %>
+            ];
+        var projectChoicesId = [
+            <% for (let i = 0; i < projectChoices.length; i++) { %>
+                    "<%= projectChoices[i]._id %>"<%= i < projectChoices.length - 1 ? ',' : '' %>
+                <% } %>
+            ];
+        var groupChoicesName = [
+            <% for (let i = 0; i < groupChoices.length; i++) { %>
+                    "<%= groupChoices[i].name %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
+                <% } %>
+            ];
+        var groupChoicesId = [
+            <% for (let i = 0; i < groupChoices.length; i++) { %>
+                    "<%= groupChoices[i]._id %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
+                <% } %>
+            ];
+    </script>
     <div class="d-flex justify-content-center mt-4 button-gap">
-        <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(`<%- JSON.stringify(personalInfo) %>`)'>Cancel</button>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">Save Changes</button>
-    </div>
+        <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(JSON.stringify(inputFields), "<%=editDate%>",JSON.stringify(dropdownFields), JSON.stringify(projectChoicesName), JSON.stringify(projectChoicesId), JSON.stringify(groupChoicesName), JSON.stringify(groupChoicesId))'>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveEdit">Save Changes</button>
+    </div>  
 </div>
