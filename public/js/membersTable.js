@@ -111,57 +111,72 @@ function loadMobileTable(){
     return table;
 };
 
-function reloadTable(value, table){
-	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept','oct','nov','dec']
+function reloadTable(value, table) {
+	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec'];
 	table.clear().draw();
   
-	fetch(`/membersTable/${value}`).then(res => res.json()).then(data => {
-	  data.memberList.forEach(member => {
-		let total = member.totalSavings + member.totalMatch;
-		table.row.add([
-		  member.name,
-		  member.id,
-		  member.jan.savings,
-		  member.jan.match,
-		  member.feb.savings,
-		  member.feb.match,
-		  member.mar.savings,
-		  member.mar.match,
-		  member.apr.savings,
-		  member.apr.match,
-		  member.may.savings,
-		  member.may.match,
-		  member.jun.savings,
-		  member.jun.match,
-		  member.jul.savings,
-		  member.jul.match,
-		  member.aug.savings,
-		  member.aug.match,
-		  member.sept.savings,
-		  member.sept.match,
-		  member.oct.savings,
-		  member.oct.match,
-		  member.nov.savings,
-		  member.nov.match,
-		  member.dec.savings,
-		  member.dec.match,
-		  member.totalSavings,
-		  member.totalMatch,
-		  total
-		]).draw();
+	fetch(`/membersTable/${value}`)
+	  .then((res) => res.json())
+	  .then((data) => {
+		data.memberList.forEach((member) => {
+		  let total = member.totalSavings + member.totalMatch;
+		  const rowData = [
+			member.name,
+			member.id,
+			member.jan.savings,
+			member.jan.match,
+			member.feb.savings,
+			member.feb.match,
+			member.mar.savings,
+			member.mar.match,
+			member.apr.savings,
+			member.apr.match,
+			member.may.savings,
+			member.may.match,
+			member.jun.savings,
+			member.jun.match,
+			member.jul.savings,
+			member.jul.match,
+			member.aug.savings,
+			member.aug.match,
+			member.sept.savings,
+			member.sept.match,
+			member.oct.savings,
+			member.oct.match,
+			member.nov.savings,
+			member.nov.match,
+			member.dec.savings,
+			member.dec.match,
+			member.totalSavings,
+			member.totalMatch,
+			total,
+		  ];
   
-		//set the just added cells to be editable
-		const rows = table.rows().nodes();
-		const row = rows[rows.length - 1];
-		const cells = row.querySelectorAll('td');
-		for (let i = 2; i < cells.length - 3; i++) {
-		  const cell = cells[i];
-		  cell.setAttribute('contenteditable', 'true');
-		  cell.setAttribute('id', `${member.id}_${months[i-2]}_${value}_savings`);
-		}
-	  })
-	})
-};
+		  // Add a new row to the table
+		  const row = table.row.add(rowData).draw();
+  
+		  // Make the cells of the newly added row editable and set attributes
+		  const cells = row.node().querySelectorAll('td');
+  
+		  for (let i = 0; i < 2; i++) {
+			let cell = cells[i];
+			cell.setAttribute('class', 'memberPage');
+		  }
+  
+		  for (let i = 2; i < cells.length - 3; i += 2) {
+			let cell = cells[i];
+			cell.setAttribute('contenteditable', 'true');
+			cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_savings`);
+			cell = cells[i + 1];
+			cell.setAttribute('contenteditable', 'true');
+			cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_match`);
+		  }
+  
+		  linkMemberPage(`${member.id}`);
+		});
+	  });
+  }
+  
 
 class Change {
 	constructor(id, year, content) {
