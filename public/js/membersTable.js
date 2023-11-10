@@ -102,7 +102,7 @@ function loadMobileTable() {
 };
 
 function reloadTable(value, table) {
-	YEAR = value;
+	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec'];
 	table.clear().draw();
 	fetch(`/membersTable/${value}`)
@@ -241,7 +241,7 @@ function save() {
 					const toastLiveExample = document.getElementById('addSuccessToast')
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
-					reloadTable(year, DATATABLE);
+					reloadTable(YEAR.value, DATATABLE);
 				} else {
 					return response.json();
 				}
