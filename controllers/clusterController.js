@@ -60,7 +60,7 @@ const clusterController = {
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
     },
-    
+
     //create a new cluster
     newCluster: async (req, res) => {
         try {
@@ -153,7 +153,7 @@ const clusterController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the cluster." });
         }
     },
-    
+
     loadEditClusterForm: async (req, res) => {
         const clusterId = req.params.clusterId;
         const cluster = await Cluster.findOne({ _id: clusterId });
@@ -172,6 +172,7 @@ const clusterController = {
             console.error(error);
         }
     }
+    
 }
 
 module.exports = clusterController;

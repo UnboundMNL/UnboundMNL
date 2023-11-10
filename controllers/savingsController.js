@@ -50,7 +50,7 @@ const savingsController = {
         }
     },
 
-    newSaving: async (req, res) => { 
+    newSaving: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
                 const { id, year, updateData } = req.body;

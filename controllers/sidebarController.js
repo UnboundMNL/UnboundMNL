@@ -7,6 +7,7 @@ const Project = require('../models/Project');
 const Group = require('../models/Group');
 
 const sidebarController = {
+
     sidebarChange: (req, res) => {
         try {
             req.session.sidebar = !req.session.sidebar;
@@ -15,6 +16,7 @@ const sidebarController = {
             console.error(error);
         }
     }
+
 }
 
 module.exports = sidebarController;

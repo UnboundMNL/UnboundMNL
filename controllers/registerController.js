@@ -15,7 +15,7 @@ const registerController = {
         if (password !== repassword) {
           return res.status(400).json({ error: "Passwords do not match." });
         }
-        const MIN_PASSWORD_LENGTH = 6; 
+        const MIN_PASSWORD_LENGTH = 6;
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/; //checking inputs for other stuff
         if (password.length < MIN_PASSWORD_LENGTH || !passwordRegex.test(password)) {
           return res.status(400).json({ error: "Password must be at least 6 characters long and must contain upper and lowercase lettes, and numbers." });
@@ -60,7 +60,7 @@ const registerController = {
       return res.status(500).render("fail", { error: "An error occurred while fetching data." });
     }
   }
-  
+
 }
 
 module.exports = registerController;

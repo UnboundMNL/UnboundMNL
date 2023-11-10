@@ -120,7 +120,7 @@ const profileController = {
                 if (((newPassword !== "") && (req.body.password === req.body.repassword))) {
                     updateData.password = newPassword;
                 } else {
-    
+
                     delete updateData.password;
                     delete updateData.repassword;
                     req.session.expires = null;
@@ -142,8 +142,8 @@ const profileController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
-    },
-    
+    }
+
 }
 
 module.exports = profileController;

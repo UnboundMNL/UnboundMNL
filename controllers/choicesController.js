@@ -44,6 +44,7 @@ const choicesController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     }
+    
 }
 
 module.exports = choicesController;

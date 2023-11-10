@@ -17,6 +17,6 @@ router.post("/newProject", projectController.newProject);
 router.post('/project/:id/edit', projectController.editProject);
 router.post('/project/:id/delete', projectController.deleteProject);
 router.get('/editSubProjectsForm/:projectId', projectController.loadEditSubProjectsForm);
-router.post("/projectMiddle",projectController.projectMiddle);
+router.post("/projectMiddle", projectController.projectMiddle);
 
 module.exports = router;  

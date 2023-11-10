@@ -17,6 +17,6 @@ router.post("/newGroup", groupController.newGroup);
 router.post('/group/:id/edit', groupController.editGroup);
 router.post('/group/:id/delete', groupController.deleteGroup);
 router.get('/editSHGForm/:shgId', groupController.loadEditSHGForm);
-router.post("/groupMiddle",groupController.groupMiddle);
+router.post("/groupMiddle", groupController.groupMiddle);
 
 module.exports = router;  

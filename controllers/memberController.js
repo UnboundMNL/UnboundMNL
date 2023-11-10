@@ -161,8 +161,8 @@ const memberController = {
                 const groupChoices = await Group.find({ _id: { $in: project.groups } });
                 let allSavings = 0;
                 let totalSavings = null;
-                if (memberId){
-                    allSavings = await Saving.find({memberID:memberId});
+                if (memberId) {
+                    allSavings = await Saving.find({ memberID: memberId });
                     totalSavings = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSavings), 0);
                 }
                 res.render("memberprofile", {
@@ -296,7 +296,7 @@ const memberController = {
             return res.status(500).render("fail", { error: "An error occurred while saving data." });
         }
     },
-    
+
     deleteMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
