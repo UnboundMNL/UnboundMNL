@@ -55,3 +55,10 @@
 .kaban-tables {
     overflow: auto;
 }
+
+#cancelConfirm {
+    display: none;
+    justify-content: center;
+    position: sticky;
+    bottom: 20px;
+}

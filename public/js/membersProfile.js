@@ -29,6 +29,8 @@ function backProfile() {
     contentEdit.style.display = "none";
     const contentDisplay = document.getElementById("profileContent");
     contentDisplay.style.display = "block";
+
+    resetForm();
 }
 
 /* KABAN */
@@ -46,9 +48,13 @@ function setKabanStatusRadio(status) {
 }
 
 function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesName, projectChoicesId, groupChoicesName, groupChoicesId) {
+    resetForm();
+    displayCancellationMessage();
+
     inputValues = JSON.parse(inputValues);
     //  Restore the original values of input Fields
-    const inputFields = document.querySelectorAll("input[type='text']:not([disabled])");
+    const formContainer = document.getElementById("infoContainer");
+    const inputFields = formContainer.querySelectorAll("input[type='text']:not([disabled])");
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].value = inputValues[i];
     }
@@ -78,8 +84,16 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesNa
             }
         }
     }
-    const contentDisplay = document.getElementById("profileContent");
-    contentDisplay.style.display = "block";
-    const contentEdit = document.getElementById("editContent");
-    contentEdit.style.display = "none";
+    // const contentDisplay = document.getElementById("profileContent");
+    // contentDisplay.style.display = "block";
+    // const contentEdit = document.getElementById("editContent");
+    // contentEdit.style.display = "none";
+}
+
+displayCancellationMessage = () => {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function(toastEl) {
+      return new bootstrap.Toast(toastEl)
+    })
+    toastList.forEach(toast => toast.show()) 
 }

@@ -35,7 +35,7 @@
                     <div class="mb-2">
                         <span>Account Type</span>
                         <div>
-                            <select class="custom-select form-control">
+                            <select class="custom-select form-select">
                                 <option selected>Choose...</option>
                                 <option value="1">Admin</option>
                                 <option value="2">SEDO</option>
@@ -52,7 +52,7 @@
                     <div class="mb-2">
                         <span>Cluster</span>
                         <div>
-                            <select class="custom-select form-control">
+                            <select class="custom-select form-select">
                                 <option selected>Choose...</option>
                                 <% for (var i = 0; i < cluster.length; i++) { %>
                                     <option value="i"><%- cluster[i] %></option>
@@ -64,7 +64,7 @@
                     <div class="mb-2">
                         <span>Sub-Project Unit</span>
                         <div>
-                            <select class="custom-select form-control">
+                            <select class="custom-select form-select">
                                 <option selected>Choose...</option>
                                 <% for (var i = 0; i < spu.length; i++) { %>
                                     <option value="i"><%- spu[i] %></option>
@@ -76,7 +76,7 @@
                     <div class="mb-2">
                         <span>Self-Help Group</span>
                         <div>
-                            <select class="custom-select form-control">
+                            <select class="custom-select form-select">
                                 <option selected>Choose...</option>
                                 <% for (var i = 0; i < shg.length; i++) { %>
                                     <option value="i"><%- shg[i] %></option>
