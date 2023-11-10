@@ -5,19 +5,19 @@
                 <div class="mx-3">
                     <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
+
                 <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
             </div>
         </div>
-        <div>
-            <button class="btn btn-outline-primary btn-sm">>> View Savings & Matching Grant</button>
-        </div> 
     </div>
     <hr>
+
     <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
     "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
     <!-- Hannah: Temporary Info -->
     <% const personalInfo = [member.id, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
     member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
+
 
     <div class="d-flex mt-4">
         <div class="row d-flex flex-grow-1">
@@ -35,6 +35,7 @@
                 <% for (let i = Math.ceil(info.length / 2); i < info.length; i++) { %>
                     <div class="row mt-2">
                         <h6 class="col-4 m-0"><%- info[i] %></h6>
+
                         <% if (info[i]=="Status"){ 
                             if (personalInfo[i]=="RwS") { %>
                                 <span class="col"> Retired with Savings </span>

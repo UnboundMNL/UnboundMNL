@@ -26,10 +26,18 @@ const userController = {
                 let nGroup = 0;
                 let nMember = 0;
                 let savings = 0;
+<<<<<<< HEAD
                 switch (authority) {
                     case "Admin":
                         const allSaving = await Saving.find({});
                         for (item in allSaving) {
+=======
+                let allSaving;
+                switch (authority) {
+                    case "Admin":
+                        allSaving = await Saving.find({});
+                        for (const item of allSaving) {
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
                             savings += item.totalSavings;
                         }
                         nCluster = await Cluster.countDocuments();
@@ -52,8 +60,26 @@ const userController = {
                     default:
                         break;
                 }
+<<<<<<< HEAD
                 dashbuttons = dashboardButtons(authority);
                 res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings });
+=======
+                const monthCounts = {};
+                const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                months.forEach((month) => {
+                    monthCounts[month] = 0;
+                });
+
+                allSaving.forEach((saving) => {
+                    months.forEach((month) => {
+                        if (saving[month].savings > 0) {
+                            monthCounts[month]++;
+                        }
+                    });
+                });
+                dashbuttons = dashboardButtons(authority);
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts });
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
             } else {
                 res.redirect("/");
             }
@@ -176,6 +202,7 @@ const userController = {
                     }
                 }
                 if (newPassword !== "" && !passwordRegex.test(newPassword)) {
+<<<<<<< HEAD
                     console.log("invalid new password");
                     return res.status(400).json({ error: "Passwod should be at least 6 characters long, and containing only alphanumeric characters" });
                 }
@@ -184,6 +211,14 @@ const userController = {
                     updateData.password = newPassword;
                 } else {
                     console.log("no new password")
+=======
+                    return res.status(400).json({ error: "Passwod should be at least 6 characters long, and containing only alphanumeric characters" });
+                }
+                if (((newPassword !== "") && (req.body.password === req.body.repassword))) {
+                    updateData.password = newPassword;
+                } else {
+    
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
                     delete updateData.password;
                     delete updateData.repassword;
                     req.session.expires = null;
@@ -236,7 +271,10 @@ const userController = {
         try {
             req.session.groupId = req.body.id;
             delete req.session.memberId;
+<<<<<<< HEAD
             console.log("Group Middle: ", req.session.groupId);
+=======
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
             await req.session.save();
             res.status(200).json({ success: true, message: 'group ID saved' });
         } catch (error) {

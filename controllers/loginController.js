@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const mongoose = require('mongoose')
 
-
 const loginController = {
 
     login: async (req, res) => {

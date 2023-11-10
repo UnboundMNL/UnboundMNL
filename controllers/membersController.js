@@ -22,7 +22,11 @@ const membersController = {
                 const username = user.username;
                 const authority = user.authority;
                 if (!req.session.memberId) {
+<<<<<<< HEAD
                     res.redirect("/group")
+=======
+                    res.redirect("/member");
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
                 }
                 const member = await Member.findById(req.session.memberId);
                 const memberId = member._id;
@@ -50,9 +54,21 @@ const membersController = {
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
                 const projectChoices = await Project.find({ _id: { $in: cluster.projects } });
                 const groupChoices = await Group.find({ _id: { $in: project.groups } });
+<<<<<<< HEAD
                 res.render("memberprofile", {
                     member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group,
                     fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices
+=======
+                let allSavings = 0;
+                let totalSavings = null;
+                if (memberId){
+                    allSavings = await Saving.find({memberID:memberId});
+                    totalSavings = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSavings), 0);
+                }
+                res.render("memberprofile", {
+                    member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group,
+                    fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices, allSavings, totalSavings
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
                 });
             } else {
                 res.redirect("/");
@@ -181,6 +197,7 @@ const membersController = {
             return res.status(500).render("fail", { error: "An error occurred while saving data." });
         }
     },
+    
     deleteMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {

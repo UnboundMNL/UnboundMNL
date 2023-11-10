@@ -1,6 +1,6 @@
 <div id = "table_div" class = "mt-5">
     <div class="d-flex justify-content-between align-items-center">
-        <h2 class="text-center flex-grow-1">Savings and Matching Grant for <%=year%></h2>
+        <h2 class="text-center flex-grow-1" id="memberYear">Savings and Matching Grant for <%=year%></h2>
         <button class="btn btn-primary" id="save" onclick="save()">Save All Changes</button>
     </div>
     <table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
@@ -27,20 +27,20 @@
             <% var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec']; %>
             <% for (let i = 0; i < memberList.length; i++) { %>
                 <tr>
-
-                    <td class = "memberPage"><%= memberList[i].name %></td>
-                    <td class = "memberPage"><%= memberList[i].id %></td>
+                    <% let className = "memberPage"+i;%>
+                    <td class = "<%=className%>"><%= memberList[i].name %></td>
+                    <td class = "<%=className%>"><%= memberList[i].id %></td>
                     <script>
-                        linkMemberPage("<%= memberList[i].id %>")
+                        linkMemberPage("<%= memberList[i].id %>", "<%=className%>")
                     </script>
                     <% for (let j = 0; j < month.length; j++) { %>
                         <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_savings"><%= memberList[i][month[j]].savings %></td>
                         <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_match"><%= memberList[i][month[j]].match %></td>
                     <% } %>
-                    <td><%= memberList[i].totalSavings %></td>
-                    <td><%= memberList[i].totalMatch %></td>
+                    <td class="format-number"><%= memberList[i].totalSavings %></td>
+                    <td class="format-number"><%= memberList[i].totalMatch %></td>
                     <% let total = memberList[i].totalMatch + memberList[i].totalSavings%>
-                    <td><%= total %></td>
+                    <td class="format-number"><%= total %></td>
                 </tr>
             <% } %>
         </tbody>

@@ -6,11 +6,19 @@ function displayContent(section) {
     console.log("Displaying " + section);
     const containerDisplay = document.getElementById("containerDisplay");
     const contentDisplay = document.getElementById(section + "Content");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     // Hide all content divs
     const contentDivs = containerDisplay.getElementsByClassName("content");
     for (let div of contentDivs) {
         div.style.display = "none";
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     // Show the selected content
     contentDisplay.style.display = "block";
 }
@@ -27,12 +35,35 @@ function backProfile() {
     contentEdit.style.display = "none";
     const contentDisplay = document.getElementById("profileContent");
     contentDisplay.style.display = "block";
+<<<<<<< HEAD
+=======
+
+    resetForm();
+}
+
+/* KABAN */
+function setKabanStatusRadio(status) {
+    const radios = {
+        'Active': 'activeRadio',
+        'RwS': 'retiredNoSavingsRadio',
+        'RwoS': 'retiredWithSavingsRadio'
+    };
+
+    if (radios[status]) {
+        document.getElementById(radios[status]).checked = true;
+        document.getElementById(radios[status]).disabled = false;
+    }
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
 }
 
 function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesName, projectChoicesId, groupChoicesName, groupChoicesId) {
+    resetForm();
+    displayCancellationMessage();
+
     inputValues = JSON.parse(inputValues);
     //  Restore the original values of input Fields
-    const inputFields = document.querySelectorAll("input[type='text']");
+    const formContainer = document.getElementById("infoContainer");
+    const inputFields = formContainer.querySelectorAll("input[type='text']:not([disabled])");
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].value = inputValues[i];
     }
@@ -62,8 +93,23 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesNa
             }
         }
     }
+<<<<<<< HEAD
     const contentDisplay = document.getElementById("profileContent");
     contentDisplay.style.display = "block";
     const contentEdit = document.getElementById("editContent");
     contentEdit.style.display = "none";
+=======
+    // const contentDisplay = document.getElementById("profileContent");
+    // contentDisplay.style.display = "block";
+    // const contentEdit = document.getElementById("editContent");
+    // contentEdit.style.display = "none";
+}
+
+displayCancellationMessage = () => {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function(toastEl) {
+      return new bootstrap.Toast(toastEl)
+    })
+    toastList.forEach(toast => toast.show()) 
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
 }

@@ -82,6 +82,7 @@ $(document).on('click', '#logout', function () {
         });
 
 });
+<<<<<<< HEAD
 // authority checking
 function authCheck(authority) {
     if (authority == "Admin") {
@@ -92,6 +93,8 @@ function authCheck(authority) {
         console.log(authority)
     }
 }
+=======
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
 // button highlight
 function open(button) {
     let anchor = document.getElementById(button);

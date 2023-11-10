@@ -26,10 +26,8 @@
 <div>
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
-
         <div class="container-style mb-3" id = <%=pageParts[i]._id%>>
             <h5>SHG <%=pageParts[i].name%></h5>
-            <script>console.log("<%=pageParts[i].location%>")</script>
             <div>
                 <i class='bx bxs-map'></i>
                 <span><%=pageParts[i].location%></span>
@@ -52,7 +50,7 @@
 
                 <div>
                     <span>Total Savings:</span>
-                    <h3>P <%=pageParts[i].totalKaban%></h3>
+                    <h3 class="format-number"><%=pageParts[i].totalKaban%></h3>
                 </div>
             </div>
         </div>

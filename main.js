@@ -32,7 +32,10 @@ const { groupidMiddleware } = require('./lib/middleware');
 const { memberidMiddleware } = require('./lib/middleware');
 const { savingidMiddleware } = require('./lib/middleware');
 const { authorityMiddleware } = require('./lib/middleware');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
 const Member = require('./models/Member');
 const Saving = require('./models/Saving');
 const User = require('./models/User');

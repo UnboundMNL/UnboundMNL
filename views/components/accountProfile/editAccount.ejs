@@ -13,9 +13,7 @@
                             <i class='bx bx-camera'></i>
                         </div>
                     </div>
-
                     <h5><%- username %></h5>
-
                 </div>
                 <button class="btn btn-danger mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#deleteMemberModal">Delete Account</button>
             </div>
@@ -27,9 +25,7 @@
                     <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkUsername" onchange="toggleFields('usernameChange', this, `<%- user %>`)">Change Username</h6>
                     <div class="p-2" id="usernameChange">
                         <span>Username</span>
-
                         <input type="text" class="form-control mb-4" value="<%- username %>">
-
                         <span>Password</span>
                         <input type="password" class="form-control mb-2">
                         <span id="matchingAlert1"></span>
@@ -50,9 +46,7 @@
                             <input type="password" id="newPass" class="form-control" required onkeyup="validatePassword()">
                         </div>
                         <div class="mb-2">
-
                             <span>Confirm New Password</span>
-
                             <input type="password" id="confirmPass" class="form-control" required
                             onkeyup="validatePassword()">
                         </div>

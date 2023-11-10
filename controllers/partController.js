@@ -10,6 +10,7 @@ const { updateOrgParts, getOrgParts } = require('../controllers/functions/shared
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const partController = {
+
     //create a new group
     newGroup: async (req, res) => {
         try {
@@ -184,6 +185,7 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
+
     // edit group
     editGroup: async (req, res) => {
         try {
@@ -313,6 +315,10 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while creating a new project." });
         }
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     //retrieve project
     retrieveProject: async (req, res) => {
         try {
@@ -325,7 +331,11 @@ const partController = {
                 const username = user.username;
                 const project = await Project.findOne({ _id: req.session.projectId });
                 if (!project) {
+<<<<<<< HEAD
                     res.redirect("/cluster");
+=======
+                    res.redirect("/project");
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
                 }
                 let updatedParts = [];
                 if (req.query.search) {
@@ -364,6 +374,10 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     // edit project
     editProject: async (req, res) => {
         try {
@@ -435,6 +449,10 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     //create a new cluster
     newCluster: async (req, res) => {
         try {
@@ -459,6 +477,10 @@ const partController = {
             return res.status(500).json({ error: "An error occurred while creating a new cluster    ." });
         }
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     //retrieve cluster
     retrieveCluster: async (req, res) => {
         try {
@@ -504,7 +526,10 @@ const partController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
                 dashbuttons = dashboardButtons(authority);
                 res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
             } else {
@@ -515,6 +540,10 @@ const partController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     // edit cluster
     editCluster: async (req, res) => {
         try {

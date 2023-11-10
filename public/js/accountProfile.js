@@ -67,6 +67,10 @@ function toggleFields(targetId, checkbox, user) {
         cancelChanges(user);
         clearAlert();
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     for (let input of inputs) {
         input.disabled = !checkbox.checked;
     }
@@ -87,6 +91,10 @@ function updateUserInformation() {
     };
     // Define the URL for your server endpoint that handles user updates
     const updateUserUrl = '/updateUser'; // Replace with the actual endpoint URL
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     // Send a POST request with the updated user information
     fetch(updateUserUrl, {
         method: 'POST', // You can use PUT if it's more appropriate for your use case

@@ -9,7 +9,7 @@
         <div class="container col" id="<%=i%>">
             <i class='bx <%=buttons[i].icon%> icon'></i>
             <script>
-                var div = document.getElementById(<%=i%>);
+                var div = document.getElementById(`<%=i%>`);
                 div.onclick = function() {
                     location.href = '<%= buttons[i].href %>'; 
                 };
@@ -32,28 +32,28 @@
                     <% if (authority=="Admin") { %>
                     <div class="d-flex justify-content-between">
                         <span>Total number of Clusters</span>
-                        <span class="ml-auto"><%=nCluster%></span> <!-- TBD: Provide an actual value -->
+                        <span class="ml-auto"><%=nCluster%></span>
                     </div>
                     <% } %>
                     <% if (authority=="Admin" || authority=="SEDO") { %>
                     <div class="d-flex justify-content-between">
                         <span>Total number of Projects</span>
-                        <span class="ml-auto"><%=nProject%></span> <!-- TBD: Provide an actual value -->
+                        <span class="ml-auto"><%=nProject%></span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Total number of SHGs</span>
-                        <span class="ml-auto"><%=nGroup%></span> <!-- TBD: Provide an actual value -->
+                        <span class="ml-auto"><%=nGroup%></span>
                     </div>
                     <% } %>
                     <div class="d-flex justify-content-between">
                         <span>Total number of Members</span>
-                        <span class="ml-auto"><%=nMember%></span> <!-- TBD: Provide an actual value -->
+                        <span class="ml-auto"><%=nMember%></span>
                     </div>
                 </div>
                 <div class="container">
                     <div>
                         <h5>Total Savings</h5>
-                        <h4 class="ml-auto fw-bold">P<%=savings%></h4> <!-- TBD: Provide an actual value -->
+                        <h4 class="ml-auto fw-bold format-number"><%=savings%></h4>
                     </div>
                 </div>
             </div>

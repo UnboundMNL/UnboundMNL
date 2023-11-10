@@ -71,4 +71,16 @@
     background-color: var(--secondary-color);
     color: white;
     cursor: pointer;
+<<<<<<< HEAD
 }
+=======
+}
+
+/* ACCOUNT REGISTRATION */
+.register-container {
+    background-color: var(--translucent-tertiary-color);
+    min-height: 100%;
+    padding: 1.5rem;
+}
+
+>>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
