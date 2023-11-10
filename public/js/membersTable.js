@@ -213,7 +213,7 @@ function save() {
 		const data = {};
 		const updateData = {};
 		data["id"] = each.id;
-		data["year"] = each.year;
+		data["year"] = parseInt(each.year);
 		each.content.forEach(orderedContent => {
 			if (orderedContent.type === "match") {
 				if (!updateData[orderedContent.month]) {
@@ -241,7 +241,7 @@ function save() {
 					const toastLiveExample = document.getElementById('addSuccessToast')
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
-					reloadTable(YEAR, DATATABLE);
+					reloadTable(year, DATATABLE);
 				} else {
 					return response.json();
 				}
