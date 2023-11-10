@@ -3,11 +3,14 @@
 <head>
     <%-include('components/headers.ejs', {authority, pageName: "Members"})%>
     
+    <!-- CSS -->
     <link href="/css/memberTable.css" rel = "stylesheet">
 
-    <script src="/js/IDchecker.js"></script>
+    <!-- SCRIPTS -->
+    <script src="/js/formChange.js"></script>
     <script src="/js/card.js"></script>
-    
+    <script src="/js/reload.js"></script>
+
     <!-- DATATABLES -->
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/fc-4.3.0/datatables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/fc-4.3.0/datatables.min.js"></script>
@@ -51,7 +54,7 @@
                 <div class="align-items-end">
                     <div class="container-rounded">
                         <span>Total:</span>
-                        <h3>P 1000</h3>
+                        <h3 class="format-number"><%=totalSavings%></h3>
                     </div>
                 </div>
             </div>

@@ -1,16 +1,6 @@
 /* --------------- REUSABLE STYLES --------------- */
 @import url('https://fonts.googleapis.com/css?family=Montserrat Alternates');
 
-/* :root {
-    --body-color: #f2f2f2;
-    --primary-color: #0097b2;
-    --secondary-color: #0cc0df;
-    --tertiary-color: rgb(49, 118, 214);
-    --button-color: #007bff;
-    --text-color: #555151;
-    --sidebar-hover-color: #c7e5eb;
-} */
-
 :root {
     --body-color: #F2F4F3;
     --primary-color: #0092E0;
@@ -33,6 +23,13 @@ body {
     background-color: var(--body-color);
 }
 
+.no-padding {
+    padding: 0 !important;
+}
+
+.currSign:before {
+    content: '₱ ';
+}
 /* SIDEBAR */
 .sidebar {
     position: fixed;
@@ -152,6 +149,7 @@ main {
     gap: 1rem;
 }
 
+
 .container-profile {
     background-color: white;
     padding: 2rem;
@@ -160,6 +158,7 @@ main {
 .container-profile img {
     margin-right: 1rem;
 }
+
 
 .card-actions {
     display: flex;
@@ -241,6 +240,7 @@ main {
     .menu {
         padding-top: 4rem;
     }
+
     .menu-bar {
         padding: 4rem 0;
     }
@@ -251,7 +251,7 @@ main {
 
     .sidebar header {
         display: none;
-    }       
+    }
 
     .top-bar {
         padding-right: 1rem;

@@ -1,6 +1,6 @@
-function dashboardButtons(authority){
-    let buttons ;
-    if (authority === "Admin"){
+function dashboardButtons(authority) {
+    let buttons;
+    if (authority === "Admin") {
         buttons = [
             {
                 text: "Clusters",
@@ -22,8 +22,8 @@ function dashboardButtons(authority){
                 href: "/savings",
                 icon: "bx-money"
             }
-        ]
-    } else if (authority === "SEDO"){
+        ];
+    } else if (authority === "SEDO") {
         buttons = [
             {
                 text: "Projects",
@@ -45,8 +45,8 @@ function dashboardButtons(authority){
                 href: "/savings",
                 icon: "bx-money"
             }
-        ]
-    } else if (authority === "Treasurer"){
+        ];
+    } else if (authority === "Treasurer") {
         buttons = [
             {
                 text: "Members",
@@ -58,8 +58,9 @@ function dashboardButtons(authority){
                 href: "/savings",
                 icon: "bx-money"
             }
-        ]
+        ];
     }
     return buttons;
 }
-module.exports = {dashboardButtons};
+
+module.exports = { dashboardButtons };

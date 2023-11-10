@@ -1,21 +1,18 @@
 // login button
-$(document).on('click', '#login', function() {
-	var username = document.getElementById("username").value;
-    var password = document.getElementById("pw").value;
-    var remember = document.getElementById("remember-me").checked;
-    console.log(username)
-    console.log(password)
-    console.log(remember)
-    if (username==''||password==''){
-        var errorDiv = document.getElementById("error");
-        errorDiv.style.display="block";
-        errorDiv.textContent="No info inputted";
-    }else{
-        var data = {
+$(document).on('click', '#login', function () {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("pw").value;
+    const remember = document.getElementById("remember-me").checked;
+    if (username == '' || password == '') {
+        const errorDiv = document.getElementById("error");
+        errorDiv.style.display = "block";
+        errorDiv.textContent = "Please fill out all fields";
+    } else {
+        const data = {
             username,
             password,
             remember
-        }
+        };
         fetch('/login', {
             method: 'POST',
             headers: {
@@ -23,19 +20,19 @@ $(document).on('click', '#login', function() {
             },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            if (response.ok) {
-                location.href="/dashboard";
-            } else {
-                return response.json().then(data => {
-                    var errorDiv = document.getElementById("error");
-                    errorDiv.style.display="block";
-                    errorDiv.textContent=data.error;
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    location.href = "/dashboard";
+                } else {
+                    return response.json().then(data => {
+                        let errorDiv = document.getElementById("error");
+                        errorDiv.style.display = "block";
+                        errorDiv.textContent = data.error;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 });

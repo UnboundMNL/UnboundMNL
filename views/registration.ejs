@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/profile.css">
     <%-include('components/headers.ejs', {authority, pageName: "Registration"})%>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/profile.css">
+
+    <!-- SCRIPTS -->
+    <script src="/js/reload.js"></script>
 </head>
 
 <body class="body-bg">
@@ -11,6 +19,10 @@
     <main>
         <!-- Top navigation bar -->
         <%- include('components/navbars/topNavbar.ejs')%>
+
+        <!-- Registration form -->
+        <%- include('components/registrationContent.ejs', {authority: authority})%>
+
         <script>open('registrationButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
     </main>
