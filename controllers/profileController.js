@@ -25,6 +25,10 @@ const profileController = {
                 let nMember = 0;
                 let savings = 0;
                 let allSaving;
+                let memberList;
+                let savingIds;
+                let memberIds;
+                console.log(authority);
                 switch (authority) {
                     case "Admin":
                         allSaving = await Saving.find({});
@@ -42,11 +46,22 @@ const profileController = {
                         nGroup = cluster.totalGroups;
                         nMember = cluster.totalMembers;
                         savings = cluster.totalKaban;
+                        const projectList = await Project.find({ _id: { $in: cluster.projects } });
+                        const groupIds = projectList.flatMap(project => project.groups);
+                        const groupList = await Group.find({ _id: { $in: groupIds } });
+                        memberIds = groupList.flatMap(group => group.member);
+                        memberList = await Member.find({ _id: { $in: memberIds } });
+                        savingIds = memberList.flatMap(member => member.savings);
+                        allSaving = await Saving.find({ _id: { $in: savingIds } })
                         break;
                     case "Treasurer":
                         const group = await Group.find({ _id: user.validGroup });
                         nMember = group.totalMembers;
                         savings = group.totalKaban;
+                        memberIds = group.flatMap(group => group.member);
+                        memberList = await Member.find({ _id: { $in: memberIds } });
+                        savingIds = memberList.flatMap(member => member.savings);
+                        allSaving = await Saving.find({ _id: { $in: savingIds } });
                         break;
                     default:
                         break;
@@ -56,14 +71,19 @@ const profileController = {
                 months.forEach((month) => {
                     monthCounts[month] = 0;
                 });
-
-                allSaving.forEach((saving) => {
-                    months.forEach((month) => {
-                        if (saving[month].savings > 0) {
-                            monthCounts[month]++;
-                        }
+                if (allSaving) {
+                    allSaving.forEach((saving) => {
+                        months.forEach((month) => {
+                            if (saving[month].savings > 0) {
+                                monthCounts[month]++;
+                            }
+                        });
                     });
-                });
+                } else {
+                    months.forEach((month) => {
+                        monthCounts[month] = 0;
+                    })
+                }
                 dashbuttons = dashboardButtons(authority);
                 res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts });
             } else {
