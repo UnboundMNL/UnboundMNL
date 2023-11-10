@@ -90,12 +90,10 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesNa
     // contentEdit.style.display = "none";
 }
 
-function displayCancellationMessage() {
-    const cancelConfirmDiv = document.getElementById("cancelConfirm");
-
-    cancelConfirmDiv.style.display = "flex";
-    
-    setTimeout(() => {
-        cancelConfirmDiv.style.display = "none";
-    }, 3000);
+displayCancellationMessage = () => {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function(toastEl) {
+      return new bootstrap.Toast(toastEl)
+    })
+    toastList.forEach(toast => toast.show()) 
 }
