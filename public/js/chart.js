@@ -1,5 +1,7 @@
-function chart(monthValues) {
-    const monthCounts = JSON.parse(monthValues);
+
+ function chart(monthValues) {
+    let monthCounts = JSON.parse(monthValues).split(',');
+
     const ctx = document.getElementById('myChart');
     const monthColors = [
         'rgba(255, 99, 132, 0.8)',

@@ -116,7 +116,6 @@ function reloadTable(value, table) {
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())
 		.then((data) => {
-			console.log(data)
 			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
 				let total = member.totalSavings + member.totalMatch;
@@ -177,6 +176,7 @@ function reloadTable(value, table) {
 				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
 				const totalDiv = document.getElementById("totalSavings");
 				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
 			});
 		});
 }
