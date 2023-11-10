@@ -7,10 +7,9 @@ const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
 
-const savingsController = require('../controllers/savingsController');
+const profileController = require('../controllers/profileController');
 
-router.get("/savings", savingsController.savings);
-router.post("/newSaving", savingsController.newSaving)
+router.get("/dashboard", profileController.dashboard);
+router.get("/profile", profileController.profile);
 
-module.exports = router;
-
+module.exports = router;  

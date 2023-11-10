@@ -15,12 +15,14 @@ const router = express.Router();
 
 const routesRegister = require('./routers/routesRegister');
 const routesLogin = require('./routers/routesLogin');
-const routesUser = require('./routers/routesUser');
+const routesProfile = require('./routers/routesProfile');
 const routesSidebar = require('./routers/routesSidebar');
-const routesMembers = require('./routers/routesMembers');
 const routesSavings = require('./routers/routesSavings');
-const routesForms = require('./routers/routesForms');
-const routesPart = require('./routers/routesPart');
+const routesCluster = require('./routers/routesCluster');
+const routesProject = require('./routers/routesProject');
+const routesGroup = require('./routers/routesGroup');
+const routesMember = require('./routers/routesMember');
+const routesChoices = require('./routers/routesChoices');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
@@ -32,10 +34,6 @@ const { groupidMiddleware } = require('./lib/middleware');
 const { memberidMiddleware } = require('./lib/middleware');
 const { savingidMiddleware } = require('./lib/middleware');
 const { authorityMiddleware } = require('./lib/middleware');
-<<<<<<< HEAD
-
-=======
->>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
 const Member = require('./models/Member');
 const Saving = require('./models/Saving');
 const User = require('./models/User');
@@ -115,23 +113,28 @@ app.get("/group", (req, res) => {
   res.redirect("/group/view/1");
 });
 
-app.get("/manual", async (req, res) => {
-  try {
-    req.session.destroy();
-    res.json()
-  } catch (err) {
-    console.error('Error logging out:', err);
-    return new Error('Error logging out');
+//This is one just to render the forms in a separate page
+router.get("/addUser", async (req, res) => {
+  if (req.session.isLoggedIn) {
+      const user = await User.findById(req.session.userId);
+      const authority = user.authority;
+      var clusters = []; // sample
+      if (authority == "Admin") {
+          clusters = await Cluster.find({});
+      }
+      if (authority == "SEDO") {
+          clusters = await Cluster.find({ validSEDOs: [user] });
+      }
+      res.render("popup", { authority, clusters });
   }
-
-  res.status(200).send();
+  else
+      res.redirect("/");
 });
 
 app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
 app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
-
 app.use(clusteridMiddleware);
 app.use(projectidMiddleware);
 app.use(groupidMiddleware);
@@ -142,9 +145,11 @@ app.use(authorityMiddleware);
 app.use(express.urlencoded({ extended: true }));
 app.use(routesRegister);
 app.use(routesLogin);
-app.use(routesUser);
+app.use(routesProfile);
 app.use(routesSidebar);
-app.use(routesMembers);
 app.use(routesSavings);
-app.use(routesForms);
-app.use(routesPart);
+app.use(routesCluster);
+app.use(routesProject);
+app.use(routesGroup);
+app.use(routesMember);
+app.use(routesChoices);

@@ -120,15 +120,9 @@ function linkMemberPage(id) {
     });
 }
 
-<<<<<<< HEAD
-function linkMemberPage(id) {
-    let data;
-    const divs = document.querySelectorAll(".memberPage");
-=======
 function linkMemberPage(id,className) {
     let data;
     const divs = document.querySelectorAll("."+className);
->>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     divs.forEach(div => {
         div.addEventListener('click', function () {
             data = { id };

@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-document.addEventListener('DOMContentLoaded', function () {
-=======
  function chart(monthValues) {
     const monthCounts = JSON.parse(monthValues);
->>>>>>> 04f7f935db62c1cb100d6e36884b4eeda2819cd5
     const ctx = document.getElementById('myChart');
     const monthColors = [
         'rgba(255, 99, 132, 0.8)',
