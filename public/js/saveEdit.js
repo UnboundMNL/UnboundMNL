@@ -47,6 +47,6 @@ function saveEdit(link, actionForm, saveID) {
                 console.error('Error:', error);
             });
 
-            validateForm();
+        validateForm();
     }
 }

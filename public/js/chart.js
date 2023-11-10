@@ -1,4 +1,4 @@
- function chart(monthValues) {
+function chart(monthValues) {
     const monthCounts = JSON.parse(monthValues);
     const ctx = document.getElementById('myChart');
     const monthColors = [
