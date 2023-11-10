@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	//Unsaved changes warning
+	window.addEventListener('beforeunload', function (e) {
+		if (LISTOFCHANGES.length > 0) {
+			e.preventDefault();
+			e.returnValue = '';
+		}
+	});
+
 });
 
 function loadDesktopTable() {
@@ -102,12 +110,13 @@ function loadMobileTable() {
 };
 
 function reloadTable(value, table) {
-	YEAR = value;
+	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec'];
 	table.clear().draw();
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())
 		.then((data) => {
+			console.log(data)
 			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
 				let total = member.totalSavings + member.totalMatch;
@@ -167,7 +176,7 @@ function reloadTable(value, table) {
 				const yearDiv = document.getElementById("memberYear");
 				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
 				const totalDiv = document.getElementById("totalSavings");
-				totalDiv.textContent = sum;
+				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 			});
 		});
 }
@@ -241,7 +250,9 @@ function save() {
 					const toastLiveExample = document.getElementById('addSuccessToast')
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
-					reloadTable(year, DATATABLE);
+					reloadTable(YEAR.value, DATATABLE);
+					// Clear the list of changes
+					LISTOFCHANGES = [];
 				} else {
 					return response.json();
 				}
