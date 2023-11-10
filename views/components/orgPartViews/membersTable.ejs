@@ -28,8 +28,8 @@
             <% for (let i = 0; i < memberList.length; i++) { %>
                 <tr>
                     <% let className = "memberPage"+i;%>
-                    <td class = "<%=className%>"><%= memberList[i].name %></td>
-                    <td class = "<%=className%>"><%= memberList[i].id %></td>
+                    <td class = "<%=className%> memberPage"><%= memberList[i].name %></td>
+                    <td class = "<%=className%> memberPage"><%= memberList[i].id %></td>
                     <script>
                         linkMemberPage("<%= memberList[i].id %>", "<%=className%>")
                     </script>
