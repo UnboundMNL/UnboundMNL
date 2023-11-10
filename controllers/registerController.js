@@ -60,6 +60,7 @@ const registerController = {
       return res.status(500).render("fail", { error: "An error occurred while fetching data." });
     }
   }
+  
 }
 
 module.exports = registerController;

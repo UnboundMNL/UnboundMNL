@@ -1,5 +1,3 @@
-let sharedData = {};
-
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -7,11 +5,122 @@ const User = require('../models/User');
 const Cluster = require('../models/Cluster');
 const Project = require('../models/Project');
 const Group = require('../models/Group');
-
-const { dashboardButtons } = require('../controllers/functions/buttons');
 const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
+const { dashboardButtons } = require('../controllers/functions/buttons');
 
-const membersController = {
+const memberController = {
+
+    member: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const sidebar = req.session.sidebar;
+                const userID = req.session.userId;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+                let memberList = [];
+                const group = await Group.findOne({ _id: req.session.groupId });
+                if (!group) {
+                    res.redirect("/group");
+                }
+                const year = new Date().getFullYear();
+                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
+                const members = await Member.find({ _id: { $in: group.member } });
+                let totalSavings = 0;
+                if (members) {
+                    for (const member of members) {
+                        const savings = await Saving.findOne({
+                            _id: { $in: member.savings },
+                            year: year
+                        });
+                        const data = {
+                            name: member.name.firstName + ' ' + member.name.lastName,
+                            id: member._id,
+                        };
+                        if (savings) {
+                            for (const month of months) {
+                                data[month] = {
+                                    savings: savings[month]?.savings || "",
+                                    match: savings[month]?.match || ""
+                                };
+                            }
+                            data.totalMatch = savings.totalMatch;
+                            data.totalSavings = savings.totalSavings;
+                        } else {
+                            for (const month of months) {
+                                data[month] = {
+                                    savings: "",
+                                    match: ""
+                                };
+                            }
+                            data.totalMatch = 0;
+                            data.totalSavings = 0;
+                        }
+                        totalSavings += parseInt(data.totalSavings);
+                        memberList.push(data);
+                    }
+                }
+                dashbuttons = dashboardButtons(authority);
+                res.render("member", { authority, username, sidebar, dashbuttons, grpName: group.name, year, memberList, totalSavings });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    },
+
+    reloadTable: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                let memberList = [];
+                const group = await Group.findOne({ _id: req.session.groupId });
+                const year = req.params.year;
+                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
+                const members = await Member.find({ _id: { $in: group.member } });
+                let totalSavings = 0;
+                for (const member of members) {
+                    const savings = await Saving.findOne({
+                        _id: { $in: member.savings },
+                        year: year
+                    });
+                    const data = {
+                        name: member.name.firstName + ' ' + member.name.lastName,
+                        id: member._id,
+                    };
+                    if (savings) {
+                        for (const month of months) {
+                            data[month] = {
+                                savings: savings[month]?.savings || "",
+                                match: savings[month]?.match || ""
+                            };
+                        }
+                        data.totalMatch = savings.totalMatch;
+                        data.totalSavings = savings.totalSavings;
+                    } else {
+                        for (const month of months) {
+                            data[month] = {
+                                savings: "",
+                                match: ""
+                            };
+                        }
+                        data.totalMatch = 0;
+                        data.totalSavings = 0;
+                    }
+                    totalSavings += data.totalSavings;
+                    memberList.push(data);
+                }
+                res.status(200).json({ memberList, totalSavings, year });
+            } else {
+                res.status(400).json({ error: "An error occurred while retrieving group information." });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+        }
+    },
+
     retrieveMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -237,7 +346,18 @@ const membersController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
         }
+    },
+
+    memberMiddle: async (req, res) => {
+        try {
+            req.session.memberId = req.body.id;
+            await req.session.save();
+            res.status(200).json({ success: true, message: 'member ID saved' });
+        } catch (error) {
+            console.error(error);
+        }
     }
+
 }
 
-module.exports = membersController;
+module.exports = memberController;
