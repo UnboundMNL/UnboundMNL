@@ -1,27 +1,27 @@
-let listOfChanges = [];
-let datatable;
-let year;
+let LISTOFCHANGES = [];
+let DATATABLE;
+let YEAR;
 document.addEventListener('DOMContentLoaded', function () {
 	//LOAD TABLE
 	const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
 	switch (isMobile) {
 		case true:
-			datatable = loadMobileTable();
+			DATATABLE = loadMobileTable();
 			break;
 		case false:
-			datatable = loadDesktopTable();
+			DATATABLE = loadDesktopTable();
 			break;
 	}
 	const search = document.getElementById("searchBar");
 	search.addEventListener('keyup', function () {
-		datatable.search(search.value).draw();
+		DATATABLE.search(search.value).draw();
 	})
 	//LOAD YEAR
-	year = document.getElementById("yearInput");
+	YEAR = document.getElementById("yearInput");
 	const yearButton = document.getElementById("yearButton");
 	yearButton.addEventListener('click', function () {
-		listOfChanges = [];
-		reloadTable(year.value, datatable);
+		LISTOFCHANGES = [];
+		reloadTable(YEAR.value, DATATABLE);
 	})
 	//SAVE BUTTON
 	const saveButton = document.getElementById("save");
@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	table.addEventListener("input", event => {
 		const cell = event.target;
 		if (cell.tagName === "TD") {
-			if (!listOfChanges.includes(cell)) {
-				listOfChanges.push(cell);
+			if (!LISTOFCHANGES.includes(cell)) {
+				LISTOFCHANGES.push(cell);
 			}
 			if (/^\d+(\.\d+)?$/.test(cell.textContent) || cell.textContent === '') {
 				cell.style.backgroundColor = '';
@@ -102,13 +102,13 @@ function loadMobileTable() {
 };
 
 function reloadTable(value, table) {
-	year=value;
+	YEAR = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec'];
 	table.clear().draw();
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())
 		.then((data) => {
-			let j=0, sum=0;
+			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
 				let total = member.totalSavings + member.totalMatch;
 				const rowData = [
@@ -142,7 +142,7 @@ function reloadTable(value, table) {
 					member.totalMatch,
 					total,
 				];
-				sum+=member.totalSavings;
+				sum += member.totalSavings;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -150,7 +150,7 @@ function reloadTable(value, table) {
 				let className;
 				for (let i = 0; i < 2; i++) {
 					let cell = cells[i];
-					className="memberPage"+j;
+					className = "memberPage" + j;
 					j++;
 					cell.setAttribute('class', className);
 				}
@@ -163,11 +163,11 @@ function reloadTable(value, table) {
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_match`);
 				}
-				linkMemberPage(`${member.id}`,className);
+				linkMemberPage(`${member.id}`, className);
 				const yearDiv = document.getElementById("memberYear");
-				yearDiv.textContent="Savings and Matching Grant for "+data.year;
+				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
 				const totalDiv = document.getElementById("totalSavings");
-				totalDiv.textContent=sum;
+				totalDiv.textContent = sum;
 			});
 		});
 }
@@ -200,7 +200,7 @@ function check(table) {
 
 function save() {
 	const constructedChanges = [];
-	for (const each of listOfChanges) {
+	for (const each of LISTOFCHANGES) {
 		const split = each.id.split('_');
 		const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
 		if (existingChange) {
@@ -241,8 +241,7 @@ function save() {
 					const toastLiveExample = document.getElementById('addSuccessToast')
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
-					console.log(year)
-					reloadTable(year,datatable);
+					reloadTable(YEAR, DATATABLE);
 				} else {
 					return response.json();
 				}

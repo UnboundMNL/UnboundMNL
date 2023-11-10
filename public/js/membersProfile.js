@@ -92,8 +92,8 @@ function cancelChanges(inputValues, dateValues, dropdownValues, projectChoicesNa
 
 displayCancellationMessage = () => {
     var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-    var toastList = toastElList.map(function(toastEl) {
-      return new bootstrap.Toast(toastEl)
+    var toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl)
     })
-    toastList.forEach(toast => toast.show()) 
+    toastList.forEach(toast => toast.show())
 }
