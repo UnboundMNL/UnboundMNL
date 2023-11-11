@@ -35,13 +35,15 @@ const clusterController = {
                     updatedParts = await Cluster.find({});
                 }
                 const orgParts = updatedParts;
+                console.log(orgParts.length)
                 let pageParts = [];
                 let perPage = 6; // change to how many clusters per page
-                if (orgParts.length!==0){
-                    let totalPages = Math.ceil(orgParts.length / perPage);
-                if (page > totalPages) {
-                    return res.redirect("/cluster");
-                }
+                let totalPages;
+                if (orgParts.length !== 0) {
+                    totalPages = Math.ceil(orgParts.length / perPage);
+                    if (page > totalPages) {
+                        return res.redirect("/cluster");
+                    }
                 }
                 if (orgParts.length > perPage) {
                     let startPage = perPage * (page - 1);
@@ -67,10 +69,11 @@ const clusterController = {
     newCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                console.log(req.body)
                 const { name, location } = req.body;
                 const existingCluster = await Cluster.findOne({ name });
                 if (existingCluster) {
-                    return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                    return res.json({ error: "A Cluster with the same name already exists." });
                 }
                 let projects = [];
                 const newCluster = new Cluster({
@@ -79,7 +82,7 @@ const clusterController = {
                     projects,
                 });
                 await newCluster.save();
-                res.redirect("/cluster");
+                res.json({ success: "A Cluster has bee" });
             } else {
                 res.redirect("/");
             }
@@ -174,7 +177,7 @@ const clusterController = {
             console.error(error);
         }
     }
-    
+
 }
 
 module.exports = clusterController;
