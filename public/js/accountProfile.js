@@ -18,9 +18,16 @@ function backAccount() {
 }
 
 function clearAlert() {
-    const matchingAlert2 = document.getElementById('matchingAlert2');
-    matchingAlert2.innerHTML = '';
+    const alertIds = ['usernameAlert', 'currentPasswordAlert1', 'currentPasswordAlert2', 'matchingAlert2'];
+
+    alertIds.forEach((id) => {
+        const alertElement = document.getElementById(id);
+        if (alertElement) {
+            alertElement.innerHTML = '';
+        }
+    });
 }
+
 
 function cancelChanges(user) {
     const inputContainer = document.getElementById("inputContainer");

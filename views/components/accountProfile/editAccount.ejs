@@ -30,9 +30,9 @@
                             <span id="usernameAlert"></span>
                         </div>
                         <span>Password</span>
-                        <div class=" mb-2">
-                            <input type="password" class="form-control" id="currentPassword">
-                            <span id="matchingAlert1"></span>
+                        <div class="mb-2">
+                            <input type="password" class="form-control" id="currentPassword1" onchange="validateCurrentPassword('currentPassword1', 'currentPasswordAlert1')">
+                            <span id="currentPasswordAlert1"></span>
                         </div>
                     </div>
                 </div>
@@ -43,8 +43,10 @@
                         <div class="mb-2">
                             <span>Current Password</span>
                             <div class="input-group align-items-center">
-                                <input type="password" class="form-control">
+                                <input type="password" class="form-control" id="currentPassword2" onchange="validateCurrentPassword('currentPassword2', 'currentPasswordAlert2')">
                                 <!-- <i class='bx bx-show'></i> -->
+                                <span id="currentPasswordAlert2"></span>
+                            </div>
                         </div>
                         <div class="mb-2">
                             <span>New Password</span>

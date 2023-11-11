@@ -41,3 +41,25 @@ function validateUsername() {
         usernameAlert.innerHTML = '✓ Username is available';
     }
 }
+
+// Hannah: I want it to show upon submitting the button but I hardcoded it for now
+// to show where it would be
+function validateCurrentPassword(currentPassword, currentPasswordAlert) {
+    const currentPass = document.getElementById(currentPassword).value;
+    const currentPassAlert = document.getElementById(currentPasswordAlert);
+
+    // Hannah: Check validity of current password
+    // 0 = password incorrect
+    // 1 = password correct
+
+    const currentPassValid = 1;
+    if (currentPass.length === 0) {
+        currentPassAlert.innerHTML = '';
+    } else if (currentPassValid === 0) {
+        currentPassAlert.style.color = 'red';
+        currentPassAlert.innerHTML = '✕ Incorrect password';
+    } else {
+        currentPassAlert.style.color = 'lime';
+        currentPassAlert.innerHTML = '✓ Correct password';
+    }
+}
