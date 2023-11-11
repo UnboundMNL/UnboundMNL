@@ -23,7 +23,7 @@ function validatePassword() {
 }
 
 function validateUsername() {
-    const username = document.getElementById('checkUsername').value;
+    const username = document.getElementById('newUsername').value;
     const usernameAlert = document.getElementById('usernameAlert');
 
     // Hannah: Check validity of username
