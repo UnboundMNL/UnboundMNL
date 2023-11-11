@@ -1,5 +1,4 @@
 const Member = require('../models/Member');
-// const Part = require('../models/Part');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
 
@@ -8,6 +7,7 @@ const Project = require('../models/Project');
 const Group = require('../models/Group');
 
 const sidebarController = {
+
     sidebarChange: (req, res) => {
         try {
             req.session.sidebar = !req.session.sidebar;
@@ -16,6 +16,7 @@ const sidebarController = {
             console.error(error);
         }
     }
+
 }
 
 module.exports = sidebarController;

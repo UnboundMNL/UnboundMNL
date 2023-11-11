@@ -1,5 +1,3 @@
-let sharedData = {};
-
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -10,7 +8,7 @@ const Group = require('../models/Group');
 const { dashboardButtons } = require('../controllers/functions/buttons');
 const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
 
-const userController = {
+const profileController = {
 
     dashboard: async (req, res) => {
         try {
@@ -27,11 +25,15 @@ const userController = {
                 let nMember = 0;
                 let savings = 0;
                 let allSaving;
+                let memberList;
+                let savingIds;
+                let memberIds;
+
                 switch (authority) {
                     case "Admin":
                         allSaving = await Saving.find({});
                         for (const item of allSaving) {
-                            savings += item.totalSavings;
+                            savings += item.totalSaving;
                         }
                         nCluster = await Cluster.countDocuments();
                         nProject = await Project.countDocuments();
@@ -40,15 +42,28 @@ const userController = {
                         break;
                     case "SEDO":
                         const cluster = await Cluster.findOne({ _id: user.validCluster });
-                        nProject = cluster.totalProjects;
-                        nGroup = cluster.totalGroups;
-                        nMember = cluster.totalMembers;
-                        savings = cluster.totalKaban;
+                        if (cluster) {
+                            nProject = cluster.totalProjects;
+                            nGroup = cluster.totalGroups;
+                            nMember = cluster.totalMembers;
+                            savings = cluster.totalKaban;
+                            const projectList = await Project.find({ _id: { $in: cluster.projects } });
+                            const groupIds = projectList.flatMap(project => project.groups);
+                            const groupList = await Group.find({ _id: { $in: groupIds } });
+                            memberIds = groupList.flatMap(group => group.members);
+                            memberList = await Member.find({ _id: { $in: memberIds } });
+                            savingIds = memberList.flatMap(member => member.savings);
+                            allSaving = await Saving.find({ _id: { $in: savingIds } })
+                        }
                         break;
                     case "Treasurer":
                         const group = await Group.find({ _id: user.validGroup });
                         nMember = group.totalMembers;
                         savings = group.totalKaban;
+                        memberIds = group.flatMap(group => group.members);
+                        memberList = await Member.find({ _id: { $in: memberIds } });
+                        savingIds = memberList.flatMap(member => member.savings);
+                        allSaving = await Saving.find({ _id: { $in: savingIds } });
                         break;
                     default:
                         break;
@@ -58,89 +73,21 @@ const userController = {
                 months.forEach((month) => {
                     monthCounts[month] = 0;
                 });
-
-                allSaving.forEach((saving) => {
-                    months.forEach((month) => {
-                        if (saving[month].savings > 0) {
-                            monthCounts[month]++;
-                        }
+                if (allSaving) {
+                    allSaving.forEach((saving) => {
+                        months.forEach((month) => {
+                            if (saving[month].savings > 0) {
+                                monthCounts[month]++;
+                            }
+                        });
                     });
-                });
+                } else {
+                    months.forEach((month) => {
+                        monthCounts[month] = 0;
+                    })
+                }
                 dashbuttons = dashboardButtons(authority);
                 res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts });
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
-        }
-    },
-
-    cluster: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                let page = req.params.page;
-                const userID = req.session.userId;
-                const sidebar = req.session.sidebar;
-                const user = await User.findById(userID);
-                const authority = user.authority;
-                const username = user.username;
-                if (req.session.authority == "SEDO") {
-                    res.redirect("/project")
-                }
-                if (req.session.authority == "Treasurer") {
-                    res.redirect("/member")
-                }
-                if (authority !== "Admin") {
-                    return res.status(403).render("fail", { error: "You are not authorized to view this page." });
-                }
-                let updatedParts;
-                if (req.query.search) {
-                    updatedParts = await Cluster.find({ name: { $regex: req.query.search } });
-                } else {
-                    updatedParts = await Cluster.find({});
-                }
-                const orgParts = updatedParts;
-                let pageParts = [];
-                let perPage = 6; // change to how many clusters per page
-                let totalPages = Math.ceil(orgParts.length / perPage);
-                if (page > totalPages) {
-                    res.redirect("/cluster")
-                }
-                if (orgParts.length > perPage) {
-                    let startPage = perPage * (page - 1);
-                    for (let i = 0; i < perPage && (startPage + i < orgParts.length); i++) {
-                        pageParts.push(orgParts[startPage + i]);
-                    }
-                } else {
-                    pageParts = orgParts;
-                    totalPages = 1;
-                }
-                dashbuttons = dashboardButtons(authority);
-                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
-        }
-    },
-
-    member: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                const userID = req.session.userId;
-                const sidebar = req.session.sidebar;
-                const user = await User.findById(userID);
-                const authority = user.authority;
-                const username = user.username;
-                const updatedParts = [];
-                await updateOrgParts(updatedParts);
-                const orgParts = getOrgParts();
-                dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, username, dashbuttons, sidebar, orgParts });
             } else {
                 res.redirect("/");
             }
@@ -195,7 +142,7 @@ const userController = {
                 if (((newPassword !== "") && (req.body.password === req.body.repassword))) {
                     updateData.password = newPassword;
                 } else {
-    
+
                     delete updateData.password;
                     delete updateData.repassword;
                     req.session.expires = null;
@@ -217,54 +164,8 @@ const userController = {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
-    },
-
-    clusterMiddle: async (req, res) => {
-        try {
-            req.session.clusterId = req.body.id;
-            delete req.session.projectId;
-            delete req.session.groupId;
-            delete req.session.memberId;
-            await req.session.save();
-            res.status(200).json({ success: true, message: 'cluster ID saved' });
-        } catch (error) {
-            console.error(error);
-        }
-    },
-    
-    projectMiddle: async (req, res) => {
-        try {
-            req.session.projectId = req.body.id;
-            delete req.session.groupId;
-            delete req.session.memberId;
-            await req.session.save();
-            res.status(200).json({ success: true, message: 'project ID saved' });
-        } catch (error) {
-            console.error(error);
-        }
-    },
-
-    groupMiddle: async (req, res) => {
-        try {
-            req.session.groupId = req.body.id;
-            delete req.session.memberId;
-            await req.session.save();
-            res.status(200).json({ success: true, message: 'group ID saved' });
-        } catch (error) {
-            console.error(error);
-        }
-    },
-
-    memberMiddle: async (req, res) => {
-        try {
-            req.session.memberId = req.body.id;
-            await req.session.save();
-            res.status(200).json({ success: true, message: 'member ID saved' });
-        } catch (error) {
-            console.error(error);
-        }
     }
-    
+
 }
 
-module.exports = userController;
+module.exports = profileController;

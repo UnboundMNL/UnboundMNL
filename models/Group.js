@@ -27,7 +27,7 @@ const GroupSchema = new mongoose.Schema({
     lastName: String,
     contatNo: String
   },
-  member: [{ type: mongoose.Schema.Types.ObjectId, ref: 'member' }],
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'member' }],
   totalMembers: { type: Number, default: 0 },
   totalKaban: { type: Number, default: 0 }
 

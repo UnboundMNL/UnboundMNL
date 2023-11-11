@@ -7,7 +7,7 @@
     <link href="/css/memberTable.css" rel = "stylesheet">
 
     <!-- SCRIPTS -->
-    <script src="/js/IDchecker.js"></script>
+    <script src="/js/formChange.js"></script>
     <script src="/js/card.js"></script>
     <script src="/js/reload.js"></script>
 
@@ -48,16 +48,18 @@
             
             <div class="member-total d-flex justify-content-between flex-wrap mt-3 page-title">
                 <div class="mb-3">
-                    <p>Cluster # SP # Group #</p>
-                    <h4><%=grpName%> Members</h4>
+                    <p>Cluster <%=clusterName%> SP <%=projectName%> Group <%=groupName%></p>
+                    <h4><%=groupName%> Members</h4>
                 </div>
                 <div class="align-items-end">
                     <div class="container-rounded">
                         <span>Total:</span>
-                        <h3 class="format-number"><%=totalSavings%></h3>
+
+                        <h3 class="format-number" id = "totalSaving"><%=totalSaving%></h3>
                     </div>
                 </div>
             </div>
+
              
             <% var type = "Member";  %>
             <div class="d-flex mt-4 mb-4 justify-content-between align-items-center card-actions">

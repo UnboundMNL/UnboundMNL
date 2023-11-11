@@ -5,7 +5,7 @@ const MemberSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true }
   },
-  id: { type: String, required: true },
+  orgId: { type: String, required: true },
   photo: { type: String, required: true, default: 'something' },
   nameFather: {
     firstName: String,
