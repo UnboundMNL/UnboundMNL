@@ -118,7 +118,7 @@ function reloadTable(value, table) {
 		.then((data) => {
 			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
-				let total = member.totalSavings + member.totalMatch;
+				let total = member.totalSaving + member.totalMatch;
 				const rowData = [
 					member.name,
 					member.id,
@@ -146,11 +146,11 @@ function reloadTable(value, table) {
 					member.nov.match,
 					member.dec.savings,
 					member.dec.match,
-					member.totalSavings,
+					member.totalSaving,
 					member.totalMatch,
 					total,
 				];
-				sum += member.totalSavings;
+				sum += member.totalSaving;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -174,7 +174,7 @@ function reloadTable(value, table) {
 				linkMemberPage(`${member.id}`, className);
 				const yearDiv = document.getElementById("memberYear");
 				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
-				const totalDiv = document.getElementById("totalSavings");
+				const totalDiv = document.getElementById("totalSaving");
 				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 			});

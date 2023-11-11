@@ -101,6 +101,17 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/manual", async (req, res) => {
+  try {
+    req.session.destroy();
+    res.json();
+} catch (err) {
+    console.error('Error logging out:', err);
+    return new Error('Error logging out');
+}
+res.status(200).send();
+});
+
 app.get("/cluster", (req, res) => {
   res.redirect("/cluster/view/1");
 })

@@ -126,7 +126,7 @@ const SavingSchema = new mongoose.Schema({
         }
 
     },
-    totalSavings: {
+    totalSaving: {
         type: Number,
         default: 0
     },

@@ -37,9 +37,11 @@ const clusterController = {
                 const orgParts = updatedParts;
                 let pageParts = [];
                 let perPage = 6; // change to how many clusters per page
-                let totalPages = Math.ceil(orgParts.length / perPage);
+                if (orgParts.length!==0){
+                    let totalPages = Math.ceil(orgParts.length / perPage);
                 if (page > totalPages) {
                     res.redirect("/cluster")
+                }
                 }
                 if (orgParts.length > perPage) {
                     let startPage = perPage * (page - 1);
@@ -129,8 +131,8 @@ const clusterController = {
                                 group = await Group.findById(groupId);
                                 if (Array.isArray(group.members)) {
                                     for (const member of group.members) {
-                                        await Saving.deleteMany({ member: member });
-                                        await Member.deleteOne({ _id: member });
+                                        await Saving.deleteMany({ memberID: member.id });
+                                        await Member.deleteOne({ _id: member.id });
                                     }
                                 }
                                 await Group.deleteOne({ _id: group });

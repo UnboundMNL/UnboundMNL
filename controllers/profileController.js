@@ -32,7 +32,7 @@ const profileController = {
                     case "Admin":
                         allSaving = await Saving.find({});
                         for (const item of allSaving) {
-                            savings += item.totalSavings;
+                            savings += item.totalSaving;
                         }
                         nCluster = await Cluster.countDocuments();
                         nProject = await Project.countDocuments();
@@ -41,23 +41,25 @@ const profileController = {
                         break;
                     case "SEDO":
                         const cluster = await Cluster.findOne({ _id: user.validCluster });
-                        nProject = cluster.totalProjects;
-                        nGroup = cluster.totalGroups;
-                        nMember = cluster.totalMembers;
-                        savings = cluster.totalKaban;
-                        const projectList = await Project.find({ _id: { $in: cluster.projects } });
-                        const groupIds = projectList.flatMap(project => project.groups);
-                        const groupList = await Group.find({ _id: { $in: groupIds } });
-                        memberIds = groupList.flatMap(group => group.member);
-                        memberList = await Member.find({ _id: { $in: memberIds } });
-                        savingIds = memberList.flatMap(member => member.savings);
-                        allSaving = await Saving.find({ _id: { $in: savingIds } })
+                        if (cluster) {
+                            nProject = cluster.totalProjects;
+                            nGroup = cluster.totalGroups;
+                            nMember = cluster.totalMembers;
+                            savings = cluster.totalKaban;
+                            const projectList = await Project.find({ _id: { $in: cluster.projects } });
+                            const groupIds = projectList.flatMap(project => project.groups);
+                            const groupList = await Group.find({ _id: { $in: groupIds } });
+                            memberIds = groupList.flatMap(group => group.members);
+                            memberList = await Member.find({ _id: { $in: memberIds } });
+                            savingIds = memberList.flatMap(member => member.savings);
+                            allSaving = await Saving.find({ _id: { $in: savingIds } })
+                        }
                         break;
                     case "Treasurer":
                         const group = await Group.find({ _id: user.validGroup });
                         nMember = group.totalMembers;
                         savings = group.totalKaban;
-                        memberIds = group.flatMap(group => group.member);
+                        memberIds = group.flatMap(group => group.members);
                         memberList = await Member.find({ _id: { $in: memberIds } });
                         savingIds = memberList.flatMap(member => member.savings);
                         allSaving = await Saving.find({ _id: { $in: savingIds } });
