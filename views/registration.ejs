@@ -10,6 +10,7 @@
 
     <!-- SCRIPTS -->
     <script src="/js/reload.js"></script>
+    <script src="/js/passwordValidation.js"></script>
 </head>
 
 <body class="body-bg">
@@ -24,6 +25,7 @@
         <%- include('components/registrationContent.ejs', {authority: authority})%>
 
         <script>open('registrationButton')</script>
+        <%-include('components/popups/savePopup.ejs')%>
         <%-include('components/popups/logoutPopup.ejs') %>
     </main>
 </body>
