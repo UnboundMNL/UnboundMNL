@@ -164,9 +164,10 @@ const memberController = {
                 let allSavings = 0;
                 let totalSavings = null;
                 if (memberId) {
-                    allSavings = await Saving.find({ memberID: memberId });
-                    totalSavings = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSavings), 0);
+                    allSavings = await Saving.find({ memberID: memberId }).sort({ year: 1 });
+                    totalSavings = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSavings) + parseFloat(saving.totalMatch), 0);
                 }
+
                 res.render("memberprofile", {
                     member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group,
                     fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices, allSavings, totalSavings
