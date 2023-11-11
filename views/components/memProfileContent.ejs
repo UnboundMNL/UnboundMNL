@@ -16,7 +16,7 @@
             <%- include('memberProfile/profileDisplay.ejs') %>
         </div>
         <div class="content" id="editContent">
-            <%- include('memberProfile/editDisplay.ejs') %>
+            <%- include('memberProfile/editDisplay.ejs', {authority: authority}) %>
         </div>
         <div class="content" id="kabanContent">
             <%- include('memberProfile/kabanDisplay.ejs') %>

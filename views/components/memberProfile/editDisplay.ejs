@@ -143,6 +143,16 @@
                         "<%= groupChoices[i]._id %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
                     <% } %>
                 ];
+
+            document.addEventListener('DOMContentLoaded', function() {
+                if ("<%=authority%>" !== "Admin") {
+                    document.getElementById("clusterSelect").disabled = true;
+                }
+                if ("<%=authority%>" === "Treasurer") {
+                    document.getElementById("projectSelect").disabled = true;
+                    document.getElementById("groupSelect").disabled = true;
+                }
+            }, false);
         </script>
         
         <div class="d-flex justify-content-center mt-4 button-gap">
