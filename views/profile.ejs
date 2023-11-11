@@ -8,7 +8,7 @@
 
     <!-- SCRIPTS -->
     <script src="/js/accountProfile.js"></script>
-    <script src="/js/passwordValidation.js"></script>
+    <script src="/js/checkValidation.js"></script>
     <script src="/js/reload.js"></script>
 </head>
 
@@ -30,7 +30,7 @@
 
 
         <!-- Modals -->
-        <%-include('components/popups/savePopup.ejs') %>
+        <%-include('components/popups/savePopup.ejs', pageName: "Profile") %>
 
         <!-- Others -->
         <script>open('profileButton')</script>

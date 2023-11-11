@@ -54,7 +54,7 @@
         </div>
 
         <!-- Pop-ups -->
-        <%-include('components/popups/savePopup.ejs') %>
+        <%-include('components/popups/savePopup.ejs', {pageName: "Member's Profile"}) %>
         <%-include('components/popups/deleteMemberModal.ejs') %>
         <% const actionForm = "/member/"+memberId+"/edit"; %>
         <script>

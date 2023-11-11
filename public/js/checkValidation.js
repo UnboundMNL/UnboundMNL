@@ -21,3 +21,23 @@ function validatePassword() {
         // Add code to enable the save button if needed
     }
 }
+
+function validateUsername() {
+    const username = document.getElementById('newUsername').value;
+    const usernameAlert = document.getElementById('usernameAlert');
+
+    // Hannah: Check validity of username
+    // 0 = username taken
+    // 1 = username available
+    
+    const usernameValid = 1;
+    if (username.length === 0) {
+        usernameAlert.innerHTML = '';
+    } else if (usernameValid === 0) {
+        usernameAlert.style.color = 'red';
+        usernameAlert.innerHTML = '✕ Username is taken';
+    } else {
+        usernameAlert.style.color = 'lime';
+        usernameAlert.innerHTML = '✓ Username is available';
+    }
+}
