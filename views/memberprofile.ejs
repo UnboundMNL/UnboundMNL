@@ -55,7 +55,7 @@
 
         <!-- Pop-ups -->
         <%-include('components/popups/savePopup.ejs', {pageName: "Member's Profile"}) %>
-        <%-include('components/popups/deleteMemberModal.ejs') %>
+        <%-include('components/popups/deleteProfileModal.ejs', {pageName: "Member's Profile"}) %>
         <% const actionForm = "/member/"+memberId+"/edit"; %>
         <script>
             open('partsButton');
