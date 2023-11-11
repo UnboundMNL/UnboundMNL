@@ -13,6 +13,7 @@ const memberController = {
     member: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                delete req.session.memberId;
                 const sidebar = req.session.sidebar;
                 const userID = req.session.userId;
                 const user = await User.findById(userID);
@@ -231,7 +232,7 @@ const memberController = {
     editMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const { MemberFirstName, MemberLastName, id,
+                const { MemberFirstName, MemberLastName, orgId,
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
                     sex, birthdate, address, status,
@@ -282,7 +283,7 @@ const memberController = {
                             }
                         }
                     }
-                    const updateData = { name, id, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
+                    const updateData = { name, orgId, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
                     member.set(updateData);
                     const updateMember = await member.save({ new: true });
                     if (updateMember) {
