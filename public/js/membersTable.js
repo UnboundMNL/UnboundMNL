@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	//Unsaved changes warning
+	window.addEventListener('beforeunload', function (e) {
+		if (LISTOFCHANGES.length > 0) {
+			e.preventDefault();
+			e.returnValue = '';
+		}
+	});
+
 });
 
 function loadDesktopTable() {
@@ -167,7 +175,8 @@ function reloadTable(value, table) {
 				const yearDiv = document.getElementById("memberYear");
 				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
 				const totalDiv = document.getElementById("totalSavings");
-				totalDiv.textContent = sum;
+				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
 			});
 		});
 }
@@ -242,6 +251,8 @@ function save() {
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
 					reloadTable(YEAR.value, DATATABLE);
+					// Clear the list of changes
+					LISTOFCHANGES = [];
 				} else {
 					return response.json();
 				}
