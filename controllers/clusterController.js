@@ -40,7 +40,7 @@ const clusterController = {
                 if (orgParts.length!==0){
                     let totalPages = Math.ceil(orgParts.length / perPage);
                 if (page > totalPages) {
-                    res.redirect("/cluster")
+                    return res.redirect("/cluster");
                 }
                 }
                 if (orgParts.length > perPage) {

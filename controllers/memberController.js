@@ -24,7 +24,7 @@ const memberController = {
                 const project = await Project.findOne({ _id: req.session.projectId });
                 const group = await Group.findOne({ _id: req.session.groupId });
                 if (!group) {
-                    res.redirect("/group");
+                    return res.redirect("/group");
                 }
                 const year = new Date().getFullYear();
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
@@ -134,7 +134,7 @@ const memberController = {
                 const username = user.username;
                 const authority = user.authority;
                 if (!req.session.memberId) {
-                    res.redirect("/member");
+                    return res.redirect("/member");
                 }
                 const member = await Member.findById(req.session.memberId);
                 const memberId = member._id;
