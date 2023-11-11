@@ -19,6 +19,8 @@ const memberController = {
                 const authority = user.authority;
                 const username = user.username;
                 let memberList = [];
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                const project = await Project.findOne({ _id: req.session.projectId });
                 const group = await Group.findOne({ _id: req.session.groupId });
                 if (!group) {
                     res.redirect("/group");
@@ -61,7 +63,7 @@ const memberController = {
                     }
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, username, sidebar, dashbuttons, grpName: group.name, year, memberList, totalSavings });
+                res.render("member", { authority, username, sidebar, dashbuttons, groupName: group.name, year, memberList, totalSavings, projectName: project.name, clusterName: cluster.name });
             } else {
                 res.redirect("/");
             }

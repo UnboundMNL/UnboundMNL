@@ -20,6 +20,7 @@ const groupController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
                 const project = await Project.findOne({ _id: req.session.projectId });
                 if (!project) {
                     res.redirect("/project");
@@ -52,7 +53,7 @@ const groupController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location });
+                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location, projectName: project.name, clusterName: cluster.name });
             } else {
                 res.redirect("/");
             }

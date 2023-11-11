@@ -28,7 +28,6 @@ const profileController = {
                 let memberList;
                 let savingIds;
                 let memberIds;
-                console.log(authority);
                 switch (authority) {
                     case "Admin":
                         allSaving = await Saving.find({});

@@ -20,10 +20,10 @@ const clusterController = {
                 const authority = user.authority;
                 const username = user.username;
                 if (req.session.authority == "SEDO") {
-                    res.redirect("/project")
+                    return res.redirect("/project");
                 }
                 if (req.session.authority == "Treasurer") {
-                    res.redirect("/member")
+                    return res.redirect("/member");
                 }
                 if (authority !== "Admin") {
                     return res.status(403).render("fail", { error: "You are not authorized to view this page." });
