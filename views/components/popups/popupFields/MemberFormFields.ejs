@@ -36,7 +36,7 @@
                         aria-describedby="<%=nameFields[i]%>LastName"
                         required>
                 <div class="invalid-feedback">
-                    Full child name required.
+                    Full <%=nameFields[i]%> name required.
                 </div>  
             </div>
         </div>
@@ -45,12 +45,17 @@
 <% } %>
     <div class="mb-3">
         <label for="sex" class="form-label"> Gender </label>
-        <select class="form-select" id="sex" name="sex" aria-label="sex">
-            <option selected default hidden value="">Choose a Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-        </select>    
+        <div class = "input-group">
+            <select class="form-select" id="sex" name="sex" aria-label="sex" required>
+                <option selected default hidden value="">Choose a Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <div class="invalid-feedback">
+                Gender required.
+            </div> 
+        </div>
     </div>
     
     <div class = "mb-3">
@@ -86,8 +91,7 @@
     <div class="mb-3">
         <label for="status" class="form-label"> Status </label>
         <select class="form-select" id="status" name="status" aria-label="status">
-            <option selected default hidden value="">Choose a Status</option>
-            <option value="Active">Active</option>
+            <option selected default value="Active">Active</option>
             <option value="RwS">Retired with Savings</option>
             <option value="RwoS">Retired w/o Savings</option>
         </select>    
