@@ -67,35 +67,35 @@ const savingsController = {
                 currentSaving = await Saving.findOne({ memberID: id, year });
             }
             let updatedData = {};
-            let totalSavings = 0;
+            let totalSaving = 0;
             let totalMatch = 0;
             const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
             months.forEach((month) => {
                 const match = parseInt(updateData[month]?.match || (isNewSaving ? 0 : saving[month]?.match) || 0, 10);
                 const savings = parseInt(updateData[month]?.savings || (isNewSaving ? 0 : saving[month]?.savings) || 0, 10);
                 totalMatch += match;
-                totalSavings += savings;
+                totalSaving += savings;
                 updatedData[month] = {
                     match: match,
                     savings: savings,
                 };
             });
-            updatedData.totalSavings = totalSavings;
+            updatedData.totalSaving = totalSaving;
             updatedData.totalMatch = totalMatch;
             const member = await Member.findOne({ _id: id });
-            member.totalSaving += isNewSaving ? updatedData.totalSavings : updatedData.totalSavings - currentSaving.totalSavings;
+            member.totalSaving += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
             if (isNewSaving) {
                 member.savings.push(currentSaving._id);
             }
             member.save();
             const group = await Group.findById(req.session.groupId);
-            group.totalKaban += isNewSaving ? updatedData.totalSavings : updatedData.totalSavings - currentSaving.totalSavings;
+            group.totalKaban += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
             group.save();
             const project = await Project.findById(req.session.projectId);
-            project.totalKaban += isNewSaving ? updatedData.totalSavings : updatedData.totalSavings - currentSaving.totalSavings;
+            project.totalKaban += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
             project.save();
             const cluster = await Cluster.findById(req.session.clusterId);
-            cluster.totalKaban += isNewSaving ? updatedData.totalSavings : updatedData.totalSavings - currentSaving.totalSavings;
+            cluster.totalKaban += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
             cluster.save();
             const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
             if (updatedSaving) {

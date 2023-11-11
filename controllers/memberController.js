@@ -19,14 +19,16 @@ const memberController = {
                 const authority = user.authority;
                 const username = user.username;
                 let memberList = [];
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                const project = await Project.findOne({ _id: req.session.projectId });
                 const group = await Group.findOne({ _id: req.session.groupId });
                 if (!group) {
                     res.redirect("/group");
                 }
                 const year = new Date().getFullYear();
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
-                const members = await Member.find({ _id: { $in: group.member } });
-                let totalSavings = 0;
+                const members = await Member.find({ _id: { $in: group.members } });
+                let totalSaving = 0;
                 if (members) {
                     for (const member of members) {
                         const savings = await Saving.findOne({
@@ -45,7 +47,7 @@ const memberController = {
                                 };
                             }
                             data.totalMatch = savings.totalMatch;
-                            data.totalSavings = savings.totalSavings;
+                            data.totalSaving = savings.totalSaving;
                         } else {
                             for (const month of months) {
                                 data[month] = {
@@ -54,14 +56,14 @@ const memberController = {
                                 };
                             }
                             data.totalMatch = 0;
-                            data.totalSavings = 0;
+                            data.totalSaving = 0;
                         }
-                        totalSavings += parseInt(data.totalSavings);
+                        totalSaving += parseInt(data.totalSaving);
                         memberList.push(data);
                     }
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, username, sidebar, dashbuttons, grpName: group.name, year, memberList, totalSavings });
+                res.render("member", { authority, username, sidebar, dashbuttons, groupName: group.name, year, memberList, totalSaving, projectName: project.name, clusterName: cluster.name });
             } else {
                 res.redirect("/");
             }
@@ -78,8 +80,8 @@ const memberController = {
                 const group = await Group.findOne({ _id: req.session.groupId });
                 const year = req.params.year;
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
-                const members = await Member.find({ _id: { $in: group.member } });
-                let totalSavings = 0;
+                const members = await Member.find({ _id: { $in: group.members } });
+                let totalSaving = 0;
                 for (const member of members) {
                     const savings = await Saving.findOne({
                         _id: { $in: member.savings },
@@ -97,7 +99,7 @@ const memberController = {
                             };
                         }
                         data.totalMatch = savings.totalMatch;
-                        data.totalSavings = savings.totalSavings;
+                        data.totalSaving = savings.totalSaving;
                     } else {
                         for (const month of months) {
                             data[month] = {
@@ -106,12 +108,12 @@ const memberController = {
                             };
                         }
                         data.totalMatch = 0;
-                        data.totalSavings = 0;
+                        data.totalSaving = 0;
                     }
-                    totalSavings += data.totalSavings;
+                    totalSaving += data.totalSaving;
                     memberList.push(data);
                 }
-                res.status(200).json({ memberList, totalSavings, year });
+                res.status(200).json({ memberList, totalSaving, year });
             } else {
                 res.status(400).json({ error: "An error occurred while retrieving group information." });
             }
@@ -160,14 +162,15 @@ const memberController = {
                 const projectChoices = await Project.find({ _id: { $in: cluster.projects } });
                 const groupChoices = await Group.find({ _id: { $in: project.groups } });
                 let allSavings = 0;
-                let totalSavings = null;
+                let totalSaving = null;
                 if (memberId) {
-                    allSavings = await Saving.find({ memberID: memberId });
-                    totalSavings = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSavings), 0);
+                    allSavings = await Saving.find({ memberID: memberId }).sort({ year: 1 });
+                    totalSaving = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSaving) + parseFloat(saving.totalMatch), 0);
                 }
+
                 res.render("memberprofile", {
                     member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group,
-                    fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices, allSavings, totalSavings
+                    fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices, allSavings, totalSaving
                 });
             } else {
                 res.redirect("/");
@@ -181,7 +184,7 @@ const memberController = {
     newMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const { MemberFirstName, MemberLastName, id,
+                const { MemberFirstName, MemberLastName, orgId,
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
                     sex, birthdate, address, status } = req.body;
@@ -202,11 +205,11 @@ const memberController = {
                 const groupId = req.session.groupId;
                 const clusterId = req.session.clusterId;
                 const newMember = new Member({
-                    name, id, nameFather, nameMother, sex, birthdate, address, savings, status, projectId, groupId, clusterId
+                    name, orgId, nameFather, nameMother, sex, birthdate, address, savings, status, projectId, groupId, clusterId
                 });
                 await newMember.save();
                 const group = await Group.findById(req.session.groupId);
-                group.member.push(newMember);
+                group.members.push(newMember);
                 group.totalMembers += 1;
                 await group.save();
                 const project = await Project.findById(req.session.projectId);
@@ -251,12 +254,12 @@ const memberController = {
                         const prevGroup = await Group.findOne({ _id: member.groupId });
                         prevGroup.totalMembers -= 1;
                         prevGroup.totalKaban -= member.totalSaving;
-                        prevGroup.member = prevGroup.member.filter(memberId => !memberId.equals(member._id.toString()));
+                        prevGroup.members = prevGroup.members.filter(memberId => !memberId.equals(member._id.toString()));
                         await prevGroup.save();
                         const newGroup = await Group.findOne({ _id: groupId });
                         newGroup.totalMembers += 1;
                         newGroup.totalKaban += member.totalSaving;
-                        newGroup.member.push(member._id);
+                        newGroup.members.push(member._id);
                         await newGroup.save();
                         if (member.projectId.toString() !== projectId) {
                             const prevProject = await Project.findOne({ _id: member.projectId });
@@ -314,7 +317,7 @@ const memberController = {
                 await project.save();
                 group.totalKaban -= member.totalSaving;
                 group.totalMembers -= 1;
-                group.member = group.member.filter(arrayMembers => !arrayMembers.equals(memberId.toString()));
+                group.members = group.members.filter(arrayMembers => !arrayMembers.equals(memberId.toString()));
                 await group.save();
                 const deletedMember = await Member.findByIdAndDelete(memberId);
                 if (deletedMember) {

@@ -37,9 +37,9 @@
                         <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_savings"><%= memberList[i][month[j]].savings %></td>
                         <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_match"><%= memberList[i][month[j]].match %></td>
                     <% } %>
-                    <td class="format-number"><%= memberList[i].totalSavings %></td>
+                    <td class="format-number"><%= memberList[i].totalSaving %></td>
                     <td class="format-number"><%= memberList[i].totalMatch %></td>
-                    <% let total = memberList[i].totalMatch + memberList[i].totalSavings%>
+                    <% let total = memberList[i].totalMatch + memberList[i].totalSaving%>
                     <td class="format-number"><%= total %></td>
                 </tr>
             <% } %>

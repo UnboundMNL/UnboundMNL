@@ -28,7 +28,6 @@ const projectController = {
                     id = user.validCluster;
                     cluster = await Cluster.findOne({ _id: id });
                 }
-                let updatedParts;
                 if (req.query.search) {
                     updatedParts = await Project.find({
                         $and: [
@@ -42,8 +41,10 @@ const projectController = {
                 const orgParts = updatedParts;
                 const perPage = 6; // change to how many clusters per page
                 let totalPages = Math.ceil(orgParts.length / perPage);
-                if (page > totalPages) {
-                    res.redirect("/project")
+                if (orgParts.length!==0){
+                    if (page > totalPages) {
+                        res.redirect("/project")
+                    }
                 }
                 let pageParts = [];
                 if (orgParts.length > perPage) {
@@ -56,7 +57,7 @@ const projectController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
+                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, clusterName: cluster.name });
             } else {
                 res.redirect("/");
             }
@@ -135,7 +136,7 @@ const projectController = {
                             for (const member of group.members) {
                                 kaban = await Saving.findMany({ member: member });
                                 for (const item of kaban) {
-                                    cluster.totalKaban -= item.totalSavings;
+                                    cluster.totalKaban -= item.totalSaving;
                                 }
                                 await Saving.deleteMany({ member: member });
                                 cluster.totalMembers -= 1;
