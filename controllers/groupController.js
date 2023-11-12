@@ -79,7 +79,7 @@ const groupController = {
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone } = req.body;
                 const existingGroup = await Group.findOne({ SPU, name, location });
                 if (existingGroup) {
-                    return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
+                    return res.json({ error: "A group with the same name already exists." });
                 }
                 let SHGLeader = {
                     firstName: SHGLeaderFirstName,
@@ -120,7 +120,7 @@ const groupController = {
                 await newGroup.save();
                 project.groups.push(newGroup._id);
                 await project.save();
-                res.redirect("/group");
+                res.json({ success: "A Group has been added." });
             } else {
                 res.redirect("/");
             }
@@ -238,7 +238,7 @@ const groupController = {
 
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;
-        const shg = await SHG.findOne({ _id: shgId });
+        const shg = await Group.findOne({ _id: shgId });
         const project = await Project.findOne({ _id: req.session.projectId });
         res.render('components/popups/popupFields/SHGFormFields', { shg, SPU: project.SPU, location: project.location });
     },

@@ -4,73 +4,64 @@ document.addEventListener('DOMContentLoaded', function () {
         const forms = document.querySelectorAll('.needs-validation'); // Fetch all the forms we want to apply custom Bootstrap validation styles to
         Array.from(forms).forEach(form => { // Loop over them and prevent submission
             form.addEventListener('submit', event => {
-                if (form.name) { 
-                    addGroup(event.target, form.name);
-                }
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
+                } else{
+                    addGroup(event.target, form.name);
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('projectName').addEventListener('input', event => {
+                document.getElementById('SHGName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('projectName').value == "") {
+                    if (document.getElementById('SHGName').value == "") {
                         formNameInput.classList.add('is-invalid');
-                        invalidFeedback.textContent = 'Please enter a sub-project name.';
-                    } else{
+                        invalidFeedback.textContent = 'Please enter a SHG name.';
+                    } else {
                         invalidFeedback.textContent = '';
                     }
                 });
             }, false)
         })
     })()
-    
+
 });
 
-function addGroup(form, nameInput){
+function addGroup(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};
     const formNameInput = nameInput;
     const invalidFeedback = formNameInput.nextElementSibling;
-
     // Convert FormData to plain object
     formData.forEach((value, key) => {
         formDataObject[key] = value;
     });
     // Check if all values in formDataObject are not empty
-    const fieldEmpty = Object.values(formDataObject).every(value => value !== '');
-     
-    if (fieldEmpty) {
-        fetch('/newGroup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataObject)
+    fetch('/newGroup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataObject)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else if (data.error) {
+                formNameInput.setCustomValidity('Invalid field.');
+                formNameInput.classList.add('is-invalid');
+                formNameInput.classList.remove('is-valid');
+                invalidFeedback.textContent = data.error;
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else if (data.error) {
-                    formNameInput.setCustomValidity('Invalid field.');
-                    formNameInput.classList.add('is-invalid');
-                    formNameInput.classList.remove('is-valid');
-                    invalidFeedback.textContent = data.error;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle errors here
-            });
-    } else {
-        // Handle case where at least one value is empty
-        console.log('Please fill in all fields.');
-        // You might want to provide user feedback or take appropriate action.
-    }
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle errors here
+        });
+
 }
