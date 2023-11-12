@@ -13,12 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add event listener for the "Cluster" dropdown
     clusterDropdown.addEventListener('change', function () {
         const selectedCluster = clusterDropdown.value; // Get the selected value directly from clusterDropdown
-        console.log("Selected Cluster:", selectedCluster);
     
         // Check if a cluster is selected
         if (selectedCluster !== "") {
             // Enable the project dropdown
-            console.log("Selected Cluster:", selectedCluster);
             projectDropdown.disabled = false;
     
             // Call getProject function to retrieve projects for the selected cluster
@@ -52,12 +50,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 clusterDropdown.addEventListener('change', function () {
     const selectedCluster = clusterDropdown.value; // Get the selected value directly from clusterDropdown
-    console.log("Selected Cluster:", selectedCluster);
 
     // Check if a cluster is selected
     if (selectedCluster !== "") {
         // Enable the project dropdown
-        console.log("Selected Cluster:", selectedCluster);
         projectDropdown.disabled = false;
 
         // Call getProject function to retrieve projects for the selected cluster

@@ -14,6 +14,5 @@ const choicesController = require('../controllers/choicesController.js');
 
 router.post('/SHGChoices', choicesController.SHGChoices);
 router.post('/projectChoices', choicesController.projectChoices);
-router.post('/clusterChoices', choicesController.clusterChoices);
 
 module.exports = router;  

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'use strict'
         const forms = document.querySelectorAll('.needs-validation'); // Fetch all the forms we want to apply custom Bootstrap validation styles to
         Array.from(forms).forEach(form => { // Loop over them and prevent submission
-            console.log(form)
             form.addEventListener('submit', event => {
                 if (!form.checkValidity()) {
                     event.preventDefault();
@@ -37,7 +36,6 @@ function addGroup(form, nameInput) {
     const formDataObject = {};
     const formNameInput = nameInput;
     const invalidFeedback = formNameInput.nextElementSibling;
-    console.log(formNameInput)
     // Convert FormData to plain object
     formData.forEach((value, key) => {
         formDataObject[key] = value;
