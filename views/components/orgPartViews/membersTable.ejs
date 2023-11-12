@@ -29,7 +29,7 @@
                 <tr>
                     <% let className = "memberPage"+i;%>
                     <td class = "<%=className%> memberPage"><%= memberList[i].name %></td>
-                    <td class = "<%=className%> memberPage"><%= memberList[i].id %></td>
+                    <td class = "<%=className%> memberPage"><%= memberList[i].orgId %></td>
                     <script>
                         linkMemberPage("<%= memberList[i].id %>", "<%=className%>")
                     </script>

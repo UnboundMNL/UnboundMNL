@@ -24,7 +24,7 @@ const memberController = {
                 const project = await Project.findOne({ _id: req.session.projectId });
                 const group = await Group.findOne({ _id: req.session.groupId });
                 if (!group) {
-                    res.redirect("/group");
+                    return res.redirect("/group");
                 }
                 const year = new Date().getFullYear();
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
@@ -38,7 +38,8 @@ const memberController = {
                         });
                         const data = {
                             name: member.name.firstName + ' ' + member.name.lastName,
-                            id: member._id,
+                            orgId: member.orgId,
+                            id: member._id
                         };
                         if (savings) {
                             for (const month of months) {
@@ -134,7 +135,7 @@ const memberController = {
                 const username = user.username;
                 const authority = user.authority;
                 if (!req.session.memberId) {
-                    res.redirect("/member");
+                    return res.redirect("/member");
                 }
                 const member = await Member.findById(req.session.memberId);
                 const memberId = member._id;
@@ -189,6 +190,10 @@ const memberController = {
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
                     sex, birthdate, address, status } = req.body;
+                const existingMember = await Member.find({orgId});
+                if (existingMember.length!==0){
+                    return res.json({ error: "A member with the same ID already exists." });
+                }
                 const name = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
@@ -219,7 +224,7 @@ const memberController = {
                 const cluster = await Cluster.findById(req.session.clusterId);
                 cluster.totalMembers += 1;
                 await cluster.save();
-                res.redirect("/member");
+                res.json({ success: "A Member has been added." });
             } else {
                 res.redirect("/");
             }

@@ -35,13 +35,15 @@ const clusterController = {
                     updatedParts = await Cluster.find({});
                 }
                 const orgParts = updatedParts;
+
                 let pageParts = [];
                 let perPage = 6; // change to how many clusters per page
-                if (orgParts.length!==0){
-                    let totalPages = Math.ceil(orgParts.length / perPage);
-                if (page > totalPages) {
-                    res.redirect("/cluster")
-                }
+                let totalPages;
+                if (orgParts.length !== 0) {
+                    totalPages = Math.ceil(orgParts.length / perPage);
+                    if (page > totalPages) {
+                        return res.redirect("/cluster");
+                    }
                 }
                 if (orgParts.length > perPage) {
                     let startPage = perPage * (page - 1);
@@ -70,7 +72,7 @@ const clusterController = {
                 const { name, location } = req.body;
                 const existingCluster = await Cluster.findOne({ name });
                 if (existingCluster) {
-                    return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                    return res.json({ error: "A Cluster with the same name already exists." });
                 }
                 let projects = [];
                 const newCluster = new Cluster({
@@ -79,7 +81,7 @@ const clusterController = {
                     projects,
                 });
                 await newCluster.save();
-                res.redirect("/cluster");
+                res.json({ success: "A Cluster has been added." });
             } else {
                 res.redirect("/");
             }
@@ -131,8 +133,8 @@ const clusterController = {
                                 group = await Group.findById(groupId);
                                 if (Array.isArray(group.members)) {
                                     for (const member of group.members) {
-                                        await Saving.deleteMany({ memberID: member.id });
-                                        await Member.deleteOne({ _id: member.id });
+                                        await Saving.deleteMany({ memberID: member._id });
+                                        await Member.deleteOne({ _id: member._id });
                                     }
                                 }
                                 await Group.deleteOne({ _id: group });
@@ -174,7 +176,7 @@ const clusterController = {
             console.error(error);
         }
     }
-    
+
 }
 
 module.exports = clusterController;

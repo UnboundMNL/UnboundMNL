@@ -8,6 +8,7 @@
 
     <!-- SCRIPTS -->
     <script src="/js/accountProfile.js"></script>
+    <script src="/js/checkValidation.js"></script>
     <script src="/js/reload.js"></script>
 </head>
 
@@ -27,10 +28,10 @@
         <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user.username}) %>
         <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
 
-
         <!-- Modals -->
         <%-include('components/popups/savePopup.ejs') %>
-
+        <%-include('components/popups/deleteProfileModal.ejs', {pageName: "Profile"}) %>
+        
         <!-- Others -->
         <script>open('profileButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>

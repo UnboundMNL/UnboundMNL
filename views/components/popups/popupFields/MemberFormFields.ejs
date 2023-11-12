@@ -1,8 +1,8 @@
     <div class = "mb-3">
         <label for="id" class="form-label">ID</label>
-        <div class = "input-group" id = "ID">
+        <div class = "input-group">
             <input class="form-control"
-                    id = "id"
+                    id = "orgId"
                     name = "orgId"
                     type="text" 
                     aria-describedby="id"
@@ -20,21 +20,29 @@
 %>
         <div class = "mb-3">
             <label for="<%=nameFields[i]%>Name" class="form-label"><%=nameFields[i]%> Name</label>
-            <div class = "input-group" id = "<%=nameFields[i]%>Name">
+            <div class = "input-group">
                 <span class = "input-group-text">First Name</span>
                 <input class="form-control"
                         id = "<%=nameFields[i]%>FirstName"
                         name = "<%=nameFields[i]%>FirstName"
                         type="text" 
                         aria-describedby="<%=nameFields[i]%>FirstName"
-                        required>
+                        <% if (i!==0) { %>
+                            >
+                        <% } else {%>
+                            required>
+                        <% } %>
                 <span class = "input-group-text">Last Name</span>
                 <input class="form-control"
                         id = "<%=nameFields[i]%>LastName"
                         name = "<%=nameFields[i]%>LastName"
                         type="text"
                         aria-describedby="<%=nameFields[i]%>LastName"
-                        required>
+                        <% if (i!==0) { %>
+                            >
+                        <% } else {%>
+                            required>
+                        <% } %>
                 <div class="invalid-feedback">
                     Full <%=nameFields[i]%> name required.
                 </div>  
@@ -58,24 +66,26 @@
         </div>
     </div>
     
-    <div class = "mb-3">
+    <div class="mb-3">
         <label for="birthdate" class="form-label">Birthday</label>
-        <div class = "input-group" id = "birthdate">
+        <div class="input-group">
             <input class="form-control"
-                    id = "birthdate"
-                    name = "birthdate"
-                    type="date" 
-                    aria-describedby="birthdate"
-                    required>
+                   id="birthdate"
+                   name="birthdate"
+                   type="date"
+                   aria-describedby="birthdate"
+                   min="1900-01-01"
+                   max="2200-12-31"
+                   required>
             <div class="invalid-feedback">
                 Birthday required.
-            </div>  
+            </div>
         </div>
     </div>
 
     <div class = "mb-3">
         <label for="address" class="form-label">Address</label>
-        <div class = "input-group" id = "birthdate">
+        <div class = "input-group">
             <input class="form-control"
                     id = "address"
                     name = "address"

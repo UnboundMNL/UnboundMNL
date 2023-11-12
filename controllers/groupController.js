@@ -23,7 +23,7 @@ const groupController = {
                 const cluster = await Cluster.findOne({ _id: req.session.clusterId });
                 const project = await Project.findOne({ _id: req.session.projectId });
                 if (!project) {
-                    res.redirect("/project");
+                    return res.redirect("/project");
                 }
                 let updatedParts = [];
                 if (req.query.search) {
@@ -38,10 +38,11 @@ const groupController = {
                 }
                 const orgParts = updatedParts;
                 const perPage = 6; // change to how many clusters per page
-                let totalPages = Math.ceil(orgParts.length / perPage); 
+                let totalPages;
                 if (orgParts.length !== 0) {
+                    totalPages = Math.ceil(orgParts.length / perPage);
                     if (page > totalPages) {
-                        res.redirect("/group")
+                        return res.redirect("/group");
                     }
                 }
                 let pageParts = [];
@@ -69,17 +70,19 @@ const groupController = {
     newGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const projectId = req.session.projectId;
-                let project = await Project.findById(projectId);
                 const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum,
                     SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone,
                     SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone,
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone,
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone } = req.body;
-                const existingGroup = await Group.findOne({ SPU, name, location });
-                if (existingGroup) {
-                    return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
+                const projectId = req.session.projectId;
+                let project = await Project.findById(projectId);
+                const group = await Group.find({ _id: { $in: project.groups } });
+                const existingGroups = group.flatMap(group => group.name);
+                if (existingGroups.includes(name)) {
+                    return res.json({ error: "A group with the same name already exists." });
                 }
+
                 let SHGLeader = {
                     firstName: SHGLeaderFirstName,
                     lastName: SHGLeaderLastName,
@@ -119,7 +122,7 @@ const groupController = {
                 await newGroup.save();
                 project.groups.push(newGroup._id);
                 await project.save();
-                res.redirect("/group");
+                res.json({ success: "A Group has been added." });
             } else {
                 res.redirect("/");
             }
@@ -204,13 +207,13 @@ const groupController = {
                 let kaban;
                 if (Array.isArray(group.members)) {
                     for (const member of group.members) {
-                        kaban = await Saving.findMany({ memberID: member.id });
+                        kaban = await Saving.find({ memberID: member._id });
                         for (const item of kaban) {
                             cluster.totalKaban -= item.totalSaving;
                             project.totalKaban -= item.totalSaving;
                         }
-                        await Saving.deleteMany({ memberID: member.id });
-                        await Member.deleteOne({ _id: member.id });
+                        await Saving.deleteMany({ memberID: member._id });
+                        await Member.deleteOne({ _id: member._id });
                         cluster.totalMembers -= 1;
                         project.totalMembers -= 1;
                     }
@@ -237,7 +240,7 @@ const groupController = {
 
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;
-        const shg = await SHG.findOne({ _id: shgId });
+        const shg = await Group.findOne({ _id: shgId });
         const project = await Project.findOne({ _id: req.session.projectId });
         res.render('components/popups/popupFields/SHGFormFields', { shg, SPU: project.SPU, location: project.location });
     },

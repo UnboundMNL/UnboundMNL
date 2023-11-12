@@ -15,7 +15,7 @@
                     </div>
                     <h5><%- username %></h5>
                 </div>
-                <button class="btn btn-danger mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#deleteMemberModal">Delete Account</button>
+                <button class="btn btn-danger mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Account</button>
             </div>
 
             <div class="col-md-6" id="inputContainer">
@@ -25,10 +25,15 @@
                     <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkUsername" onchange="toggleFields('usernameChange', this, `<%- user %>`)">Change Username</h6>
                     <div class="p-2" id="usernameChange">
                         <span>Username</span>
-                        <input type="text" class="form-control mb-4" value="<%- username %>">
+                        <div class="mb-2">
+                            <input type="text" class="form-control" value="<%- username %>" id="newUsername" onkeyup="validateUsername()" >
+                            <span id="usernameAlert"></span>
+                        </div>
                         <span>Password</span>
-                        <input type="password" class="form-control mb-2">
-                        <span id="matchingAlert1"></span>
+                        <div class="mb-2">
+                            <input type="password" class="form-control" id="currentPassword1" onchange="validateCurrentPassword('currentPassword1', 'currentPasswordAlert1')">
+                            <span id="currentPasswordAlert1"></span>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -38,8 +43,10 @@
                         <div class="mb-2">
                             <span>Current Password</span>
                             <div class="input-group align-items-center">
-                                <input type="password" class="form-control">
+                                <input type="password" class="form-control" id="currentPassword2" onchange="validateCurrentPassword('currentPassword2', 'currentPasswordAlert2')">
                                 <!-- <i class='bx bx-show'></i> -->
+                                <span id="currentPasswordAlert2"></span>
+                            </div>
                         </div>
                         <div class="mb-2">
                             <span>New Password</span>
@@ -47,8 +54,7 @@
                         </div>
                         <div class="mb-2">
                             <span>Confirm New Password</span>
-                            <input type="password" id="confirmPass" class="form-control" required
-                            onkeyup="validatePassword()">
+                            <input type="password" id="confirmPass" class="form-control" required onkeyup="validatePassword()">
                         </div>
                         <span id="matchingAlert2"></span>
                     </div>

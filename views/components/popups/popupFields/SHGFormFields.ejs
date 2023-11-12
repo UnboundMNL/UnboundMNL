@@ -1,10 +1,15 @@
 <div class = "mb-3">
     <label for="SHGName" class="form-label">Self Help Group Name</label>
-    <input class="form-control" id = "SHGName" name = "name" type="text" aria-describedby="SHGName" 
-    <% if (locals.shg) { %>
-        value = "<%=locals.shg.name%>"
-    <% } %>
-    required>
+    <div class = "input-group">
+        <input class="form-control" id = "SHGName" name = "name" type="text" aria-describedby="SHGName" 
+        <% if (locals.shg) { %>
+            value = "<%=locals.shg.name%>"
+        <% } %>
+        required>
+        <div class="invalid-feedback">
+            Please enter a SHG name.
+        </div>
+    </div>
 </div>
 
 <%  let people = ['SHG Leader','SEDP Chairman', 'Kaban Treasurer', 'Kaban Auditor']
@@ -59,8 +64,16 @@
     <label for="bankAccountType" class="form-label"> Bank Account Type </label>
     <select class="form-select" id="bankAccountType" name="bankAccountType" aria-label="bankAccountType">
         <% if (!locals.shg) { %>
-            <option selected default value="">No bank account type selected</option>
+            <option selected default hidden value="">No bank account type selected</option>
         <% } %>
+        <option value=""
+        <% if (locals.shg) { %>
+            <% if (locals.shg.bankAccountType == "") { %>
+                selected
+                default hidden
+            <% } %>
+        <% } %>
+        >No bank account type selected</option>
         <option value="Savings"
         <% if (locals.shg) { %>
             <% if (locals.shg.bankAccountType == "Savings") { %>
@@ -68,7 +81,7 @@
                 default
             <% } %>
         <% } %>
-        >Savings</option>
+        >Savings</option>      
         <option value="Checking" 
         <% if (locals.shg) { %>
             <% if (locals.shg.bankAccountType == "Checking") { %>

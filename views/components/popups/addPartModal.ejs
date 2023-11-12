@@ -1,4 +1,15 @@
-<script src="/js/formValidation.js"></script>
+<% if (partname === 'cluster') { %>
+	<script src="/js/addCluster.js"></script>
+<% } else if (partname === 'Sub-Projects') { %>
+	<script src="/js/addProject.js"></script>
+<% } else if (partname === 'SHG') { %>
+	<script src="/js/addGroup.js"></script>
+<% } else if (partname === 'Member') { %>
+	<script src="/js/addMember.js"></script>
+<% } else { %>
+	<script src="/js/formValidation.js"></script>
+<% } %>
+<script src = "/js/resetButton.js"></script>
 <div class="modal modal-lg fade" id="add<%=partname%>" tabindex="-1" aria-labelledby="add<%=partname%>ModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -6,22 +17,7 @@
 				<h1 class="modal-title fs-5" id="add<%=partname%>ModalLabel">Add <%=partname%></h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<% var addAction = null %>
-			<% if (partname=="cluster") { 
-			 addAction = "/newCluster"
-			 } %>
-			 <% if (partname=="Sub-Projects") { 
-				addAction = "/newProject"
-				} %>
-
-			<% if (partname=="SHG") { 
-				addAction = "/newGroup"
-				} %>
-
-			<% if (partname=="Member") { 
-				addAction = "/newMember"
-				} %>
-			<form id = "add<%=partname%>Form" class = "needs-validation" name = "add<%=partname%>Form" method = "POST" action = "<%=addAction%>" novalidate>
+			<form id = "add<%=partname%>Form" class = "needs-validation" name = "add<%=partname%>Form" data-bs-parttype="<%=partname%>" novalidate>
 				
                 <div class="modal-body">
 					<div id = "add<%=partname%>FormDiv">
@@ -34,7 +30,7 @@
 				</div>
 				<% var id = "add"+ partname; %>
 				<div class="modal-footer">
-					<button type="reset" class="btn btn-danger" onclick="ResetAll(authority)">Reset</button>
+					<button type="reset" class="btn btn-danger" onclick="ResetAll()">Reset</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary" >Add <%=partname%></button>
 				</div>

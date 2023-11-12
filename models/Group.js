@@ -5,7 +5,7 @@ const GroupSchema = new mongoose.Schema({
   name: { type: String, required: true },
   location: { type: String },
   depositoryBank: String,
-  bankAccountType: { type: String, enum: ['Savings', 'Checking'] },
+  bankAccountType: { type: String, enum: ['Savings', 'Checking',''] },
   bankAccountNum: Number,
   SHGLeader: {
     firstName: String,
