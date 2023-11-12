@@ -45,18 +45,31 @@ function cancelChanges(user) {
 // and it clears the text fields when the checkbox is unchecked
 function toggleFields(targetId, checkbox, user) {
     const target = document.getElementById(targetId);
+    const allInputs = document.querySelectorAll(`input[type='text'], input[type='password']`);
     const inputs = target.querySelectorAll('input');
-    if (!checkbox.checked) {
-        cancelChanges(user);
-        clearAlert();
-    }
 
-    for (let input of inputs) {
-        input.disabled = !checkbox.checked;
-    }
+    // Uncheck the other checkbox
     const otherCheckboxId = checkbox.id === 'checkUsername' ? 'checkPassword' : 'checkUsername';
     const otherCheckbox = document.getElementById(otherCheckboxId);
-    otherCheckbox.disabled = checkbox.checked;
+    otherCheckbox.checked = false;
+
+    const inputsArray = Array.from(inputs);
+
+    for (let input of allInputs) {
+        if (!inputsArray.includes(input)) {
+            input.disabled = true;
+            cancelChanges(user);
+            clearAlert();
+        } else {
+            if (checkbox.checked) {
+                input.disabled = false;
+            } else {
+                input.disabled = true;
+                cancelChanges(user);
+                clearAlert();
+            }
+        }
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
