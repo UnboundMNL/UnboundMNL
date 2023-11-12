@@ -26,16 +26,16 @@
                         </div> -->
                         <div class="mb-2">
                             <span>Username</span>
-                            <input type="text" class="form-control" id="newUsername" value="" required onkeyup="validateUsername()">
+                            <input type="text" class="form-control" id="newUsername" value="" required onkeyup="validateUsername()" autocomplete="off">
                             <span id="usernameAlert"></span>
                         </div>
                         <div class="mb-2">
                             <span>Password</span>
-                            <input type="password" id="newPass" class="form-control" required onkeyup="validatePassword()">
+                            <input type="password" id="newPass" class="form-control" required onkeyup="validatePassword()" autocomplete="new-password">
                         </div>
                         <div class="mb-2">
                             <span>Confirm Password</span>
-                            <input type="password" id="confirmPass" class="form-control" required onkeyup="validatePassword()">
+                            <input type="password" id="confirmPass" class="form-control" required onkeyup="validatePassword()" autocomplete="new-password">
                         </div>
                         <span id="matchingAlert2"></span>
                     </div>
@@ -59,15 +59,14 @@
                             </div>
                         </div>
     
-                        <% const cluster = ["Cluster 1", "Cluster 2"] %>
-                        <% const spu = ["SPU 1", "SPU 2"] %>
-                        <% const shg = ["SHG 1", "SHG 2"] %>
+                        <% let cluster = [] %>
+                        <% let spu = [] %>
+                        <% let shg = [] %>
     
                         <div class="mb-2">
                             <span>Cluster</span>
                             <div>
                                 <select class="custom-select form-select" id="clusterSelect" required <% if (authority !== 'Admin') { %> disabled <% } %>>
-                                    // Hannah: change the value to the cluster of the user
                                     <option selected>
                                         <% if (authority !== 'Admin') { %>
                                             <%- cluster[0] %>
@@ -76,11 +75,12 @@
                                         <% } %>
                                     </option>
                                     <% for (var i = 0; i < cluster.length; i++) { %>
-                                        <option value="i"><%- cluster[i] %></option>
+                                        <option value="<%- cluster[i] %>"><%- cluster[i] %></option>
                                     <% } %>
                                 </select>
                             </div>
                         </div>
+                        
     
                         <div class="mb-2">
                             <span>Sub-Project Unit</span>
