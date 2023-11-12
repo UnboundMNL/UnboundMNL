@@ -162,7 +162,10 @@ const memberController = {
                     editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
                 }
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
-                const projectChoices = await Project.find({ _id: { $in: cluster.projects } });
+                const projectChoices = await Project.find({ 
+                    _id: { $in: cluster.projects }, 
+                    totalGroups: { $gt: 0 }  
+                  });
                 const groupChoices = await Group.find({ _id: { $in: project.groups } });
                 let allSavings = 0;
                 let totalSaving = null;
@@ -281,7 +284,7 @@ const memberController = {
                                 prevCluster.totalMembers -= 1;
                                 prevCluster.totalKaban -= member.totalSaving;
                                 await prevCluster.save();
-                                const newCluster = await Project.findOne({ _id: clusterId });
+                                const newCluster = await Cluster.findOne({ _id: clusterId });
                                 newCluster.totalMembers += 1;
                                 newCluster.totalKaban += member.totalSaving;
                                 await newCluster.save();

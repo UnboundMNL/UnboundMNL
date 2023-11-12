@@ -1,14 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById("accountType").onchange = function() {
-        accountTypeSelect();
-    };
     const selectIDs = ["#clusterSelect", "#spuSelect", "#shgSelect"];
     for (let i = 0; i < selectIDs.length - 1; i++) {
         if ($(selectIDs[i]).is('select')) {
 
             $(selectIDs[i]).change(function () {
                 console.log(document.getElementById("accountType").value)
-                if (document.getElementById("accountType").value!=="Admin" && document.getElementById("accountType").value!=="SEDO"){
+                if (document.getElementById("accountType").value !== "Admin" && document.getElementById("accountType").value !== "SEDO") {
                     if (selectIDs[i] === "#clusterSelect") {
                         getProject();
                     }
@@ -44,12 +41,12 @@ function getProject() {
                 let newOption = `<option value="${project._id}" ${index === 0 ? 'selected' : ''}>${project.name}</option>`;
                 $("#spuSelect").append(newOption);
             });
-            if (data.project.length!==0){
+            if (data.project.length !== 0) {
                 getSHG();
             } else {
                 $("#shgSelect").empty();
             }
-            
+
         })
         .catch(error => {
             console.error('Error:', error);
@@ -89,7 +86,7 @@ function showModal() {
     const saveModal = new bootstrap.Modal(document.getElementById("saveModal"));
     saveModal.show();
 }
-function accountTypeSelect() {
+function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
     var accountType = document.getElementById("accountType").value;
     var elementsToHandle = ["clusterSelect", "spuSelect", "shgSelect"];
 
@@ -108,7 +105,15 @@ function accountTypeSelect() {
             } else {
                 var element = document.getElementById(elementId);
                 element.disabled = false;
-                element.value = "Choose...";
+                clusterChoicesName = JSON.parse(clusterChoicesName);
+                clusterChoicesId = JSON.parse(clusterChoicesId);
+                $("#clusterSelect").empty();
+                $("#clusterSelect").append('<option selected hidden default> Choose...</option>');
+                for (let i = 0; i < clusterChoicesName.length; i++) {
+                    let newOption = `<option value="${clusterChoicesId[i]}">${clusterChoicesName[i]}</option>`;
+                    $("#clusterSelect").append(newOption);
+                }
+
             }
         });
     } else {
@@ -116,7 +121,30 @@ function accountTypeSelect() {
             document.getElementById(elementId).disabled = false;
             var element = document.getElementById(elementId);
             element.disabled = false;
-            element.value = "Choose...";
+            fetch('/clusterChoices', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to fetch data');
+                    }
+                })
+                .then(data => {
+                    $("#clusterSelect").empty();
+                    $("#clusterSelect").append('<option selected hidden default> Choose...</option>');
+                    data.cluster.forEach((cluster) => {
+                        let newOption = `<option value="${cluster._id}">${cluster.name}</option>`;
+                        $("#clusterSelect").append(newOption);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
     }
 }

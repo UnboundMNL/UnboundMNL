@@ -43,10 +43,6 @@
                         <span id="matchingAlert2"></span>
                     </div>
                 </div>
-<%
-                let spu =[];
-                let shg =[];
-                %>
                 <div class="col-md-6" id="inputContainer">
                     <div class="p-2">
                         <div class="mb-2">
@@ -69,15 +65,13 @@
                                 <select class="custom-select form-select" id="clusterSelect" required <% if (authority !== 'Admin') { %> disabled <% } %>>
                                     <% if (authority !== 'Admin') { %>
 <                                       <option selected value = "<%=clusterChoices._id%>"> <%- clusterChoices.name %></option>
-                                    <% } else {%>
+                                    <% } else { %>
                                         <option selected hidden default selected>Choose...</option>
                                         <% for (var i = 0; i < clusterChoices.length; i++) { %>
                                             <option value="<%- clusterChoices[i]._id %>"><%- clusterChoices[i].name %></option>
-                                        <% } %>
+                                        <% } 
+                                    }%>
                                     </option>
-                                    <% for (var i = 0; i < cluster.length; i++) { %>
-                                        <option value="<%- cluster[i] %>"><%- cluster[i] %></option>
-                                    <% } %>
                                 </select>
                             </div>
                         </div>
@@ -114,4 +108,18 @@
         </form>
     </div>
 </div>
-    
+    <script>
+        var clusterChoicesName = [
+                <% for (let i = 0; i < clusterChoices.length; i++) { %>
+                        "<%= clusterChoices[i].name %>"<%= i < clusterChoices.length - 1 ? ',' : '' %>
+                    <% } %>
+                ];
+            var clusterChoicesId = [
+                <% for (let i = 0; i < clusterChoices.length; i++) { %>
+                        "<%= clusterChoices[i]._id %>"<%= i < clusterChoices.length - 1 ? ',' : '' %>
+                    <% } %>
+                ];
+        document.getElementById("accountType").onchange = function() {
+            accountTypeSelect(JSON.stringify(clusterChoicesName),JSON.stringify(clusterChoicesId));
+        };
+    </script>
