@@ -15,7 +15,7 @@ const projectController = {
         try {
             if (req.session.isLoggedIn) {
                 if (req.session.authority == "Treasurer") {
-                    res.redirect("/group")
+                    return res.redirect("/group");
                 }
                 const sidebar = req.session.sidebar;
                 const page = req.params.page;
@@ -43,7 +43,7 @@ const projectController = {
                 let totalPages = Math.ceil(orgParts.length / perPage);
                 if (orgParts.length!==0){
                     if (page > totalPages) {
-                        res.redirect("/project")
+                        return res.redirect("/project");
                     }
                 }
                 let pageParts = [];

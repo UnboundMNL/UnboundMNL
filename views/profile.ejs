@@ -29,8 +29,7 @@
         <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
 
         <!-- Modals -->
-        <%-include('components/popups/savePopup.ejs', {pageName: "Profile"}) %>
-        <%-include('components/popups/deleteProfileModal.ejs', {pageName: "Profile"}) %>
+        <%-include('components/popups/savePopup.ejs') %>
 
         <!-- Others -->
         <script>open('profileButton')</script>

@@ -13,6 +13,7 @@ const memberController = {
     member: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                delete req.session.memberId;
                 const sidebar = req.session.sidebar;
                 const userID = req.session.userId;
                 const user = await User.findById(userID);
@@ -23,7 +24,7 @@ const memberController = {
                 const project = await Project.findOne({ _id: req.session.projectId });
                 const group = await Group.findOne({ _id: req.session.groupId });
                 if (!group) {
-                    res.redirect("/group");
+                    return res.redirect("/group");
                 }
                 const year = new Date().getFullYear();
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
@@ -133,7 +134,7 @@ const memberController = {
                 const username = user.username;
                 const authority = user.authority;
                 if (!req.session.memberId) {
-                    res.redirect("/member");
+                    return res.redirect("/member");
                 }
                 const member = await Member.findById(req.session.memberId);
                 const memberId = member._id;
@@ -231,7 +232,7 @@ const memberController = {
     editMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const { MemberFirstName, MemberLastName, id,
+                const { MemberFirstName, MemberLastName, orgId,
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
                     sex, birthdate, address, status,
@@ -282,7 +283,7 @@ const memberController = {
                             }
                         }
                     }
-                    const updateData = { name, id, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
+                    const updateData = { name, orgId, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
                     member.set(updateData);
                     const updateMember = await member.save({ new: true });
                     if (updateMember) {

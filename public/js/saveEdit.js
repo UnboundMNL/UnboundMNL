@@ -1,7 +1,7 @@
 function saveEdit(link, actionForm, saveID) {
     const saveButton = document.getElementById(saveID);
     saveButton.onclick = () => {
-        const id = document.getElementById("id").value;
+        const orgId = document.getElementById("id").value;
         const address = document.getElementById("address").value;
         const birthdate = document.getElementById("birthdate").value;
         const sex = document.getElementById("sex").value;
@@ -22,7 +22,7 @@ function saveEdit(link, actionForm, saveID) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id, address, birthdate, sex, status, MemberFirstName,
+                orgId, address, birthdate, sex, status, MemberFirstName,
                 MemberLastName, MotherFirstName, MotherLastName,
                 FatherFirstName, FatherLastName, clusterId, projectId, groupId
             })

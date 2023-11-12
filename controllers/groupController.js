@@ -23,7 +23,7 @@ const groupController = {
                 const cluster = await Cluster.findOne({ _id: req.session.clusterId });
                 const project = await Project.findOne({ _id: req.session.projectId });
                 if (!project) {
-                    res.redirect("/project");
+                    return res.redirect("/project");
                 }
                 let updatedParts = [];
                 if (req.query.search) {
@@ -41,7 +41,7 @@ const groupController = {
                 let totalPages = Math.ceil(orgParts.length / perPage); 
                 if (orgParts.length !== 0) {
                     if (page > totalPages) {
-                        res.redirect("/group")
+                        return res.redirect("/group");
                     }
                 }
                 let pageParts = [];
