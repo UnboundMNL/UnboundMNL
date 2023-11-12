@@ -123,39 +123,78 @@ const profileController = {
                 const userID = req.session.userId;
                 let user = await User.findById(userID);
                 const username = user.username;
-                const newUsername = req.body.username;
-                const newPassword = req.body.password;
-                const updateData = req.body;
-                newPassword = newPassword.toString();
-                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
-                if (username === newUsername) {
-                    delete updateData.username;
-                } else {
+                const {newUsername, currentPassword1, newPassword, confirmPassword, currentPassword2,
+                    checkUsernameCheckbox, checkPasswordCheckbox} = req.body;
+                
+                // const newUsername = req.body.newUsername;
+                // const currentPassword1 = req.body.currentPassword1;
+                // const newPassword = req.body.newPassword;
+                // const confirmPassword = req.body.confirmPassword;
+                // const currentPassword2 = req.body.currentPassword2;
+                
+                let updateData = req.body;
+                console.log(updateData);
+                let updateUser;
+                
+                if(currentPassword1 === "" && checkUsernameCheckbox === true){
+                    console.log("no password");
+                    return res.status(401).json({ errorType: 4, error: "Please enter your current password." });
+                }
+                
+                if((newUsername !== "") && (currentPassword1 !== "")){ //mighht ermove last one
+                    
+                    //updateData.username = newUsername;
+
+                    // const usernameRegex = /^(?=.{3,15}$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]*$/;
+                    // if (!usernameRegex.test(newUsername) || newUsername.toLowerCase() === "visitor") {
+                    //     return res.status(401).json({ error: "Username must contain at least one letter or number, and be between 3-15 characters long, and cannot be 'visitor!" });
+                    // }
+                    if(newUsername === user.username){
+                        console.log("same username");
+                        return res.status(401).json({ errorType: 2, error: "No Canges Made." });
+                    }
+                    
+                    const isPasswordMatch = await user.comparePassword(currentPassword1);
+                    if (!isPasswordMatch) {
+                        return res.status(401).json({ errorType: 1, error: "Incorrect Password" });
+                    }
+
                     let tempUser = await User.findOne({ username: newUsername })
                     if (tempUser) {
-                        return res.status(300).json({ error: "Username has already been taken. Choose a different username." })
+                        return res.status(401).json({ errorType: 3, error: "Username has already been taken. Choose a different username." });
                     }
+                    updateData.username = newUsername;
+                    updateUser = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
+                    console.log(updateUser);
                 }
-                if (newPassword !== "" && !passwordRegex.test(newPassword)) {
-                    return res.status(400).json({ error: "Passwod should be at least 6 characters long, and containing only alphanumeric characters" });
+                if(currentPassword2 === "" && checkPasswordCheckbox === true){
+                    console.log("no password");
+                    return res.status(401).json({ errorType: 6, error: "Please enter your current password." });
                 }
-                if (((newPassword !== "") && (req.body.password === req.body.repassword))) {
+                if(newPassword == "" && confirmPassword == "" && checkPasswordCheckbox === true){
+                    console.log("no password");
+                    return res.status(401).json({ errorType: 6, error: "Please enter your new password." });
+                }
+                if((newPassword !== "") && (confirmPassword !== "") && (newPassword === confirmPassword) && (currentPassword2 !== "")){
+                    const isPasswordMatch = await user.comparePassword(currentPassword2);
+                    if (!isPasswordMatch) {
+                        return res.status(401).json({ errorType: 5, error: "Incorrect Password" });
+                    }
+                    testPassword = newPassword.toString();
+                    const passwordRegex = /^.{6,}$/;
+                    if (testPassword !== "" && !passwordRegex.test(testPassword)) {
+                        return res.status(400).json({error: "Password should be at least 6 characters long." });
+                        
+                    }
+                    
                     updateData.password = newPassword;
-                } else {
+                    updateUser = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
+                }
 
-                    delete updateData.password;
-                    delete updateData.repassword;
-                    req.session.expires = null;
-                }
-                const usernameRegex = /^(?=.{3,15}$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]*$/;
-                if (!usernameRegex.test(newUsername) || newUsername.toLowerCase() === "visitor") {
-                    return res.status(401).json({ error: "Username must contain at least one letter or number, and be between 3-15 characters long, and cannot be 'visitor!" });
-                }
-                user = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
-                if (user) {
-                    return res.redirect("/profile");;
+                if (updateUser) {
+                    return res.json();
                 } else {
-                    return res.status(404).json({ error: "User not found" });
+                    return res.json({ error: "User not found" });
                 }
             } else {
                 res.redirect("/");
@@ -163,6 +202,18 @@ const profileController = {
         } catch (error) {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+
+    retrieveUsernameList: async (req, res) => {
+        try {
+            const usernameList = await User.find().select('username -_id');
+            console.log(usernameList);
+            return res.json({ usernameList });
+            
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "An error occurred while fetching data." });
         }
     }
 
