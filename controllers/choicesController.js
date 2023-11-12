@@ -41,7 +41,22 @@ const choicesController = {
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+            return res.status(500).render("fail", { error: "An error occurred while retrieving project information." });
+        }
+    },
+
+    clusterChoices: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const cluster = await Cluster.find({});
+                console.log(cluster)
+                res.json({ cluster });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving cluster information." });
         }
     }
     
