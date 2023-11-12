@@ -55,7 +55,7 @@ const clusterController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages });
+                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, search: req.query.search });
             } else {
                 res.redirect("/");
             }

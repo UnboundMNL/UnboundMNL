@@ -2,7 +2,9 @@ function validatePassword() {
     const newPass = document.getElementById('newPass').value;
     const confirmPass = document.getElementById('confirmPass').value;
     const matchingAlert2 = document.getElementById('matchingAlert2');
-    const minLength = 8; // TBD: Temp minimum length of password
+
+    const minLength = 6; // TBD: Temp minimum length of password
+
     if (newPass.length === 0 && confirmPass.length === 0) {
         matchingAlert2.innerHTML = '';
     } else if (newPass !== confirmPass || newPass.length < minLength) {

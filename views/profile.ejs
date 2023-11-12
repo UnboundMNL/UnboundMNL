@@ -29,7 +29,9 @@
         <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
 
         <!-- Modals -->
-        <%-include('components/popups/savePopup.ejs') %>
+
+        <%-include('components/popups/savePopup.ejs', {pageName: "Profile"}) %>
+
         <%-include('components/popups/deleteProfileModal.ejs', {pageName: "Profile"}) %>
         
         <!-- Others -->
