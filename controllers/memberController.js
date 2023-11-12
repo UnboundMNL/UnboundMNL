@@ -39,6 +39,7 @@ const memberController = {
                         const data = {
                             name: member.name.firstName + ' ' + member.name.lastName,
                             orgId: member.orgId,
+                            id: member._id
                         };
                         if (savings) {
                             for (const month of months) {
