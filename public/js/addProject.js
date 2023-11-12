@@ -8,15 +8,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     addProject(event.target, form.name);
                 }
                 if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
-                event.preventDefault()
-                form.classList.add('was-validated')
+                event.preventDefault();
+                form.classList.add('was-validated');
+                document.getElementById('projectName').addEventListener('input', event => {
+                    const formNameInput = event.target;
+                    const invalidFeedback = formNameInput.nextElementSibling;
+                    formNameInput.setCustomValidity('');
+                    formNameInput.classList.remove('is-invalid');
+                    formNameInput.classList.remove('is-valid');
+                    if (document.getElementById('projectName').value == "") {
+                        formNameInput.classList.add('is-invalid');
+                        invalidFeedback.textContent = 'Please enter a sub-project name.';
+                    } else{
+                        invalidFeedback.textContent = '';
+                    }
+                });
             }, false)
         })
-
-
     })()
     
 });
@@ -50,7 +61,7 @@ function addProject(form, nameInput){
                     formNameInput.setCustomValidity('Invalid field.');
                     formNameInput.classList.add('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    invalidFeedback.textContent = 'The cluster name is already in use';
+                    invalidFeedback.textContent = data.error;
                 }
             })
             .catch(error => {

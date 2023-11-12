@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const forms = document.querySelectorAll('.needs-validation'); // Fetch all the forms we want to apply custom Bootstrap validation styles to
         Array.from(forms).forEach(form => { // Loop over them and prevent submission
             form.addEventListener('submit', event => {
-                if (form.name) {
-                    addCluster(event.target, form.name);
+                if (form.name) { 
+                    addGroup(event.target, form.name);
                 }
                 if (!form.checkValidity()) {
                     event.preventDefault();
@@ -13,15 +13,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('clusterName').addEventListener('input', event => {
+                document.getElementById('projectName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('clusterName').value == "") {
+                    if (document.getElementById('projectName').value == "") {
                         formNameInput.classList.add('is-invalid');
-                        invalidFeedback.textContent = 'Please enter a cluster name.';
+                        invalidFeedback.textContent = 'Please enter a sub-project name.';
                     } else{
                         invalidFeedback.textContent = '';
                     }
@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }, false)
         })
     })()
-
+    
 });
 
-function addCluster(form, nameInput) {
+function addGroup(form, nameInput){
     const formData = new FormData(form);
     const formDataObject = {};
     const formNameInput = nameInput;
@@ -44,9 +44,9 @@ function addCluster(form, nameInput) {
     });
     // Check if all values in formDataObject are not empty
     const fieldEmpty = Object.values(formDataObject).every(value => value !== '');
-
+     
     if (fieldEmpty) {
-        fetch('/newCluster', {
+        fetch('/newGroup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

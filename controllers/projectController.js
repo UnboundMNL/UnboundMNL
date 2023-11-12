@@ -41,7 +41,7 @@ const projectController = {
                 const orgParts = updatedParts;
                 const perPage = 6; // change to how many clusters per page
                 let totalPages;
-                if (orgParts.length!==0){
+                if (orgParts.length !== 0) {
                     totalPages = Math.ceil(orgParts.length / perPage);
                     if (page > totalPages) {
                         return res.redirect("/project");
@@ -73,6 +73,12 @@ const projectController = {
         try {
             if (req.session.isLoggedIn) {
                 const { name, location } = req.body;
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                const project = await Project.find({ _id: { $in: cluster.projects } });
+                const existingProjects = project.flatMap(project => project.name);
+                if (existingProjects.includes(name)) {
+                    return res.json({ error: "A Project with the same name already exists." });
+                }
                 let groups = [];
                 const newProject = new Project({
                     name,
@@ -80,7 +86,7 @@ const projectController = {
                     location
                 });
                 await newProject.save();
-                const cluster = await Cluster.findById(req.session.clusterId);
+
                 cluster.projects.push(newProject._id);
                 cluster.totalProjects += 1;
                 await cluster.save();
