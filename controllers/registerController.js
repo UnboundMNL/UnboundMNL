@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Cluster = require('../models/Cluster');
 const mongoose = require('mongoose')
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
@@ -51,7 +52,13 @@ const registerController = {
         const authority = user.authority;
         const username = user.username;
         dashbuttons = dashboardButtons(authority);
-        res.render("registration", { authority, username, dashbuttons, sidebar });
+        let clusterChoices;
+        if (authority == "Admin") {
+          clusterChoices = await Cluster.find({});
+        } else {
+          clusterChoices = await Cluster.findById(req.session.clusterId);
+        }
+        res.render("registration", { authority, username, dashbuttons, sidebar, clusterChoices });
       } else {
         res.redirect("/");
       }
