@@ -169,7 +169,7 @@ const memberController = {
                     allSavings = await Saving.find({ memberID: memberId }).sort({ year: 1 });
                     totalSaving = allSavings.reduce((total, saving) => total + parseFloat(saving.totalSaving) + parseFloat(saving.totalMatch), 0);
                 }
-
+                console.log(clusterChoices);
                 res.render("memberprofile", {
                     member, dashbuttons, sidebar, page, authority, username, cluster: cluster.name, project: project.name, group,
                     fixedBirthdate, editDate, memberId, clusterChoices, projectChoices, groupChoices, allSavings, totalSaving
