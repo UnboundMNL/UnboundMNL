@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
-                } else{
+                } else {
                     addGroup(event.target, form.name);
                 }
                 event.preventDefault();

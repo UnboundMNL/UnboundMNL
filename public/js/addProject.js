@@ -4,12 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const forms = document.querySelectorAll('.needs-validation'); // Fetch all the forms we want to apply custom Bootstrap validation styles to
         Array.from(forms).forEach(form => { // Loop over them and prevent submission
             form.addEventListener('submit', event => {
-                if (form.name) { 
-                    addProject(event.target, form.name);
-                }
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
+                } else {
+                    addProject(event.target, form.name);
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
@@ -22,17 +21,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (document.getElementById('projectName').value == "") {
                         formNameInput.classList.add('is-invalid');
                         invalidFeedback.textContent = 'Please enter a sub-project name.';
-                    } else{
+                    } else {
                         invalidFeedback.textContent = '';
                     }
                 });
             }, false)
         })
     })()
-    
+
 });
 
-function addProject(form, nameInput){
+function addProject(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};
     const formNameInput = nameInput;
@@ -43,34 +42,28 @@ function addProject(form, nameInput){
         formDataObject[key] = value;
     });
     // Check if all values in formDataObject are not empty
-    const fieldEmpty = Object.values(formDataObject).every(value => value !== '');
-     
-    if (fieldEmpty) {
-        fetch('/newProject', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataObject)
+
+    fetch('/newProject', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataObject)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else if (data.error) {
+                formNameInput.setCustomValidity('Invalid field.');
+                formNameInput.classList.add('is-invalid');
+                formNameInput.classList.remove('is-valid');
+                invalidFeedback.textContent = data.error;
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                } else if (data.error) {
-                    formNameInput.setCustomValidity('Invalid field.');
-                    formNameInput.classList.add('is-invalid');
-                    formNameInput.classList.remove('is-valid');
-                    invalidFeedback.textContent = data.error;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Handle errors here
-            });
-    } else {
-        // Handle case where at least one value is empty
-        console.log('Please fill in all fields.');
-        // You might want to provide user feedback or take appropriate action.
-    }
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle errors here
+        });
+
 }
