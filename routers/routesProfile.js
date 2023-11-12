@@ -11,5 +11,7 @@ const profileController = require('../controllers/profileController');
 
 router.get("/dashboard", profileController.dashboard);
 router.get("/profile", profileController.profile);
+router.patch("/editProfile", profileController.editProfile);
+router.get("/retrieveUsernameList", profileController.retrieveUsernameList);
 
 module.exports = router;  

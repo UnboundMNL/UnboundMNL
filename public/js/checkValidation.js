@@ -24,44 +24,82 @@ function validatePassword() {
     }
 }
 
-function validateUsername() {
-    const username = document.getElementById('newUsername').value;
-    const usernameAlert = document.getElementById('usernameAlert');
+// // This variable will hold the list of usernames
+// let UsernameList;
 
-    // Hannah: Check validity of username
-    // 0 = username taken
-    // 1 = username available
-    
-    const usernameValid = 1;
-    if (username.length === 0) {
-        usernameAlert.innerHTML = '';
-    } else if (usernameValid === 0) {
-        usernameAlert.style.color = 'red';
-        usernameAlert.innerHTML = '✕ Username is taken';
-    } else {
-        usernameAlert.style.color = 'lime';
-        usernameAlert.innerHTML = '✓ Username is available';
-    }
-}
+// // This function will be called after fetching the username list
+// function handleUsernameList(data) {
+//     UsernameList = data.usernameList;
+//     console.log('Username list:', UsernameList);
+//     validateUsername();
+// }
 
-// Hannah: I want it to show upon submitting the button but I hardcoded it for now
-// to show where it would be
-function validateCurrentPassword(currentPassword, currentPasswordAlert) {
-    const currentPass = document.getElementById(currentPassword).value;
-    const currentPassAlert = document.getElementById(currentPasswordAlert);
+// // This function fetches the username list
+// async function fetchUsernameList() {
+//     const updateUserUrl = '/retrieveUsernameList';
+//     await fetch(updateUserUrl, {
+//         method: 'GET',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     })
+//         .then(response => {
+//             if (response.ok) {
+//                 return response.json();
+//             } else {
+//                 throw new Error('Failed to retrieve username list');
+//             }
+//         })
+//         .then(data => {
+//             handleUsernameList(data);
+//         })
+//         .catch(error => {
+//             console.error('An error occurred:', error);
+//         });
+// }
 
-    // Hannah: Check validity of current password
-    // 0 = password incorrect
-    // 1 = password correct
+// // Call the fetchUsernameList function when the DOM is loaded
+// document.addEventListener('DOMContentLoaded', function () {
+//     fetchUsernameList();
+// });
 
-    const currentPassValid = 1;
-    if (currentPass.length === 0) {
-        currentPassAlert.innerHTML = '';
-    } else if (currentPassValid === 0) {
-        currentPassAlert.style.color = 'red';
-        currentPassAlert.innerHTML = '✕ Incorrect password';
-    } else {
-        currentPassAlert.style.color = 'lime';
-        currentPassAlert.innerHTML = '✓ Correct password';
-    }
-}
+// function validateUsername() {
+//     const username = document.getElementById('newUsername').value;
+//     const usernameAlert = document.getElementById('usernameAlert');
+
+//     // Check if the username is in the list
+//     const usernameValid = UsernameList.includes(username) ? 0 : 1;
+//     console.log("asda", UsernameList);
+
+//     if (username.length === 0) {
+//         usernameAlert.innerHTML = '';
+//     } else if (usernameValid === 0) {
+//         usernameAlert.style.color = 'red';
+//         usernameAlert.innerHTML = '✕ Username is taken';
+//     } else {
+//         usernameAlert.style.color = 'lime';
+//         usernameAlert.innerHTML = '✓ Username is available';
+//     }
+// }
+
+// // Hannah: I want it to show upon submitting the button but I hardcoded it for now
+// // to show where it would be
+// function validateCurrentPassword(currentPassword, currentPasswordAlert) {
+//     const currentPass = document.getElementById(currentPassword).value;
+//     const currentPassAlert = document.getElementById(currentPasswordAlert);
+
+//     // Hannah: Check validity of current password
+//     // 0 = password incorrect
+//     // 1 = password correct
+
+//     const currentPassValid = 1;
+//     if (currentPass.length === 0) {
+//         currentPassAlert.innerHTML = '';
+//     } else if (currentPassValid === 0) {
+//         currentPassAlert.style.color = 'red';
+//         currentPassAlert.innerHTML = '✕ Incorrect password';
+//     } else {
+//         currentPassAlert.style.color = 'lime';
+//         currentPassAlert.innerHTML = '✓ Correct password';
+//     }
+// }
