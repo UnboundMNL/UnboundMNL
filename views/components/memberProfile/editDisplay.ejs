@@ -14,7 +14,7 @@
             <button class="btn btn-secondary btn-sm">Change Photo</button>
         </div>
         <div class="align-items-right">
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteMemberModal">Delete Member</button>
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Member</button>
         </div>
     </div>
     <hr>
@@ -120,6 +120,7 @@
             </div>
         </div>
 
+
         <script>
             var inputFields = ["<%=member.orgId %>","<%=member.name.firstName%>", "<%=member.name.lastName %>", "<%=member.address %>", "<%=member.nameMother.firstName %>", "<%=member.nameMother.lastName %>", "<%=member.nameFather.firstName %>", "<%=member.nameFather.lastName %>"];
             var dropdownFields = ["<%=cluster %>","<%=project %>","<%=group %>",'<%=member.sex%>','<%=member.status%>'];
@@ -143,6 +144,17 @@
                         "<%= groupChoices[i]._id %>"<%= i < groupChoices.length - 1 ? ',' : '' %>
                     <% } %>
                 ];
+
+            document.addEventListener('DOMContentLoaded', function() {
+                if ("<%=authority%>" !== "Admin") {
+                    document.getElementById("clusterSelect").disabled = true;
+                }
+                if ("<%=authority%>" === "Treasurer") {
+                    document.getElementById("projectSelect").disabled = true;
+                    document.getElementById("groupSelect").disabled = true;
+                }
+            }, false);
+
         </script>
         
         <div class="d-flex justify-content-center mt-4 button-gap">

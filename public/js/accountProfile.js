@@ -17,34 +17,17 @@ function backAccount() {
     document.getElementById('profileAccount').style.display = 'flex';
 }
 
-function validatePassword() {
-    const newPass = document.getElementById('newPass').value;
-    const confirmPass = document.getElementById('confirmPass').value;
-    const matchingAlert2 = document.getElementById('matchingAlert2');
-    const minLength = 8; // TBD: Temp minimum length of password
-    if (newPass.length === 0 && confirmPass.length === 0) {
-        matchingAlert2.innerHTML = '';
-    } else if (newPass !== confirmPass || newPass.length < minLength) {
-        matchingAlert2.style.color = 'red';
-        if (newPass !== confirmPass && confirmPass.length > 0) {
-            matchingAlert2.innerHTML = '✕ Use the same password';
-        } else if (newPass.length >= minLength && confirmPass.length === 0) {
-            matchingAlert2.innerHTML = '✕ Confirm your password';
-        } else if (newPass.length < minLength) {
-            matchingAlert2.innerHTML = '✕ Password must be at least ' + minLength + ' characters';
+function clearAlert() {
+    const alertIds = ['usernameAlert', 'currentPasswordAlert1', 'currentPasswordAlert2', 'matchingAlert2'];
+
+    alertIds.forEach((id) => {
+        const alertElement = document.getElementById(id);
+        if (alertElement) {
+            alertElement.innerHTML = '';
         }
-        // Add code to disable the save button if needed
-    } else {
-        matchingAlert2.style.color = 'lime';
-        matchingAlert2.innerHTML = '✓ Password Matched';
-        // Add code to enable the save button if needed
-    }
+    });
 }
 
-function clearAlert() {
-    const matchingAlert2 = document.getElementById('matchingAlert2');
-    matchingAlert2.innerHTML = '';
-}
 
 function cancelChanges(user) {
     const inputContainer = document.getElementById("inputContainer");
@@ -112,4 +95,3 @@ function updateUserInformation() {
             console.error('An error occurred:', error);
         });
 }
-
