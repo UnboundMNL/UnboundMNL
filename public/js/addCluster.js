@@ -36,13 +36,12 @@ function addCluster(form, nameInput) {
     const formDataObject = {};
     const formNameInput = nameInput;
     const invalidFeedback = formNameInput.nextElementSibling;
-
+    console.log(formNameInput)
     // Convert FormData to plain object
     formData.forEach((value, key) => {
         formDataObject[key] = value;
     });
     // Check if all values in formDataObject are not empty
-
     fetch('/newCluster', {
         method: 'POST',
         headers: {

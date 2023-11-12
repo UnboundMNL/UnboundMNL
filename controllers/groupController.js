@@ -40,7 +40,7 @@ const groupController = {
                 const perPage = 6; // change to how many clusters per page
                 let totalPages;
                 if (orgParts.length !== 0) {
-                    totalPages = Math.ceil(orgParts.length / perPage); 
+                    totalPages = Math.ceil(orgParts.length / perPage);
                     if (page > totalPages) {
                         return res.redirect("/group");
                     }
@@ -70,17 +70,19 @@ const groupController = {
     newGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const projectId = req.session.projectId;
-                let project = await Project.findById(projectId);
                 const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum,
                     SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone,
                     SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone,
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone,
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone } = req.body;
-                const existingGroup = await Group.findOne({ SPU, name, location });
-                if (existingGroup) {
+                const projectId = req.session.projectId;
+                let project = await Project.findById(projectId);
+                const group = await Group.find({ _id: { $in: project.groups } });
+                const existingGroups = group.flatMap(group => group.name);
+                if (existingGroups.includes(name)) {
                     return res.json({ error: "A group with the same name already exists." });
                 }
+
                 let SHGLeader = {
                     firstName: SHGLeaderFirstName,
                     lastName: SHGLeaderLastName,

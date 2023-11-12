@@ -38,7 +38,7 @@ const memberController = {
                         });
                         const data = {
                             name: member.name.firstName + ' ' + member.name.lastName,
-                            id: member._id,
+                            orgId: member.orgId,
                         };
                         if (savings) {
                             for (const month of months) {
@@ -189,6 +189,10 @@ const memberController = {
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
                     sex, birthdate, address, status } = req.body;
+                const existingMember = await Member.find({orgId});
+                if (existingMember.length!==0){
+                    return res.json({ error: "A member with the same ID already exists." });
+                }
                 const name = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
@@ -219,7 +223,7 @@ const memberController = {
                 const cluster = await Cluster.findById(req.session.clusterId);
                 cluster.totalMembers += 1;
                 await cluster.save();
-                res.redirect("/member");
+                res.json({ success: "A Member has been added." });
             } else {
                 res.redirect("/");
             }

@@ -35,7 +35,7 @@ const clusterController = {
                     updatedParts = await Cluster.find({});
                 }
                 const orgParts = updatedParts;
-                console.log(orgParts.length)
+
                 let pageParts = [];
                 let perPage = 6; // change to how many clusters per page
                 let totalPages;
