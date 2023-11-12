@@ -58,10 +58,12 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="mb-2">
                             <span>Cluster</span>
                             <div>
                                 <select class="custom-select form-select" id="clusterSelect" required <% if (authority !== 'Admin') { %> disabled <% } %>>
+
                                     <% if (authority !== 'Admin') { %>
 <                                       <option selected value = "<%=clusterChoices._id%>"> <%- clusterChoices.name %></option>
                                     <% } else { %>
@@ -75,6 +77,7 @@
                             </div>
                         </div>
                         
+
     
                         <div class="mb-2">
                             <span>Sub-Project Unit</span>

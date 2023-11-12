@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+
     const selectIDs = ["#clusterSelect", "#spuSelect", "#shgSelect"];
     for (let i = 0; i < selectIDs.length - 1; i++) {
         if ($(selectIDs[i]).is('select')) {
@@ -161,10 +162,12 @@ function getProject() {
         });
 }
 
+
 function getSHG() {
     const projectId = $('#spuSelect').find(":selected").val();
     const data = { projectId };
     fetch('/SHGchoices', {
+
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
