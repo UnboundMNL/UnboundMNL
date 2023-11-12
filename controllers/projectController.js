@@ -40,8 +40,9 @@ const projectController = {
                 }
                 const orgParts = updatedParts;
                 const perPage = 6; // change to how many clusters per page
-                let totalPages = Math.ceil(orgParts.length / perPage);
+                let totalPages;
                 if (orgParts.length!==0){
+                    totalPages = Math.ceil(orgParts.length / perPage);
                     if (page > totalPages) {
                         return res.redirect("/project");
                     }
@@ -83,7 +84,7 @@ const projectController = {
                 cluster.projects.push(newProject._id);
                 cluster.totalProjects += 1;
                 await cluster.save();
-                res.redirect("/project");
+                res.json({ success: "A Project has been added." });
             } else {
                 res.redirect("/");
             }
@@ -131,16 +132,16 @@ const projectController = {
                 let kaban;
                 if (Array.isArray(project.groups)) {
                     for (const groupId of project.groups) {
-                        group = await Group.findById(groupId);
+                        let group = await Group.findById(groupId);
                         if (Array.isArray(group.members)) {
                             for (const member of group.members) {
-                                kaban = await Saving.findMany({ member: member });
+                                kaban = await Saving.find({ memberID: member._id });
                                 for (const item of kaban) {
                                     cluster.totalKaban -= item.totalSaving;
                                 }
-                                await Saving.deleteMany({ member: member });
+                                await Saving.deleteMany({ memberID: member._id });
                                 cluster.totalMembers -= 1;
-                                await Member.deleteOne({ _id: member });
+                                await Member.deleteOne({ _id: member._id });
                             }
                         }
                         await Group.deleteOne({ _id: group });

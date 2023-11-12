@@ -121,7 +121,7 @@ function reloadTable(value, table) {
 				let total = member.totalSaving + member.totalMatch;
 				const rowData = [
 					member.name,
-					member.id,
+					member.orgId,
 					member.jan.savings,
 					member.jan.match,
 					member.feb.savings,

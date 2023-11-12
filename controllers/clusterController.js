@@ -69,7 +69,6 @@ const clusterController = {
     newCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                console.log(req.body)
                 const { name, location } = req.body;
                 const existingCluster = await Cluster.findOne({ name });
                 if (existingCluster) {
@@ -82,7 +81,7 @@ const clusterController = {
                     projects,
                 });
                 await newCluster.save();
-                res.json({ success: "A Cluster has bee" });
+                res.json({ success: "A Cluster has been added." });
             } else {
                 res.redirect("/");
             }
@@ -134,8 +133,8 @@ const clusterController = {
                                 group = await Group.findById(groupId);
                                 if (Array.isArray(group.members)) {
                                     for (const member of group.members) {
-                                        await Saving.deleteMany({ memberID: member.id });
-                                        await Member.deleteOne({ _id: member.id });
+                                        await Saving.deleteMany({ memberID: member._id });
+                                        await Member.deleteOne({ _id: member._id });
                                     }
                                 }
                                 await Group.deleteOne({ _id: group });

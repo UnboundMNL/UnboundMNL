@@ -38,8 +38,9 @@ const groupController = {
                 }
                 const orgParts = updatedParts;
                 const perPage = 6; // change to how many clusters per page
-                let totalPages = Math.ceil(orgParts.length / perPage); 
+                let totalPages;
                 if (orgParts.length !== 0) {
+                    totalPages = Math.ceil(orgParts.length / perPage); 
                     if (page > totalPages) {
                         return res.redirect("/group");
                     }
@@ -204,13 +205,13 @@ const groupController = {
                 let kaban;
                 if (Array.isArray(group.members)) {
                     for (const member of group.members) {
-                        kaban = await Saving.findMany({ memberID: member.id });
+                        kaban = await Saving.find({ memberID: member._id });
                         for (const item of kaban) {
                             cluster.totalKaban -= item.totalSaving;
                             project.totalKaban -= item.totalSaving;
                         }
-                        await Saving.deleteMany({ memberID: member.id });
-                        await Member.deleteOne({ _id: member.id });
+                        await Saving.deleteMany({ memberID: member._id });
+                        await Member.deleteOne({ _id: member._id });
                         cluster.totalMembers -= 1;
                         project.totalMembers -= 1;
                     }
