@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const mongoose = require('mongoose')
-
+const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
 const loginController = {
 
     login: async (req, res) => {
@@ -18,6 +20,14 @@ const loginController = {
                     req.session.clusterId = user.validCluster;
                 } else if (user.authority == "Treasurer") {
                     req.session.groupId = user.validGroup;
+                    const project = await Project.findOne({
+                        groups: { $in: [req.session.groupId] }
+                    });
+                    req.session.projectId = project._id;
+                    const cluster = await Cluster.findOne({
+                        projects: { $in: [req.session.projectId] }
+                    });
+                    req.session.clusterId = cluster._id;
                 }
                 if (!isPasswordMatch) {
                     return res.status(401).json({ error: "Incorrect Password" });
@@ -66,7 +76,7 @@ const loginController = {
             res.status(500).json({ error: "Server error." });
         }
     }
-    
+
 }
 
 module.exports = loginController;
