@@ -3,7 +3,6 @@
         <h4>Account Registration</h4><hr>
 
         <!-- <form onsubmit="event.preventDefault();" class="needs-validation" novalidate> -->
-        <form>
             <div class="row">
                 <div class="col-md-6" id="inputContainer">
                     <div class="p-2">
@@ -27,17 +26,17 @@
                         <div class="mb-2">
                             <span>Username</span>
 
-                            <input type="text" class="form-control" id="newUsername" value="" required onkeyup="validateUsername()" autocomplete="off">
+                            <input type="text" class="form-control" id="username" autocomplete="off">
 
                             <span id="usernameAlert"></span>
                         </div>
                         <div class="mb-2">
                             <span>Password</span>
-                            <input type="password" id="newPass" class="form-control" required onkeyup="validatePassword()" autocomplete="new-password">
+                            <input type="password" id="pass" class="form-control" autocomplete="new-password">
                         </div>
                         <div class="mb-2">
                             <span>Confirm Password</span>
-                            <input type="password" id="confirmPass" class="form-control" required onkeyup="validatePassword()" autocomplete="new-password">
+                            <input type="password" id="repass" class="form-control" autocomplete="new-password">
 
                         </div>
                         <span id="matchingAlert2"></span>
@@ -48,8 +47,8 @@
                         <div class="mb-2">
                             <span>Account Type</span>
                             <div>
-                                <select class="custom-select form-select" id="accountType" required <% if (authority == 'Admin') { %> onchange="accountTypeSelect()" <% } %>>
-                                    <option selected hidden default>Choose...</option>
+                                <select class="custom-select form-select" id="accountType" required>
+                                    <option selected hidden value="" default>Choose...</option>
     
                                     <% if (authority == "Admin") { %>
                                         <option value="Admin">Admin</option>
@@ -66,7 +65,7 @@
                                     <% if (authority !== 'Admin') { %>
 <                                       <option selected value = "<%=clusterChoices._id%>"> <%- clusterChoices.name %></option>
                                     <% } else { %>
-                                        <option selected hidden default selected>Choose...</option>
+                                        <option selected hidden default value="" selected>Choose...</option>
                                         <% for (var i = 0; i < clusterChoices.length; i++) { %>
                                             <option value="<%- clusterChoices[i]._id %>"><%- clusterChoices[i].name %></option>
                                         <% } 
@@ -81,7 +80,7 @@
                             <span>Sub-Project Unit</span>
                             <div>
                                 <select class="custom-select form-select" id="spuSelect" required>
-                                    <option selected hidden default selected>Choose...</option>
+                                    <option selected hidden default value="" selected>Choose...</option>
                                 </select>
                             </div>
                         </div>
@@ -90,22 +89,21 @@
                             <span>Self-Help Group</span>
                             <div>
                                 <select class="custom-select form-select" id="shgSelect" required>
-                                    <option selected hidden default selected>Choose...</option>
+                                    <option selected hidden default value="" selected>Choose...</option>
                                 </select>
                             </div>
 
                         </div>
+                        <span id="noPart"></span>
                     </div>
                 </div>
             </div>
     
             <div class="d-flex justify-content-center button-gap mt-4">
                 <button class="btn btn-secondary ml-2" onclick="window.location.href = '/registration'">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="saveChanges">Register</button>
                 <!-- TBD: Show modal after submitting -->
-                <!-- <button type="submit" class="btn btn-primary" id="saveChanges" onclick="showModal()">Register</button> -->
+                <button class="btn btn-primary" id="saveChanges">Register</button>
             </div>
-        </form>
     </div>
 </div>
     <script>
@@ -121,5 +119,6 @@
                 ];
         document.getElementById("accountType").onchange = function() {
             accountTypeSelect(JSON.stringify(clusterChoicesName),JSON.stringify(clusterChoicesId));
+            document.getElementById('noPart').innerHTML = '';
         };
     </script>
