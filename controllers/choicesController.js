@@ -42,6 +42,7 @@ const choicesController = {
         } catch (error) {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while retrieving project information." });
+
         }
     },
 
@@ -56,8 +57,9 @@ const choicesController = {
         } catch (error) {
             console.error(error);
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+
         }
-    }
+    },
     
 }
 
