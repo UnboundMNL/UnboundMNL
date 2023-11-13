@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const editCluster = document.getElementById('editcluster') //edit cluster button
+    const editCluster = document.getElementById('editCluster') //edit cluster button
     if (editCluster) {
         editCluster.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget; // Button that triggered the modal
             // Extract info from data-bs-name attribute
             const clusterId = button.getAttribute('id');
-            $('#editclusterFormDiv').load(`/editClusterForm/${clusterId}`); // Update the modal's content.
+            $('#editClusterFormDiv').load(`/editClusterForm/${clusterId}`); // Update the modal's content.
         })
     }
     //edit project button
