@@ -52,54 +52,93 @@ const savingsController = {
 
     newSaving: async (req, res) => {
         try {
-            if (!req.session.isLoggedIn) {
-                return res.redirect("/");
-            }
-            const { id, year, updateData } = req.body;
-            const saving = await Saving.findOne({ memberID: id, year });
-            let isNewSaving = false;
-            let currentSaving = null;
-            if (!saving) {
-                isNewSaving = true;
-                currentSaving = new Saving({ memberID: id, year });
-                await currentSaving.save();
+            if (req.session.isLoggedIn) {
+                const { id, year, updateData } = req.body;
+                const saving = await Saving.findOne({ memberID: id, year });
+                if (saving) {
+                    let updatedData = {};
+                    let totalSavings = 0;
+                    let totalMatch = 0;
+                    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                    months.forEach(month => {
+                        const match = parseInt(updateData[month]?.match || saving[month]?.match || 0, 10);
+                        const savings = parseInt(updateData[month]?.savings || saving[month]?.savings || 0, 10);
+                        // Accumulate savings and match for the whole year
+                        totalMatch += match;
+                        totalSavings += savings;
+
+                        updatedData[month] = {
+                            match: match,
+                            savings: savings
+                        };
+                    });
+                    updatedData.totalSaving = totalSavings;
+                    updatedData.totalMatch = totalMatch;
+                    const currentSaving = await Saving.findOne({ memberID: id, year });
+                    const member = await Member.findOne({ _id: id });
+                    member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
+                    const updatedMember = await member.save();
+                    const group = await Group.findById(req.session.groupId);
+                    group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+
+                    const updatedGroup =  await group.save();
+                    const project = await Project.findById(req.session.projectId);
+                    project.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    const updatedProject = await project.save();
+                    const cluster = await Cluster.findById(req.session.clusterId);
+                    cluster.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    const updatedCluster = await cluster.save();
+                    const updatedSaving = await Saving.findOneAndUpdate(
+                        { memberID: id, year },
+                        updatedData,
+                        { new: true }
+                    );
+                    if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
+                        res.json();
+                    }
+                } else {
+                    const newSaving = new Saving({ memberID: id, year });
+                    await newSaving.save();
+                    let updatedData = {};
+                    let totalSavings = 0;
+                    let totalMatch = 0;
+                    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+                    months.forEach(month => {
+                        const match = parseInt(updateData[month]?.match || 0, 10);
+                        const savings = parseInt(updateData[month]?.savings || 0, 10);
+                        // Accumulate savings and match for the whole year
+                        totalMatch += match;
+                        totalSavings += savings;
+                        updatedData[month] = {
+                            match: match,
+                            savings: savings
+                        };
+                    });
+                    updatedData.totalSaving = totalSavings;
+                    updatedData.totalMatch = totalMatch;
+
+
+                    const currentSaving = await Saving.findOne({ memberID: id, year });
+                    const member = await Member.findOne({ _id: id });
+                    member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
+                    member.savings.push(newSaving._id);
+                    const updatedMember = await member.save();
+                    const group = await Group.findById(req.session.groupId);
+                    group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    const updatedGroup = await group.save();
+                    const project = await Project.findById(req.session.projectId);
+                    project.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    const updatedProject = await project.save();
+                    const cluster = await Cluster.findById(req.session.clusterId);
+                    cluster.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    const updatedCluster = await cluster.save();
+                    const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
+                    if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
+                        res.json();
+                    }
+                }
             } else {
-                currentSaving = await Saving.findOne({ memberID: id, year });
-            }
-            let updatedData = {};
-            let totalSaving = 0;
-            let totalMatch = 0;
-            const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-            months.forEach((month) => {
-                const match = parseInt(updateData[month]?.match || (isNewSaving ? 0 : saving[month]?.match) || 0, 10);
-                const savings = parseInt(updateData[month]?.savings || (isNewSaving ? 0 : saving[month]?.savings) || 0, 10);
-                totalMatch += match;
-                totalSaving += savings;
-                updatedData[month] = {
-                    match: match,
-                    savings: savings,
-                };
-            });
-            updatedData.totalSaving = totalSaving;
-            updatedData.totalMatch = totalMatch;
-            const member = await Member.findOne({ _id: id });
-            member.totalSaving += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
-            if (isNewSaving) {
-                member.savings.push(currentSaving._id);
-            }
-            member.save();
-            const group = await Group.findById(req.session.groupId);
-            group.totalKaban += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
-            group.save();
-            const project = await Project.findById(req.session.projectId);
-            project.totalKaban += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
-            project.save();
-            const cluster = await Cluster.findById(req.session.clusterId);
-            cluster.totalKaban += isNewSaving ? updatedData.totalSaving : updatedData.totalSaving - currentSaving.totalSaving;
-            cluster.save();
-            const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
-            if (updatedSaving) {
-                res.json();
+                res.redirect("/");
             }
         } catch (error) {
             console.error(error);

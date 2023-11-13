@@ -150,7 +150,7 @@ function reloadTable(value, table) {
 					member.totalMatch,
 					total,
 				];
-				sum += member.totalSaving;
+				sum += member.totalSaving + member.totalMatch;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -207,13 +207,13 @@ function check(table) {
 	return true;
 }
 
-function save() {
+async function save() {
 	const constructedChanges = [];
 	for (const each of LISTOFCHANGES) {
 		const split = each.id.split('_');
 		const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
 		if (existingChange) {
-			existingChange.content.push(new orderedContent(split[1], each.textContent, split[3]));
+			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0":each.textContent , split[3]));
 		} else {
 			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
 		}
@@ -238,7 +238,7 @@ function save() {
 			}
 		});
 		data["updateData"] = updateData;
-		fetch('/newSaving', {
+		await fetch('/newSaving', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -250,7 +250,10 @@ function save() {
 					const toastLiveExample = document.getElementById('addSuccessToast')
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
-					reloadTable(YEAR.value, DATATABLE);
+					if (each === [...constructedChanges].pop()) {
+						reloadTable(YEAR.value, DATATABLE);
+					}
+					
 					// Clear the list of changes
 					LISTOFCHANGES = [];
 				} else {

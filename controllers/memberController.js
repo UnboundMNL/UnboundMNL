@@ -60,7 +60,7 @@ const memberController = {
                             data.totalMatch = 0;
                             data.totalSaving = 0;
                         }
-                        totalSaving += parseInt(data.totalSaving);
+                        totalSaving += parseInt(data.totalSaving)+parseInt(data.totalMatch);
                         memberList.push(data);
                     }
                 }
