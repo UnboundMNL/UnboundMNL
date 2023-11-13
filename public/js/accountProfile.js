@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .then(data => {
-            // Process the data and assign it to the variable
             UsernameList = data.usernameList;
         })
         .catch(error => {
@@ -122,15 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkUsernameCheckbox = document.getElementById('checkUsername');
     const checkPasswordCheckbox = document.getElementById('checkPassword');
 
-    // Add event listener to checkboxes
     checkUsernameCheckbox.addEventListener('change', updateSubmitButtonState);
     checkPasswordCheckbox.addEventListener('change', updateSubmitButtonState);
 
-    // Initial state
     saveChangesButton.disabled = true;
 
     function updateSubmitButtonState() {
-        // Enable submit button if either checkbox is checked
+
         saveChangesButton.disabled = !checkUsernameCheckbox.checked && !checkPasswordCheckbox.checked;
     }
 
@@ -158,7 +155,10 @@ function updateUserInformation() {
     usernameAlert.innerHTML = '';
     currentPasswordAlert2.innerHTML = '';
 
-
+    const saveSuccessfulButton = document.getElementById('saveSuccessful');
+    saveSuccessfulButton.addEventListener('click', function () {
+        window.location.reload();
+    });
     const requestBody = {
         newUsername: newUsername,
         currentPassword1: currentPassword1,
@@ -207,17 +207,11 @@ function updateUserInformation() {
             currentPasswordAlert2.style.color = 'red';
             currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
         } else if (data.error) {
-            // Handle other errors
             const usernameAlert = document.getElementById('usernameAlert');
             usernameAlert.style.color = 'red';
             usernameAlert.innerHTML = `✕ ${data.error}`;
         } else {
-            // Set up an event listener for the modal's "Okay" button
-            const saveSuccessfulButton = document.getElementById('saveSuccessful');
-            saveSuccessfulButton.addEventListener('click', function () {
-                // Refresh the page when the "Okay" button is clicked
-                window.location.reload();
-            });
+           
         }
     })
     .catch((error) => {
