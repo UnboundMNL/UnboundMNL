@@ -325,12 +325,15 @@ const memberController = {
                 const group = await Group.findById(req.session.groupId);
                 await Saving.deleteMany({ memberID: memberId });
                 cluster.totalKaban -= member.totalSaving;
+                cluster.totalKaban -= member.totalMatch;
                 cluster.totalMembers -= 1;
                 await cluster.save();
                 project.totalKaban -= member.totalSaving;
+                project.totalKaban -= member.totalMatch;
                 project.totalMembers -= 1;
                 await project.save();
                 group.totalKaban -= member.totalSaving;
+                group.totalKaban -= member.totalMatch;
                 group.totalMembers -= 1;
                 group.members = group.members.filter(arrayMembers => !arrayMembers.equals(memberId.toString()));
                 await group.save();

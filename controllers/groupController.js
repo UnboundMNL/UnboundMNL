@@ -211,7 +211,9 @@ const groupController = {
                         kaban = await Saving.find({ memberID: member._id });
                         for (const item of kaban) {
                             cluster.totalKaban -= item.totalSaving;
+                            cluster.totalKaban -= item.totalMatch;
                             project.totalKaban -= item.totalSaving;
+                            project.totalKaban -= item.totalMatch;
                         }
                         await Saving.deleteMany({ memberID: member._id });
                         await Member.deleteOne({ _id: member._id });
