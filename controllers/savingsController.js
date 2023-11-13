@@ -77,16 +77,21 @@ const savingsController = {
                     const currentSaving = await Saving.findOne({ memberID: id, year });
                     const member = await Member.findOne({ _id: id });
                     member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
+
+                    member.totalMatch += (updatedData.totalMatch - currentSaving.totalMatch);
                     const updatedMember = await member.save();
                     const group = await Group.findById(req.session.groupId);
                     group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-
+                    group.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
                     const updatedGroup =  await group.save();
                     const project = await Project.findById(req.session.projectId);
                     project.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    project.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
                     const updatedProject = await project.save();
                     const cluster = await Cluster.findById(req.session.clusterId);
                     cluster.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    cluster.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
+
                     const updatedCluster = await cluster.save();
                     const updatedSaving = await Saving.findOneAndUpdate(
                         { memberID: id, year },
@@ -118,19 +123,28 @@ const savingsController = {
                     updatedData.totalMatch = totalMatch;
 
 
+
                     const currentSaving = await Saving.findOne({ memberID: id, year });
                     const member = await Member.findOne({ _id: id });
                     member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
+
+                    member.totalMatch += (updatedData.totalMatch - currentSaving.totalMatch);
+
                     member.savings.push(newSaving._id);
                     const updatedMember = await member.save();
                     const group = await Group.findById(req.session.groupId);
                     group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+
+                    group.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
                     const updatedGroup = await group.save();
                     const project = await Project.findById(req.session.projectId);
                     project.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    project.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
                     const updatedProject = await project.save();
                     const cluster = await Cluster.findById(req.session.clusterId);
                     cluster.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
+                    cluster.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
+
                     const updatedCluster = await cluster.save();
                     const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
                     if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
