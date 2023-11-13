@@ -63,14 +63,11 @@
 <div class="mb-3">
     <label for="bankAccountType" class="form-label"> Bank Account Type </label>
     <select class="form-select" id="bankAccountType" name="bankAccountType" aria-label="bankAccountType">
-        <% if (!locals.shg) { %>
-            <option selected default hidden value="">No bank account type selected</option>
-        <% } %>
-        <option value=""
+        <option value="" hidden
         <% if (locals.shg) { %>
             <% if (locals.shg.bankAccountType == "") { %>
                 selected
-                default hidden
+                default 
             <% } %>
         <% } %>
         >No bank account type selected</option>
