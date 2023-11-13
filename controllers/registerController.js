@@ -9,7 +9,6 @@ const registerController = {
     if (req.session.isLoggedIn) {
       try {
         const { authority, username, password } = req.body;
-        console.log(req.body);
         const existingUser = await User.findOne({ username });
         if (existingUser) {
           return res.json({ error: "Username already exists" });

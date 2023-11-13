@@ -93,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             // Process the data and assign it to the variable
             UsernameList = data.usernameList;
-            console.log('Username list:', UsernameList);
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -168,7 +167,6 @@ function updateUserInformation() {
         }
     })
     .then(data => {
-        //console.log(data);
         if (data.errorType === 1) {
             // Handle errorType 1
             currentPasswordAlert1.style.color = 'red';

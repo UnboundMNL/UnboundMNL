@@ -133,11 +133,9 @@ const profileController = {
                 // const currentPassword2 = req.body.currentPassword2;
                 
                 let updateData = req.body;
-                console.log(updateData);
                 let updateUser;
                 
                 if(currentPassword1 === "" && checkUsernameCheckbox === true){
-                    console.log("no password");
                     return res.status(401).json({ errorType: 4, error: "Please enter your current password." });
                 }
                 
@@ -150,7 +148,6 @@ const profileController = {
                     //     return res.status(401).json({ error: "Username must contain at least one letter or number, and be between 3-15 characters long, and cannot be 'visitor!" });
                     // }
                     if(newUsername === user.username){
-                        console.log("same username");
                         return res.status(401).json({ errorType: 2, error: "No Canges Made." });
                     }
                     
@@ -165,14 +162,11 @@ const profileController = {
                     }
                     updateData.username = newUsername;
                     updateUser = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
-                    console.log(updateUser);
                 }
                 if(currentPassword2 === "" && checkPasswordCheckbox === true){
-                    console.log("no password");
                     return res.status(401).json({ errorType: 6, error: "Please enter your current password." });
                 }
                 if(newPassword == "" && confirmPassword == "" && checkPasswordCheckbox === true){
-                    console.log("no password");
                     return res.status(401).json({ errorType: 6, error: "Please enter your new password." });
                 }
                 if((newPassword !== "") && (confirmPassword !== "") && (newPassword === confirmPassword) && (currentPassword2 !== "")){
@@ -208,7 +202,6 @@ const profileController = {
     retrieveUsernameList: async (req, res) => {
         try {
             const usernameList = await User.find().select('username -_id');
-            console.log(usernameList);
             return res.json({ usernameList });
             
         } catch (error) {
