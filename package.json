@@ -2,13 +2,13 @@
   "name": "cssweng",
   "version": "1.0.0",
   "description": "WebApp project for Unbound",
-  "main": "index.js",
+  "main": "main.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon main.js"
   },
   "author": "",
   "license": "ISC",
