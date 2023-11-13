@@ -294,8 +294,6 @@ const memberController = {
                                 newCluster.totalKaban += member.totalSaving;
                                 newCluster.totalKaban += member.totalMatch;
                                 await newCluster.save();
-                                console.log(member.totalSaving)
-                                console.log(newCluster);
                             }
                         }
                     }
