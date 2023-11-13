@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%-include('/components/headers.ejs', {authority, pageName: "Clusters"})%>
+    <%-include('components/headers.ejs', {authority, pageName: "Clusters"})%>
     
     <!-- CSS -->
     <link rel="stylesheet" href="/css/cardPages.css" />
@@ -16,11 +16,11 @@
 
 <body class="body-bg">
     
-    <%- include('/components/navbars/navbar.ejs', {authority: authority})%>
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
     
     <main>
         <!-- Top navigation bar -->
-        <%- include('/components/navbars/topNavbar.ejs')%>
+        <%- include('components/navbars/topNavbar.ejs')%>
 
         <!-- Cluster Content -->
         <div class="p-4 mt-5">
@@ -30,9 +30,9 @@
             <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
-        <%- include('/components/popups/deletePopup.ejs', { pageParts, type })%>
+        <%- include('components/popups/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
-        <%-include('/components/popups/logoutPopup.ejs') %>
+        <%-include('components/popups/logoutPopup.ejs') %>
     </main>
 </body>
 </html>
