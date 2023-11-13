@@ -2,7 +2,7 @@
   "name": "cssweng",
   "version": "1.0.0",
   "description": "WebApp project for Unbound",
-  "main": "main.js",
+  "main": "index.js",
   "directories": {
     "lib": "lib"
   },
