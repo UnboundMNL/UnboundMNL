@@ -6,7 +6,7 @@
     <%-include('orgPartViews/addButton.ejs', {type})%>
 </div>
 
-
+<%-include('popups/addPartModal.ejs', {authority, partname: type}) %>
 <%-include('popups/editPopup.ejs', {partname: type}) %>
 
 <div class="row">
