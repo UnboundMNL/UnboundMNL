@@ -1,0 +1,24 @@
+<div class="modal fade" id="saveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-body text-center">
+                <% if (pageName == "Registration") { %>
+                    <i class='bx bxs-user-plus' id="save-i"></i>
+                <% } else { %>
+                    <i class='bx bxs-check-circle' id="save-i"></i>
+                <% } %>
+                <div>
+                    <h4 class="text-center p-2">Congratulations</h4>
+                    <% if (pageName == "Registration") { %>
+                        <h6 class="text-center p-2">You have successfully registered!</h6>
+                    <% } else { %>
+                        <h6 class="text-center p-2">Your changes have been successfully saved!</h6>
+                    <% } %>
+                </div>
+                <div class="modal-buttons p-3">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="saveSuccessful">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

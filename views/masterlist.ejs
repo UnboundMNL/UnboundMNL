@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%-include('components/headers.ejs', {authority, pageName: "Savings"})%>
+
+    <!-- SCRIPTS -->
+    <script src="/js/reload.js"></script>
+</head>
+
+<body class="body-bg">
+    
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
+    
+    <main>
+        <!-- Top navigation bar -->
+        <%- include('components/navbars/topNavbar.ejs')%>
+    </main>
+    <script>open('memberButton')</script>
+    <%-include('components/popups/logoutPopup.ejs') %>
+</body>
+</html>

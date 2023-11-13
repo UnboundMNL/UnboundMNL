@@ -1,82 +1,135 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function () {
 
-    const selectIDs = ["#clusterSelect", "#projectSelect", "#groupSelect"];
-    // check #clusterSelect element type
-    for(let i = 0; i < selectIDs.length-1; i++){
-        if($(selectIDs[i]).is('select')){
-    
-            // Changes the available options for the self help group select
-            $(selectIDs[i]).change(function() {
-                // I do not know how slow this can be
-                $(selectIDs[i+1] + ' option:not(:first)').remove();
+    const selectIDs = ["#clusterSelect", "#spuSelect", "#shgSelect"];
+    for (let i = 0; i < selectIDs.length - 1; i++) {
+        if ($(selectIDs[i]).is('select')) {
 
-                if(selectIDs[i] === "#clusterSelect"){
-                    getProject();   
-                }
-                else if(selectIDs[i] === "#projectSelect"){
-                    getSHG();
+            $(selectIDs[i]).change(function () {
+                if (document.getElementById("accountType").value !== "Admin" && document.getElementById("accountType").value !== "SEDO") {
+                    if (selectIDs[i] === "#clusterSelect") {
+                        getProject();
+                    }
+                    else if (selectIDs[i] === "#spuSelect") {
+                        getSHG();
+                    }
                 }
             });
         }
-        // if the user is a SEDO
-        else if ($(selectIDs[i]).is('input')){
-            //append options to the select here OR do it in the ejs file
-            //for ejs file, make sure to put an if auth === SEDO before adding options
-        }
+        
     }
 
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (() => {
-        'use strict'
-    
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-    
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
+    const saveButton = document.getElementById("saveChanges");
+    saveButton.onclick = () => {
+        const pass = document.getElementById("pass").value;
+        const repass = document.getElementById("repass").value;
+        const username = document.getElementById("username").value;
+        const usernameAlert = document.getElementById('usernameAlert');
+        usernameAlert.style.color = 'red';
+        const matchingAlert2 = document.getElementById('matchingAlert2');
+        matchingAlert2.style.color = 'red';
+        const noPart = document.getElementById('noPart');
+        noPart.style.color = 'red';
+        const passwordRegex = /^[^\s]{6,}$/;
+        let error = false;
+        if (username.length === 0) {
+            usernameAlert.innerHTML = '✕ Enter your username';
+            error = true;
+        }
+        if (pass == "") {
+            matchingAlert2.innerHTML = '✕ Enter your password';
+            error = true;
+        } else if (pass.length < 6) {
+            matchingAlert2.innerHTML = '✕ Password must be at least 6 characters';
+            error = true;
+        } else if (!passwordRegex.test(pass)) {
+            matchingAlert2.innerHTML = '✕ Password must not have spaces';
+            error = true;
+        } else if (repass == "") {
+            matchingAlert2.innerHTML = '✕ Confirm your password';
+            error = true;
+        } else if (pass !== repass) {
+            matchingAlert2.innerHTML = '✕ Use the same password';
+            error = true;
+        }
+        const accountType= document.getElementById("accountType").value;
+        if (accountType ==""){
+            noPart.innerHTML = '✕ Choose an account type';
+            error = true;
+        } else if (accountType=="SEDO" && document.getElementById("clusterSelect").value==""){
+            noPart.innerHTML = '✕ Choose a valid cluster';
+            error = true;
+        } else if (accountType=="Treasurer" && document.getElementById("shgSelect").value==""){
+            noPart.innerHTML = '✕ Choose a valid Group';
+            error = true;
+        }
+        document.getElementById("username").oninput = () => {
+            document.getElementById('usernameAlert').innerHTML = '';
+        };
+
+        document.getElementById("pass").oninput = () => {
+            document.getElementById('matchingAlert2').innerHTML = '';
+        };
+
+        document.getElementById("repass").oninput = () => {
+            document.getElementById('matchingAlert2').innerHTML = '';
+        };
+
+        document.getElementById("clusterSelect").onchange = () => {
+            document.getElementById('noPart').innerHTML = '';
+        };
+
+        document.getElementById("spuSelect").onchange = () => {
+            document.getElementById('noPart').innerHTML = '';
+        };
+
+        document.getElementById("shgSelect").onchange = () => {
+            document.getElementById('noPart').innerHTML = '';
+        };
+
+        if (!error) {
+            let data;
+            if (document.getElementById("accountType").value == "Admin") {
+                data = { username, password: pass, authority: "Admin" }
+            } else if (document.getElementById("accountType").value == "SEDO") {
+                data = { username, password: pass, authority: "SEDO", validCluster: document.getElementById('clusterSelect').value }
+            } else {
+                data = { username, password: pass, authority: "Treasurer", validGroup: document.getElementById('shgSelect').value }
             }
-    
-            form.classList.add('was-validated')
-        }, false)
-        })
-    })()
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to fetch data');
+                    }
+                })
+                .then(data => {
+                    if (data.error) {
+                        usernameAlert.innerHTML = '✕ Username already exists';
+                    } else {
+                        showModal();
+                        const saveSuccessful = document.getElementById('saveSuccessful');
+                        saveSuccessful.onclick = () => {
+                            window.location.reload();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 });
 
-function getSHG() {
-    var project = $('#clusterSelect').find(":selected").text();
-    var data = { project };
-    fetch('/SHGchoices', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json(); 
-        } else {
-            throw new Error('Failed to fetch data');
-        }
-    })
-    .then(data => {
-        data.SHG.forEach(shg => {
-            var newOption = `<option value="${shg.name}">${shg.name}</option>`;
-            $("#groupSelect").append(newOption);
-        });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 function getProject() {
-    var cluster = $('#projectSelect').find(":selected").text();
-    var data = { cluster };
+    const clusterId = $('#clusterSelect').find(":selected").val();
+    const data = { clusterId };
     fetch('/projectChoices', {
         method: 'POST',
         headers: {
@@ -84,25 +137,136 @@ function getProject() {
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json(); 
-        } else {
-            throw new Error('Failed to fetch data');
-        }
-    })
-    .then(data => {
-        data.project.forEach(project => {
-            var newOption = `<option value="${project.name}">${project.name}</option>`;
-            $("#projectSelect").append(newOption);
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch data');
+            }
+        })
+        .then(data => {
+            $("#spuSelect").empty();
+            data.project.forEach((project, index) => {
+                let newOption = `<option value="${project._id}" ${index === 0 ? 'selected' : ''}>${project.name}</option>`;
+                $("#spuSelect").append(newOption);
+            });
+            if (data.project.length !== 0) {
+                getSHG();
+            } else {
+                $("#shgSelect").empty();
+            }
+
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
 }
+
+
+function getSHG() {
+    const projectId = $('#spuSelect').find(":selected").val();
+    const data = { projectId };
+    fetch('/SHGchoices', {
+
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to fetch data');
+            }
+        })
+        .then(data => {
+            $("#shgSelect").empty();
+            data.shg.forEach((shg, index) => {
+                let newOption = `<option value="${shg._id}" ${index === 0 ? 'selected' : ''}>${shg.name}</option>`;
+                $("#shgSelect").append(newOption);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function showModal() {
+    const saveModal = new bootstrap.Modal(document.getElementById("saveModal"));
+    saveModal.show();
+}
+
+function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
+    var accountType = document.getElementById("accountType").value;
+    var elementsToHandle = ["clusterSelect", "spuSelect", "shgSelect"];
+
+    if (accountType == "Admin") {
+        elementsToHandle.forEach(function (elementId) {
+            var element = document.getElementById(elementId);
+            element.disabled = true;
+            element.value = "";
+            $("#"+elementId).empty();
+        });
+    } else if (accountType == "SEDO") {
+        elementsToHandle.forEach(function (elementId) {
+            if (elementId !== "clusterSelect") {
+                var element = document.getElementById(elementId);
+                element.disabled = true;
+                element.value = "";
+                $("#"+elementId).empty();
+                
+            } else {
+                var element = document.getElementById(elementId);
+                element.disabled = false;
+                clusterChoicesName = JSON.parse(clusterChoicesName);
+                clusterChoicesId = JSON.parse(clusterChoicesId);
+                $("#clusterSelect").empty();
+                $("#clusterSelect").append('<option value="" selected hidden default> Choose..</option>');
+                for (let i = 0; i < clusterChoicesName.length; i++) {
+                    let newOption = `<option value="${clusterChoicesId[i]}">${clusterChoicesName[i]}</option>`;
+                    $("#clusterSelect").append(newOption);
+                }
+
+            }
+        });
+    } else {
+        elementsToHandle.forEach(function (elementId) {
+            document.getElementById(elementId).disabled = false;
+            var element = document.getElementById(elementId);
+            element.disabled = false;
+            $("#"+elementId).empty();
+            $("#"+elementId).append('<option value="" selected hidden default> Choose...</option>');
+        });
+            fetch('/clusterChoices', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to fetch data');
+                    }
+                })
+                .then(data => {
+                    data.cluster.forEach((cluster) => {
+                        let newOption = `<option value="${cluster._id}">${cluster.name}</option>`;
+                        $("#clusterSelect").append(newOption);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        
+    }
+}
+
 function ResetAll(authority) {
-    let groupSelectDefault
+    let groupSelectDefault;
     if (authority != "Treasurer") {
         groupSelectDefault = `<option disabled value = "">
             No Project Selected
@@ -113,8 +277,7 @@ function ResetAll(authority) {
             Error
         </option>`
     }
-
-    let projectSelectDefault
+    let projectSelectDefault;
     if (authority === "Admin") {
         projectSelectDefault = `<option disabled value = "">
             No Cluster Selected
@@ -125,8 +288,6 @@ function ResetAll(authority) {
             Error
         </option>`
     }
-
-    const selectForms = document.querySelectorAll(".form-select");
     $('#projectSelect option:not(:first)').remove();
     $('#groupSelect option:not(:first)').remove();
     $('#groupSelect').append(groupSelectDefault);

@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const LoanSchema = new mongoose.Schema({
-    loanRemaining
-    loanInterest
-    loanDueDate
+    loanRemaining,
+    loanInterest,
+    loanDueDate,
     loanTerm
-}, {versionKey: false}
-);
+}, { versionKey: false });
 
 const Loan = mongoose.model('loan', LoanSchema);
 

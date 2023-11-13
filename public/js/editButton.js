@@ -1,53 +1,31 @@
-document.addEventListener('DOMContentLoaded', function() {
-    
-    //edit cluster button
-    const editCluster = document.getElementById('editcluster')
+document.addEventListener('DOMContentLoaded', function () {
+    const editCluster = document.getElementById('editcluster') //edit cluster button
     if (editCluster) {
-    editCluster.addEventListener('show.bs.modal', event => {
-        // Button that triggered the modal
-        const button = event.relatedTarget
-
-        // Extract info from data-bs-name attribute
-
-        //const clusterName = button.getAttribute('data-bs-name')
-        const clusterId = button.getAttribute('id')
-
-
-        // Update the modal's content.
-        $('#editclusterFormDiv').load(`/editClusterForm/${clusterId}`)
-    })
+        editCluster.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget; // Button that triggered the modal
+            // Extract info from data-bs-name attribute
+            const clusterId = button.getAttribute('id');
+            $('#editclusterFormDiv').load(`/editClusterForm/${clusterId}`); // Update the modal's content.
+        })
     }
-
     //edit project button
-    const editProject = document.getElementById('editSub-Projects')
+    const editProject = document.getElementById('editSub-Projects');
     if (editProject) {
-    editProject.addEventListener('show.bs.modal', event => {
-        // Button that triggered the modal
-        const button = event.relatedTarget
-
-        // Extract info from data-bs-name attribute
-        //const projectName = button.getAttribute('data-bs-name')
-
-        const projectId = button.getAttribute('id')
-
-        // Update the modal's content.
-        $('#editSub-ProjectsFormDiv').load(`/editSubProjectsForm/${projectId}`)
-    })
+        editProject.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget; // Button that triggered the modal
+            // Extract info from data-bs-name attribute
+            const projectId = button.getAttribute('id');
+            $('#editSub-ProjectsFormDiv').load(`/editSubProjectsForm/${projectId}`); // Update the modal's content.
+        })
     }
-
     //edit SHG button
-    const editSHG = document.getElementById('editSHG')
+    const editSHG = document.getElementById('editSHG');
     if (editSHG) {
-    editSHG.addEventListener('show.bs.modal', event => {
-        // Button that triggered the modal
-        const button = event.relatedTarget
-
-        // Extract info from data-bs-name attribute
-        //const shgName = button.getAttribute('data-bs-name')
-        const shgId = button.getAttribute('id')
-        
-        // Update the modal's content.
-        $('#editSHGFormDiv').load(`/editSHGForm/${shgId}`)
-    })
+        editSHG.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget; // Button that triggered the modal
+            // Extract info from data-bs-name attribute
+            const shgId = button.getAttribute('id');
+            $('#editSHGFormDiv').load(`/editSHGForm/${shgId}`); // Update the modal's content.
+        })
     }
 });

@@ -1,0 +1,29 @@
+<div class="mt-4">
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="profileDisplay" onclick="displayContent('profile')" autocomplete="off" checked>
+        <label class="btn btn-outline-secondary" for="profileDisplay">Profile</label>
+        
+        <input type="radio" class="btn-check" name="btnradio" id="kabanDisplay" onclick="displayContent('kaban')" autocomplete="off">
+        <label class="btn btn-outline-secondary" for="kabanDisplay">Kaban</label>
+
+        <!-- Hannah: Loan Button -->
+        <!-- <input type="radio" class="btn-check" name="btnradio" id="loanDisplay" onclick="displayContent('loan')" autocomplete="off">
+        <label class="btn btn-outline-secondary" for="kabanDisplay">Loan</label> -->
+    </div>
+
+    <div id="containerDisplay">                    
+        <div class="content" id="profileContent">
+            <%- include('memberProfile/profileDisplay.ejs') %>
+        </div>
+        <div class="content" id="editContent">
+            <%- include('memberProfile/editDisplay.ejs', {authority: authority}) %>
+        </div>
+        <div class="content" id="kabanContent">
+            <%- include('memberProfile/kabanDisplay.ejs') %>
+        </div>
+        <!-- Hannah: No loanDisplay.ejs yet -->
+        <!-- <div class="content" id="loanContent">
+            < %- include('memberProfile/loanDisplay.ejs') %>
+        </div> -->
+    </div>
+</div>

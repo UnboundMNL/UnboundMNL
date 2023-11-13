@@ -1,0 +1,64 @@
+/* Page Buttons */
+.btn-outline-custom {
+    background-color: darkgray;
+    border: 2px solid whitesmoke;
+    border-bottom: none;
+    color: black;
+    padding: 0.5rem 1rem;
+    border-radius: 10px 10px 0 0;
+    font-weight: 500;
+}
+
+.btn-check:checked + .btn-outline-custom {
+    background-color: white;
+    pointer-events: none;
+}
+
+.btn-outline-custom:hover {
+    background-color: lightgray;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Profile */
+.container-profile {
+    background-color: white;
+    padding: 2rem;
+}
+
+.container-profile img {
+    margin-right: 1rem;
+}
+
+.container-rounded {
+    background-color: var(--tertiary-color);
+    color: var(--text-color);
+    padding: 0.3rem 1rem;
+    border-radius: 10px;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.container-rounded h3 {
+    color: var(--text-color);
+    margin: 0;
+}
+
+/* KABAN */
+.kaban-status {
+    display: flex;
+    justify-content: space-between;
+    bottom: 0;
+}
+
+.kaban-tables {
+    overflow: auto;
+}
+
+#cancelConfirm {
+    display: none;
+    justify-content: center;
+    position: sticky;
+    bottom: 20px;
+}

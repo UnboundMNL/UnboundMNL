@@ -1,0 +1,8 @@
+.memberPage {
+    cursor: pointer;
+}
+
+.page-title p {
+    margin-bottom: 0;
+    font-weight: 500;
+}

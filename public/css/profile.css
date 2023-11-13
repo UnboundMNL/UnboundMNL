@@ -1,0 +1,82 @@
+.box-container {
+    display: flex;
+    flex-flow: column;
+    min-height: 100%;
+    padding: 1rem;
+}
+
+.bg-top {
+    background-color: var(--tertiary-color);
+    border-radius: 10px 10px 0 0;
+    height: 30vh;
+    display: table-row;
+}
+
+.bg-top h5 {
+    color: var(--secondary-color);
+}
+
+.bg-bottom {
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.bg-bottom img {
+    margin-top: -100px;
+    border: 5px solid white;
+}
+
+.edit-container {
+    background-color: white;
+    min-height: 100%;
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
+.edit-title {
+    background-color: aliceblue;
+    padding: 0.5rem;
+}
+
+/* Change Profile Picture */
+.change-profile {
+    position: relative;
+}
+
+.middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--translucent-tertiary-color);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}
+
+.middle i {
+    font-size: 2rem;
+}
+
+.change-profile:hover .middle {
+    opacity: 0.8;
+    background-color: var(--secondary-color);
+    color: white;
+    cursor: pointer;
+}
+
+/* ACCOUNT REGISTRATION */
+.register-container {
+    background-color: var(--translucent-tertiary-color);
+    min-height: 100%;
+    padding: 1.5rem;
+}
+

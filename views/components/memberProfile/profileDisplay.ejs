@@ -1,0 +1,59 @@
+<div class="container-profile">
+    <div class="d-flex justify-content-between flex-wrap mt-3 mb-3">
+        <div class="align-items-center">
+            <div class="d-flex align-items-center flex-wrap">
+                <div class="mx-3">
+                    <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
+                </div>
+
+                <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
+    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
+    <!-- Hannah: Temporary Info -->
+    <% const personalInfo = [member.orgId, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
+    member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
+
+
+    <div class="d-flex mt-4">
+        <div class="row d-flex flex-grow-1">
+            <div class="d-flex flex-column col-12 col-md-6 mb-4">
+                <h6><u>GENERAL INFORMATION</u></h6>
+                <% for (let i = 0; i < Math.ceil(info.length / 2); i++) { %>
+                    <div class="row mt-2">
+                        <h6 class="col-4 m-0"><%- info[i] %></h6>
+                        <span class="col"><%- personalInfo[i] %></span>
+                    </div>
+                <% } %>                
+            </div>
+            <div class="d-flex flex-column col-12 col-md-6">
+                <h6><u>PERSONAL INFORMATION</u></h6>         
+                <% for (let i = Math.ceil(info.length / 2); i < info.length; i++) { %>
+                    <div class="row mt-2">
+                        <h6 class="col-4 m-0"><%- info[i] %></h6>
+
+                        <% if (info[i]=="Status"){ 
+                            if (personalInfo[i]=="RwS") { %>
+                                <span class="col"> Retired with Savings </span>
+                            <% } else if (personalInfo[i]=="RwoS") { %>
+                                <span class="col">Retired without Savings</span>
+                            <% } else{ %>
+                                <span class="col"><%- personalInfo[i] %></span>
+                            <% }
+                        } else{ %>
+                            <span class="col"><%- personalInfo[i] %></span>
+                        <% } %>
+                    </div>
+                <% } %>   
+            </div>  
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-primary mt-4" onclick="editProfile()">Edit Profile</button>
+    </div>
+</div>

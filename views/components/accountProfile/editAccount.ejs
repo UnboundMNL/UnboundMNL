@@ -1,0 +1,70 @@
+<div class="box-container" id="editAccount">
+    <div class="edit-container">
+        <div>
+            <button class="btn btn-outline-secondary btn-sm mb-4" onclick="backAccount()"><i class='bx bx-arrow-back'></i> Back to Profile</button>
+        </div>
+        <h4>Edit Account</h4><hr>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center button-gap">
+                    <div class="change-profile" data-toggle="tooltip" data-placement="bottom" title="Change Profile Picture" data-delay="100">
+                        <img src="/img/default_pfp.png" alt="profile" class="rounded-circle" width="100px" height="100px">
+                        <div class="middle align-items-center rounded-circle">
+                            <i class='bx bx-camera'></i>
+                        </div>
+                    </div>
+                    <h5><%- username %></h5>
+                </div>
+                <button class="btn btn-danger mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Account</button>
+            </div>
+
+            <div class="col-md-6" id="inputContainer">
+                <span class="text-danger"><small><i>Note: Toggle the checkbox to enable editing for either your username or password.</i></small></span>
+                <div class="mt-3">
+                    <!-- Checkbox to enable editing -->
+                    <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkUsername" onchange="toggleFields('usernameChange', this, `<%- user %>`)">Change Username</h6>
+                    <div class="p-2" id="usernameChange">
+                        <span>Username</span>
+                        <div class="mb-2">
+                            <input type="text" class="form-control" value="<%- username %>" id="newUsername"  >
+                            <span id="usernameAlert"></span>
+                        </div>
+                        <span>Password</span>
+                        <div class="mb-2">
+                            <input type="password" class="form-control" id="currentPassword1" >
+                            <span id="currentPasswordAlert1"></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <!-- Checkbox to enable password editing -->
+                    <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkPassword" onchange="toggleFields('passwordChange', this, `<%- user %>`)">Change Password</h6>
+                    <div class="p-2" id="passwordChange">
+                        <div class="mb-2">
+                            <span>Current Password</span>
+                            <div class="input-group align-items-center">
+                                <input type="password" class="form-control" id="currentPassword2" >
+                                <!-- <i class='bx bx-show'></i> -->
+                                <span id="currentPasswordAlert2"></span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <span>New Password</span>
+                            <input type="password" id="newPass" class="form-control" required onkeyup="validatePassword()">
+                        </div>
+                        <div class="mb-2">
+                            <span>Confirm New Password</span>
+                            <input type="password" id="confirmPass" class="form-control" required onkeyup="validatePassword()">
+                        </div>
+                        <span id="matchingAlert2"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center button-gap mt-4">
+            <button class="btn btn-secondary ml-2" onclick="cancelChanges('<%- user %>')">Cancel</button>
+            <button class="btn btn-primary" id="saveChanges" >Save Changes</button>
+        </div>
+    </div>
+</div>
