@@ -111,7 +111,7 @@ function loadMobileTable() {
 
 function reloadTable(value, table) {
 	YEAR.value = value;
-	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sept', 'oct', 'nov', 'dec'];
+	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 	table.clear().draw();
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())
@@ -138,8 +138,8 @@ function reloadTable(value, table) {
 					member.jul.match,
 					member.aug.savings,
 					member.aug.match,
-					member.sept.savings,
-					member.sept.match,
+					member.sep.savings,
+					member.sep.match,
 					member.oct.savings,
 					member.oct.match,
 					member.nov.savings,
