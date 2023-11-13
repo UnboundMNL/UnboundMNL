@@ -3,10 +3,14 @@
 <head>
     <%-include('components/headers.ejs', {authority, pageName: "Members"})%>
     
-    <script src="/js/IDchecker.js"></script>
-    <script src="/js/membersTable.js"></script>
-    
-    
+    <!-- CSS -->
+    <link href="/css/memberTable.css" rel = "stylesheet">
+
+    <!-- SCRIPTS -->
+    <script src="/js/formChange.js"></script>
+    <script src="/js/card.js"></script>
+    <script src="/js/reload.js"></script>
+
     <!-- DATATABLES -->
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/fc-4.3.0/datatables.min.css" rel="stylesheet">
     <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/fc-4.3.0/datatables.min.js"></script>
@@ -42,40 +46,48 @@
                 <% }); %>
             </div>
             
-            <div class="mt-3 page-title">
-                <p>Cluster # SP # Group #</p>
-                <h4><%=grpName%> Members</h4>
+            <div class="member-total d-flex justify-content-between flex-wrap mt-3 page-title">
+                <div class="mb-3 page-title">
+                    <p>Cluster <%=clusterName%> SP <%=projectName%></p>
+                    <h4><%=groupName%> Members</h4>
+                </div>
+                <div class="align-items-end">
+                    <div class="container-rounded">
+                        <span>Total:</span>
+
+                        <h3 class="format-number" id = "totalSaving"><%=totalSaving%></h3>
+                    </div>
+                </div>
             </div>
+
              
             <% var type = "Member";  %>
-            <div class="d-flex mt-4 mb-4 justify-content-between align-items-center">
+            <div class="d-flex mt-4 mb-4 justify-content-between align-items-center card-actions">
              
-                <div class="col-11 col-md-10">
+                <div class="col-10">
                     <div class="search-bar d-flex">
-                        <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search" aria-describedby="button-addon2" id="searchBar">
+                        <input type="text" class="form-control" placeholder="Search for member by name or ID" aria-label="Search" aria-describedby="button-addon2" id="searchBar">
                     </div>
                 </div>
                 
                 <%-include('components/orgPartViews/addButton.ejs', {type})%>
             </div>
 
-            <div>
-                <select onchange="reloadTable(this.value)" autocomplete="off">
-                    <option value="2023" selected default>this year</option>
-                    <option value="2023">prev year</option>
-                    <option value="2022">year before ^</option>
-                    <option value="2021">a</option>
-                    <option value="2020">1</option>
-                </select>
+            <div class ="row">
+                <div class = "col-3">
+                    <input type="number" class = "form-control" value="<%=year%>" id="yearInput" autocomplete="off">
+                </div>
+                <div class ="col">
+                    <button class = "btn btn-primary" id="yearButton">Change year</button>
+                </div>
             </div>
-            <div id = "table_div">
-                <%- include('components/orgPartViews/membersTable.ejs', { pageParts, type }) %>
-            </div>
+            
+            <%- include('components/orgPartViews/membersTable.ejs', { memberList, type, year}) %>
         </div>
 
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
         <%-include('components/popups/addPartModal.ejs', {authority, partname: type}) %>
-
+        <script src="/js/membersTable.js"></script>
 </body>
 </html>

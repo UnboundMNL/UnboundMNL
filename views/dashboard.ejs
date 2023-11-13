@@ -8,8 +8,10 @@
     
     <!-- SCRIPTS -->
     <script src="/js/chart.js"></script>
+    <script src="/js/reload.js"></script>
+
+    <!-- CHART -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
 </head>
 
 <body class="body-bg">
@@ -24,6 +26,11 @@
         <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons, nCluster, nProject, nGroup, nMember, savings})%>
         <script>open('dashboardButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
+        <% const months = [monthCounts["jan"], monthCounts["feb"], monthCounts["mar"], monthCounts["apr"], monthCounts["may"], monthCounts["jun"],
+            monthCounts["jul"], monthCounts["aug"], monthCounts["sep"], monthCounts["oct"], monthCounts["nov"], monthCounts["dec"] ]; %>
+        <script>
+            chart(JSON.stringify("<%=months%>"));
+        </script>
     </main>
 </body>
 </html>

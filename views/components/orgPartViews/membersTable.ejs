@@ -1,48 +1,65 @@
+<div id = "table_div" class = "mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-center flex-grow-1" id="memberYear">Savings and Matching Grant for <%=year%></h2>
+        <button class="btn btn-primary" id="save" onclick="save()">Save All Changes</button>
+    </div>
+    <table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th rowspan="2" class = "align-middle">Name</th>
+                <th rowspan="2" class = "align-middle">ID</th>
+                <% const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']%>
+                <% for(let i = 0; i < months.length; i++) { %>
+                    <th colspan = "2" class = "text-center"><%=months[i]%></th>
+                <% } %>
+                <th rowspan="2" class = "align-middle">Total Savings</th>
+                <th rowspan="2" class = "align-middle">Total Match</th>
+                <th rowspan="2" class = "align-middle">Grant Total</th>
+            </tr>
+            <tr>
+                <% for(let i = 0; i < months.length; i++) { %>
+                    <th>Savings</th>
+                    <th>Grant</th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <% var month = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']; %>
+            <% for (let i = 0; i < memberList.length; i++) { %>
+                <tr>
+                    <% let className = "memberPage"+i;%>
+                    <td class = "<%=className%> memberPage"><%= memberList[i].name %></td>
+                    <td class = "<%=className%> memberPage"><%= memberList[i].orgId %></td>
+                    <script>
+                        linkMemberPage("<%= memberList[i].id %>", "<%=className%>")
+                    </script>
+                    <% for (let j = 0; j < month.length; j++) { %>
+                        <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_savings"><%= memberList[i][month[j]].savings %></td>
+                        <td contenteditable="true" id="<%= memberList[i].id %>_<%= month[j] %>_<%= year %>_match"><%= memberList[i][month[j]].match %></td>
+                    <% } %>
+                    <td class="format-number"><%= memberList[i].totalSaving %></td>
+                    <td class="format-number"><%= memberList[i].totalMatch %></td>
+                    <% let total = memberList[i].totalMatch + memberList[i].totalSaving%>
+                    <td class="format-number"><%= total %></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
 
-<table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
-    <thead>
-        <tr>
-            <!-- Adjust colspan to fit the number of cols of data needed -->
-            <th colspan = "3" class = "text-center">YEAR *update based on choice*</th>
-            <% const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']%>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <th colspan = "2" class = "text-center"><%=months[i]%></th>
-            <% } %>
-            <th>Year</th>
-        </tr>
-        <tr>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>ID</th>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <th>Savings</th>
-                <th>Grant</th>
-            <% } %>
-            <th>Total Savings</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for(let i = 0; i < months.length; i++) { %>
-        <tr>
-            <td>Montoya de la cruz</td>
-            <td>first</td>
-            <td>12111111</td>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <td>--</td>
-                <td>--</td>
-            <% } %>
-            <td>--</td>
-        </tr>
-        <tr>
-            <td>Last2</td>
-            <td>first2</td>
-            <td>121111211</td>
-            <% for(let i = 0; i < months.length; i++) { %>
-                <td>--</td>
-                <td>--</td>
-            <% } %>
-            <td>--</td>
-        </tr>
-        <% } %>
-    </tbody>
-</table>
+<div id="addSuccessToast" class="z-3 
+                                position-absolute 
+                                toast align-items-center 
+                                text-bg-success 
+                                border-0 
+                                start-50 
+                                translate-middle-x" 
+                                style="top:15%;"
+                                role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+        <div class="toast-body align-middle">
+            <h5 class = "m-0">All changes have been saved!</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>

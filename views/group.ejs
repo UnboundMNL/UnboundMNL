@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%-include('components/headers.ejs', {authority, pageName: "Groups"})%>
+    
     <!-- CSS -->
     <link rel="stylesheet" href="/css/cardPages.css" />
-
-    <%-include('components/headers.ejs', {authority, pageName: "Groups"})%>
     
     <!-- SCRIPTS -->
     <script src="/js/editButton.js"></script>
     <script src="/js/viewDetails.js"></script>
     <script src="/js/card.js"></script>
-    <script src="/js/IDchecker.js"></script>
+    <script src="/js/formChange.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/reload.js"></script>
 </head>
 
 <body class="body-bg">
@@ -25,7 +27,7 @@
         <!-- Note: Temporary number of containers -->
         <% const containers = 6; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters", "Sub-Projects", "SHG"]; 
+            <% const path = ["Clusters", "Sub-Projects"]; 
                 var pathLink; %>
 
             <div class="custom-path">
@@ -42,15 +44,15 @@
             </div>
             
             <div class="mt-3 page-title">
-                <p>Cluster # SP #</p>
+                <p>Cluster <%=clusterName%> SP <%=projectName%></p>
                 <h4>Self-Help Groups</h4>
             </div>
              
             <% var type = "SHG";  %>
             <%- include('components/shgContent.ejs', { pageParts, type }) %>
+            <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
-        <%- include('components/pagination.ejs', {page, totalPages})%>
         <%- include('components/popups/deletePopup.ejs', { pageParts, type })%>
         <script>open('partsButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>

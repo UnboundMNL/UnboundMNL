@@ -1,32 +1,108 @@
+    <div class = "mb-3">
+        <label for="id" class="form-label">ID</label>
+        <div class = "input-group">
+            <input class="form-control"
+                    id = "orgId"
+                    name = "orgId"
+                    type="text" 
+                    aria-describedby="id"
+                    required>
+            <div class="invalid-feedback">
+                ID required.
+            </div>  
+        </div>
+    </div>
+
 <% 
-    const nameFields = ["Child", "Mother", "Father"]
-    const placeholder = [["Kiana", "Kaslana"], ["Cecilia", "Schariac"], ["Siegfried", "Kaslana"]]
+    const nameFields = ["Member", "Mother", "Father"]
 
     for (let i = 0; i < nameFields.length; i++) {
 %>
         <div class = "mb-3">
             <label for="<%=nameFields[i]%>Name" class="form-label"><%=nameFields[i]%> Name</label>
-            <div class = "input-group" id = "<%=nameFields[i]%>Name">
+            <div class = "input-group">
                 <span class = "input-group-text">First Name</span>
                 <input class="form-control"
                         id = "<%=nameFields[i]%>FirstName"
                         name = "<%=nameFields[i]%>FirstName"
                         type="text" 
-                        placeholder="<%=placeholder[i][0]%>"
                         aria-describedby="<%=nameFields[i]%>FirstName"
-                        required>
+                        <% if (i!==0) { %>
+                            >
+                        <% } else {%>
+                            required>
+                        <% } %>
                 <span class = "input-group-text">Last Name</span>
                 <input class="form-control"
                         id = "<%=nameFields[i]%>LastName"
                         name = "<%=nameFields[i]%>LastName"
                         type="text"
-                        placeholder="<%=placeholder[i][1]%>"
                         aria-describedby="<%=nameFields[i]%>LastName"
-                        required>
+                        <% if (i!==0) { %>
+                            >
+                        <% } else {%>
+                            required>
+                        <% } %>
                 <div class="invalid-feedback">
-                    Full child name required.
+                    Full <%=nameFields[i]%> name required.
                 </div>  
             </div>
         </div>
+        
 
 <% } %>
+    <div class="mb-3">
+        <label for="sex" class="form-label"> Gender </label>
+        <div class = "input-group">
+            <select class="form-select" id="sex" name="sex" aria-label="sex" required>
+                <option selected default hidden value="">Choose a Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <div class="invalid-feedback">
+                Gender required.
+            </div> 
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <label for="birthdate" class="form-label">Birthday</label>
+        <div class="input-group">
+            <input class="form-control"
+                   id="birthdate"
+                   name="birthdate"
+                   type="date"
+                   aria-describedby="birthdate"
+                   min="1900-01-01"
+                   max="<%= new Date().toISOString().split('T')[0] %>"
+                   required>
+            <div class="invalid-feedback">
+                Birthday required.
+            </div>
+        </div>
+    </div>
+
+    <div class = "mb-3">
+        <label for="address" class="form-label">Address</label>
+        <div class = "input-group">
+            <input class="form-control"
+                    id = "address"
+                    name = "address"
+                    type="text" 
+                    aria-describedby="address"
+                    required>
+            <div class="invalid-feedback">
+                Address required.
+            </div>  
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="status" class="form-label"> Status </label>
+        <select class="form-select" id="status" name="status" aria-label="status">
+            <option selected default value="Active">Active</option>
+            <option value="RwS">Retired with Savings</option>
+            <option value="RwoS">Retired w/o Savings</option>
+        </select>    
+    </div>

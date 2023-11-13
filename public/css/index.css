@@ -1,16 +1,6 @@
 /* --------------- REUSABLE STYLES --------------- */
 @import url('https://fonts.googleapis.com/css?family=Montserrat Alternates');
 
-/* :root {
-    --body-color: #f2f2f2;
-    --primary-color: #0097b2;
-    --secondary-color: #0cc0df;
-    --tertiary-color: rgb(49, 118, 214);
-    --button-color: #007bff;
-    --text-color: #555151;
-    --sidebar-hover-color: #c7e5eb;
-} */
-
 :root {
     --body-color: #F2F4F3;
     --primary-color: #0092E0;
@@ -18,12 +8,28 @@
     --tertiary-color: #ADE2FF;
     --text-color: #2E4057;
     --red-color: #DC3545;
+    --translucent-tertiary-color: rgba(173, 226, 255, 0.5);
+}
+
+html {
+    height: 100vh;
+}
+
+body {
+    height: calc(100% - 4rem);
 }
 
 .body-bg {
     background-color: var(--body-color);
 }
 
+.no-padding {
+    padding: 0 !important;
+}
+
+.currSign:before {
+    content: '₱ ';
+}
 /* SIDEBAR */
 .sidebar {
     position: fixed;
@@ -133,8 +139,47 @@
 
 /* MAIN */
 main {
+    margin-top: 4rem;
     margin-left: 14rem;
     padding: 0;
+    height: 100%;
+}
+
+.button-gap {
+    gap: 1rem;
+}
+
+
+.container-profile {
+    background-color: white;
+    padding: 2rem;
+}
+
+.container-profile img {
+    margin-right: 1rem;
+}
+
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.container-rounded {
+    background-color: var(--tertiary-color);
+    color: var(--text-color);
+    padding: 0.3rem 1rem;
+    border-radius: 10px;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.container-rounded h3 {
+    color: var(--text-color);
+    margin: 0;
 }
 
 /* MODALS */
@@ -148,8 +193,20 @@ main {
     width: 10rem;
 }
 
+.modal-body i {
+    font-size: 4rem;
+}
+
 #logout-i {
     color: black;
+}
+
+#save-i {
+    color: green;
+}
+
+#delete-i {
+    color: var(--red-color);
 }
 
 /* PATH */
@@ -183,6 +240,7 @@ main {
     .menu {
         padding-top: 4rem;
     }
+
     .menu-bar {
         padding: 4rem 0;
     }
@@ -193,7 +251,7 @@ main {
 
     .sidebar header {
         display: none;
-    }       
+    }
 
     .top-bar {
         padding-right: 1rem;
@@ -205,6 +263,10 @@ main {
 
     .top-bar #topbar-name {
         display: none;
+    }
+
+    .member-total {
+        flex-direction: column;
     }
 
     main {

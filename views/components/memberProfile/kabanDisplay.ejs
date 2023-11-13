@@ -1,0 +1,111 @@
+<div class="container-profile">
+    <!-- Kabam Header -->
+    <div class="d-flex justify-content-center align-items-center pt-4 pb-2">
+        <img src="/img/Unbound_icon.png" alt="Unbound Logo" width="50px" height="50px">
+        <span class="text-center"><strong>KABAN NG KAUNLARAN FAMILY SAVINGS PROGRAM<br>APPLICATION SA PANGUNGUTANG</strong></span>
+    </div>
+
+    <% const kabanInfo = ["Full Name", "Mother's Name", "Father's Name", "Kaban", "Cluster", "Sub-Project", "Self-Help Group", "Status"]; %>
+    <% const memberKabanInfo = [member.name.firstName+" "+member.name.lastName, member.nameMother.firstName+" "+member.nameMother.lastName, 
+    member.nameFather.firstName+" "+member.nameFather.lastName,"₱ " + totalSaving,cluster, project, group, member.status]; %>
+
+    <% const memberActive = [2020, 2023]; %>
+    <!-- Hannah: Added a Total Column -->
+    <% const kabanTableHeaders = ["Month", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Total"]; %>
+    <% const kabanTableValues = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "100", "0"]; %>
+
+    <!-- Member Kaban Details -->
+    <div class="row mt-4">
+        <div class="col-md-6 mt-4">
+            <span><strong>A. Member Information</strong></span>
+            <% for (let i = 0; i < 4; i++) { %>
+                <div class="mt-2">
+                    <h6><%- kabanInfo[i] %>:</h6>
+                    <input type="text" class="form-control" value="<%- memberKabanInfo[i] %>" disabled>
+                </div>
+            <% } %>
+        </div>
+        <div class="col-md-6 mt-4 d-flex flex-column justify-content-between">
+            <div>
+                <span><strong>B. Sponsor Information</strong></span>
+                <% for (let i = 4; i < 7; i++) { %>
+                    <div class="mt-2">
+                        <h6 class=""><%- kabanInfo[i] %>:</h6>
+                        <input type="text" class="form-control" value="<%- memberKabanInfo[i] %>" disabled>
+                    </div>
+                <% } %>
+            </div>
+            <div class="mt-2">
+                <h6><%- kabanInfo[7] %>:</h6>
+                <div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="" id="activeRadio" disabled>
+                        <label class="form-check-label" for="activeRadio">
+                            Active
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="" id="retiredNoSavingsRadio" disabled>
+                        <label class="form-check-label" for="retiredNoSavingsRadio">
+                            Retired with no Savings
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="" id="retiredWithSavingsRadio" disabled>
+                        <label class="form-check-label" for="retiredWithSavingsRadio">
+                            Retired with Savings
+                        </label>
+                    </div> 
+                    
+                    <script>
+                        setKabanStatusRadio(`<%- memberKabanInfo[7] %>`);
+                    </script>
+                </div>
+        </div>
+    </div>
+
+    <!-- Member Kaban Tables -->
+    <div class="kaban-tables mt-5 mb-5">
+       <% const month = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]; %>
+        <% for (let i = 0; i < allSavings.length; i++) { %>
+            <div class="mt-3">
+                <span><strong><%- allSavings[i].year %></strong></span>
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr class="table-light">
+                            <% for (let j = 0; j < kabanTableHeaders.length; j++) { %>
+                                <th scope="col"><%- kabanTableHeaders[j] %></th>
+                            <% } %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Savings</th>
+                            <% for (let j = 0; j < month.length; j++) { %>
+                                <td class="format-number"><%- allSavings[i][month[j]].savings %></td>
+                            <% } %>
+                            <!-- Hannah: Display Total Savings -->
+                            <td class="format-number"><%- allSavings[i].totalSaving %></td>
+                        </tr>
+                        <tr>
+                            <!-- Hannah: Added Grant -->
+                            <th scope="row">Grant</th>
+                            <% for (let j = 0; j < month.length; j++) { %>
+                                <td class="format-number"><%- allSavings[i][month[j]].savings %></td>
+                            <% } %>
+                            <!-- Hannah: Display Total Grant -->
+                            <td class="format-number"><%- allSavings[i].totalMatch %></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="row" colspan="13">Grand Total</th>
+                            <td class="format-number"><%- allSavings[i].totalSaving+allSavings[i].totalMatch %></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        <% } %>
+    </div>
+</div>
+
