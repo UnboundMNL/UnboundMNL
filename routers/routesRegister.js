@@ -11,5 +11,6 @@ const registerController = require('../controllers/registerController');
 
 router.post("/register", registerController.register);
 router.get("/registration", registerController.registration);
+router.post("/deleteUser", registerController.deleteUser);
 
 module.exports = router;  

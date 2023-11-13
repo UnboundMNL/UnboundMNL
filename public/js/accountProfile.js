@@ -5,6 +5,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].disabled = true;
     }
+    document.getElementById("deleteButton").onclick = () => {
+        if (document.getElementById("deleteConfirm").value == "DELETE"){
+            fetch('/deleteUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.href = "/";
+                    } else {
+                        
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 });
 
 function editAccount() {
@@ -93,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             // Process the data and assign it to the variable
             UsernameList = data.usernameList;
-            console.log('Username list:', UsernameList);
         })
         .catch(error => {
             console.error('An error occurred:', error);
@@ -168,7 +187,6 @@ function updateUserInformation() {
         }
     })
     .then(data => {
-        //console.log(data);
         if (data.errorType === 1) {
             // Handle errorType 1
             currentPasswordAlert1.style.color = 'red';
