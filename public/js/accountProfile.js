@@ -5,6 +5,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].disabled = true;
     }
+    document.getElementById("deleteButton").onclick = () => {
+        if (document.getElementById("deleteConfirm").value == "DELETE"){
+            fetch('/deleteUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.href = "/";
+                    } else {
+                        
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 });
 
 function editAccount() {

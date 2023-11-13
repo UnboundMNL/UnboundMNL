@@ -38,8 +38,8 @@ const registerController = {
           });
         }
         await newUser.save();
-        if (newUser){
-          res.json({succes: "New user has been added!"})
+        if (newUser) {
+          res.json({ succes: "New user has been added!" })
         }
       } catch (error) {
         console.error(error);
@@ -73,7 +73,22 @@ const registerController = {
       console.error(error);
       return res.status(500).render("fail", { error: "An error occurred while fetching data." });
     }
-  }
+  },
+
+  deleteUser: async (req, res) => {
+    if (req.session.isLoggedIn) {
+      const user = await User.findById(req.session.userId);
+      req.session.destroy();
+      const deletedUser = await User.findByIdAndDelete(user._id);
+      if (deletedUser) {
+        res.json({deletedUser});
+      } else {
+        return res.status(404).json({ error: "Delete error! Project not found." });
+      }
+    } else {
+      res.redirect("/");
+    }
+  },
 
 }
 
