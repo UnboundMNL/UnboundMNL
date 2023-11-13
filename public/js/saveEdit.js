@@ -1,6 +1,6 @@
-function saveEdit(link, actionForm, saveID) {
+ function saveEdit(link, actionForm, saveID) {
     const saveButton = document.getElementById(saveID);
-    saveButton.onclick = () => {
+    saveButton.onclick = async() => {
         const orgId = document.getElementById("id").value;
         const address = document.getElementById("address").value;
         const birthdate = document.getElementById("birthdate").value;
@@ -16,7 +16,7 @@ function saveEdit(link, actionForm, saveID) {
         const projectId = document.getElementById("projectSelect").value;
         const groupId = document.getElementById("groupSelect").value;
 
-        fetch(actionForm, {
+        await fetch(actionForm, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

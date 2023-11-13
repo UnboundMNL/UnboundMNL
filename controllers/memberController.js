@@ -263,31 +263,39 @@ const memberController = {
                         const prevGroup = await Group.findOne({ _id: member.groupId });
                         prevGroup.totalMembers -= 1;
                         prevGroup.totalKaban -= member.totalSaving;
+                        prevGroup.totalKaban -= member.totalMatch;
                         prevGroup.members = prevGroup.members.filter(memberId => !memberId.equals(member._id.toString()));
                         await prevGroup.save();
                         const newGroup = await Group.findOne({ _id: groupId });
                         newGroup.totalMembers += 1;
                         newGroup.totalKaban += member.totalSaving;
+                        newGroup.totalKaban += member.totalMatch;
                         newGroup.members.push(member._id);
                         await newGroup.save();
                         if (member.projectId.toString() !== projectId) {
                             const prevProject = await Project.findOne({ _id: member.projectId });
                             prevProject.totalMembers -= 1;
                             prevProject.totalKaban -= member.totalSaving;
+                            prevProject.totalKaban -= member.totalMatch;
                             await prevProject.save();
                             const newProject = await Project.findOne({ _id: projectId });
                             newProject.totalMembers += 1;
                             newProject.totalKaban += member.totalSaving;
+                            newProject.totalKaban += member.totalMatch;
                             await newProject.save();
                             if (member.clusterId.toString() !== clusterId) {
                                 const prevCluster = await Cluster.findOne({ _id: member.clusterId });
                                 prevCluster.totalMembers -= 1;
                                 prevCluster.totalKaban -= member.totalSaving;
+                                prevCluster.totalKaban -= member.totalMatch;
                                 await prevCluster.save();
                                 const newCluster = await Cluster.findOne({ _id: clusterId });
                                 newCluster.totalMembers += 1;
                                 newCluster.totalKaban += member.totalSaving;
+                                newCluster.totalKaban += member.totalMatch;
                                 await newCluster.save();
+                                console.log(member.totalSaving)
+                                console.log(newCluster);
                             }
                         }
                     }
