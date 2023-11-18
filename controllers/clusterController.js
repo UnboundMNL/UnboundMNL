@@ -1,3 +1,4 @@
+// controller for cluster related functions
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');

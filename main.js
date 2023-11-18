@@ -12,6 +12,14 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongodb-session')(session, mongoose);
 const router = express.Router();
+const excelJS = require("exceljs");
+
+
+const { promisify } = require('util');
+const archiver = require('archiver');
+const fs = require('fs');
+const { pipeline } = require('stream');
+const pipelineAsync = promisify(pipeline);
 
 const routesRegister = require('./routers/routesRegister');
 const routesLogin = require('./routers/routesLogin');
@@ -23,6 +31,7 @@ const routesProject = require('./routers/routesProject');
 const routesGroup = require('./routers/routesGroup');
 const routesMember = require('./routers/routesMember');
 const routesChoices = require('./routers/routesChoices');
+const routesExports = require('./routers/routesExports');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
@@ -164,3 +173,4 @@ app.use(routesProject);
 app.use(routesGroup);
 app.use(routesMember);
 app.use(routesChoices);
+app.use(routesExports);
