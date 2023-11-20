@@ -141,17 +141,18 @@ const groupController = {
         try {
             if (req.session.isLoggedIn) {
                 const groupId = req.params.id;
-                const group = await Group.findById(groupId);
+                const currentGroup = await Group.findById(groupId);
                 const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum,
                     SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone,
                     SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone,
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone,
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone } = req.body;
-                if (group.name != name) {
-                    const existingGroup = await Group.findOne({ SPU, name, location });
-                    if (existingGroup) {
-                        return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
-                    }
+                const projectId = req.session.projectId;
+                let project = await Project.findById(projectId);
+                const group = await Group.find({ _id: { $in: project.groups } });
+                const existingGroups = group.flatMap(group => group.name);
+                if (existingGroups.includes(name) && name !=currentGroup.name) {
+                    return res.json({ error: "A group with the same name already exists." });
                 }
                 const SHGLeader = {
                     firstName: SHGLeaderFirstName,
@@ -185,11 +186,11 @@ const groupController = {
                     kabanTreasurer,
                     kabanAuditor
                 };
-                const updatedGroup = await Group.findOneAndUpdate({ SPU: group.SPU, name: group.name, area: group.area }, updateData, { new: true });
+                const updatedGroup = await Group.findOneAndUpdate({ _id: groupId }, updateData, { new: true });
                 if (updatedGroup) {
-                    res.redirect("/group");
+                    res.json({ success: "A Group has been edited." });
                 } else {
-                    return res.status(404).json({ error: "Update error!" });
+                    return res.json({ error: "An error occurred while editng a group." });
                 }
             } else {
                 res.redirect("/");

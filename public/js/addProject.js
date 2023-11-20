@@ -12,13 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('projectName').addEventListener('input', event => {
+                document.getElementById('addProjectName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('projectName').value == "") {
+                    if (document.getElementById('addProjectName').value == "") {
                         formNameInput.classList.add('is-invalid');
                         invalidFeedback.textContent = 'Please enter a sub-project name.';
                     } else {

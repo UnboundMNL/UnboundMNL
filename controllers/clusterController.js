@@ -89,7 +89,7 @@ const clusterController = {
                 res.redirect("/");
             }
         } catch (error) {
-            return res.status(500).json({ error: "An error occurred while creating a new cluster    ." });
+            return res.json({ error: "An error occurred while creating a new cluster." });
         }
     },
 
@@ -103,22 +103,22 @@ const clusterController = {
                 if (oldName !== name) {
                     const existingCluster = await Cluster.findOne({ name });
                     if (existingCluster) {
-                        return res.status(400).json({ error: "A Cluster with the same name already exists." });
+                        return res.json({ error: "A Cluster with the same name already exists." });
                     }
                 }
                 updateData = req.body;
-                const updateCluster = await Cluster.findOneAndUpdate({ name: cluster.name }, updateData, { new: true });
+                const updateCluster = await Cluster.findOneAndUpdate({ _id: clusterId }, updateData, { new: true });
                 if (updateCluster) {
-                    res.redirect("/cluster");
+                    res.json({ success: "A Cluster has been added." });
                 } else {
-                    return res.status(500).render("fail", { error: "Update error!" });
+                    return res.json({ error: "An error occurred while editng a cluster." });
                 }
             } else {
                 res.redirect("/");
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while editing the group." });
+            return res.json({ error: "An error occurred while editng a cluster." });
         }
     },
 
