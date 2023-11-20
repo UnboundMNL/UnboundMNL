@@ -1,5 +1,6 @@
 function validatePassword() {
 
+
     const saveChangesButton = document.getElementById('saveChanges');
 
     const newPass = document.getElementById('newPass').value;

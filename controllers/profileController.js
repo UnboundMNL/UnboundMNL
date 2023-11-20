@@ -35,7 +35,6 @@ const profileController = {
                         for (const item of allSaving) {
                             savings += item.totalSaving;
                             savings += item.totalMatch;
-
                         }
                         nCluster = await Cluster.countDocuments();
                         nProject = await Project.countDocuments();
