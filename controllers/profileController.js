@@ -188,7 +188,7 @@ const profileController = {
                 }
 
                 if (updateUser) {
-                    return res.json();
+                    return res.json({success: "Password has been changed" });
                 } else {
                     return res.json({ error: "User not found" });
                 }

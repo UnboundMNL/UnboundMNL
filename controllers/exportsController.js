@@ -142,7 +142,7 @@ const exportsController = {
             path: 'members',
             populate: { path: 'savings' }
         });
-        console.log(shg);
+
         // maybe only filter for active members
 
         const workbook = new excelJS.Workbook();
@@ -263,7 +263,6 @@ const exportsController = {
         }
         const cluster = await Cluster.findOne({ _id: clusterId })
             .populate({path: 'projects'});
-        console.log(cluster);
         
             const zip = archiver('zip', { zlib: { level: 9 } });
 
