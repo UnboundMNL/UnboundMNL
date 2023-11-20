@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         inputFields[i].disabled = true;
     }
     document.getElementById("deleteButton").onclick = () => {
-        if (document.getElementById("deleteConfirm").value == "DELETE"){
+        if (document.getElementById("deleteConfirm").value == "DELETE") {
             fetch('/deleteUser', {
                 method: 'POST',
                 headers: {
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                     if (response.ok) {
                         location.href = "/";
                     } else {
-                        
+
                     }
                 })
                 .catch(error => {
@@ -142,9 +142,9 @@ function updateUserInformation() {
     const newUsername = document.getElementById('newUsername').value;
     const currentPassword1 = document.getElementById('currentPassword1').value;
 
-    const newPassword = document.getElementById('newPass').value; 
-    const confirmPassword = document.getElementById('confirmPass').value; 
-    const currentPassword2 = document.getElementById('currentPassword2').value; 
+    const newPassword = document.getElementById('newPass').value;
+    const confirmPassword = document.getElementById('confirmPass').value;
+    const currentPassword2 = document.getElementById('currentPassword2').value;
 
     const currentPasswordAlert1 = document.getElementById('currentPasswordAlert1');
     const usernameAlert = document.getElementById('usernameAlert');
@@ -172,56 +172,56 @@ function updateUserInformation() {
         checkPasswordCheckbox: checkPasswordCheckbox.checked,
     };
 
-    const updateUserUrl = '/editProfile'; 
+    const updateUserUrl = '/editProfile';
     fetch(updateUserUrl, {
-        method: 'PATCH', 
+        method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json', 
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
     })
-    .then((response) => {
-        if (response.ok) {
-            $('#saveModal').modal('show');
-            return response.json(); 
-        } else {
-            return response.json(); 
-        }
-    })
-    .then(data => {
-        if (data.errorType === 1) {
-            // Handle errorType 1
-            currentPasswordAlert1.style.color = 'red';
-            currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 2) {
-            usernameAlert.style.color = 'red';
-            usernameAlert.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 3) {
-            usernameAlert.style.color = 'red';
-            usernameAlert.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 4) {
-            currentPasswordAlert1.style.color = 'red';
-            currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 5) {
-            currentPasswordAlert2.style.color = 'red';
-            currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 6) {
-            currentPasswordAlert2.style.color = 'red';
-            currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
-        } else if (data.error) {
-            const usernameAlert = document.getElementById('usernameAlert');
-            usernameAlert.style.color = 'red';
-            usernameAlert.innerHTML = `✕ ${data.error}`;
-        } else {
-            const saveSuccessfulButton = document.getElementById('saveSuccessful');
-            saveSuccessfulButton.addEventListener('click', function () {
-                window.location.reload();
-            });
+        .then((response) => {
+            if (response.ok) {
+                $('#saveModal').modal('show');
+                return response.json();
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data.errorType === 1) {
+                // Handle errorType 1
+                currentPasswordAlert1.style.color = 'red';
+                currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 2) {
+                usernameAlert.style.color = 'red';
+                usernameAlert.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 3) {
+                usernameAlert.style.color = 'red';
+                usernameAlert.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 4) {
+                currentPasswordAlert1.style.color = 'red';
+                currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 5) {
+                currentPasswordAlert2.style.color = 'red';
+                currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 6) {
+                currentPasswordAlert2.style.color = 'red';
+                currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
+            } else if (data.error) {
+                const usernameAlert = document.getElementById('usernameAlert');
+                usernameAlert.style.color = 'red';
+                usernameAlert.innerHTML = `✕ ${data.error}`;
+            } else {
+                const saveSuccessfulButton = document.getElementById('saveSuccessful');
+                saveSuccessfulButton.addEventListener('click', function () {
+                    window.location.reload();
+                });
 
-        }
-    })
-    .catch((error) => {
-        console.error('An error occurred:', error);
-    });
-    
+            }
+        })
+        .catch((error) => {
+            console.error('An error occurred:', error);
+        });
+
 }

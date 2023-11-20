@@ -63,7 +63,7 @@ const memberController = {
                             data.totalMatch = 0;
                             data.totalSaving = 0;
                         }
-                        totalSaving += parseInt(data.totalSaving)+parseInt(data.totalMatch);
+                        totalSaving += parseInt(data.totalSaving) + parseInt(data.totalMatch);
                         memberList.push(data);
                     }
                 }
@@ -167,10 +167,10 @@ const memberController = {
                     editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
                 }
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
-                const projectChoices = await Project.find({ 
-                    _id: { $in: cluster.projects }, 
-                    totalGroups: { $gt: 0 }  
-                  });
+                const projectChoices = await Project.find({
+                    _id: { $in: cluster.projects },
+                    totalGroups: { $gt: 0 }
+                });
                 const groupChoices = await Group.find({ _id: { $in: project.groups } });
                 let allSavings = 0;
                 let totalSaving = null;
@@ -198,8 +198,8 @@ const memberController = {
                     FatherFirstName, FatherLastName,
                     MotherFirstName, MotherLastName,
                     sex, birthdate, address, status } = req.body;
-                const existingMember = await Member.find({orgId});
-                if (existingMember.length!==0){
+                const existingMember = await Member.find({ orgId });
+                if (existingMember.length !== 0) {
                     return res.json({ error: "A member with the same ID already exists." });
                 }
                 const name = {

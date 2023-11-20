@@ -62,8 +62,10 @@ const groupController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location, 
-                    projectName: project.name, clusterName: cluster.name, search: req.query.search });
+                res.render("group", {
+                    authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location,
+                    projectName: project.name, clusterName: cluster.name, search: req.query.search
+                });
             } else {
                 res.redirect("/");
             }
@@ -154,7 +156,7 @@ const groupController = {
                 let project = await Project.findById(projectId);
                 const group = await Group.find({ _id: { $in: project.groups } });
                 const existingGroups = group.flatMap(group => group.name);
-                if (existingGroups.includes(name) && name !=currentGroup.name) {
+                if (existingGroups.includes(name) && name != currentGroup.name) {
                     return res.json({ error: "A group with the same name already exists." });
                 }
                 const SHGLeader = {

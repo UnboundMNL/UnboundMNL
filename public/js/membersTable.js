@@ -213,7 +213,7 @@ async function save() {
 		const split = each.id.split('_');
 		const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
 		if (existingChange) {
-			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0":each.textContent , split[3]));
+			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
 		} else {
 			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
 		}
@@ -253,7 +253,7 @@ async function save() {
 					if (each === [...constructedChanges].pop()) {
 						reloadTable(YEAR.value, DATATABLE);
 					}
-					
+
 					// Clear the list of changes
 					LISTOFCHANGES = [];
 				} else {

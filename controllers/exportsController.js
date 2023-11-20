@@ -18,12 +18,12 @@ const pipelineAsync = promisify(pipeline);
 
 const exportProjectForCluster = async (project, res) => {
     const projectId = project._id;
-    if(!projectId) {
+    if (!projectId) {
         //return res.status(400).json({ error: "No project ID provided." });
         return res.redirect("/dasboard");
     }
     project = await Project.findOne({ _id: projectId })
-        .populate({path: 'groups', populate: {path: 'members', populate: {path: 'savings'}}});
+        .populate({ path: 'groups', populate: { path: 'members', populate: { path: 'savings' } } });
     // maybe only filter for active members
 
     const workbook = new excelJS.Workbook();
@@ -35,13 +35,13 @@ const exportProjectForCluster = async (project, res) => {
         { header: 'Depository Bank', key: 'depositoryBank', width: 20 },
         { header: 'Bank Account Type', key: 'bankAccountType', width: 20 },
         { header: 'Bank Account Number', key: 'bankAccountNum', width: 20 },
-        { header: 'SHG Leader', key: 'SHGLeader', width: 20},
+        { header: 'SHG Leader', key: 'SHGLeader', width: 20 },
         { header: 'SHG Leader Phone', key: 'SHGLeaderPhone', width: 20 },
-        { header: 'SEDO Chairman', key: 'SEDOChairman', width: 20},
+        { header: 'SEDO Chairman', key: 'SEDOChairman', width: 20 },
         { header: 'SEDO Chairman Phone', key: 'SEDOChairmanPhone', width: 20 },
-        { header: 'Kaban Treasurer', key: 'kabanTreasurer', width: 20},
+        { header: 'Kaban Treasurer', key: 'kabanTreasurer', width: 20 },
         { header: 'Kaban Treasurer Phone', key: 'kabanTreasurerPhone', width: 20 },
-        { header: 'Kaban Auditor', key: 'kabanAuditor', width: 20},
+        { header: 'Kaban Auditor', key: 'kabanAuditor', width: 20 },
         { header: 'Kaban Auditor Phone', key: 'kabanAuditorPhone', width: 20 },
         { header: 'Total Members', key: 'totalMembers', width: 20 },
         { header: 'Total Savings', key: 'totalSaving', width: 20 },
@@ -53,19 +53,21 @@ const exportProjectForCluster = async (project, res) => {
         let SEDOChairman = group.SEDPChairman.firstName + " " + group.SEDPChairman.lastName;
         let kabanTreasurer = group.kabanTreasurer.firstName + " " + group.kabanTreasurer.lastName;
         let kabanAuditor = group.kabanAuditor.firstName + " " + group.kabanAuditor.lastName;
-        const rowData = { SPU: group.SPU, //maybe ccan remove thihs tbhh?
-            name: group.name, location: group.location, depositoryBank: group.depositoryBank, bankAccountType: group.bankAccountType, 
-            bankAccountNum: group.bankAccountNum, 
+        const rowData = {
+            SPU: group.SPU, //maybe ccan remove thihs tbhh?
+            name: group.name, location: group.location, depositoryBank: group.depositoryBank, bankAccountType: group.bankAccountType,
+            bankAccountNum: group.bankAccountNum,
             SHGLeader: SHGLeader, SHGLeaderPhone: group.SHGLeader.contatNo,
             SEDOChairman: SEDOChairman, SEDOChairmanPhone: group.SEDPChairman.contatNo,
             kabanTreasurer: kabanTreasurer, kabanTreasurerPhone: group.kabanTreasurer.contatNo,
             kabanAuditor: kabanAuditor, kabanAuditorPhone: group.kabanAuditor.contatNo,
-            totalMembers: group.members.length, totalSaving: group.totalSaving, totalMatch: group.totalMatch};
+            totalMembers: group.members.length, totalSaving: group.totalSaving, totalMatch: group.totalMatch
+        };
         worksheet.addRow(rowData);
     }
-    
-    
-    for(const group of project.groups) {
+
+
+    for (const group of project.groups) {
         shg = group;
         const groupSheet = workbook.addWorksheet(group.name);
         const columns2 = [
@@ -90,7 +92,7 @@ const exportProjectForCluster = async (project, res) => {
             }
         }
 
-            // headers for years
+        // headers for years
         for (const year of allYears) {
             columns2.push(
                 { header: `Savings ${year}`, key: `savings_${year}`, width: 15 },
@@ -112,7 +114,7 @@ const exportProjectForCluster = async (project, res) => {
 
             for (const year of allYears) {
                 const savingsEntry = member.savings.find(entry => entry.year === year);
-            
+
                 if (savingsEntry) {
                     rowData[`savings_${year}`] = savingsEntry.totalSaving;
                     rowData[`match_${year}`] = savingsEntry.totalMatch;
@@ -124,8 +126,8 @@ const exportProjectForCluster = async (project, res) => {
 
             groupSheet.addRow(rowData);
         }
-    } 
-    
+    }
+
     return workbook;
 }
 
@@ -134,7 +136,7 @@ const exportsController = {
     //export group
     exportGroup: async (req, res) => {
         const shgId = req.session.groupId || req.params.id;
-        if(!shgId) {
+        if (!shgId) {
             return res.redirect("/dasboard");
         }
         //const shg = await Group.findOne({ _id: shgId }).populate('members').populate('savings');
@@ -151,24 +153,24 @@ const exportsController = {
             { header: 'SPU', key: 'SPU', width: 15 },
             { header: 'Name', key: 'name', width: 20 },
             { header: 'Location', key: 'location', width: 20 },
-            { header: 'SHG Leader', key: 'SHGLeader', width: 20},
+            { header: 'SHG Leader', key: 'SHGLeader', width: 20 },
             { header: 'SHG Leader Phone', key: 'SHGLeaderPhone', width: 20 },
-            { header: 'SEDO Chairman', key: 'SEDOChairman', width: 20},
+            { header: 'SEDO Chairman', key: 'SEDOChairman', width: 20 },
             { header: 'SEDO Chairman Phone', key: 'SEDOChairmanPhone', width: 20 },
-            { header: 'Kaban Treasurer', key: 'kabanTreasurer', width: 20},
+            { header: 'Kaban Treasurer', key: 'kabanTreasurer', width: 20 },
             { header: 'Kaban Treasurer Phone', key: 'kabanTreasurerPhone', width: 20 },
-            { header: 'Kaban Auditor', key: 'kabanAuditor', width: 20},
+            { header: 'Kaban Auditor', key: 'kabanAuditor', width: 20 },
             { header: 'Kaban Auditor Phone', key: 'kabanAuditorPhone', width: 20 }
 
         ];
         worksheet.columns = columns;
-        
+
         const mainRowData = {
             SPU: shg.SPU,
             name: shg.name,
             location: shg.location,
         };
-        
+
         worksheet.addRow(mainRowData);
 
 
@@ -193,7 +195,7 @@ const exportsController = {
             }
         }
 
-            // headers for years
+        // headers for years
         for (const year of allYears) {
             columns2.push(
                 { header: `Savings ${year}`, key: `savings_${year}`, width: 15 },
@@ -215,7 +217,7 @@ const exportsController = {
 
             for (const year of allYears) {
                 const savingsEntry = member.savings.find(entry => entry.year === year);
-            
+
                 if (savingsEntry) {
                     rowData[`savings_${year}`] = savingsEntry.totalSaving;
                     rowData[`match_${year}`] = savingsEntry.totalMatch;
@@ -237,12 +239,12 @@ const exportsController = {
     //export a single project (calls the function above)
     exportProject: async (req, res) => {
         const projectId = req.session.projectId || req.params.projectId || req.params.id;
-        if(!projectId) {
+        if (!projectId) {
             //return res.status(400).json({ error: "No project ID provided." });
             return res.redirect("/dasboard");
         }
         const project = await Project.findOne({ _id: projectId })
-            //.populate({path: 'groups', populate: {path: 'members', populate: {path: 'savings'}}});
+        //.populate({path: 'groups', populate: {path: 'members', populate: {path: 'savings'}}});
         // maybe only filter for active members
 
         const workbook = await exportProjectForCluster(project, res);
@@ -258,29 +260,29 @@ const exportsController = {
     //exports a cluster (in zip)
     exportCluster: async (req, res) => {
         const clusterId = req.session.clusterId || req.params.clusterId || req.params.id;
-        if(!clusterId) {
+        if (!clusterId) {
             return res.redirect("/dasboard");
         }
         const cluster = await Cluster.findOne({ _id: clusterId })
-            .populate({path: 'projects'});
+            .populate({ path: 'projects' });
 
-        
-            const zip = archiver('zip', { zlib: { level: 9 } });
 
-            const zipFilename = cluster.name + '_compiled.zip';
-            res.setHeader('Content-Type', 'application/zip');
-            res.setHeader('Content-Disposition', `attachment; filename=${zipFilename}`);
+        const zip = archiver('zip', { zlib: { level: 9 } });
 
-            zip.pipe(res);
-        
-            for (const project of cluster.projects) {
-                const workbook = await exportProjectForCluster(project, res);
-        
-                const buffer = await workbook.xlsx.writeBuffer();
-                zip.append(buffer, { name: `${project.name}.xlsx` });
-            }
-        
-            await zip.finalize();
+        const zipFilename = cluster.name + '_compiled.zip';
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', `attachment; filename=${zipFilename}`);
+
+        zip.pipe(res);
+
+        for (const project of cluster.projects) {
+            const workbook = await exportProjectForCluster(project, res);
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            zip.append(buffer, { name: `${project.name}.xlsx` });
+        }
+
+        await zip.finalize();
     },
 
     //exports all clusters (in zip, in proper folders)
