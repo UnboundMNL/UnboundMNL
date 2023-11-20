@@ -112,6 +112,7 @@ function loadMobileTable() {
 function reloadTable(value, table) {
 	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
 	table.clear().draw();
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())

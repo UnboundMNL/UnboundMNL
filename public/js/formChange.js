@@ -1,6 +1,7 @@
 function changeForm(action, partname) {
     let form;
     if (partname == "Cluster") {
+
         form = document.getElementById("edit" + partname + "Form");
         form.action = "/cluster/" + action + "/edit";
     }

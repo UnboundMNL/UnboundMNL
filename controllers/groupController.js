@@ -1,4 +1,6 @@
+
 // controller for group related functions
+
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -212,9 +214,11 @@ const groupController = {
                         kaban = await Saving.find({ memberID: member._id });
                         for (const item of kaban) {
                             cluster.totalKaban -= item.totalSaving;
+
                             cluster.totalKaban -= item.totalMatch;
                             project.totalKaban -= item.totalSaving;
                             project.totalKaban -= item.totalMatch;
+
                         }
                         await Saving.deleteMany({ memberID: member._id });
                         await Member.deleteOne({ _id: member._id });
@@ -242,7 +246,9 @@ const groupController = {
         }
     },
 
+
     // load edit group form
+
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;
         const shg = await Group.findOne({ _id: shgId });
@@ -250,7 +256,9 @@ const groupController = {
         res.render('components/popups/popupFields/SHGFormFields', { shg, SPU: project.SPU, location: project.location });
     },
 
+
     //middleware for group id
+
     groupMiddle: async (req, res) => {
         try {
             req.session.groupId = req.body.id;
@@ -260,7 +268,9 @@ const groupController = {
         } catch (error) {
             console.error(error);
         }
-    },
+
+    }
+
 
 }
 

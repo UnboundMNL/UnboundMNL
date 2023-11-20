@@ -1,4 +1,6 @@
+
 // controllers for project related functions
+
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -145,7 +147,9 @@ const projectController = {
                                 kaban = await Saving.find({ memberID: member._id });
                                 for (const item of kaban) {
                                     cluster.totalKaban -= item.totalSaving;
+
                                     cluster.totalKaban -= item.totalMatch;
+
                                 }
                                 await Saving.deleteMany({ memberID: member._id });
                                 cluster.totalMembers -= 1;
