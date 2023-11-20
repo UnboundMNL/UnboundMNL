@@ -27,7 +27,10 @@ const memberController = {
                     return res.redirect("/group");
                 }
                 const year = new Date().getFullYear();
+
+
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
                 const members = await Member.find({ _id: { $in: group.members } });
                 let totalSaving = 0;
                 if (members) {
@@ -82,6 +85,8 @@ const memberController = {
                 const group = await Group.findOne({ _id: req.session.groupId });
                 const year = req.params.year;
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+
                 const members = await Member.find({ _id: { $in: group.members } });
                 let totalSaving = 0;
                 for (const member of members) {

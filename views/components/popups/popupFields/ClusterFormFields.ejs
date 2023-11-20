@@ -1,8 +1,11 @@
 <div class = "mb-3">
     <label for="clusterName" class="form-label">Cluster Name</label>
-    <input class="form-control" id = "clusterName" name = "name" type="text" aria-describedby="ClusterName" required
+    <input class="form-control"  name = "name" type="text" aria-describedby="ClusterName" required
     <% if (locals.cluster) { %>
         value = "<%=locals.cluster.name%>"
+        id = "editClusterName"
+    <% } else { %>
+        id = "addClusterName"
     <% } %>
     >
     <div class="invalid-feedback">

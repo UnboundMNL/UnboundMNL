@@ -1,5 +1,8 @@
 function validatePassword() {
+
+
     const saveChangesButton = document.getElementById('saveChanges');
+
     const newPass = document.getElementById('newPass').value;
     const confirmPass = document.getElementById('confirmPass').value;
     const matchingAlert2 = document.getElementById('matchingAlert2');
@@ -14,16 +17,19 @@ function validatePassword() {
             matchingAlert2.innerHTML = '✕ Use the same password';
         } else if (newPass.length >= minLength && confirmPass.length === 0) {
             matchingAlert2.innerHTML = '✕ Confirm your password';
+
             saveChangesButton.disabled = true;
         } else if (newPass.length < minLength) {
             matchingAlert2.innerHTML = '✕ Password must be at least ' + minLength + ' characters';
             saveChangesButton.disabled = true
+
         }
         // Add code to disable the save button if needed
     } else {
         matchingAlert2.style.color = 'lime';
         matchingAlert2.innerHTML = '✓ Password Matched';
         saveChangesButton.disabled = false;
+
         // Add code to enable the save button if needed
     }
 }

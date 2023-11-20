@@ -121,13 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkUsernameCheckbox = document.getElementById('checkUsername');
     const checkPasswordCheckbox = document.getElementById('checkPassword');
 
+
     checkUsernameCheckbox.addEventListener('change', updateSubmitButtonState);
     checkPasswordCheckbox.addEventListener('change', updateSubmitButtonState);
 
     saveChangesButton.disabled = true;
 
     function updateSubmitButtonState() {
-
         saveChangesButton.disabled = !checkUsernameCheckbox.checked && !checkPasswordCheckbox.checked;
     }
 
@@ -155,10 +155,12 @@ function updateUserInformation() {
     usernameAlert.innerHTML = '';
     currentPasswordAlert2.innerHTML = '';
 
+
     const saveSuccessfulButton = document.getElementById('saveSuccessful');
     saveSuccessfulButton.addEventListener('click', function () {
         window.location.reload();
     });
+
     const requestBody = {
         newUsername: newUsername,
         currentPassword1: currentPassword1,
@@ -211,7 +213,11 @@ function updateUserInformation() {
             usernameAlert.style.color = 'red';
             usernameAlert.innerHTML = `✕ ${data.error}`;
         } else {
-           
+            const saveSuccessfulButton = document.getElementById('saveSuccessful');
+            saveSuccessfulButton.addEventListener('click', function () {
+                window.location.reload();
+            });
+
         }
     })
     .catch((error) => {

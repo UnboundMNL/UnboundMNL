@@ -1,11 +1,14 @@
 <div class = "mb-3">
     <label for="SHGName" class="form-label">Self Help Group Name</label>
     <div class = "input-group">
-        <input class="form-control" id = "SHGName" name = "name" type="text" aria-describedby="SHGName" 
+        <input class="form-control"  name = "name" type="text" aria-describedby="SHGName" 
         <% if (locals.shg) { %>
             value = "<%=locals.shg.name%>"
+            id = "editSHGName"
+        <% } else { %>
+            id = "addSHGName"
         <% } %>
-        required>
+        required >
         <div class="invalid-feedback">
             Please enter a SHG name.
         </div>

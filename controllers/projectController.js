@@ -1,3 +1,6 @@
+
+// controllers for project related functions
+
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -105,20 +108,20 @@ const projectController = {
         try {
             if (req.session.isLoggedIn) {
                 const projectId = req.params.id;
-                const project = await Project.findById(projectId);
+                const currentProject = await Project.findById(projectId);
                 const { name } = req.body;
-                if (project.name != name) {
-                    const existingProject = await Project.findOne({ name });
-                    if (existingProject) {
-                        return res.status(400).json({ error: "A project with the same name already exists." });
-                    }
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                const project = await Project.find({ _id: { $in: cluster.projects } });
+                const existingProjects = project.flatMap(project => project.name);
+                if (existingProjects.includes(name) && name != currentProject.name) {
+                    return res.json({ error: "A Project with the same name already exists." });
                 }
                 updateData = req.body;
-                const updateProject = await Project.findOneAndUpdate({ name: project.name }, updateData, { new: true });
+                const updateProject = await Project.findOneAndUpdate({ _id: projectId }, updateData, { new: true });
                 if (updateProject) {
-                    res.redirect("/project");
+                    res.json({ success: "A Project has been edited." });
                 } else {
-                    return res.status(404).json({ error: "Update error!" });
+                    return res.json({ error: "An error occurred while editng a project." });
                 }
             } else {
                 res.redirect("/");
@@ -144,7 +147,10 @@ const projectController = {
                                 kaban = await Saving.find({ memberID: member._id });
                                 for (const item of kaban) {
                                     cluster.totalKaban -= item.totalSaving;
+
+
                                     cluster.totalKaban -= item.totalMatch;
+
                                 }
                                 await Saving.deleteMany({ memberID: member._id });
                                 cluster.totalMembers -= 1;

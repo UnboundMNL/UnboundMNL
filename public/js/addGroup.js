@@ -12,13 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('SHGName').addEventListener('input', event => {
+                document.getElementById('addSHGName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('SHGName').value == "") {
+                    if (document.getElementById('addSHGName').value == "") {
                         formNameInput.classList.add('is-invalid');
                         invalidFeedback.textContent = 'Please enter a SHG name.';
                     } else {
