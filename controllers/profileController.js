@@ -59,8 +59,9 @@ const profileController = {
                         break;
                     case "Treasurer":
                         const group = await Group.find({ _id: user.validGroup });
-                        nMember = group.totalMembers;
-                        savings = group.totalKaban;
+                        const project = await Project.findOne({ 'groups': user.validGroup });
+                        nMember = project.totalMembers;
+                        savings = project.totalKaban;
                         memberIds = group.flatMap(group => group.members);
                         memberList = await Member.find({ _id: { $in: memberIds } });
                         savingIds = memberList.flatMap(member => member.savings);

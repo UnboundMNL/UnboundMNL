@@ -60,6 +60,9 @@ const registerController = {
         const username = user.username;
         dashbuttons = dashboardButtons(authority);
         let clusterChoices;
+        if (authority == "Treasurer"){
+          return res.redirect("/");
+        }
         if (authority == "Admin") {
           clusterChoices = await Cluster.find({});
         } else {

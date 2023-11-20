@@ -198,18 +198,18 @@ function showModal() {
     saveModal.show();
 }
 
-function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
+function accountTypeSelect(clusterChoicesName, clusterChoicesId, authority) {
     var accountType = document.getElementById("accountType").value;
     var elementsToHandle = ["clusterSelect", "spuSelect", "shgSelect"];
 
-    if (accountType == "Admin") {
+    if (accountType == "Admin" && authority == "Admin") {
         elementsToHandle.forEach(function (elementId) {
             var element = document.getElementById(elementId);
             element.disabled = true;
             element.value = "";
             $("#"+elementId).empty();
         });
-    } else if (accountType == "SEDO") {
+    } else if (accountType == "SEDO" && authority == "Admin") {
         elementsToHandle.forEach(function (elementId) {
             if (elementId !== "clusterSelect") {
                 var element = document.getElementById(elementId);
@@ -231,7 +231,7 @@ function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
 
             }
         });
-    } else {
+    } else if (accountType == "Treasurer" && authority == "Admin") {
         elementsToHandle.forEach(function (elementId) {
             document.getElementById(elementId).disabled = false;
             var element = document.getElementById(elementId);
@@ -262,6 +262,25 @@ function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
                     console.error('Error:', error);
                 });
         
+    } else if (accountType == "SEDO" && authority == "SEDO") {
+        elementsToHandle.forEach(function (elementId) {
+            if (elementId !== "clusterSelect") {
+                var element = document.getElementById(elementId);
+                element.disabled = true;
+                element.value = "";
+                $("#"+elementId).empty();
+            }
+        })
+    } else {
+        elementsToHandle.forEach(function (elementId) {
+            if (elementId !== "clusterSelect") {
+                var element = document.getElementById(elementId);
+                element.disabled = false;
+                element.value = "";
+                $("#"+elementId).empty();
+            }
+        })
+        getProject()
     }
 }
 

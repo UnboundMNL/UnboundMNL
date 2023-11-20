@@ -121,7 +121,7 @@
                     <% } %>
                 ];
         document.getElementById("accountType").onchange = function() {
-            accountTypeSelect(JSON.stringify(clusterChoicesName),JSON.stringify(clusterChoicesId));
+            accountTypeSelect(JSON.stringify(clusterChoicesName),JSON.stringify(clusterChoicesId),"<%=authority%>");
             document.getElementById('noPart').innerHTML = '';
         };
     </script>
