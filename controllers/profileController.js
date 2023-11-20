@@ -59,8 +59,9 @@ const profileController = {
                         break;
                     case "Treasurer":
                         const group = await Group.find({ _id: user.validGroup });
-                        nMember = group.totalMembers;
-                        savings = group.totalKaban;
+                        const project = await Project.findOne({ 'groups': user.validGroup });
+                        nMember = project.totalMembers;
+                        savings = project.totalKaban;
                         memberIds = group.flatMap(group => group.members);
                         memberList = await Member.find({ _id: { $in: memberIds } });
                         savingIds = memberList.flatMap(member => member.savings);
@@ -124,34 +125,34 @@ const profileController = {
                 const userID = req.session.userId;
                 let user = await User.findById(userID);
                 const username = user.username;
-                const {newUsername, currentPassword1, newPassword, confirmPassword, currentPassword2,
-                    checkUsernameCheckbox, checkPasswordCheckbox} = req.body;
-                
+                const { newUsername, currentPassword1, newPassword, confirmPassword, currentPassword2,
+                    checkUsernameCheckbox, checkPasswordCheckbox } = req.body;
+
                 // const newUsername = req.body.newUsername;
                 // const currentPassword1 = req.body.currentPassword1;
                 // const newPassword = req.body.newPassword;
                 // const confirmPassword = req.body.confirmPassword;
                 // const currentPassword2 = req.body.currentPassword2;
-                
+
                 let updateData = req.body;
                 let updateUser;
-                
-                if(currentPassword1 === "" && checkUsernameCheckbox === true){
+
+                if (currentPassword1 === "" && checkUsernameCheckbox === true) {
                     return res.status(401).json({ errorType: 4, error: "Please enter your current password." });
                 }
-                
-                if((newUsername !== "") && (currentPassword1 !== "")){ //mighht ermove last one
-                    
+
+                if ((newUsername !== "") && (currentPassword1 !== "")) { //mighht ermove last one
+
                     //updateData.username = newUsername;
 
                     // const usernameRegex = /^(?=.{3,15}$)(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]*$/;
                     // if (!usernameRegex.test(newUsername) || newUsername.toLowerCase() === "visitor") {
                     //     return res.status(401).json({ error: "Username must contain at least one letter or number, and be between 3-15 characters long, and cannot be 'visitor!" });
                     // }
-                    if(newUsername === user.username){
+                    if (newUsername === user.username) {
                         return res.status(401).json({ errorType: 2, error: "No Canges Made." });
                     }
-                    
+
                     const isPasswordMatch = await user.comparePassword(currentPassword1);
                     if (!isPasswordMatch) {
                         return res.status(401).json({ errorType: 1, error: "Incorrect Password" });
@@ -164,13 +165,13 @@ const profileController = {
                     updateData.username = newUsername;
                     updateUser = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
                 }
-                if(currentPassword2 === "" && checkPasswordCheckbox === true){
+                if (currentPassword2 === "" && checkPasswordCheckbox === true) {
                     return res.status(401).json({ errorType: 6, error: "Please enter your current password." });
                 }
-                if(newPassword == "" && confirmPassword == "" && checkPasswordCheckbox === true){
+                if (newPassword == "" && confirmPassword == "" && checkPasswordCheckbox === true) {
                     return res.status(401).json({ errorType: 6, error: "Please enter your new password." });
                 }
-                if((newPassword !== "") && (confirmPassword !== "") && (newPassword === confirmPassword) && (currentPassword2 !== "")){
+                if ((newPassword !== "") && (confirmPassword !== "") && (newPassword === confirmPassword) && (currentPassword2 !== "")) {
                     const isPasswordMatch = await user.comparePassword(currentPassword2);
                     if (!isPasswordMatch) {
                         return res.status(401).json({ errorType: 5, error: "Incorrect Password" });
@@ -178,16 +179,18 @@ const profileController = {
                     testPassword = newPassword.toString();
                     const passwordRegex = /^.{6,}$/;
                     if (testPassword !== "" && !passwordRegex.test(testPassword)) {
-                        return res.status(400).json({error: "Password should be at least 6 characters long." });
-                        
+                        return res.status(400).json({ error: "Password should be at least 6 characters long." });
+
                     }
-                    
+
                     updateData.password = newPassword;
                     updateUser = await User.findOneAndUpdate({ username: username }, updateData, { new: true });
                 }
 
                 if (updateUser) {
-                    return res.json({success: "Password has been changed" });
+
+                    return res.json({ success: "Password has been changed" });
+
                 } else {
                     return res.json({ error: "User not found" });
                 }
@@ -204,7 +207,7 @@ const profileController = {
         try {
             const usernameList = await User.find().select('username -_id');
             return res.json({ usernameList });
-            
+
         } catch (error) {
             console.error(error);
             return res.status(500).json({ error: "An error occurred while fetching data." });

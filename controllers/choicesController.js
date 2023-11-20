@@ -60,7 +60,7 @@ const choicesController = {
 
         }
     },
-    
+
 }
 
 module.exports = choicesController;

@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function addMember(form) {
     const formData = new FormData(form);
     const formDataObject = {};
-    const formNameInput =  document.getElementById('orgId');
+    const formNameInput = document.getElementById('orgId');
     const invalidFeedback = formNameInput.nextElementSibling;
 
     // Convert FormData to plain object
@@ -100,7 +100,7 @@ function checkDateValidity() {
         formNameInput.setCustomValidity('');
         formNameInput.classList.remove('is-invalid');
         formNameInput.classList.remove('is-valid');
-        const birthdateInput=document.getElementById('birthdate');
+        const birthdateInput = document.getElementById('birthdate');
         if (birthdateInput.validity.valueMissing) {
             formNameInput.classList.add('is-invalid');
             invalidFeedback.textContent = 'Birthday is required.';

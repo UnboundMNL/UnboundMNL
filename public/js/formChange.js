@@ -14,7 +14,7 @@ function changeForm(action, partname) {
                         editCluster(event.target, form.name);
                     }
                     event.preventDefault();
-                    form.classList.add('was-validated');    
+                    form.classList.add('was-validated');
                     document.getElementById('editClusterName').addEventListener('input', event => {
                         const formNameInput = event.target;
                         const invalidFeedback = formNameInput.nextElementSibling;
@@ -99,11 +99,11 @@ function changeForm(action, partname) {
             const formDataObject = {};
             const formNameInput = nameInput;
             const invalidFeedback = formNameInput.nextElementSibling;
-        
+
             formData.forEach((value, key) => {
                 formDataObject[key] = value;
             });
-        
+
             fetch(route, {
                 method: 'POST',
                 headers: {
@@ -125,11 +125,11 @@ function changeForm(action, partname) {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        
+
         }
     }
     if (partname == "SHG") {
-        route= "/group/" + action + "/edit";
+        route = "/group/" + action + "/edit";
         (() => {
             'use strict'
             const forms = document.querySelectorAll('.needs-validation.editForm'); // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -191,7 +191,7 @@ function changeForm(action, partname) {
                     console.error('Error:', error);
                     // Handle errors here
                 });
-        
+
         }
     }
 }
