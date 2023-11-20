@@ -18,7 +18,7 @@ const projectController = {
         try {
             if (req.session.isLoggedIn) {
                 if (req.session.authority == "Treasurer") {
-                    return res.redirect("/group");
+                    return res.redirect("/member");
                 }
                 const sidebar = req.session.sidebar;
                 const page = req.params.page;

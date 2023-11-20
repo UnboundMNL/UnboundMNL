@@ -17,6 +17,9 @@ const groupController = {
     group: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                if (req.session.authority == "Treasurer") {
+                    return res.redirect("/member");
+                }
                 const sidebar = req.session.sidebar;
                 const page = req.params.page;
                 const userID = req.session.userId;
