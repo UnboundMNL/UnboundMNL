@@ -27,7 +27,9 @@ const memberController = {
                     return res.redirect("/group");
                 }
                 const year = new Date().getFullYear();
-                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
+
+                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
                 const members = await Member.find({ _id: { $in: group.members } });
                 let totalSaving = 0;
                 if (members) {
@@ -81,7 +83,9 @@ const memberController = {
                 let memberList = [];
                 const group = await Group.findOne({ _id: req.session.groupId });
                 const year = req.params.year;
-                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"];
+
+                const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
                 const members = await Member.find({ _id: { $in: group.members } });
                 let totalSaving = 0;
                 for (const member of members) {
@@ -325,12 +329,17 @@ const memberController = {
                 const group = await Group.findById(req.session.groupId);
                 await Saving.deleteMany({ memberID: memberId });
                 cluster.totalKaban -= member.totalSaving;
+
+                cluster.totalKaban -= member.totalMatch;
                 cluster.totalMembers -= 1;
                 await cluster.save();
                 project.totalKaban -= member.totalSaving;
+                project.totalKaban -= member.totalMatch;
                 project.totalMembers -= 1;
                 await project.save();
                 group.totalKaban -= member.totalSaving;
+                group.totalKaban -= member.totalMatch;
+
                 group.totalMembers -= 1;
                 group.members = group.members.filter(arrayMembers => !arrayMembers.equals(memberId.toString()));
                 await group.save();
