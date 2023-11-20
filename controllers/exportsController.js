@@ -264,7 +264,9 @@ const exportsController = {
             return res.redirect("/dasboard");
         }
         const cluster = await Cluster.findOne({ _id: clusterId })
+
             .populate({ path: 'projects' });
+
 
 
         const zip = archiver('zip', { zlib: { level: 9 } });
