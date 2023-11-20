@@ -128,8 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
     saveChangesButton.disabled = true;
 
     function updateSubmitButtonState() {
-
-
         saveChangesButton.disabled = !checkUsernameCheckbox.checked && !checkPasswordCheckbox.checked;
     }
 
@@ -219,6 +217,7 @@ function updateUserInformation() {
             saveSuccessfulButton.addEventListener('click', function () {
                 window.location.reload();
             });
+
         }
     })
     .catch((error) => {
