@@ -119,3 +119,16 @@ function linkMemberPage(id, className) {
         });
     });
 }
+
+function displayExportMessage(e, name) {
+    e.stopPropagation();
+    var toastEl = document.querySelector('.toast');
+    if (toastEl) {
+        var toastBodyEl = toastEl.querySelector('.toast-body');
+
+        toastBodyEl.textContent = 'Exporting ' + name + '...';
+
+        var toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+}

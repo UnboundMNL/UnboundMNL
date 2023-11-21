@@ -12,14 +12,19 @@
 <div class="row">
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
-        <div class="col-md-4" id = "<%=pageParts[i]._id%>">
-            <div class="container container-style">
-                <h5><%=type%> <%=pageParts[i].name%></h5>
-
+        <div class="col-md-4 d-flex" id = "<%=pageParts[i]._id%>">
+            <div class="container container-style d-flex flex-column flex-grow-1 justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between">
+                        <h5><%=type%> <%=pageParts[i].name%></h5>
+                        <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, '<%=pageParts[i].name%>')"></i>
+                    </div>
+                    
                     <div>
                         <i class='bx bxs-map'></i>
-                        <span><%=pageParts[i].location%></span>
+                        <span><small><%=pageParts[i].location%></small></span>
                     </div>
+                </div>
    
                 <div class="container-bottom mt-4">
                     <div class="d-flex align-items-end">
@@ -34,9 +39,9 @@
                     </div>
 
                     <div>
-                        <span>Total Savings:</span>
-                        <h3 class="format-number"><%=pageParts[i].totalKaban%></h3>
-                    </div>
+                        <span><small>Total Savings:</small></span>
+                        <h4 class="format-number"><%=pageParts[i].totalKaban%></h4>
+                    </div> 
                 </div>
             </div>
         </div>
@@ -47,5 +52,20 @@
                 cardLink("group", "<%=pageParts[i]._id%>");
             <% } %>
         </script>
+
+        
     <% } %>
+</div>
+
+<div class="toast-container
+            position-fixed 
+            top-0 start-50 
+            translate-middle-x
+            mt-5"
+            data-delay="3000">
+    <div class="toast mt-4 text-center bg-info fw-bold text-black-50">
+        <div class="toast-body">
+
+        </div>
+    </div>
 </div>
