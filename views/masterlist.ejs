@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%-include('components/headers.ejs', {authority, pageName: "Member Masterlist"})%>
+    <%-include('components/headers.ejs', {authority, pageName: "Members Masterlist"})%>
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/masterlist.css" />
@@ -22,7 +22,7 @@
         <!-- Materlist Content -->
         <div class="p-4 mt-5"> 
             <% var type = "Masterlist";  %>
-            <h4 class="mt-3">Masterlist</h4>
+            <h4 class="mt-3">Members Masterlist</h4>
 
             <!-- Temporary memberList -->
             <% var memberList = [
@@ -36,8 +36,8 @@
                 }
             ] %>
 
-            <%- include('components/listContent.ejs', { memberList, authority }) %>
-            <%- include('components/popups/deleteProfileModal.ejs', { pageName: "Masterlist" }) %>
+            <%- include('components/listContent.ejs', { memberList, pageName: "Members Masterlist", authority }) %>
+            <%- include('components/popups/deleteProfileModal.ejs', { pageName: "Members Masterlist" }) %>
     </main>
     <script>open('memberButton')</script>
     <%-include('components/popups/logoutPopup.ejs') %>

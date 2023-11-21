@@ -10,10 +10,10 @@
                     <h4 class="text-center p-2">Delete Confirmation</h4>
                     <h6 class="text-center pt-2">
                         Are you sure you want to delete 
-                        <% if (pageName == "Member's Profile" || pageName == "Masterlist") { %>
+                        <% if (pageName == "Member's Profile" || pageName == "Members Masterlist") { %>
                             the member <br>"<span id="memberNameToDelete"></span>" ?
                         <% } else { %>
-                            account?
+                            <br><span id="userToDelete"></span>'s account?
                         <% } %>
                     </h6>
                     <h6 class="text-center text-danger">Warning: This action cannot be undone.</h6>
