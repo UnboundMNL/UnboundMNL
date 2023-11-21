@@ -44,8 +44,7 @@ const exportProjectForCluster = async (project, res) => {
         { header: 'Kaban Auditor', key: 'kabanAuditor', width: 20 },
         { header: 'Kaban Auditor Phone', key: 'kabanAuditorPhone', width: 20 },
         { header: 'Total Members', key: 'totalMembers', width: 20 },
-        { header: 'Total Savings', key: 'totalSaving', width: 20 },
-        { header: 'Total Match', key: 'totalMatch', width: 20 }
+        { header: 'Total Kaban', key: 'totalKaban', width: 20 }
     ];
     worksheet.columns = columns;
     for (const group of project.groups) {
@@ -61,8 +60,7 @@ const exportProjectForCluster = async (project, res) => {
             SEDOChairman: SEDOChairman, SEDOChairmanPhone: group.SEDPChairman.contatNo,
             kabanTreasurer: kabanTreasurer, kabanTreasurerPhone: group.kabanTreasurer.contatNo,
             kabanAuditor: kabanAuditor, kabanAuditorPhone: group.kabanAuditor.contatNo,
-            totalMembers: group.members.length, totalSaving: group.totalSaving, totalMatch: group.totalMatch
-        };
+            totalMembers: group.members.length, totalKaban: group.totalKaban};
         worksheet.addRow(rowData);
     }
 
@@ -138,6 +136,9 @@ const exportsController = {
         const shgId = req.session.groupId || req.params.id;
         if (!shgId) {
             return res.redirect("/dasboard");
+        }
+        if(req.session.isLoggedIn == false) {
+            return res.redirect("/");
         }
         //const shg = await Group.findOne({ _id: shgId }).populate('members').populate('savings');
         const shg = await Group.findOne({ _id: shgId }).populate({
@@ -243,6 +244,11 @@ const exportsController = {
             //return res.status(400).json({ error: "No project ID provided." });
             return res.redirect("/dasboard");
         }
+        const userId = req.session.userId;
+        const user = await User.findById(userId);
+        if(req.session.isLoggedIn == false || user.authority == "Treasurer") {
+            return res.redirect("/");
+        }
         const project = await Project.findOne({ _id: projectId })
         //.populate({path: 'groups', populate: {path: 'members', populate: {path: 'savings'}}});
         // maybe only filter for active members
@@ -263,6 +269,11 @@ const exportsController = {
         if (!clusterId) {
             return res.redirect("/dasboard");
         }
+        const userId = req.session.userId;
+        const user = await User.findById(userId);
+        if(req.session.isLoggedIn == false || user.authority == "Treasurer") {
+            return res.redirect("/");
+        }
         const cluster = await Cluster.findOne({ _id: clusterId })
 
             .populate({ path: 'projects' });
@@ -275,20 +286,25 @@ const exportsController = {
         res.setHeader('Content-Type', 'application/zip');
         res.setHeader('Content-Disposition', `attachment; filename=${zipFilename}`);
 
-        zip.pipe(res);
-
-        for (const project of cluster.projects) {
-            const workbook = await exportProjectForCluster(project, res);
-
-            const buffer = await workbook.xlsx.writeBuffer();
-            zip.append(buffer, { name: `${project.name}.xlsx` });
-        }
-
-        await zip.finalize();
+            zip.pipe(res);
+        
+            for (const project of cluster.projects) {
+                const workbook = await exportProjectForCluster(project, res);
+        
+                const buffer = await workbook.xlsx.writeBuffer();
+                zip.append(buffer, { name: `${project.name}.xlsx` });
+            }
+        
+            await zip.finalize();
     },
 
     //exports all clusters (in zip, in proper folders)
     exportAdminClusters: async (req, res) => {
+        const userId = req.session.userId;
+        const user = await User.findById(userId);
+        if(req.session.isLoggedIn == false || user.authority != "Admin") {
+            return res.redirect("/");
+        }
         const clusters = await Cluster.find().populate({ path: 'projects' });
 
         const zip = archiver('zip', { zlib: { level: 9 } });
@@ -310,6 +326,7 @@ const exportsController = {
                 zip.append(buffer, { name: `${cluster.name}/${project.name}.xlsx`, prefix: cluster.name });
             }
         }
+        //ADD SUMMARY SHEET
 
         await zip.finalize();
     }
