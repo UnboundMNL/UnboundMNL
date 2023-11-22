@@ -12,7 +12,8 @@ const adminController = require('../controllers/adminFunctionsController');
 //  GETS
 router.get("/userMasterList", adminController.userMasterList);
 
-// POSTS
+// DELETE
+router.POST("/adminUserDelete", adminController.adminUserDelete);
 
 // PATCH
 router.patch("/userDetailsOverride", adminController.userDetailsOverride);

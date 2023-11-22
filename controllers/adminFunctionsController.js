@@ -76,6 +76,25 @@ const adminFunctionsController = {
             return res.status(500).json({ error: error.message })
         }
 
+    },
+    
+    adminUserDelete: async (req, res) => {
+
+        if(req.session.isLoggedIn){
+            const user = await User.findById(req.session.userId)
+            const authority = user.authority
+            if (authority === "Admin") {
+                const { profileID } = req.body
+
+                await User.findOneAndDelete({ _id: profileID })
+
+                return res.status(200).json({ success: "User has been deleted." })
+            } else {
+                return res.status(403).json({ error: "User not authorized" })
+            }
+        } else {
+            res.redirect("/")
+        }
     }
 
 }
