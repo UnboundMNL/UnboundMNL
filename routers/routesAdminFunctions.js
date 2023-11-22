@@ -17,7 +17,5 @@ router.get("/userMasterList", adminController.userMasterList);
 // PATCH
 router.patch("/userDetailsOverride", adminController.userDetailsOverride);
 
-// DELETES
-router.delete("/deleteUser", adminController.deleteUser);
 
 module.exports = router;  

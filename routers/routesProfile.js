@@ -16,4 +16,5 @@ router.get("/retrieveUsernameList", profileController.retrieveUsernameList);
 router.get("/accounts", profileController.accounts);
 router.post("/redirectMiddle", profileController.redirectMiddle);
 
+
 module.exports = router;  

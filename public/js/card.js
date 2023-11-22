@@ -39,8 +39,8 @@ function cardLink(type, id) {
 
 function cardDelete(type, id) {
     if (type != "member" && type != "masterlist") {
-        const div = document.getElementById("delete_" + id);
-        div.addEventListener('click', function () {
+        const button = document.getElementById("delete_" + id);
+        button.addEventListener('click', function () {
             if (document.getElementById(id + "Confirm").value == "DELETE") {
                 const data = '/' + type + '/' + id + '/delete';
                 fetch(data, {
@@ -62,23 +62,21 @@ function cardDelete(type, id) {
             }
         });
     } else {
-        const div = document.getElementById("deleteButton");
-        div.addEventListener('click', function () {
+        const button = document.getElementById("deleteButton");
+        button.addEventListener('click', function () {
             if (document.getElementById("deleteConfirm").value == "DELETE") {
                 let href;
                 let data; 
                 switch(type) {
                     case "masterlist":
-                        href = window.location.reload();
-                        data = '/member/' + type + '/' + id + '/delete';
+                        href = "/masterlist";
+                        data = '/member/' + id + '/delete';
                         break;
                     case "member":
                         href = "/member";
                         data = '/' + type + '/' + id + '/delete';
                     break;
                 }
-                
-                
                 fetch(data, {
                     method: 'POST',
                     headers: {

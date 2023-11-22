@@ -407,44 +407,6 @@ const memberController = {
         }
     },
 
-    masterListDeleteMember: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn) {
-                const memberId = req.params.id;
-                const member = await Member.findById(memberId);
-                const cluster = await Cluster.findById(member.clusterId);
-                const project = await Project.findById(member.projectId);
-                const group = await Group.findById(member.groupId);
-
-                await Saving.deleteMany({ memberID: memberId });
-                cluster.totalKaban -= member.totalSaving;
-                cluster.totalKaban -= member.totalMatch;
-                cluster.totalMembers -= 1;
-                await cluster.save();
-                project.totalKaban -= member.totalSaving;
-                project.totalKaban -= member.totalMatch;
-                project.totalMembers -= 1;
-                await project.save();
-                group.totalKaban -= member.totalSaving;
-                group.totalKaban -= member.totalMatch;
-                group.totalMembers -= 1;
-                group.members = group.members.filter(arrayMembers => !arrayMembers.equals(memberId.toString()));
-                await group.save();
-                const deletedMember = await Member.findByIdAndDelete(memberId);
-                if (deletedMember) {
-                    res.json(deletedMember);
-                } else {
-                    return res.status(404).json({ error: "Delete error! Member not found." });
-                }
-            } else {
-                res.redirect("/");
-            }
-        } catch (error) {
-            console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
-        }
-    },
-
 }
 
 module.exports = memberController;

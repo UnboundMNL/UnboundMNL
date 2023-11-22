@@ -6,6 +6,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/profile.css" />
 
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <!-- SCRIPTS -->
     <script src="/js/accountProfile.js"></script>
     <script src="/js/checkValidation.js"></script>
@@ -33,9 +36,15 @@
 
         <%-include('components/popups/savePopup.ejs', {pageName: "Profile"}) %>
 
-        <%-include('components/popups/deleteProfileModal.ejs', {pageName: "Profile", user: user.username}) %>
+        <%-include('components/popups/deleteProfileModal.ejs', {pageName: "Profile"}) %>
         
         <!-- Others -->
+        <script>
+            open('profileButton');
+            $(document).ready(function() {
+                $('#userToDelete').text("<%=user.username%>");
+            });
+        </script>
         
         <%-include('components/popups/logoutPopup.ejs') %>
     </main>

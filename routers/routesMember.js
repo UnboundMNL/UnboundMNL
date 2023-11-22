@@ -20,6 +20,5 @@ router.post('/member/:id/edit', memberController.editMember);
 router.post('/member/:id/delete', memberController.deleteMember);
 router.get('/masterlist', memberController.retrieveMasterlist)
 router.post("/memberMiddle", memberController.memberMiddle);
-router.post('/member/masterlist/:id/delete', memberController.masterListDeleteMember)
 
 module.exports = router;  
