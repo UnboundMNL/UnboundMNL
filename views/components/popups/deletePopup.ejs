@@ -22,8 +22,8 @@
                         <% var deleteID= "delete_"+pageParts[i]._id ; %>
                         <button type="button" class="btn btn-danger" id="<%=deleteID%>">Delete</button>
                         <script>
-                            <% if (type == "cluster") { %>
-                                cardDelete("cluster", "<%= pageParts[i]._id %>");
+                            <% if (type == "Cluster") { %>
+                                cardDelete("Cluster", "<%= pageParts[i]._id %>");
                             <% } else if (type == "Sub-Projects") { %>
                                 cardDelete("project", "<%= pageParts[i]._id %>");
                             <% } else if (type == "SHG") { %>
