@@ -245,10 +245,17 @@ const profileController = {
                 if (authority == "Treasurer") {
                     return res.redirect("/");
                 }
+                let memberList;
+                if (authority == "Admin"){
+                    memberList = await User.find({});
+                } else {
+                    memberList = await User.find({});
+                }
+                
                 const username = user.username;
                 const orgParts = await getAuthorizedMembers(user, authority);
                 dashbuttons = dashboardButtons(authority);
-                res.render("accounts", { authority, username, dashbuttons, sidebar, orgParts });
+                res.render("accounts", { authority, username, dashbuttons, sidebar, orgParts, memberList });
             } else {
                 res.redirect("/");
             }

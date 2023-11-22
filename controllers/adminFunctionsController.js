@@ -65,7 +65,7 @@ const adminFunctionsController = {
                         })
                     }
 
-                    return res.render("accounts", { officerList, username, authority, sidebar })
+                    return res.render("", { officerList, username, authority, sidebar })
                 } else {
                     return res.status(403).json({ error: "User not authorized" })
                 }
@@ -80,13 +80,12 @@ const adminFunctionsController = {
 
     adminUserDelete: async (req, res) => {
         if(req.session.isLoggedIn){
-            const user = await User.findById(req.session.userId)
-            const authority = user.authority
-                const { profileID } = req.body
-                const deletedUser = await User.findOneAndDelete({ _id: profileID })
-                if (deletedUser){
-                    return res.status(200).json({ success: "User has been deleted." })
-                }
+            console.log("here");
+            const { profileID } = req.body
+            const deletedUser = await User.findOneAndDelete({ _id: profileID })
+            if (deletedUser){
+                return res.json({ success: "User has been deleted." })
+            }
         } else {
             res.redirect("/")
         }

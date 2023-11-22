@@ -43,10 +43,10 @@
                         <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick ="redirectMember('<%= memberList[i].objectID%>')">View</button></td>
                         <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].name %>','<%= memberList[i].objectID%>')">Delete</button></td>
                     <% } else { %>
-                        <td class = "text-center"><%= memberList[i].type %></td>
+                        <td class = "text-center"><%= memberList[i].authority %></td>
                         <td class = "text-center"><%= memberList[i].username %></td>
                         <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick="displayEditModal('<%= memberList[i] %>')">Edit</button></td>
-                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].username %>')">Delete</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].username %>', '<%= memberList[i]._id%>')">Delete</button></td>
                     <% } %>
                 </tr>
             <% } %>
