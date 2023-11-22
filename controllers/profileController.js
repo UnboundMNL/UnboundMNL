@@ -249,7 +249,11 @@ const profileController = {
                 if (authority == "Admin"){
                     memberList = await User.find({});
                 } else {
-                    memberList = await User.find({});
+                    const cluster = await Cluster.find({ _id: user.validCluster });
+                    const projectId = cluster.flatMap(cluster => cluster.projects);
+                    const project = await Project.find({_id: { $in: projectId }});
+                    const groupId = project.flatMap(project => project.groups);
+                    memberList = await User.find({validGroup: { $in: groupId } });
                 }
                 
                 const username = user.username;
