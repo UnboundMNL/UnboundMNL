@@ -364,7 +364,30 @@ const memberController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-                res.render("masterlist", { authority, username });
+                let members;
+                const memberList = [];
+                switch (authority) {
+                    case "Admin":
+                        members = await Member.find();
+                        break;
+                    case "SEDO":
+                        members = await Member.find({ clusterId: req.session.clusterId });
+                        break;
+                    case "Treasurer":
+                        return res.redirect("/");
+                }
+
+                if( members ) {
+                    for (const member of members) {
+                        memberList.push({
+                            name: member.name.firstName + ' ' + member.name.lastName,
+                            id: member.orgId,
+                            objectID: member._id
+                        });
+                    }
+                }
+
+                res.render("masterlist", { authority, username, memberList });
             } else {
                 res.redirect("/");
             }
@@ -382,7 +405,7 @@ const memberController = {
         } catch (error) {
             console.error(error);
         }
-    }
+    },
 
 }
 

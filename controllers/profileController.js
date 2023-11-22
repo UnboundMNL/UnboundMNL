@@ -8,6 +8,27 @@ const Group = require('../models/Group');
 const { dashboardButtons } = require('../controllers/functions/buttons');
 const { updateOrgParts, getOrgParts } = require('../controllers/functions/sharedData');
 
+async function getAuthorizedMembers(user, authority) {
+    let orgParts;
+    if (authority === "Admin") {
+        orgParts = await Member.find({}).populate("savings");
+    } else if (authority === "SEDO") {
+        const accessibleProjects = await Project.find({ cluster: user.validCluster });
+        const accessibleGroups = await Group.find({ project: { $in: accessibleProjects.map(project => project._id) } });
+        orgParts = await Member.find({ group: { $in: accessibleGroups.map(group => group._id) } }).populate("savings");
+    } else if (authority === "Treasurer") {
+        const accessibleGroup = await Group.findById(user.validGroup);
+        if (accessibleGroup) {
+            orgParts = await Member.find({ group: accessibleGroup._id }).populate("savings");
+        } else {
+            orgParts = [];
+        }
+    } else {
+        orgParts = [];
+    }
+    return orgParts;
+}
+
 const profileController = {
 
     dashboard: async (req, res) => {
@@ -28,10 +49,11 @@ const profileController = {
                 let memberList;
                 let savingIds;
                 let memberIds;
-
+                const options = { year: 'numeric', timeZone: 'Asia/Manila' };
+                const currYear = new Date().toLocaleString('en-US', options);
                 switch (authority) {
                     case "Admin":
-                        allSaving = await Saving.find({});
+                        allSaving = await Saving.find({ year: currYear });
                         for (const item of allSaving) {
                             savings += item.totalSaving;
                             savings += item.totalMatch;
@@ -54,7 +76,7 @@ const profileController = {
                             memberIds = groupList.flatMap(group => group.members);
                             memberList = await Member.find({ _id: { $in: memberIds } });
                             savingIds = memberList.flatMap(member => member.savings);
-                            allSaving = await Saving.find({ _id: { $in: savingIds } })
+                            allSaving = await Saving.find({ _id: { $in: savingIds }, year: currYear });
                         }
                         break;
                     case "Treasurer":
@@ -65,7 +87,7 @@ const profileController = {
                         memberIds = group.flatMap(group => group.members);
                         memberList = await Member.find({ _id: { $in: memberIds } });
                         savingIds = memberList.flatMap(member => member.savings);
-                        allSaving = await Saving.find({ _id: { $in: savingIds } });
+                        allSaving = await Saving.find({ _id: { $in: savingIds }, year: currYear });
                         break;
                     default:
                         break;
@@ -78,9 +100,8 @@ const profileController = {
                 if (allSaving) {
                     allSaving.forEach((saving) => {
                         months.forEach((month) => {
-                            if (saving[month].savings > 0) {
-                                monthCounts[month]++;
-                            }
+                            monthCounts[month] += saving[month].savings + saving[month].match;
+                            ;
                         });
                     });
                 } else {
@@ -212,7 +233,61 @@ const profileController = {
             console.error(error);
             return res.status(500).json({ error: "An error occurred while fetching data." });
         }
+    },
+
+    accounts: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                if (authority == "Treasurer") {
+                    return res.redirect("/");
+                }
+                let memberList;
+                if (authority == "Admin"){
+                    memberList = await User.find({});
+                } else {
+                    const cluster = await Cluster.find({ _id: user.validCluster });
+                    const projectId = cluster.flatMap(cluster => cluster.projects);
+                    const project = await Project.find({_id: { $in: projectId }});
+                    const groupId = project.flatMap(project => project.groups);
+                    memberList = await User.find({validGroup: { $in: groupId } });
+                }
+                
+                const username = user.username;
+                const orgParts = await getAuthorizedMembers(user, authority);
+                dashbuttons = dashboardButtons(authority);
+                res.render("accounts", { authority, username, dashbuttons, sidebar, orgParts, memberList });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+
+    redirectMiddle: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const { memberId } = req.body;
+                const member = await Member.findById(memberId);
+                req.session.groupId = member.groupId;
+                req.session.projectId = member.projectId;
+                req.session.clusterId = member.clusterId;
+                res.json();
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
     }
+
+   
 
 }
 

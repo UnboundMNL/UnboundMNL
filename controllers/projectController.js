@@ -61,7 +61,7 @@ const projectController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, clusterName: cluster.name, search: req.query.search });
+                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, clusterName: cluster.name, clusterId: cluster._id, search: req.query.search });
             } else {
                 res.redirect("/");
             }

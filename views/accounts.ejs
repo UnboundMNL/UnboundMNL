@@ -9,8 +9,7 @@
     <!-- SCRIPTS -->
     <script src="/js/reload.js"></script>
     <script src="/js/card.js"></script>
-    <script src="/js/formChange.js"></script>
-    <script src="/js/checkValidation.js"></script>
+    <script src="/js/list.js"></script>
 </head>
 
 <body class="body-bg">
@@ -27,16 +26,6 @@
             <h4 class="mt-3">Account Management</h4>
 
             <!-- Temporary memberList -->
-            <% var memberList = [
-                {
-                    username : "juan",
-                    type : "Admin",
-                },
-                {
-                    username : "maria",
-                    type : "Treasurer",
-                }
-            ] %>
 
             <%- include('components/listContent.ejs', { memberList, pageName: "Account Management", authority }) %>
             <%- include('components/popups/deleteProfileModal.ejs', { pageName: "Account Management" }) %>

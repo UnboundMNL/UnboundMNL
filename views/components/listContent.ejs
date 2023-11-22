@@ -38,35 +38,18 @@
             <% for (let i = 0; i < memberList.length; i++) { %>
                 <tr>
                     <% if (pageName == "Members Masterlist") { %> 
-                        <td class = "text-center"><%= memberList[i].orgId %></td>
+                        <td class = "text-center"><%= memberList[i].id %></td>
                         <td class = "text-center"><%= memberList[i].name %></td>
-                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75">View</button></td>
-                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].name %>')">Delete</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick ="redirectMember('<%= memberList[i].objectID%>')">View</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].name %>','<%= memberList[i].objectID%>')">Delete</button></td>
                     <% } else { %>
-                        <td class = "text-center"><%= memberList[i].type %></td>
+                        <td class = "text-center"><%= memberList[i].authority %></td>
                         <td class = "text-center"><%= memberList[i].username %></td>
-                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick="displayEditModal('<%= JSON.stringify(memberList[i]) %>')">Edit</button></td>
-                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].username %>')">Delete</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick="displayEditModal('<%= memberList[i] %>')">Edit</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].username %>', '<%= memberList[i]._id%>')">Delete</button></td>
                     <% } %>
                 </tr>
             <% } %>
         </tbody>
     </table>
 </div>
-
-<script>
-    function displayDeleteModal(memberName) {
-        // Show the modal using Bootstrap's modal method
-        $('#deleteProfileModal').modal('show');
-        if (`<%=pageName%>` == "Members Masterlist") {
-            $('#memberNameToDelete').text(memberName);
-        } else {
-            $('#userToDelete').text(memberName);
-        }
-    }
-
-    function displayEditModal (member) {
-        console.log(member);
-        changeForm(member,"EditUser");
-    }
-</script>
