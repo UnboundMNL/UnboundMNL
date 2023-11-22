@@ -66,8 +66,8 @@ function cardDelete(type, id) {
         button.addEventListener('click', function () {
             if (document.getElementById("deleteConfirm").value == "DELETE") {
                 let href;
-                let data; 
-                switch(type) {
+                let data;
+                switch (type) {
                     case "masterlist":
                         href = "/masterlist";
                         data = '/member/' + id + '/delete';
@@ -75,7 +75,7 @@ function cardDelete(type, id) {
                     case "member":
                         href = "/member";
                         data = '/' + type + '/' + id + '/delete';
-                    break;
+                        break;
                 }
                 fetch(data, {
                     method: 'POST',
@@ -131,7 +131,7 @@ function linkMemberPage(id, className) {
     });
 }
 
-function displayExportMessage(e, name) {
+function displayExportMessage(e, name, id) {
     e.stopPropagation();
     var toastEl = document.querySelector('.toast');
     if (toastEl) {

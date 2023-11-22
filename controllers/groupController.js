@@ -64,7 +64,7 @@ const groupController = {
                 dashbuttons = dashboardButtons(authority);
                 res.render("group", {
                     authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location,
-                    projectName: project.name, clusterName: cluster.name, search: req.query.search
+                    projectName: project.name, projectId: project._id, clusterName: cluster.name, search: req.query.search
                 });
             } else {
                 res.redirect("/");
