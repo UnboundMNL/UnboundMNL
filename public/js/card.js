@@ -131,7 +131,7 @@ function linkMemberPage(id, className) {
     });
 }
 
-function displayExportMessage(e, name, id) {
+function displayExportMessage(e, name, id, type) {
     e.stopPropagation();
     var toastEl = document.querySelector('.toast');
     if (toastEl) {
@@ -142,26 +142,51 @@ function displayExportMessage(e, name, id) {
         var toast = new bootstrap.Toast(toastEl);
         toast.show();
     }
-    let fetchLink;
-    let data;
-    if (id=="All"){
-        fetchLink = "/exportAdminClusters";
+    let fetchLink, format;
+    if (type === "All") {
+        format = 'zip';
+        fetchLink = `/exportAdminClusters?format=${format}`;
+    } else if (type=="Cluster") {
+        format = 'zip';
+        // Handle exporting a specific cluster
+        fetchLink = `/exportCluster/${id}?format=${format}`;
+    } else if (type=="SHG") {
+        format = 'xlsx';
+        // Handle exporting a specific group
+        fetchLink = `/exportGroup/${id}?format=${format}`;
+    } else if (type=="Sub-Projects") {
+        format = 'xlsx';
+        // Handle exporting a specific project
+        fetchLink = `/exportProject/${id}?format=${format}`;
     }
-    console.log(id)
     fetch(fetchLink, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },
     })
-        .then(response => {
-            if (response.ok) {
-            } else {
-                return response.json();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        if (response.ok) {
+            // Trigger download
+            response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${name}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            });
+        } else {
+            return response.json();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+
+
+
 
