@@ -142,5 +142,26 @@ function displayExportMessage(e, name, id) {
         var toast = new bootstrap.Toast(toastEl);
         toast.show();
     }
+    let fetchLink;
+    let data;
+    if (id=="All"){
+        fetchLink = "/exportAdminClusters";
+    }
+    console.log(id)
+    fetch(fetchLink, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+            } else {
+                return response.json();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
