@@ -14,7 +14,7 @@ function dashboardButtons(authority) {
             },
             {
                 text: "Account Management",
-                href: "/savings",
+                href: "/accounts",
                 icon: "bx-cog"
             },
             {
@@ -32,12 +32,12 @@ function dashboardButtons(authority) {
             },
             {
                 text: "Manage Cluster",
-                href: "/member",
+                href: "/masterlist",
                 icon: "bx-grid-alt"
             },
             {
                 text: "Account Management",
-                href: "/savings",
+                href: "/accounts",
                 icon: "bx-cog"
             },
             {
@@ -52,11 +52,6 @@ function dashboardButtons(authority) {
                 text: "Members",
                 href: "/member",
                 icon: "bx-group"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "/savings",
-                icon: "bx-money"
             }
         ];
     }

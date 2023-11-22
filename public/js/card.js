@@ -38,9 +38,9 @@ function cardLink(type, id) {
 }
 
 function cardDelete(type, id) {
-    if (type != "member") {
-        const div = document.getElementById("delete_" + id);
-        div.addEventListener('click', function () {
+    if (type != "member" && type != "masterlist") {
+        const button = document.getElementById("delete_" + id);
+        button.addEventListener('click', function () {
             if (document.getElementById(id + "Confirm").value == "DELETE") {
                 const data = '/' + type + '/' + id + '/delete';
                 fetch(data, {
@@ -62,10 +62,21 @@ function cardDelete(type, id) {
             }
         });
     } else {
-        const div = document.getElementById("deleteButton");
-        div.addEventListener('click', function () {
+        const button = document.getElementById("deleteButton");
+        button.addEventListener('click', function () {
             if (document.getElementById("deleteConfirm").value == "DELETE") {
-                let data = '/' + type + '/' + id + '/delete';
+                let href;
+                let data;
+                switch (type) {
+                    case "masterlist":
+                        href = "/masterlist";
+                        data = '/member/' + id + '/delete';
+                        break;
+                    case "member":
+                        href = "/member";
+                        data = '/' + type + '/' + id + '/delete';
+                        break;
+                }
                 fetch(data, {
                     method: 'POST',
                     headers: {
@@ -74,7 +85,7 @@ function cardDelete(type, id) {
                 })
                     .then(response => {
                         if (response.ok) {
-                            window.location.href = "/member";
+                            window.location.href = href;
                         } else {
                             throw new Error('Failed to fetch data');
                         }
@@ -120,7 +131,7 @@ function linkMemberPage(id, className) {
     });
 }
 
-function displayExportMessage(e, name) {
+function displayExportMessage(e, name, id) {
     e.stopPropagation();
     var toastEl = document.querySelector('.toast');
     if (toastEl) {
@@ -131,4 +142,26 @@ function displayExportMessage(e, name) {
         var toast = new bootstrap.Toast(toastEl);
         toast.show();
     }
+    let fetchLink;
+    let data;
+    if (id=="All"){
+        fetchLink = "/exportAdminClusters";
+    }
+    console.log(id)
+    fetch(fetchLink, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+            } else {
+                return response.json();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
+
