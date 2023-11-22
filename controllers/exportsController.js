@@ -133,7 +133,10 @@ const exportProjectForCluster = async (project, res) => {
 const exportsController = {
     //export group
     exportGroup: async (req, res) => {
-        const shgId = req.session.groupId || req.params.id;
+        if(req.session.isLoggedIn == false) {
+            return res.redirect("/");
+        }
+        const shgId = req.params.id;
         if (!shgId) {
             return res.redirect("/dasboard");
         }
@@ -239,7 +242,10 @@ const exportsController = {
 
     //export a single project (calls the function above)
     exportProject: async (req, res) => {
-        const projectId = req.session.projectId || req.params.projectId || req.params.id;
+        if(req.session.isLoggedIn == false || req.session.authority == "Treasurer") {
+            return res.redirect("/");
+        }
+        const projectId =  req.params.id;
         if (!projectId) {
             //return res.status(400).json({ error: "No project ID provided." });
             return res.redirect("/dasboard");
@@ -265,7 +271,10 @@ const exportsController = {
 
     //exports a cluster (in zip)
     exportCluster: async (req, res) => {
-        const clusterId = req.params.id || req.session.clusterId || req.params.clusterId || req.params.id;
+        if(req.session.isLoggedIn == false || req.session.authority == "Treasurer") {
+            return res.redirect("/");
+        }
+        const clusterId =  req.params.id;
         if (!clusterId) {
             return res.redirect("/dasboard");
         }
