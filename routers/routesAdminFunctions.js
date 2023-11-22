@@ -13,7 +13,7 @@ const adminController = require('../controllers/adminFunctionsController');
 router.get("/userMasterList", adminController.userMasterList);
 
 // DELETE
-router.POST("/adminUserDelete", adminController.adminUserDelete);
+router.post("/adminUserDelete", adminController.adminUserDelete);
 
 // PATCH
 router.patch("/userDetailsOverride", adminController.userDetailsOverride);

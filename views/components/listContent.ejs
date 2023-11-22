@@ -55,7 +55,7 @@
 </div>
 
 <script>
-    function displayDeleteModal(memberName,memberId) {
+    function displayDeleteModal(memberName, memberId) {
         // Show the modal using Bootstrap's modal method
         $('#deleteProfileModal').modal('show');
         if (`<%=pageName%>` == "Members Masterlist") {
@@ -63,7 +63,10 @@
             cardDelete("masterlist", memberId);
         } else {
             $('#userToDelete').text(memberName);
-            cardDelete("member", memberId);
+            $('#deleteButton').click(function() {
+                userDelete(memberId);
+            });
+            
         }
        }
 
