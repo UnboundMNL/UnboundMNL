@@ -14,7 +14,8 @@
             <button class="btn btn-secondary btn-sm">Change Photo</button>
         </div>
         <div class="align-items-right">
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Member</button>
+            <% var memberName = member.name.firstName + " " + member.name.lastName; %>
+            <button class="btn btn-danger btn-sm" onclick="displayDeleteModal('<%= memberName %>')">Delete Member</button>
         </div>
     </div>
     <hr>
@@ -155,6 +156,11 @@
                 }
             }, false);
 
+            function displayDeleteModal(memberName) {
+                // Show the modal using Bootstrap's modal method
+                $('#deleteProfileModal').modal('show');
+                $('#memberNameToDelete').text(memberName);
+            }
         </script>
         
         <div class="d-flex justify-content-center mt-4 button-gap">

@@ -2,7 +2,8 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat Alternates');
 
 :root {
-    --body-color: #F2F4F3;
+    --body-color: #f2f4f396;
+    --border-color: #dee2e6;
     --primary-color: #0092E0;
     --secondary-color: #0077B8;
     --tertiary-color: #ADE2FF;
@@ -30,6 +31,23 @@ body {
 .currSign:before {
     content: '₱ ';
 }
+
+/* CHANGE COLOUR */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.pagination>li.active>a {
+    background-color: var(--secondary-color);
+}
+
 /* SIDEBAR */
 .sidebar {
     position: fixed;
@@ -41,6 +59,7 @@ body {
     justify-content: space-between;
     overflow-x: hidden;
     padding: 0.5rem !important;
+    border-right: 1px solid var(--border-color);
 }
 
 .sidebar .image-text img {
@@ -93,8 +112,8 @@ body {
     height: 4rem;
     top: 0;
     background-color: rgb(255, 255, 255);
-    border-left: 2px solid var(--body-color);
-    border-bottom: 2px solid var(--body-color);
+    border-left: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
     padding: 1rem 15rem 1rem 1rem;
 }
 
