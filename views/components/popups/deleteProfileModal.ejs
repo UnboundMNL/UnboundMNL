@@ -30,7 +30,11 @@
                         <script>
                             cardDelete("member", "<%=member?._id%>");
                         </script>
-                    <% } %>                    
+                    <% } else if (pageName == "Members Masterlist") { %>
+                        <script>
+                            cardDelete("masterlist", "<%=memberList?.objectID%>");
+                        </script>
+                    <% } %>             
                 </div>
             </div>
         </div>

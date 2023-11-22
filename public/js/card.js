@@ -38,7 +38,7 @@ function cardLink(type, id) {
 }
 
 function cardDelete(type, id) {
-    if (type != "member") {
+    if (type != "member" && type != "masterlist") {
         const div = document.getElementById("delete_" + id);
         div.addEventListener('click', function () {
             if (document.getElementById(id + "Confirm").value == "DELETE") {
@@ -65,7 +65,20 @@ function cardDelete(type, id) {
         const div = document.getElementById("deleteButton");
         div.addEventListener('click', function () {
             if (document.getElementById("deleteConfirm").value == "DELETE") {
-                let data = '/' + type + '/' + id + '/delete';
+                let href;
+                let data; 
+                switch(type) {
+                    case "masterlist":
+                        href = window.location.reload();
+                        data = '/member/' + type + '/' + id + '/delete';
+                        break;
+                    case "member":
+                        href = "/member";
+                        data = '/' + type + '/' + id + '/delete';
+                    break;
+                }
+                
+                
                 fetch(data, {
                     method: 'POST',
                     headers: {
@@ -74,7 +87,7 @@ function cardDelete(type, id) {
                 })
                     .then(response => {
                         if (response.ok) {
-                            window.location.href = "/member";
+                            window.location.href = href;
                         } else {
                             throw new Error('Failed to fetch data');
                         }

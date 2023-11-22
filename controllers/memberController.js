@@ -364,10 +364,30 @@ const memberController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
-                if (authority == "Treasurer"){
-                    return res.redirect("/");
+                let members;
+                const memberList = [];
+                switch (authority) {
+                    case "Admin":
+                        members = await Member.find();
+                        break;
+                    case "SEDO":
+                        members = await Member.find({ clusterId: req.session.clusterId });
+                        break;
+                    case "Treasurer":
+                        return res.redirect("/");
                 }
-                res.render("masterlist", { authority, username });
+
+                if( members ) {
+                    for (const member of members) {
+                        memberList.push({
+                            name: member.name.firstName + ' ' + member.name.lastName,
+                            id: member.orgId,
+                            objectID: member._id
+                        });
+                    }
+                }
+
+                res.render("masterlist", { authority, username, memberList });
             } else {
                 res.redirect("/");
             }
@@ -385,7 +405,45 @@ const memberController = {
         } catch (error) {
             console.error(error);
         }
-    }
+    },
+
+    masterListDeleteMember: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const memberId = req.params.id;
+                const member = await Member.findById(memberId);
+                const cluster = await Cluster.findById(member.clusterId);
+                const project = await Project.findById(member.projectId);
+                const group = await Group.findById(member.groupId);
+
+                await Saving.deleteMany({ memberID: memberId });
+                cluster.totalKaban -= member.totalSaving;
+                cluster.totalKaban -= member.totalMatch;
+                cluster.totalMembers -= 1;
+                await cluster.save();
+                project.totalKaban -= member.totalSaving;
+                project.totalKaban -= member.totalMatch;
+                project.totalMembers -= 1;
+                await project.save();
+                group.totalKaban -= member.totalSaving;
+                group.totalKaban -= member.totalMatch;
+                group.totalMembers -= 1;
+                group.members = group.members.filter(arrayMembers => !arrayMembers.equals(memberId.toString()));
+                await group.save();
+                const deletedMember = await Member.findByIdAndDelete(memberId);
+                if (deletedMember) {
+                    res.json(deletedMember);
+                } else {
+                    return res.status(404).json({ error: "Delete error! Member not found." });
+                }
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while deleting the project." });
+        }
+    },
 
 }
 

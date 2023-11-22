@@ -21,22 +21,11 @@
 
         <!-- Materlist Content -->
         <div class="p-4 mt-5"> 
+            
             <% var type = "Masterlist";  %>
             <h4 class="mt-3">Members Masterlist</h4>
 
             <!-- Temporary memberList -->
-            <% var memberList = [
-                {
-                    name : "Juan Dela Cruz",
-                    orgId : "123456789",
-                    _id: "655191755ca0adc3bff431ca"
-                },
-                {
-                    name : "Maria Dela Cruz",
-                    orgId : "123456788",
-                    _id: "655191755ca0adc3bff431ca"
-                }
-            ] %>
 
             <%- include('components/listContent.ejs', { memberList, pageName: "Members Masterlist", authority }) %>
             <%- include('components/popups/deleteProfileModal.ejs', { pageName: "Members Masterlist" }) %>
