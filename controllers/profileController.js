@@ -116,7 +116,8 @@ const profileController = {
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+            req.session.destroy();
+            return res.status(500).redirect("/");
         }
     },
 
@@ -247,7 +248,8 @@ const profileController = {
                 }
                 let memberList;
                 if (authority == "Admin"){
-                    memberList = await User.find({});
+                    // show all users except the current user
+                    memberList = await User.find({_id: {$ne: req.session.userId}});
                 } else {
                     const cluster = await Cluster.find({ _id: user.validCluster });
                     const projectId = cluster.flatMap(cluster => cluster.projects);

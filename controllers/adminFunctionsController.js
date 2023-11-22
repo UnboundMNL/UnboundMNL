@@ -18,6 +18,12 @@ const adminFunctionsController = {
                     const { profileID, newUsername, newPassword } = req.body
 
                     const profileToBeEdited = await User.findById(profileID)
+
+                    const isUsernameTaken = (newUsername !== profileToBeEdited.username) && (await User.find({ username: newUsername }).countDocuments() > 0);
+
+                    if(isUsernameTaken){
+                        return res.json({ error: "Username is already taken." })
+                    }
                     const isPasswordMatch = await profileToBeEdited.comparePassword(newPassword);
                     const usernameUpdate = (newUsername !== profileToBeEdited.username);
 
@@ -43,39 +49,6 @@ const adminFunctionsController = {
         } catch (error) {
             return res.status(500).json({ error: error.message })
         }
-    },
-
-    userMasterList: async (req, res) => {
-        try {
-            if (req.session.isLoggedIn){
-                const userID = req.session.userId;
-                const sidebar = req.session.sidebar;
-                const user = await User.findById(userID);
-                const authority = user.authority;
-                const username = user.username;
-
-                if (authority === "Admin") {
-                    const userList = await User.find()
-
-                    const officerList = []
-                    for (officer in userList) {
-                        officerList.push({
-                            username: officer.username,
-                            authority: officer.authority
-                        })
-                    }
-
-                    return res.render("", { officerList, username, authority, sidebar })
-                } else {
-                    return res.status(403).json({ error: "User not authorized" })
-                }
-            } else {
-                res.redirect("/")
-            }
-        } catch (error) {
-            return res.status(500).json({ error: error.message })
-        }
-
     },
 
     adminUserDelete: async (req, res) => {

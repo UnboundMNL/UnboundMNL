@@ -10,10 +10,6 @@ function displayDeleteModal(memberName, memberId) {
             userDelete(memberId);
         });
     }
-   }
-
-function displayEditModal(member) {
-    
 }
 
 function redirectMember(id){
@@ -56,4 +52,8 @@ function userDelete(profileID){
         .catch(error => {
             console.error('Error:', error);
         });
+}
+
+function userDetailsOverride(){
+    
 }
