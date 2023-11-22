@@ -1,7 +1,13 @@
 <div class="d-flex justify-content-end">
     <div class="d-flex align-items-center p-1">
         <div>
-            <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>')">
+            <% if (type=="Cluster") {%>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>', 'All')">
+            <% } else if (type=="Sub-Projects") { %>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>', 'Cluster')">
+            <% } else { %>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>', 'SHG')">
+            <% } %>
                 <i class='bx bx-export '></i>
                 <span class="d-none d-sm-inline">Export</span>
             </button>

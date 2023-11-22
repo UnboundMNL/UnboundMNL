@@ -131,7 +131,7 @@ function linkMemberPage(id, className) {
     });
 }
 
-function displayExportMessage(e, name, id, format = 'zip') {
+function displayExportMessage(e, name, id, type) {
     e.stopPropagation();
     var toastEl = document.querySelector('.toast');
     if (toastEl) {
@@ -142,23 +142,23 @@ function displayExportMessage(e, name, id, format = 'zip') {
         var toast = new bootstrap.Toast(toastEl);
         toast.show();
     }
-    let fetchLink;
-    if (id === "All") {
+    let fetchLink, format;
+    if (type === "All") {
+        format = 'zip';
         fetchLink = `/exportAdminClusters?format=${format}`;
-    } else if (id.startsWith("Cluster")) {
+    } else if (type=="Cluster") {
+        format = 'zip';
         // Handle exporting a specific cluster
-        const clusterId = id.substring(7); // Assuming the format is "Cluster123"
-        fetchLink = `/exportCluster/${clusterId}?format=${format}`;
-    } else if (id.startsWith("Group")) {
+        fetchLink = `/exportCluster/${id}?format=${format}`;
+    } else if (type=="SHG") {
+        format = 'xlsx';
         // Handle exporting a specific group
-        const groupId = id.substring(5); // Assuming the format is "Group123"
-        fetchLink = `/exportGroup/${groupId}?format=${format}`;
-    } else if (id.startsWith("Project")) {
+        fetchLink = `/exportGroup/${id}?format=${format}`;
+    } else if (type=="Sub-Projects") {
+        format = 'xlsx';
         // Handle exporting a specific project
-        const projectId = id.substring(7); // Assuming the format is "Project123"
-        fetchLink = `/exportProject/${projectId}?format=${format}`;
+        fetchLink = `/exportProject/${id}?format=${format}`;
     }
-    console.log(id);
     fetch(fetchLink, {
         method: 'GET',
         headers: {

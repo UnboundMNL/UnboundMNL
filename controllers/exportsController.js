@@ -269,7 +269,6 @@ const exportsController = {
         if (!clusterId) {
             return res.redirect("/dasboard");
         }
-        console.log(cluster);
         const userId = req.session.userId;
         const user = await User.findById(userId);
         if(req.session.isLoggedIn == false || user.authority == "Treasurer") {

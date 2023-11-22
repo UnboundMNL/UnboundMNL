@@ -13,7 +13,7 @@
     <div  class="d-flex justify-content-end">
         <div class="d-flex align-items-center p-1">
             <div>
-                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=projectName%>', '<%=projectId%>')">
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=projectName%>', '<%=projectId%>','Sub-Projects')">
                     <i class='bx bx-export '></i>
                     <span class="d-none d-sm-inline">Export</span>
                 </button>
@@ -32,14 +32,13 @@
 </div>
 <%-include('popups/addPartModal.ejs', {partname: type}) %>
 <%-include('popups/editPopup.ejs', {partname: type}) %>
-
 <div>
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
         <div class="container-style mb-3" id = <%=pageParts[i]._id%>>
             <div class="d-flex justify-content-between">
                 <h5>SHG <%=pageParts[i].name%></h5>
-                <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, '<%=pageParts[i].name%>', '<%=pageParts[i]._id%>')"></i>
+                <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, '<%=pageParts[i].name%>', '<%=pageParts[i]._id%>','<%=type%>')"></i>
             </div>
             <div>
                 <i class='bx bxs-map'></i>
