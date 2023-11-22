@@ -1,0 +1,18 @@
+<div class = "mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input class="form-control"  name = "name" type="text" aria-describedby="username" autocomplete="off" required>
+    <div class="invalid-feedback">
+        Username taken. Please enter another username.
+    </div>  
+</div>
+<div>
+    <div class="mb-3">
+        <span>New Password</span>
+        <input id="newPass" class="form-control" required onkeyup="validatePassword()">
+    </div>
+    <div class="mb-3">
+        <span>Confirm New Password</span>
+        <input id="confirmPass" class="form-control" required onkeyup="validatePassword()">
+    </div>
+    <span id="matchingAlert2"></span>
+</div>
