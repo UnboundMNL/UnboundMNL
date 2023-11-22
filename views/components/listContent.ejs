@@ -40,7 +40,7 @@
                     <% if (pageName == "Members Masterlist") { %> 
                         <td class = "text-center"><%= memberList[i].orgId %></td>
                         <td class = "text-center"><%= memberList[i].name %></td>
-                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75">View</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick ="redirectMember('<%= memberList[i]%>')">View</button></td>
                         <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].name %>')">Delete</button></td>
                     <% } else { %>
                         <td class = "text-center"><%= memberList[i].type %></td>
@@ -67,5 +67,27 @@
 
     function displayEditModal(member) {
         
+    }
+
+    function redirectMember(member){
+        console.log(member._id)
+        data = { memberId:id };
+        fetch('/redirectMiddle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/member";
+                } else {
+                    return response.json();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 </script>

@@ -53,7 +53,7 @@ const profileController = {
                 const currYear = new Date().toLocaleString('en-US', options);
                 switch (authority) {
                     case "Admin":
-                        allSaving = await Saving.find({year: currYear});
+                        allSaving = await Saving.find({ year: currYear });
                         for (const item of allSaving) {
                             savings += item.totalSaving;
                             savings += item.totalMatch;
@@ -100,7 +100,7 @@ const profileController = {
                 if (allSaving) {
                     allSaving.forEach((saving) => {
                         months.forEach((month) => {
-                            monthCounts[month]+=saving[month].savings+saving[month].match;
+                            monthCounts[month] += saving[month].savings + saving[month].match;
                             ;
                         });
                     });
@@ -242,13 +242,31 @@ const profileController = {
                 const sidebar = req.session.sidebar;
                 const user = await User.findById(userID);
                 const authority = user.authority;
-                if (authority == "Treasurer"){
+                if (authority == "Treasurer") {
                     return res.redirect("/");
                 }
                 const username = user.username;
                 const orgParts = await getAuthorizedMembers(user, authority);
                 dashbuttons = dashboardButtons(authority);
                 res.render("accounts", { authority, username, dashbuttons, sidebar, orgParts });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
+
+    redirectMiddle: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const { memberId } = req.body;
+                const member = await Member.findById(memberId);
+                req.session.groupId = member.groupId;
+                req.session.projectId = member.projectId;
+                req.session.clusterId = member.clusterId;
+                res.json();
             } else {
                 res.redirect("/");
             }

@@ -14,5 +14,6 @@ router.get("/profile", profileController.profile);
 router.patch("/editProfile", profileController.editProfile);
 router.get("/retrieveUsernameList", profileController.retrieveUsernameList);
 router.get("/accounts", profileController.accounts);
+router.post("/redirectMiddle", profileController.redirectMiddle);
 
 module.exports = router;  
