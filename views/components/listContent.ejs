@@ -45,13 +45,7 @@
                     <% } else { %>
                         <td class = "text-center"><%= memberList[i].type %></td>
                         <td class = "text-center"><%= memberList[i].username %></td>
-                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75">Edit</button></td>
-                        <script>
-                            var editButton = document.getElementById("<%=pageParts[i]._id%>");
-                            editButton.onclick = function() {
-                                changeForm("<%=pageParts[i]._id%>","<%=type%>");
-                            };
-                        </script>
+                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick="displayEditModal('<%= JSON.stringify(memberList[i]) %>')">Edit</button></td>
                         <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].username %>')">Delete</button></td>
                     <% } %>
                 </tr>
@@ -69,5 +63,10 @@
         } else {
             $('#userToDelete').text(memberName);
         }
+    }
+
+    function displayEditModal (member) {
+        console.log(member);
+        changeForm(member,"EditUser");
     }
 </script>

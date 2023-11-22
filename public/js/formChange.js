@@ -194,4 +194,60 @@ function changeForm(action, partname) {
 
         }
     }
+    if (partname == "EditUser") {
+        route = "/account/" + action + "/edit";
+    
+        (() => {
+            'use strict';
+    
+            const forms = document.querySelectorAll('.needs-validation.editForm');
+    
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        editUser(event.target);
+                    }
+    
+                    event.preventDefault();
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    
+        function editUser(form) {
+            const formData = new FormData(form);
+            const formDataObject = {};
+            const usernameInput = form.querySelector('[name="name"]');
+            const invalidFeedback = usernameInput.nextElementSibling;
+    
+            formData.forEach((value, key) => {
+                formDataObject[key] = value;
+            });
+    
+            fetch(route, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataObject)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else if (data.error) {
+                        usernameInput.setCustomValidity('Invalid field.');
+                        usernameInput.classList.add('is-invalid');
+                        usernameInput.classList.remove('is-valid');
+                        invalidFeedback.textContent = data.error;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }    
 }
