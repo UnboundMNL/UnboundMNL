@@ -265,10 +265,11 @@ const exportsController = {
 
     //exports a cluster (in zip)
     exportCluster: async (req, res) => {
-        const clusterId = req.session.clusterId || req.params.clusterId || req.params.id;
+        const clusterId = req.params.id || req.session.clusterId || req.params.clusterId || req.params.id;
         if (!clusterId) {
             return res.redirect("/dasboard");
         }
+        console.log(cluster);
         const userId = req.session.userId;
         const user = await User.findById(userId);
         if(req.session.isLoggedIn == false || user.authority == "Treasurer") {
@@ -300,6 +301,7 @@ const exportsController = {
 
     //exports all clusters (in zip, in proper folders)
     exportAdminClusters: async (req, res) => {
+        console.log("exporting all clusters")
         const userId = req.session.userId;
         const user = await User.findById(userId);
         if(req.session.isLoggedIn == false || user.authority != "Admin") {
@@ -329,6 +331,8 @@ const exportsController = {
         //ADD SUMMARY SHEET
 
         await zip.finalize();
+        console.log(zip)
+        return zip;
     }
 }
 

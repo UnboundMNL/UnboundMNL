@@ -131,7 +131,7 @@ function linkMemberPage(id, className) {
     });
 }
 
-function displayExportMessage(e, name, id) {
+function displayExportMessage(e, name, id, format = 'zip') {
     e.stopPropagation();
     var toastEl = document.querySelector('.toast');
     if (toastEl) {
@@ -143,25 +143,50 @@ function displayExportMessage(e, name, id) {
         toast.show();
     }
     let fetchLink;
-    let data;
-    if (id=="All"){
-        fetchLink = "/exportAdminClusters";
+    if (id === "All") {
+        fetchLink = `/exportAdminClusters?format=${format}`;
+    } else if (id.startsWith("Cluster")) {
+        // Handle exporting a specific cluster
+        const clusterId = id.substring(7); // Assuming the format is "Cluster123"
+        fetchLink = `/exportCluster/${clusterId}?format=${format}`;
+    } else if (id.startsWith("Group")) {
+        // Handle exporting a specific group
+        const groupId = id.substring(5); // Assuming the format is "Group123"
+        fetchLink = `/exportGroup/${groupId}?format=${format}`;
+    } else if (id.startsWith("Project")) {
+        // Handle exporting a specific project
+        const projectId = id.substring(7); // Assuming the format is "Project123"
+        fetchLink = `/exportProject/${projectId}?format=${format}`;
     }
-    console.log(id)
+    console.log(id);
     fetch(fetchLink, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },
     })
-        .then(response => {
-            if (response.ok) {
-            } else {
-                return response.json();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        if (response.ok) {
+            // Trigger download
+            response.blob().then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${name}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            });
+        } else {
+            return response.json();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+
+
+
 

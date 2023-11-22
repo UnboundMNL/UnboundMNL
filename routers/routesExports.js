@@ -19,11 +19,11 @@ const pipelineAsync = promisify(pipeline);
 
 const exportsController = require('../controllers/exportsController.js');
 
-// router.post("/exportGroup", exportsController.exportGroup);
+router.get("/exportGroup", exportsController.exportGroup);
 router.get("/exportGroup/:id", exportsController.exportGroup);
-// router.post("/exportProject", exportsController.exportProject);
+router.get("/exportProject", exportsController.exportProject);
 router.get("/exportProject/:id", exportsController.exportProject);
-// router.post("/exportCluster", exportsController.exportCluster);
+router.get("/exportCluster", exportsController.exportCluster);
 router.get("/exportCluster/:id", exportsController.exportCluster);
 router.get("/exportAdminClusters", exportsController.exportAdminClusters);
 
