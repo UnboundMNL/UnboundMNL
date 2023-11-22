@@ -45,7 +45,7 @@
                     <% } else { %>
                         <td class = "text-center"><%= memberList[i].authority %></td>
                         <td class = "text-center"><%= memberList[i].username %></td>
-                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" onclick="displayEditModal('<%= memberList[i] %>')">Edit</button></td>
+                        <td class="text-center"><button type="button" class="btn btn-primary btn-sm w-75" data-bs-toggle="modal" data-bs-target="#editUser" data-bs-id="<%= memberList[i]._id%>" data-bs-username="<%=memberList[i].username%>" onclick="changeForm('<%=memberList[i]._id%>', 'User')">Edit</button></td>
                         <td class="text-center"><button type="button" class="btn btn-danger btn-sm w-75" onclick="displayDeleteModal('<%= memberList[i].username %>', '<%= memberList[i]._id%>')">Delete</button></td>
                     <% } %>
                 </tr>

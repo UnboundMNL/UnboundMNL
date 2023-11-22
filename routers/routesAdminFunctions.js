@@ -10,7 +10,6 @@ const User = require('../models/User');
 const adminController = require('../controllers/adminFunctionsController');
 
 //  GETS
-router.get("/userMasterList", adminController.userMasterList);
 
 // DELETE
 router.post("/adminUserDelete", adminController.adminUserDelete);
