@@ -238,8 +238,6 @@ function editUser(form, route) {
     const usernameInput = document.getElementById('editUsernameInput');
     const invalidFeedback = usernameInput.nextElementSibling;
 
-    console.log("test")
-
     const formDataObject = {
         profileID: usernameInput.getAttribute('data-bs-id'),
         newUsername: formData.get('username'),

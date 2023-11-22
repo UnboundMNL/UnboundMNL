@@ -54,6 +54,3 @@ function userDelete(profileID){
         });
 }
 
-function userDetailsOverride(){
-    
-}

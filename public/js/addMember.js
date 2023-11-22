@@ -107,7 +107,7 @@ function checkDateValidity() {
         } else if (birthdateInput.validity.rangeUnderflow) {
             invalidFeedback.textContent = "Please select a date on or after January 1, 1900.";
         } else if (birthdateInput.validity.rangeOverflow) {
-            invalidFeedback.textContent = "Please select a date on or before December 31, 2200.";
+            invalidFeedback.textContent = "Please select a date on or before today.";
         } else {
             invalidFeedback.textContent = ""; // Clear the error message
         }

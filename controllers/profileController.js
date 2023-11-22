@@ -116,8 +116,7 @@ const profileController = {
             }
         } catch (error) {
             console.error(error);
-            req.session.destroy();
-            return res.status(500).redirect("/");
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
         }
     },
 

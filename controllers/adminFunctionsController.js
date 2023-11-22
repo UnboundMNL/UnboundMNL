@@ -4,7 +4,7 @@ const User = require('../models/User');
 const Cluster = require('../models/Cluster');
 const Project = require('../models/Project');
 const Group = require('../models/Group');
-
+const { ObjectId } = require('mongodb');
 
 const adminFunctionsController = {
 
@@ -15,6 +15,7 @@ const adminFunctionsController = {
                 const authority = user.authority
 
                 if (authority === "Admin") {
+                    console.log(req.body)
                     const { profileID, newUsername, newPassword } = req.body
 
                     const profileToBeEdited = await User.findById(profileID)
@@ -24,7 +25,13 @@ const adminFunctionsController = {
                     if(isUsernameTaken){
                         return res.json({ error: "Username is already taken." })
                     }
-                    const isPasswordMatch = await profileToBeEdited.comparePassword(newPassword);
+                    let isPasswordMatch;
+                    if (newPassword==""){
+                        isPasswordMatch = true;
+                    } else {
+                        isPasswordMatch = await profileToBeEdited.comparePassword(newPassword); 
+                    } 
+                    
                     const usernameUpdate = (newUsername !== profileToBeEdited.username);
 
                     if (!isPasswordMatch && usernameUpdate) {
@@ -35,6 +42,24 @@ const adminFunctionsController = {
                         await User.findOneAndUpdate({ _id: profileID }, { password: newPassword })
                     }
 
+                    req.sessionStore.all((err, sessions) => {
+                        if (err) {
+                          return res.status(500).json({ error: 'Internal Server Error' });
+                        }
+                    
+                        sessions.forEach((session) => {
+                            console.log(session)
+                          const sessionData = session;
+                          if (sessionData.session.userId.equals(profileID)) {
+                            req.sessionStore.destroy(sessionData._id, (destroyErr) => {
+                              if (destroyErr) {
+                                return res.status(500).json({ error: 'Internal Server Error' });
+                              }
+                            });
+                          }
+                        });
+                      });
+                      
                     if(!isPasswordMatch || usernameUpdate)
                         return res.json({ success: "Profile has been edited." })
                     else
@@ -53,8 +78,24 @@ const adminFunctionsController = {
 
     adminUserDelete: async (req, res) => {
         if(req.session.isLoggedIn){
-            console.log("here");
             const { profileID } = req.body
+            req.sessionStore.all((err, sessions) => {
+                if (err) {
+                  return res.status(500).json({ error: 'Internal Server Error' });
+                }
+            
+                sessions.forEach((session) => {
+                  const sessionData = session;
+                  if (sessionData.session.userId.equals(profileID)) {
+                    req.sessionStore.destroy(sessionData._id, (destroyErr) => {
+                      if (destroyErr) {
+                        return res.status(500).json({ error: 'Internal Server Error' });
+                      }
+                    });
+                  }
+                });
+              });
+              
             const deletedUser = await User.findOneAndDelete({ _id: profileID })
             if (deletedUser){
                 return res.json({ success: "User has been deleted." })
