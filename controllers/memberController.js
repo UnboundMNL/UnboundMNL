@@ -364,6 +364,9 @@ const memberController = {
                 const user = await User.findById(userID);
                 const authority = user.authority;
                 const username = user.username;
+                if (authority == "Treasurer"){
+                    return res.redirect("/");
+                }
                 res.render("masterlist", { authority, username });
             } else {
                 res.redirect("/");
