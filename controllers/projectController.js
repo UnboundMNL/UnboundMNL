@@ -107,7 +107,7 @@ const projectController = {
     editProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                console.log(req.body)
+
                 const projectId = req.params.id;
                 const currentProject = await Project.findById(projectId);
                 const { name, location } = req.body;

@@ -8,9 +8,7 @@
 
 <%-include('popups/addPartModal.ejs', {authority, partname: type}) %>
 <%-include('popups/editPopup.ejs', {partname: type}) %>
-<script>
-    console.log("<%=type%>")
-</script>
+
 <div class="row">
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->

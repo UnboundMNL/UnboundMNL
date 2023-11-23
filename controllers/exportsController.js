@@ -309,7 +309,7 @@ const exportsController = {
 
     //exports all clusters (in zip, in proper folders)
     exportAdminClusters: async (req, res) => {
-        console.log("exporting all clusters")
+
         const userId = req.session.userId;
         const user = await User.findById(userId);
         if(req.session.isLoggedIn == false || user.authority != "Admin") {
@@ -339,7 +339,7 @@ const exportsController = {
         //ADD SUMMARY SHEET
 
         await zip.finalize();
-        console.log(zip)
+
         return zip;
     }
 }

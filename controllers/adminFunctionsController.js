@@ -15,7 +15,6 @@ const adminFunctionsController = {
         const authority = user.authority
 
         if (authority === "Admin") {
-          console.log(req.body)
           const { profileID, newUsername, newPassword } = req.body
 
           const profileToBeEdited = await User.findById(profileID)
@@ -50,7 +49,6 @@ const adminFunctionsController = {
               }
 
               sessions.forEach((session) => {
-                console.log(session)
                 const sessionData = session;
                 if (sessionData.session.userId.equals(profileID)) {
                   req.sessionStore.destroy(sessionData._id, (destroyErr) => {
