@@ -37,7 +37,7 @@ const routesExports = require('./routers/routesExports');
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
-const { rememberMeMiddleware } = require('./lib/middleware');
+// const { rememberMeMiddleware } = require('./lib/middleware');
 const { sidebarMiddleware } = require('./lib/middleware');
 const { clusteridMiddleware } = require('./lib/middleware');
 const { projectidMiddleware } = require('./lib/middleware');
@@ -155,7 +155,7 @@ router.get("/addUser", async (req, res) => {
 
 app.use(isLoggedInMiddleware);
 app.use(userIDMiddleware);
-app.use(rememberMeMiddleware);
+// app.use(rememberMeMiddleware);
 app.use(sidebarMiddleware);
 app.use(clusteridMiddleware);
 app.use(projectidMiddleware);

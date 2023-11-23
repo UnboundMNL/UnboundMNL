@@ -2,7 +2,7 @@
 $(document).on('click', '#login', function () {
     const username = document.getElementById("username").value;
     const password = document.getElementById("pw").value;
-    const remember = document.getElementById("remember-me").checked;
+    // const remember = document.getElementById("remember-me").checked;
     if (username == '' || password == '') {
         const errorDiv = document.getElementById("error");
         errorDiv.style.display = "block";
@@ -11,7 +11,7 @@ $(document).on('click', '#login', function () {
         const data = {
             username,
             password,
-            remember
+            // remember
         };
         fetch('/login', {
             method: 'POST',

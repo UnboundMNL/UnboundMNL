@@ -9,7 +9,8 @@ const loginController = {
         try {
             console.log("does req.session not exist?", !req.session.isLoggedIn);
             if (!req.session.isLoggedIn) {
-                let { username, password, remember } = req.body;
+                // let { username, password, remember } = req.body;
+                let { username, password } = req.body;
                 const user = await User.findOne({ username: username });
                 if (!user) {
                     return res.status(401).json({ error: "User not found" });
@@ -35,10 +36,10 @@ const loginController = {
                 req.session.isLoggedIn = true;
                 req.session.userId = user._id;
                 req.session.sidebar = true;
-                if (!remember) {
-                    req.session.cookie.expires = false;
-                }
-                req.session.rememberMe = remember;
+                // if (!remember) {
+                //     req.session.cookie.expires = false;
+                // }
+                // req.session.rememberMe = remember;
                 res.json();
             } else {
                 res.redirect("/dashboard");
