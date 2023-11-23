@@ -1,7 +1,7 @@
-function displayDeleteModal(memberName, memberId) {
+function displayDeleteModal(memberName, memberId, pageName) {
     // Show the modal using Bootstrap's modal method
     $('#deleteProfileModal').modal('show');
-    if (`<%=pageName%>` == "Members Masterlist") {
+    if (pageName == "Members Masterlist") {
         $('#memberNameToDelete').text(memberName);
         cardDelete("masterlist", memberId);
     } else {

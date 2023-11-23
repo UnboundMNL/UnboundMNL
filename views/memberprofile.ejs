@@ -62,6 +62,7 @@
         <script>
             open('partsButton');
             saveEdit("/memberInfo","<%=actionForm%>","saveEdit",)
+            cardDelete("member", "<%=member._id%>")
         </script>
         <%-include('components/popups/logoutPopup.ejs') %> 
     </main>
