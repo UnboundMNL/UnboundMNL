@@ -1,12 +1,23 @@
 <div class="d-flex justify-content-end">
     <div class="d-flex align-items-center p-1">
         <div>
+            <script>
+                var encodedText = '<%=groupName%>';
+
+                // Create a new element to decode the HTML-encoded text
+                var decodedElement = document.createElement('div');
+                decodedElement.innerHTML = encodedText;
+
+                // Get the decoded text
+                var decodedText = decodedElement.innerText;
+
+            </script>
             <% if (type=="Cluster") {%>
-                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>', 'All')">
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=groupId%>', 'All')">
             <% } else if (type=="Sub-Projects") { %>
-                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>', 'Cluster')">
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=groupId%>', 'Cluster')">
             <% } else { %>
-                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=groupName%>', '<%=groupId%>', 'SHG')">
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=groupId%>', 'SHG')">
             <% } %>
                 <i class='bx bx-export '></i>
                 <span class="d-none d-sm-inline">Export</span>

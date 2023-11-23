@@ -13,7 +13,18 @@
     <div  class="d-flex justify-content-end">
         <div class="d-flex align-items-center p-1">
             <div>
-                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, '<%=projectName%>', '<%=projectId%>','Sub-Projects')">
+                <script>
+                    var encodedText = '<%=projectName%>';
+
+                    // Create a new element to decode the HTML-encoded text
+                    var decodedElement = document.createElement('div');
+                    decodedElement.innerHTML = encodedText;
+
+                    // Get the decoded text
+                    var decodedText = decodedElement.innerText;
+
+                </script>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=projectId%>','Sub-Projects')">
                     <i class='bx bx-export '></i>
                     <span class="d-none d-sm-inline">Export</span>
                 </button>
@@ -38,7 +49,18 @@
         <div class="container-style mb-3" id = <%=pageParts[i]._id%>>
             <div class="d-flex justify-content-between">
                 <h5>SHG <%=pageParts[i].name%></h5>
-                <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, '<%=pageParts[i].name%>', '<%=pageParts[i]._id%>','<%=type%>')"></i>
+                <script>
+                    var encodedText = '<%=pageParts[i].name%>';
+
+                    // Create a new element to decode the HTML-encoded text
+                    var decodedElement = document.createElement('div');
+                    decodedElement.innerHTML = encodedText;
+
+                    // Get the decoded text
+                    var decodedText<%=i%> = decodedElement.innerText;
+
+                </script>
+                <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, decodedText<%=i%>, '<%=pageParts[i]._id%>','<%=type%>')"></i>
             </div>
             <div>
                 <i class='bx bxs-map'></i>

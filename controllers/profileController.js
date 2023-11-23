@@ -275,6 +275,7 @@ const profileController = {
             if (req.session.isLoggedIn) {
                 const { memberId } = req.body;
                 const member = await Member.findById(memberId);
+                req.session.memberId = memberId;
                 req.session.groupId = member.groupId;
                 req.session.projectId = member.projectId;
                 req.session.clusterId = member.clusterId;

@@ -107,9 +107,10 @@ const projectController = {
     editProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                console.log(req.body)
                 const projectId = req.params.id;
                 const currentProject = await Project.findById(projectId);
-                const { name } = req.body;
+                const { name, location } = req.body;
                 const cluster = await Cluster.findOne({ _id: req.session.clusterId });
                 const project = await Project.find({ _id: { $in: cluster.projects } });
                 const existingProjects = project.flatMap(project => project.name);
@@ -119,6 +120,17 @@ const projectController = {
                 updateData = req.body;
                 const updateProject = await Project.findOneAndUpdate({ _id: projectId }, updateData, { new: true });
                 if (updateProject) {
+                    if (currentProject.location !== location){
+                        const group = await Group.find({ _id: { $in: currentProject.groups } })
+                        
+                        group.forEach(async (groupItem) => {
+                            let locUpdate = {
+                                location :location
+                            }
+                            await Group.findOneAndUpdate({_id: groupItem._id}, locUpdate, { new: true })
+                        });
+                        
+                    }
                     res.json({ success: "A Project has been edited." });
                 } else {
                     return res.json({ error: "An error occurred while editng a project." });

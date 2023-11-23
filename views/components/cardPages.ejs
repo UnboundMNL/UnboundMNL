@@ -18,8 +18,19 @@
             <div class="container container-style d-flex flex-column flex-grow-1 justify-content-between">
                 <div>
                     <div class="d-flex justify-content-between">
+                        <script>
+                            var encodedText = '<%=pageParts[i].name%>';
+
+                            // Create a new element to decode the HTML-encoded text
+                            var decodedElement = document.createElement('div');
+                            decodedElement.innerHTML = encodedText;
+
+                            // Get the decoded text
+                            var decodedText<%=i%> = decodedElement.innerText;
+
+                        </script>
                         <h5><%=type%> <%=pageParts[i].name%></h5>
-                        <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, '<%=pageParts[i].name%>', '<%=pageParts[i]._id%>','<%=type%>')"></i>
+                        <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, decodedText<%=i%>, '<%=pageParts[i]._id%>','<%=type%>')"></i>
                     </div>
                     
                     <div>
