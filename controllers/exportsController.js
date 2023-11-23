@@ -60,7 +60,8 @@ const exportProjectForCluster = async (project, res) => {
             SEDOChairman: SEDOChairman, SEDOChairmanPhone: group.SEDPChairman.contatNo,
             kabanTreasurer: kabanTreasurer, kabanTreasurerPhone: group.kabanTreasurer.contatNo,
             kabanAuditor: kabanAuditor, kabanAuditorPhone: group.kabanAuditor.contatNo,
-            totalMembers: group.members.length, totalKaban: group.totalKaban};
+            totalMembers: group.members.length, totalKaban: group.totalKaban
+        };
         worksheet.addRow(rowData);
     }
 
@@ -133,14 +134,14 @@ const exportProjectForCluster = async (project, res) => {
 const exportsController = {
     //export group
     exportGroup: async (req, res) => {
-        if(req.session.isLoggedIn == false) {
+        if (req.session.isLoggedIn == false) {
             return res.redirect("/");
         }
         const shgId = req.params.id;
         if (!shgId) {
             return res.redirect("/dasboard");
         }
-        if(req.session.isLoggedIn == false) {
+        if (req.session.isLoggedIn == false) {
             return res.redirect("/");
         }
         //const shg = await Group.findOne({ _id: shgId }).populate('members').populate('savings');
@@ -234,7 +235,11 @@ const exportsController = {
             worksheet2.addRow(rowData);
         }
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        const name = shg.name + ".xlsx";
+        let shgName = shg.name.replace(/[^a-zA-Z0-9]/g, '');
+        if (shgName == '') {
+            shgName = "export";
+        }
+        const name = shgName + ".xlsx";
         res.setHeader("Content-Disposition", "attachment; filename=" + name);
         await workbook.xlsx.write(res);
         res.end();
@@ -242,17 +247,17 @@ const exportsController = {
 
     //export a single project (calls the function above)
     exportProject: async (req, res) => {
-        if(req.session.isLoggedIn == false || req.session.authority == "Treasurer") {
+        if (req.session.isLoggedIn == false || req.session.authority == "Treasurer") {
             return res.redirect("/");
         }
-        const projectId =  req.params.id;
+        const projectId = req.params.id;
         if (!projectId) {
             //return res.status(400).json({ error: "No project ID provided." });
             return res.redirect("/dasboard");
         }
         const userId = req.session.userId;
         const user = await User.findById(userId);
-        if(req.session.isLoggedIn == false || user.authority == "Treasurer") {
+        if (req.session.isLoggedIn == false || user.authority == "Treasurer") {
             return res.redirect("/");
         }
         const project = await Project.findOne({ _id: projectId })
@@ -261,7 +266,11 @@ const exportsController = {
 
         const workbook = await exportProjectForCluster(project, res);
         res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        const name = project.name + ".xlsx";
+        let projectName = project.name.replace(/[^a-zA-Z0-9]/g, '');
+        if (projectName == '') {
+            projectName = "export";
+        }
+        const name = projectName + ".xlsx";
         res.setHeader("Content-Disposition", "attachment; filename=" + name);
         await workbook.xlsx.write(res);
         res.end();
@@ -271,16 +280,16 @@ const exportsController = {
 
     //exports a cluster (in zip)
     exportCluster: async (req, res) => {
-        if(req.session.isLoggedIn == false || req.session.authority == "Treasurer") {
+        if (req.session.isLoggedIn == false || req.session.authority == "Treasurer") {
             return res.redirect("/");
         }
-        const clusterId =  req.params.id;
+        const clusterId = req.params.id;
         if (!clusterId) {
             return res.redirect("/dasboard");
         }
         const userId = req.session.userId;
         const user = await User.findById(userId);
-        if(req.session.isLoggedIn == false || user.authority == "Treasurer") {
+        if (req.session.isLoggedIn == false || user.authority == "Treasurer") {
             return res.redirect("/");
         }
         const cluster = await Cluster.findOne({ _id: clusterId })
@@ -290,21 +299,29 @@ const exportsController = {
 
 
         const zip = archiver('zip', { zlib: { level: 9 } });
-
-        const zipFilename = cluster.name + '_compiled.zip';
+        let clusterName = cluster.name.replace(/[^a-zA-Z0-9]/g, '');
+        if (clusterName == '') {
+            clusterName = "export";
+        }
+        const zipFilename = clusterName + '_compiled.zip';
         res.setHeader('Content-Type', 'application/zip');
         res.setHeader('Content-Disposition', `attachment; filename=${zipFilename}`);
 
-            zip.pipe(res);
-        
-            for (const project of cluster.projects) {
-                const workbook = await exportProjectForCluster(project, res);
-        
-                const buffer = await workbook.xlsx.writeBuffer();
-                zip.append(buffer, { name: `${project.name}.xlsx` });
+        zip.pipe(res);
+
+        for (const project of cluster.projects) {
+            const workbook = await exportProjectForCluster(project, res);
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            let projectName = project.name.replace(/[^a-zA-Z0-9]/g, '');
+            if (projectName == '') {
+                projectName = "export";
+                console.log(projectName);
             }
-        
-            await zip.finalize();
+            zip.append(buffer, { name: `${projectName}.xlsx` });
+        }
+
+        await zip.finalize();
     },
 
     //exports all clusters (in zip, in proper folders)
@@ -312,7 +329,7 @@ const exportsController = {
 
         const userId = req.session.userId;
         const user = await User.findById(userId);
-        if(req.session.isLoggedIn == false || user.authority != "Admin") {
+        if (req.session.isLoggedIn == false || user.authority != "Admin") {
             return res.redirect("/");
         }
         const clusters = await Cluster.find().populate({ path: 'projects' });
@@ -328,12 +345,19 @@ const exportsController = {
 
         for (const cluster of clusters) {
             zip.append(null, { name: `${cluster.name}/`, prefix: cluster.name });
-
+            let clusterName = cluster.name.replace(/[^a-zA-Z0-9]/g, '');
+            if (clusterName == '') {
+                clusterName = "export";
+            }
             for (const project of cluster.projects) {
+                let projectName = project.name.replace(/[^a-zA-Z0-9]/g, '');
+                if (projectName == '') {
+                    projectName = "export";
+                }
                 const workbook = await exportProjectForCluster(project, res);
 
                 const buffer = await workbook.xlsx.writeBuffer();
-                zip.append(buffer, { name: `${cluster.name}/${project.name}.xlsx`, prefix: cluster.name });
+                zip.append(buffer, { name: `${clusterName}/${projectName}.xlsx`, prefix: cluster.name });
             }
         }
         //ADD SUMMARY SHEET

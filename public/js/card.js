@@ -133,6 +133,11 @@ function linkMemberPage(id, className) {
 
 function displayExportMessage(e, name, id, type) {
     e.stopPropagation();
+    name = name.replace(/[^a-zA-Z0-9]/g, '');
+    if (name == ''){
+        name= "export";
+    }
+    console.log(name)
     var toastEl = document.querySelector('.toast');
     if (toastEl) {
         var toastBodyEl = toastEl.querySelector('.toast-body');
