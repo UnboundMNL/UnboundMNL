@@ -14,7 +14,6 @@ const adminFunctionsController = {
         const user = await User.findById(req.session.userId)
         const authority = user.authority
 
-        if (authority === "Admin") {
           const { profileID, newUsername, newPassword } = req.body
 
           const profileToBeEdited = await User.findById(profileID)
@@ -50,6 +49,7 @@ const adminFunctionsController = {
 
               sessions.forEach((session) => {
                 const sessionData = session;
+                if (sessionData.session.userId){
                 if (sessionData.session.userId.equals(profileID)) {
                   req.sessionStore.destroy(sessionData._id, (destroyErr) => {
                     if (destroyErr) {
@@ -57,6 +57,7 @@ const adminFunctionsController = {
                     }
                   });
                 }
+              }
               });
             });
             return res.json({ success: "Profile has been edited." })
@@ -64,12 +65,6 @@ const adminFunctionsController = {
             return res.json({ success: "No edits were made." })
           }
 
-
-
-
-        } else {
-          return res.status(403).json({ error: "User not authorized" })
-        }
       } else {
         res.redirect("/")
       }
