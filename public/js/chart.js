@@ -1,4 +1,4 @@
-
+// chart in dashboard
 function chart(monthValues) {
     let monthCounts = JSON.parse(monthValues).split(',');
 

@@ -1,3 +1,4 @@
+// form validation for adding members
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// adding members
 function addMember(form) {
     const formData = new FormData(form);
     const formDataObject = {};

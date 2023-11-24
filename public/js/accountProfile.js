@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     for (let i = 0; i < inputFields.length; i++) {
         inputFields[i].disabled = true;
     }
+    // delete user button
     document.getElementById("deleteButton").onclick = () => {
         if (document.getElementById("deleteConfirm").value == "DELETE") {
             fetch('/deleteUser', {

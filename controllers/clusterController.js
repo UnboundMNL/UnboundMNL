@@ -12,7 +12,7 @@ const { updateOrgParts, getOrgParts } = require('../controllers/functions/shared
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const clusterController = {
-
+    // Cluster page
     cluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -28,9 +28,6 @@ const clusterController = {
                 if (req.session.authority == "Treasurer") {
                     return res.redirect("/member");
                 }
-                if (authority !== "Admin") {
-                    return res.status(403).render("fail", { error: "You are not authorized to view this page." });
-                }
                 let updatedParts;
                 if (req.query.search) {
                     updatedParts = await Cluster.find({ name: { $regex: req.query.search, $options: 'i' } });
@@ -39,8 +36,8 @@ const clusterController = {
                 }
                 const orgParts = updatedParts;
 
-                let pageParts = [];
-                let perPage = 6; // change to how many clusters per page
+                let pageParts = []; // array to store the clusters per page
+                let perPage = 6; // number of clusters per page
                 let totalPages;
                 if (orgParts.length !== 0) {
                     totalPages = Math.ceil(orgParts.length / perPage);
@@ -68,7 +65,7 @@ const clusterController = {
         }
     },
 
-    //create a new cluster
+    // creates a new cluster
     newCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -122,6 +119,7 @@ const clusterController = {
         }
     },
 
+    // delete cluster
     deleteCluster: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -161,12 +159,14 @@ const clusterController = {
         }
     },
 
+    // gets cluster's info for edit modal
     loadEditClusterForm: async (req, res) => {
         const clusterId = req.params.clusterId;
         const cluster = await Cluster.findOne({ _id: clusterId });
         res.render('components/popups/popupFields/ClusterFormFields', { cluster });
     },
 
+    // middleware to store the cluster
     clusterMiddle: async (req, res) => {
         try {
             req.session.clusterId = req.body.id;

@@ -5,6 +5,7 @@ const Project = require('../models/Project');
 const Group = require('../models/Group');
 const loginController = {
 
+    // login function
     login: async (req, res) => {
         try {
             console.log("does req.session not exist?", !req.session.isLoggedIn);
@@ -50,6 +51,7 @@ const loginController = {
         }
     },
 
+    // logout
     logout: async (req, res) => {
         try {
             req.session.destroy();

@@ -1,3 +1,4 @@
+// diisplayng the delete modal for user and member
 function displayDeleteModal(memberName, memberId, pageName) {
     // Show the modal using Bootstrap's modal method
     $('#deleteProfileModal').modal('show');
@@ -12,6 +13,7 @@ function displayDeleteModal(memberName, memberId, pageName) {
     }
 }
 
+// changing middleware for members
 function redirectMember(id) {
     data = { memberId: id };
     fetch('/redirectMiddle', {
@@ -33,6 +35,7 @@ function redirectMember(id) {
         });
 }
 
+// user delete for admins
 function userDelete(profileID) {
     data = { profileID };
     fetch('/adminUserDelete', {

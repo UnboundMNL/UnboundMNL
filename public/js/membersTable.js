@@ -115,6 +115,7 @@ function loadMobileTable() {
 	return table;
 };
 
+// reloads the table with the specific year
 function reloadTable(value, table) {
 	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
@@ -213,6 +214,7 @@ function check(table) {
 	return true;
 }
 
+// on save create objects that saves the changes
 async function save() {
 	const constructedChanges = [];
 	for (const each of LISTOFCHANGES) {

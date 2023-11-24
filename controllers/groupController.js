@@ -75,7 +75,7 @@ const groupController = {
         }
     },
 
-    //create a new group
+    // creates a new group
     newGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -251,8 +251,7 @@ const groupController = {
     },
 
 
-    // load edit group form
-
+    // get's group's info for edit modal
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;
         const shg = await Group.findOne({ _id: shgId });
@@ -261,8 +260,7 @@ const groupController = {
     },
 
 
-    //middleware for group id
-
+    // middleware to save group ids
     groupMiddle: async (req, res) => {
         try {
             req.session.groupId = req.body.id;

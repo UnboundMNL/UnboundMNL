@@ -10,6 +10,7 @@ const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const memberController = {
 
+    // loads the member page to show the savings and matching grant for the specific year
     member: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -33,6 +34,8 @@ const memberController = {
 
                 const members = await Member.find({ _id: { $in: group.members } });
                 let totalSaving = 0;
+
+                // gets savings and matching grant of each member of a group on the current year
                 if (members) {
                     for (const member of members) {
                         const savings = await Saving.findOne({
@@ -78,6 +81,7 @@ const memberController = {
         }
     },
 
+    // reloads the member page and gets savings and matching grant of each member of a group on a specific year
     reloadTable: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -131,6 +135,7 @@ const memberController = {
         }
     },
 
+    // member's profile page
     retrieveMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -149,6 +154,7 @@ const memberController = {
                 const project = await Project.findById(member.projectId);
                 const group = (await Group.findById(member.groupId)).name;
                 dashbuttons = dashboardButtons(authority);
+                // change date to Philippine format
                 const originalDate = new Date(member.birthdate);
                 originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
                 const options = {
@@ -191,6 +197,7 @@ const memberController = {
         }
     },
 
+    // adding members
     newMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -242,6 +249,7 @@ const memberController = {
         }
     },
 
+    // editing members
     editMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -320,6 +328,7 @@ const memberController = {
         }
     },
 
+    // deletinng members
     deleteMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -357,6 +366,7 @@ const memberController = {
         }
     },
 
+    // showing all the accessible members
     retrieveMasterlist: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -397,6 +407,7 @@ const memberController = {
         }
     },
 
+    // middleware to save member ids
     memberMiddle: async (req, res) => {
         try {
             req.session.memberId = req.body.id;

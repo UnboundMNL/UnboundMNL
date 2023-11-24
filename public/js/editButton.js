@@ -1,3 +1,4 @@
+// show edit modals
 document.addEventListener('DOMContentLoaded', function () {
 
     const editCluster = document.getElementById('editCluster') //edit cluster button

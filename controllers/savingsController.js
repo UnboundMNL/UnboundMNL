@@ -9,12 +9,13 @@ const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const savingsController = {
 
+    // add new savings
     newSaving: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
                 const { id, year, updateData } = req.body;
                 const saving = await Saving.findOne({ memberID: id, year });
-                if (saving) {
+                if (saving) { // if there is already a saving for that year
                     let updatedData = {};
                     let totalSavings = 0;
                     let totalMatch = 0;
@@ -60,7 +61,7 @@ const savingsController = {
                     if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
                         res.json();
                     }
-                } else {
+                } else { // if there aren't savings for the year
                     const newSaving = new Saving({ memberID: id, year });
                     await newSaving.save();
                     let updatedData = {};

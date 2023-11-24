@@ -1,3 +1,4 @@
+// form validation for adding projects
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// addinng projects
 function addProject(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};

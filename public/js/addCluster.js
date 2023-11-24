@@ -1,3 +1,4 @@
+// form validation for adding clusters
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// adding cluster
 function addCluster(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};

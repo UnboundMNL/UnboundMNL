@@ -1,3 +1,4 @@
+// Dashboard button
 function dashboardButtons(authority) {
     let buttons;
     if (authority === "Admin") {

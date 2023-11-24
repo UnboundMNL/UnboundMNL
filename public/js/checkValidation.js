@@ -1,3 +1,4 @@
+// form validations for passwords
 function validatePassword() {
 
 

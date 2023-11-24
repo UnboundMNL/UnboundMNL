@@ -71,7 +71,7 @@ const projectController = {
         }
     },
 
-    //create a new project
+    // create a new project
     newProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -144,6 +144,7 @@ const projectController = {
         }
     },
 
+    // deletes a project
     deleteProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -191,12 +192,14 @@ const projectController = {
         }
     },
 
+    /// get's sub-project's info for edit modal
     loadEditSubProjectsForm: async (req, res) => {
         const projectId = req.params.projectId;
         const project = await Project.findOne({ _id: projectId });
         res.render('components/popups/popupFields/Sub-ProjectsFormFields', { project });
     },
 
+    // middleware to save project ids
     projectMiddle: async (req, res) => {
         try {
             req.session.projectId = req.body.id;

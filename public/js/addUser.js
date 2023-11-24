@@ -1,3 +1,4 @@
+// form validation for adding users
 document.addEventListener('DOMContentLoaded', function () {
 
     const selectIDs = ["#clusterSelect", "#spuSelect", "#shgSelect"];
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 data = { username, password: pass, authority: "Treasurer", validGroup: document.getElementById('shgSelect').value }
             }
+            // adding user
             fetch('/register', {
                 method: 'POST',
                 headers: {
@@ -127,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// getting project options
 function getProject() {
     const clusterId = $('#clusterSelect').find(":selected").val();
     const data = { clusterId };
@@ -162,7 +165,7 @@ function getProject() {
         });
 }
 
-
+// getting group options
 function getSHG() {
     const projectId = $('#spuSelect').find(":selected").val();
     const data = { projectId };
@@ -198,6 +201,7 @@ function showModal() {
     saveModal.show();
 }
 
+// disabling and changing dropdown opotions
 function accountTypeSelect(clusterChoicesName, clusterChoicesId, authority) {
     var accountType = document.getElementById("accountType").value;
     var elementsToHandle = ["clusterSelect", "spuSelect", "shgSelect"];
@@ -284,6 +288,7 @@ function accountTypeSelect(clusterChoicesName, clusterChoicesId, authority) {
     }
 }
 
+// reset all options
 function ResetAll(authority) {
     let groupSelectDefault;
     if (authority != "Treasurer") {

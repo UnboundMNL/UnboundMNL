@@ -1,3 +1,4 @@
+// adding middleware and redirects
 function cardLink(type, id) {
     let data;
     const div = document.getElementById(id);
@@ -36,7 +37,7 @@ function cardLink(type, id) {
             });
     });
 }
-
+// adding on click delete
 function cardDelete(type, id) {
     if (type != "member" && type != "masterlist") {
         const button = document.getElementById("delete_" + id);
@@ -99,6 +100,7 @@ function cardDelete(type, id) {
 
 }
 
+// linking member's name to their profile
 function linkMemberPage(id, className) {
     let data;
     const divs = document.querySelectorAll("." + className);
@@ -131,6 +133,7 @@ function linkMemberPage(id, className) {
     });
 }
 
+// download button
 function displayExportMessage(e, name, id, type) {
     e.stopPropagation();
     name = name.replace(/[^a-zA-Z0-9]/g, '');

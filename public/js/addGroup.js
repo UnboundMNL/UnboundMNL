@@ -1,3 +1,4 @@
+// form validation for adding groups
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// adding groups
 function addGroup(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};

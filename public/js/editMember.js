@@ -1,3 +1,4 @@
+// gets options for dropdown
 $(document).ready(function () {
     const selectIDs = ["#clusterSelect", "#projectSelect", "#groupSelect"];
     for (let i = 0; i < selectIDs.length - 1; i++) {
@@ -16,6 +17,7 @@ $(document).ready(function () {
     }
 });
 
+// gets groups for dropdown
 function getSHG() {
     const projectId = $('#projectSelect').find(":selected").val();
     const data = { projectId };
@@ -45,6 +47,7 @@ function getSHG() {
         });
 }
 
+// gets projects for dropdown
 function getProject() {
     const clusterId = $('#clusterSelect').find(":selected").val();
     const data = { clusterId };

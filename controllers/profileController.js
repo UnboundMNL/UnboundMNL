@@ -31,6 +31,7 @@ async function getAuthorizedMembers(user, authority) {
 
 const profileController = {
 
+    // dashboard page
     dashboard: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -49,8 +50,12 @@ const profileController = {
                 let memberList;
                 let savingIds;
                 let memberIds;
+
+                // change year to Philippine time
                 const options = { year: 'numeric', timeZone: 'Asia/Manila' };
                 const currYear = new Date().toLocaleString('en-US', options);
+
+                // get information about the accessible parts of the user
                 switch (authority) {
                     case "Admin":
                         allSaving = await Saving.find({ year: currYear });
@@ -92,6 +97,7 @@ const profileController = {
                     default:
                         break;
                 }
+                // gets how much savings and matching grant is saved for all the months of the current year
                 const monthCounts = {};
                 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
                 months.forEach((month) => {
@@ -120,6 +126,7 @@ const profileController = {
         }
     },
 
+    // profile page
     profile: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -140,6 +147,7 @@ const profileController = {
         }
     },
 
+    // user update
     editProfile: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -148,13 +156,6 @@ const profileController = {
                 const username = user.username;
                 const { newUsername, currentPassword1, newPassword, confirmPassword, currentPassword2,
                     checkUsernameCheckbox, checkPasswordCheckbox } = req.body;
-
-                // const newUsername = req.body.newUsername;
-                // const currentPassword1 = req.body.currentPassword1;
-                // const newPassword = req.body.newPassword;
-                // const confirmPassword = req.body.confirmPassword;
-                // const currentPassword2 = req.body.currentPassword2;
-
                 let updateData = req.body;
                 let updateUser;
 
@@ -224,6 +225,7 @@ const profileController = {
         }
     },
 
+    // shows list of username
     retrieveUsernameList: async (req, res) => {
         try {
             const usernameList = await User.find().select('username -_id');
@@ -235,6 +237,7 @@ const profileController = {
         }
     },
 
+    // list accounts page 
     accounts: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -246,8 +249,8 @@ const profileController = {
                     return res.redirect("/");
                 }
                 let memberList;
+                // get the list of members
                 if (authority == "Admin") {
-                    // show all users except the current user
                     memberList = await User.find({ _id: { $ne: req.session.userId } });
                 } else {
                     const cluster = await Cluster.find({ _id: user.validCluster });
@@ -270,6 +273,7 @@ const profileController = {
         }
     },
 
+    // changes the middleware for redirection to member's page
     redirectMiddle: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {

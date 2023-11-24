@@ -7,7 +7,7 @@ const Group = require('../models/Group');
 const { ObjectId } = require('mongodb');
 
 const adminFunctionsController = {
-
+  // user edits for admins
   userDetailsOverride: async (req, res) => {
     try {
       if (req.session.isLoggedIn) {
@@ -41,12 +41,12 @@ const adminFunctionsController = {
         }
 
 
-        if (!isPasswordMatch || usernameUpdate) {
+        if (!isPasswordMatch || usernameUpdate) { // if there is an update
           req.sessionStore.all((err, sessions) => {
             if (err) {
               return res.status(500).json({ error: 'Internal Server Error' });
             }
-
+            // clear sessions of updated user
             sessions.forEach((session) => {
               const sessionData = session;
               if (sessionData.session.userId) {
@@ -72,7 +72,7 @@ const adminFunctionsController = {
       return res.status(500).json({ error: error.message })
     }
   },
-
+  // user delete for admins
   adminUserDelete: async (req, res) => {
     if (req.session.isLoggedIn) {
       const { profileID } = req.body
@@ -80,7 +80,7 @@ const adminFunctionsController = {
         if (err) {
           return res.status(500).json({ error: 'Internal Server Error' });
         }
-
+        // clear sessions of updated user
         sessions.forEach((session) => {
           const sessionData = session;
           if (sessionData.session.userId) {

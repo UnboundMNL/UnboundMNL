@@ -5,6 +5,7 @@ const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const registerController = {
 
+  // registration for users
   register: async (req, res) => {
     if (req.session.isLoggedIn) {
       try {
@@ -50,6 +51,7 @@ const registerController = {
     }
   },
 
+  // registration page
   registration: async (req, res) => {
     try {
       if (req.session.isLoggedIn) {
@@ -78,6 +80,7 @@ const registerController = {
     }
   },
 
+  // delete user
   deleteUser: async (req, res) => {
     if (req.session.isLoggedIn) {
       const user = await User.findById(req.session.userId);
