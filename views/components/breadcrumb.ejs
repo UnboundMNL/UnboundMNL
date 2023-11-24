@@ -1,0 +1,19 @@
+<%  const path = ["Clusters", "Sub-Projects", "SHG", "Members", "Member's Profile"];
+    const pathLink = ["/cluster", "/project", "/group", "/member"];
+    %>
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <% for (var i = 0; i < path.length; i++) { 
+            if (path[i] !== pageName){ 
+                if (authority==="SEDO" && i == 0) {continue;}
+                if (authority==="Treasurer" && i < 3) {continue;}
+                %>
+                <li class="breadcrumb-item"><a href="<%=pathLink[i]%>"><%=path[i]%></a></li>
+            <% } else if (path[i] === pageName) { %>
+                <li class="breadcrumb-item active" aria-current="page"><%=path[i]%></li>
+            <%  break;
+            } %>
+        <% } %>
+    </ol>
+</nav>

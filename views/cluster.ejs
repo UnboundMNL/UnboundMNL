@@ -23,7 +23,9 @@
         <%- include('components/navbars/topNavbar.ejs')%>
 
         <!-- Cluster Content -->
-        <div class="p-4 mt-5"> 
+        <div class="p-4 mt-5">
+            <%- include('components/breadcrumb.ejs', {pageName: "Clusters"}) %>
+            
             <% var type = "Cluster";  %>
             <h4 class="mt-3">Clusters</h4>
             <%- include('components/cardPages.ejs', { groupName: "All", groupId: "All", pageParts, type, authority}) %>
