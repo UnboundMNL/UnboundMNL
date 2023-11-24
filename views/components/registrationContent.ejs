@@ -3,7 +3,6 @@
         <h4>Account Registration</h4><hr>
 
         <!-- <form onsubmit="event.preventDefault();" class="needs-validation" novalidate> -->
-        <form>
             <div class="row">
                 <div class="col-md-6" id="inputContainer">
                     <div class="p-2">
@@ -26,70 +25,65 @@
                         </div> -->
                         <div class="mb-2">
                             <span>Username</span>
-                            <input type="text" class="form-control" id="newUsername" value="" required onkeyup="validateUsername()">
+
+                            <input type="text" class="form-control" id="username" autocomplete="off">
+
                             <span id="usernameAlert"></span>
                         </div>
                         <div class="mb-2">
                             <span>Password</span>
-                            <input type="password" id="newPass" class="form-control" required onkeyup="validatePassword()">
+                            <input type="password" id="pass" class="form-control" autocomplete="new-password">
                         </div>
                         <div class="mb-2">
                             <span>Confirm Password</span>
-                            <input type="password" id="confirmPass" class="form-control" required onkeyup="validatePassword()">
+                            <input type="password" id="repass" class="form-control" autocomplete="new-password">
+
                         </div>
                         <span id="matchingAlert2"></span>
                     </div>
                 </div>
-
-    
                 <div class="col-md-6" id="inputContainer">
                     <div class="p-2">
                         <div class="mb-2">
                             <span>Account Type</span>
                             <div>
-                                <select class="custom-select form-select" id="accountType" required <% if (authority == 'Admin') { %> onclick="accountTypeSelect()" <% } %>>
-                                    <option selected>Choose...</option>
+                                <select class="custom-select form-select" id="accountType" required>
+                                    <option selected hidden value="" default>Choose...</option>
     
                                     <% if (authority == "Admin") { %>
-                                        <option value="1">Admin</option>
+                                        <option value="Admin">Admin</option>
                                     <% } %>
-                                    <option value="2">SEDO</option>
-                                    <option value="3">Treasurer</option>
+                                    <option value="SEDO">SEDO</option>
+                                    <option value="Treasurer">Treasurer</option>
                                 </select>
                             </div>
                         </div>
-    
-                        <% const cluster = ["Cluster 1", "Cluster 2"] %>
-                        <% const spu = ["SPU 1", "SPU 2"] %>
-                        <% const shg = ["SHG 1", "SHG 2"] %>
-    
+
                         <div class="mb-2">
                             <span>Cluster</span>
                             <div>
                                 <select class="custom-select form-select" id="clusterSelect" required <% if (authority !== 'Admin') { %> disabled <% } %>>
-                                    // Hannah: change the value to the cluster of the user
-                                    <option selected>
-                                        <% if (authority !== 'Admin') { %>
-                                            <%- cluster[0] %>
-                                        <% } else { %>
-                                            Choose...
-                                        <% } %>
+
+                                    <% if (authority !== 'Admin') { %>
+<                                       <option selected value = "<%=clusterChoices._id%>"> <%- clusterChoices.name %></option>
+                                    <% } else { %>
+                                        <option selected hidden default value="" selected>Choose...</option>
+                                        <% for (var i = 0; i < clusterChoices.length; i++) { %>
+                                            <option value="<%- clusterChoices[i]._id %>"><%- clusterChoices[i].name %></option>
+                                        <% } 
+                                    }%>
                                     </option>
-                                    <% for (var i = 0; i < cluster.length; i++) { %>
-                                        <option value="i"><%- cluster[i] %></option>
-                                    <% } %>
                                 </select>
                             </div>
                         </div>
+                        
+
     
                         <div class="mb-2">
                             <span>Sub-Project Unit</span>
                             <div>
                                 <select class="custom-select form-select" id="spuSelect" required>
-                                    <option selected>Choose...</option>
-                                    <% for (var i = 0; i < spu.length; i++) { %>
-                                        <option value="i"><%- spu[i] %></option>
-                                    <% } %>
+                                    <option selected hidden default value="" selected>Choose...</option>
                                 </select>
                             </div>
                         </div>
@@ -98,64 +92,36 @@
                             <span>Self-Help Group</span>
                             <div>
                                 <select class="custom-select form-select" id="shgSelect" required>
-                                    <option selected>Choose...</option>
-                                    <% for (var i = 0; i < shg.length; i++) { %>
-                                        <option value="i"><%- shg[i] %></option>
-                                    <% } %>
+                                    <option selected hidden default value="" selected>Choose...</option>
                                 </select>
                             </div>
 
                         </div>
+                        <span id="noPart"></span>
                     </div>
                 </div>
             </div>
     
             <div class="d-flex justify-content-center button-gap mt-4">
                 <button class="btn btn-secondary ml-2" onclick="window.location.href = '/registration'">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="saveChanges">Register</button>
                 <!-- TBD: Show modal after submitting -->
-                <!-- <button type="submit" class="btn btn-primary" id="saveChanges" onclick="showModal()">Register</button> -->
+                <button class="btn btn-primary" id="saveChanges">Register</button>
             </div>
-        </form>
     </div>
 </div>
-    
-<script>
-    function showModal() {
-        const saveModal = new bootstrap.Modal(document.getElementById("saveModal"));
-        saveModal.show();
-    }
-                        
-                        
-    function accountTypeSelect() {
-        var accountType = document.getElementById("accountType").value;
-        var elementsToHandle = ["clusterSelect", "spuSelect", "shgSelect"];
-
-        if (accountType == 1) {
-            elementsToHandle.forEach(function (elementId) {
-                var element = document.getElementById(elementId);
-                element.disabled = true;
-                element.value = "";
-            });
-        } else if (accountType == 2) {
-            elementsToHandle.forEach(function (elementId) {
-                if (elementId !== "clusterSelect") {
-                    var element = document.getElementById(elementId);
-                    element.disabled = true;
-                    element.value = "";
-                } else {
-                    var element = document.getElementById(elementId);
-                    element.disabled = false;
-                    element.value = "Choose...";
-                }
-            });
-        } else {
-            elementsToHandle.forEach(function (elementId) {
-                document.getElementById(elementId).disabled = false;
-                var element = document.getElementById(elementId);
-                element.disabled = false;
-                element.value = "Choose...";
-            });
-        }
-    }
-</script>
+    <script>
+        var clusterChoicesName = [
+                <% for (let i = 0; i < clusterChoices.length; i++) { %>
+                        "<%= clusterChoices[i].name %>"<%= i < clusterChoices.length - 1 ? ',' : '' %>
+                    <% } %>
+                ];
+            var clusterChoicesId = [
+                <% for (let i = 0; i < clusterChoices.length; i++) { %>
+                        "<%= clusterChoices[i]._id %>"<%= i < clusterChoices.length - 1 ? ',' : '' %>
+                    <% } %>
+                ];
+        document.getElementById("accountType").onchange = function() {
+            accountTypeSelect(JSON.stringify(clusterChoicesName),JSON.stringify(clusterChoicesId),"<%=authority%>");
+            document.getElementById('noPart').innerHTML = '';
+        };
+    </script>

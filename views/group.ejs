@@ -27,7 +27,7 @@
         <!-- Note: Temporary number of containers -->
         <% const containers = 6; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters", "Sub-Projects", "SHG"]; 
+            <% const path = ["Clusters", "Sub-Projects"]; 
                 var pathLink; %>
 
             <div class="custom-path">
@@ -49,7 +49,7 @@
             </div>
              
             <% var type = "SHG";  %>
-            <%- include('components/shgContent.ejs', { pageParts, type }) %>
+            <%- include('components/shgContent.ejs', { projectName, pageParts, type }) %>
             <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 

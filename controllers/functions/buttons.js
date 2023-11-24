@@ -1,3 +1,4 @@
+// Dashboard button
 function dashboardButtons(authority) {
     let buttons;
     if (authority === "Admin") {
@@ -5,22 +6,22 @@ function dashboardButtons(authority) {
             {
                 text: "Clusters",
                 href: "/cluster",
-                icon: "bxs-folder-open"
+                icon: "bx-category"
+            },
+            {
+                text: "Members Masterlist",
+                href: "/masterlist",
+                icon: "bxs-user-account"
+            },
+            {
+                text: "Account Management",
+                href: "/accounts",
+                icon: "bx-cog"
             },
             {
                 text: "Account Registration",
                 href: "/registration",
                 icon: "bxs-user-plus"
-            },
-            {
-                text: "Manage Organization",
-                href: "/masterlist",
-                icon: "bx-building-house"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "/savings",
-                icon: "bx-money"
             }
         ];
     } else if (authority === "SEDO") {
@@ -32,18 +33,18 @@ function dashboardButtons(authority) {
             },
             {
                 text: "Manage Cluster",
-                href: "/member",
+                href: "/masterlist",
                 icon: "bx-grid-alt"
+            },
+            {
+                text: "Account Management",
+                href: "/accounts",
+                icon: "bx-cog"
             },
             {
                 text: "Account Registration",
                 href: "/registration",
                 icon: "bxs-user-plus"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "/savings",
-                icon: "bx-money"
             }
         ];
     } else if (authority === "Treasurer") {
@@ -52,11 +53,6 @@ function dashboardButtons(authority) {
                 text: "Members",
                 href: "/member",
                 icon: "bx-group"
-            },
-            {
-                text: "Total Savings & Matching Grant",
-                href: "/savings",
-                icon: "bx-money"
             }
         ];
     }

@@ -12,6 +12,7 @@
     background-color: white;
     margin: 0.5rem 0;
     padding: 1rem;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
 }
 
@@ -19,8 +20,9 @@
     margin-right: 0.5rem;
 }
 
-.container-style h3 {
-    color: var(--primary-color);
+.container-style h5 ,
+.container-style h4 {
+    color: var(--secondary-color);
 }
 
 .container-style:hover {
@@ -48,4 +50,12 @@
 
 .modal-body i {
     color: var(--red-color);
+}
+
+.card-export {
+    font-size: 1.5rem;
+}
+
+.card-export:hover {
+    color: var(--primary-color);
 }

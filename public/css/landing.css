@@ -1,13 +1,15 @@
 /* --------------- LANDING PAGE --------------- */
 .landing-bg {
     background-image: radial-gradient(rgb(154, 225, 238), white);
+    height: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .landing-bg .container {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
 }
 
 .card {

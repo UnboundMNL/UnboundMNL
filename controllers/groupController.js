@@ -1,3 +1,6 @@
+
+// controller for group related functions
+
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -14,6 +17,9 @@ const groupController = {
     group: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+                if (req.session.authority == "Treasurer") {
+                    return res.redirect("/member");
+                }
                 const sidebar = req.session.sidebar;
                 const page = req.params.page;
                 const userID = req.session.userId;
@@ -38,8 +44,9 @@ const groupController = {
                 }
                 const orgParts = updatedParts;
                 const perPage = 6; // change to how many clusters per page
-                let totalPages = Math.ceil(orgParts.length / perPage); 
+                let totalPages;
                 if (orgParts.length !== 0) {
+                    totalPages = Math.ceil(orgParts.length / perPage);
                     if (page > totalPages) {
                         return res.redirect("/group");
                     }
@@ -55,7 +62,10 @@ const groupController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("group", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location, projectName: project.name, clusterName: cluster.name });
+                res.render("group", {
+                    authority, pageParts, username, sidebar, dashbuttons, page, totalPages, SPU: project.name, location: project.location,
+                    projectName: project.name, projectId: project._id, clusterName: cluster.name, search: req.query.search
+                });
             } else {
                 res.redirect("/");
             }
@@ -65,21 +75,23 @@ const groupController = {
         }
     },
 
-    //create a new group
+    // creates a new group
     newGroup: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
-                const projectId = req.session.projectId;
-                let project = await Project.findById(projectId);
                 const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum,
                     SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone,
                     SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone,
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone,
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone } = req.body;
-                const existingGroup = await Group.findOne({ SPU, name, location });
-                if (existingGroup) {
-                    return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
+                const projectId = req.session.projectId;
+                let project = await Project.findById(projectId);
+                const group = await Group.find({ _id: { $in: project.groups } });
+                const existingGroups = group.flatMap(group => group.name);
+                if (existingGroups.includes(name)) {
+                    return res.json({ error: "A group with the same name already exists." });
                 }
+
                 let SHGLeader = {
                     firstName: SHGLeaderFirstName,
                     lastName: SHGLeaderLastName,
@@ -119,7 +131,7 @@ const groupController = {
                 await newGroup.save();
                 project.groups.push(newGroup._id);
                 await project.save();
-                res.redirect("/group");
+                res.json({ success: "A Group has been added." });
             } else {
                 res.redirect("/");
             }
@@ -134,17 +146,18 @@ const groupController = {
         try {
             if (req.session.isLoggedIn) {
                 const groupId = req.params.id;
-                const group = await Group.findById(groupId);
+                const currentGroup = await Group.findById(groupId);
                 const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum,
                     SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone,
                     SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone,
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone,
                     kabanAuditorFirstName, kabanAuditorLastName, kabanAuditorPhone } = req.body;
-                if (group.name != name) {
-                    const existingGroup = await Group.findOne({ SPU, name, location });
-                    if (existingGroup) {
-                        return res.status(400).json({ error: "A group with the same name, area, and SPU already exists." });
-                    }
+                const projectId = req.session.projectId;
+                let project = await Project.findById(projectId);
+                const group = await Group.find({ _id: { $in: project.groups } });
+                const existingGroups = group.flatMap(group => group.name);
+                if (existingGroups.includes(name) && name != currentGroup.name) {
+                    return res.json({ error: "A group with the same name already exists." });
                 }
                 const SHGLeader = {
                     firstName: SHGLeaderFirstName,
@@ -178,11 +191,11 @@ const groupController = {
                     kabanTreasurer,
                     kabanAuditor
                 };
-                const updatedGroup = await Group.findOneAndUpdate({ SPU: group.SPU, name: group.name, area: group.area }, updateData, { new: true });
+                const updatedGroup = await Group.findOneAndUpdate({ _id: groupId }, updateData, { new: true });
                 if (updatedGroup) {
-                    res.redirect("/group");
+                    res.json({ success: "A Group has been edited." });
                 } else {
-                    return res.status(404).json({ error: "Update error!" });
+                    return res.json({ error: "An error occurred while editng a group." });
                 }
             } else {
                 res.redirect("/");
@@ -204,13 +217,15 @@ const groupController = {
                 let kaban;
                 if (Array.isArray(group.members)) {
                     for (const member of group.members) {
-                        kaban = await Saving.findMany({ memberID: member.id });
+                        kaban = await Saving.find({ memberID: member._id });
                         for (const item of kaban) {
                             cluster.totalKaban -= item.totalSaving;
+                            cluster.totalKaban -= item.totalMatch;
                             project.totalKaban -= item.totalSaving;
+                            project.totalKaban -= item.totalMatch;
                         }
-                        await Saving.deleteMany({ memberID: member.id });
-                        await Member.deleteOne({ _id: member.id });
+                        await Saving.deleteMany({ memberID: member._id });
+                        await Member.deleteOne({ _id: member._id });
                         cluster.totalMembers -= 1;
                         project.totalMembers -= 1;
                     }
@@ -235,13 +250,17 @@ const groupController = {
         }
     },
 
+
+    // get's group's info for edit modal
     loadEditSHGForm: async (req, res) => {
         const shgId = req.params.shgId;
-        const shg = await SHG.findOne({ _id: shgId });
+        const shg = await Group.findOne({ _id: shgId });
         const project = await Project.findOne({ _id: req.session.projectId });
         res.render('components/popups/popupFields/SHGFormFields', { shg, SPU: project.SPU, location: project.location });
     },
 
+
+    // middleware to save group ids
     groupMiddle: async (req, res) => {
         try {
             req.session.groupId = req.body.id;
@@ -251,7 +270,9 @@ const groupController = {
         } catch (error) {
             console.error(error);
         }
+
     }
+
 
 }
 

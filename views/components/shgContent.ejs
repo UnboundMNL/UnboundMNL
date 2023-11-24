@@ -1,6 +1,6 @@
 <div class="d-flex mt-4 mb-4 justify-content-between align-items-center">
     <!-- Search bar -->
-    <div class="col-10">
+    <div class="col-9">
         <div class="search-bar d-flex">
             <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search" aria-describedby="button-addon2" id="searchBar">
             <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
@@ -10,24 +10,58 @@
         </div>
     </div>
 
-    <!-- Add button -->
-    <div class="d-flex align-items-center p-2">
-        <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=type%>">
-                <i class='bx bx-plus'></i>
-                <span class="d-none d-sm-inline">Add SHG</span>
-            </button>
+    <div  class="d-flex justify-content-end">
+        <div class="d-flex align-items-center p-1">
+            <div>
+                <script>
+                    var encodedText = '<%=projectName%>';
+
+                    // Create a new element to decode the HTML-encoded text
+                    var decodedElement = document.createElement('div');
+                    decodedElement.innerHTML = encodedText;
+
+                    // Get the decoded text
+                    var decodedText = decodedElement.innerText;
+
+                </script>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=projectId%>','Sub-Projects')">
+                    <i class='bx bx-export '></i>
+                    <span class="d-none d-sm-inline">Export</span>
+                </button>
+            </div>
+        </div>
+        <!-- Add button -->
+        <div class="d-flex align-items-center">
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=type%>">
+                    <i class='bx bx-plus'></i>
+                    <span class="d-none d-sm-inline">Add</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 <%-include('popups/addPartModal.ejs', {partname: type}) %>
 <%-include('popups/editPopup.ejs', {partname: type}) %>
-
 <div>
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
         <div class="container-style mb-3" id = <%=pageParts[i]._id%>>
-            <h5>SHG <%=pageParts[i].name%></h5>
+            <div class="d-flex justify-content-between">
+                <h5>SHG <%=pageParts[i].name%></h5>
+                <script>
+                    var encodedText = '<%=pageParts[i].name%>';
+
+                    // Create a new element to decode the HTML-encoded text
+                    var decodedElement = document.createElement('div');
+                    decodedElement.innerHTML = encodedText;
+
+                    // Get the decoded text
+                    var decodedText<%=i%> = decodedElement.innerText;
+
+                </script>
+                <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, decodedText<%=i%>, '<%=pageParts[i]._id%>','<%=type%>')"></i>
+            </div>
             <div>
                 <i class='bx bxs-map'></i>
                 <span><%=pageParts[i].location%></span>
@@ -49,9 +83,9 @@
                 </div>
 
                 <div>
-                    <span>Total Savings:</span>
-                    <h3 class="format-number"><%=pageParts[i].totalKaban%></h3>
-                </div>
+                    <span><small>Total Savings:</small></span>
+                    <h4 class="format-number"><%=pageParts[i].totalKaban%></h4>
+                </div> 
             </div>
         </div>
 
@@ -87,4 +121,17 @@
             cardLink("member", "<%=pageParts[i]._id%>");
         </script>
     <% } %>
+</div>
+
+<div class="toast-container
+            position-fixed 
+            top-0 start-50 
+            translate-middle-x
+            mt-5"
+            data-delay="3000">
+    <div class="toast mt-4 text-center bg-info fw-bold text-black-50">
+        <div class="toast-body">
+            
+        </div>
+    </div>
 </div>

@@ -9,7 +9,7 @@ const { updateOrgParts, getOrgParts } = require('../controllers/functions/shared
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
 const choicesController = {
-
+    // SHG options
     SHGChoices: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -25,7 +25,7 @@ const choicesController = {
             return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
         }
     },
-
+    // project options
     projectChoices: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -41,10 +41,26 @@ const choicesController = {
             }
         } catch (error) {
             console.error(error);
-            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+            return res.status(500).render("fail", { error: "An error occurred while retrieving project information." });
+
         }
-    }
-    
+    },
+    // cluter options
+    clusterChoices: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const cluster = await Cluster.find({ totalGroups: { $gt: 0 } });
+                res.json({ cluster });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while retrieving group information." });
+
+        }
+    },
+
 }
 
 module.exports = choicesController;

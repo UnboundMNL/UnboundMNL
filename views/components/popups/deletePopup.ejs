@@ -15,15 +15,15 @@
                     <div class="p-4">
                         <h6 class="text-center p-2">Type DELETE to confirm.</h6>
                         <% const deleteConfirm = pageParts[i]._id+"Confirm"; %>
-                        <input type="text" class="form-control text-center" id="<%=deleteConfirm%>">
+                        <input type="text" class="form-control text-center" id="<%=deleteConfirm%>" autocomplete="off">
                     </div>
                     <div class="modal-buttons p-3">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <% var deleteID= "delete_"+pageParts[i]._id ; %>
                         <button type="button" class="btn btn-danger" id="<%=deleteID%>">Delete</button>
                         <script>
-                            <% if (type == "cluster") { %>
-                                cardDelete("cluster", "<%= pageParts[i]._id %>");
+                            <% if (type == "Cluster") { %>
+                                cardDelete("Cluster", "<%= pageParts[i]._id %>");
                             <% } else if (type == "Sub-Projects") { %>
                                 cardDelete("project", "<%= pageParts[i]._id %>");
                             <% } else if (type == "SHG") { %>

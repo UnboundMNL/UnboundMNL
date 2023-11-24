@@ -1,13 +1,17 @@
 const User = require('../models/User');
 const mongoose = require('mongoose')
-
+const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
 const loginController = {
 
+    // login function
     login: async (req, res) => {
         try {
             console.log("does req.session not exist?", !req.session.isLoggedIn);
             if (!req.session.isLoggedIn) {
-                let { username, password, remember } = req.body;
+                // let { username, password, remember } = req.body;
+                let { username, password } = req.body;
                 const user = await User.findOne({ username: username });
                 if (!user) {
                     return res.status(401).json({ error: "User not found" });
@@ -18,6 +22,14 @@ const loginController = {
                     req.session.clusterId = user.validCluster;
                 } else if (user.authority == "Treasurer") {
                     req.session.groupId = user.validGroup;
+                    const project = await Project.findOne({
+                        groups: { $in: [req.session.groupId] }
+                    });
+                    req.session.projectId = project._id;
+                    const cluster = await Cluster.findOne({
+                        projects: { $in: [req.session.projectId] }
+                    });
+                    req.session.clusterId = cluster._id;
                 }
                 if (!isPasswordMatch) {
                     return res.status(401).json({ error: "Incorrect Password" });
@@ -25,10 +37,10 @@ const loginController = {
                 req.session.isLoggedIn = true;
                 req.session.userId = user._id;
                 req.session.sidebar = true;
-                if (!remember) {
-                    req.session.cookie.expires = false;
-                }
-                req.session.rememberMe = remember;
+                // if (!remember) {
+                //     req.session.cookie.expires = false;
+                // }
+                // req.session.rememberMe = remember;
                 res.json();
             } else {
                 res.redirect("/dashboard");
@@ -39,6 +51,7 @@ const loginController = {
         }
     },
 
+    // logout
     logout: async (req, res) => {
         try {
             req.session.destroy();
@@ -66,7 +79,7 @@ const loginController = {
             res.status(500).json({ error: "Server error." });
         }
     }
-    
+
 }
 
 module.exports = loginController;
