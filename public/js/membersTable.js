@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		LISTOFCHANGES = [];
 		reloadTable(YEAR.value, DATATABLE);
 	})
+	YEAR.addEventListener('keydown', function (event) {
+		if (event.key === 'Enter') {
+			LISTOFCHANGES = [];
+			reloadTable(YEAR.value, DATATABLE);
+		}
+	});
 	//SAVE BUTTON
 	const saveButton = document.getElementById("save");
 	//TABLE EDITING
