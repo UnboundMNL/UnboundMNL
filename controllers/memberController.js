@@ -377,7 +377,7 @@ const memberController = {
                         return res.redirect("/");
                 }
 
-                if( members ) {
+                if (members) {
                     for (const member of members) {
                         memberList.push({
                             name: member.name.firstName + ' ' + member.name.lastName,

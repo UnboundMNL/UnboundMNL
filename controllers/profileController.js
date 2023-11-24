@@ -246,17 +246,17 @@ const profileController = {
                     return res.redirect("/");
                 }
                 let memberList;
-                if (authority == "Admin"){
+                if (authority == "Admin") {
                     // show all users except the current user
-                    memberList = await User.find({_id: {$ne: req.session.userId}});
+                    memberList = await User.find({ _id: { $ne: req.session.userId } });
                 } else {
                     const cluster = await Cluster.find({ _id: user.validCluster });
                     const projectId = cluster.flatMap(cluster => cluster.projects);
-                    const project = await Project.find({_id: { $in: projectId }});
+                    const project = await Project.find({ _id: { $in: projectId } });
                     const groupId = project.flatMap(project => project.groups);
-                    memberList = await User.find({validGroup: { $in: groupId } });
+                    memberList = await User.find({ validGroup: { $in: groupId } });
                 }
-                
+
                 const username = user.username;
                 const orgParts = await getAuthorizedMembers(user, authority);
                 dashbuttons = dashboardButtons(authority);
@@ -289,7 +289,7 @@ const profileController = {
         }
     }
 
-   
+
 
 }
 

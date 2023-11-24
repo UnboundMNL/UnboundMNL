@@ -6,14 +6,14 @@ function displayDeleteModal(memberName, memberId, pageName) {
         cardDelete("masterlist", memberId);
     } else {
         $('#userToDelete').text(memberName);
-        $('#deleteButton').click(function() {
+        $('#deleteButton').click(function () {
             userDelete(memberId);
         });
     }
 }
 
-function redirectMember(id){
-    data = { memberId:id };
+function redirectMember(id) {
+    data = { memberId: id };
     fetch('/redirectMiddle', {
         method: 'POST',
         headers: {
@@ -33,9 +33,9 @@ function redirectMember(id){
         });
 }
 
-function userDelete(profileID){
-    data = {profileID};
-    fetch('/adminUserDelete',{
+function userDelete(profileID) {
+    data = { profileID };
+    fetch('/adminUserDelete', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

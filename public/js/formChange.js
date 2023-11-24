@@ -94,15 +94,15 @@ function changeForm(action, partname) {
                 }, false)
             })
         })()
-        
+
     } else if (partname == "User") {
         route = "/userDetailsOverride";
-    
+
         (() => {
             'use strict';
-    
+
             const forms = document.querySelectorAll('.needs-validation.editForm');
-    
+
             Array.from(forms).forEach(form => {
                 form.addEventListener('submit', event => {
                     if (!form.checkValidity()) {
@@ -111,7 +111,7 @@ function changeForm(action, partname) {
                     } else {
                         editUser(event.target, route);
                     }
-    
+
                     event.preventDefault();
                     form.classList.add('was-validated');
                     document.getElementById('editUsernameInput').addEventListener('input', event => {
@@ -130,7 +130,7 @@ function changeForm(action, partname) {
                 }, false);
             });
         })();
-    }    
+    }
 }
 
 function editCluster(form, nameInput, route) {
@@ -243,7 +243,7 @@ function editUser(form, route) {
         newUsername: formData.get('username'),
         newPassword: formData.get('newPassword')
     };
-    
+
     fetch(route, {
         method: 'PATCH',
         headers: {

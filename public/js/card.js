@@ -134,8 +134,8 @@ function linkMemberPage(id, className) {
 function displayExportMessage(e, name, id, type) {
     e.stopPropagation();
     name = name.replace(/[^a-zA-Z0-9]/g, '');
-    if (name == ''){
-        name= "export";
+    if (name == '') {
+        name = "export";
     }
     console.log(name)
     var toastEl = document.querySelector('.toast');
@@ -151,15 +151,15 @@ function displayExportMessage(e, name, id, type) {
     if (type === "All") {
         format = 'zip';
         fetchLink = `/exportAdminClusters?format=${format}`;
-    } else if (type=="Cluster") {
+    } else if (type == "Cluster") {
         format = 'zip';
         // Handle exporting a specific cluster
         fetchLink = `/exportCluster/${id}?format=${format}`;
-    } else if (type=="SHG") {
+    } else if (type == "SHG") {
         format = 'xlsx';
         // Handle exporting a specific group
         fetchLink = `/exportGroup/${id}?format=${format}`;
-    } else if (type=="Sub-Projects") {
+    } else if (type == "Sub-Projects") {
         format = 'xlsx';
         // Handle exporting a specific project
         fetchLink = `/exportProject/${id}?format=${format}`;
@@ -170,26 +170,26 @@ function displayExportMessage(e, name, id, type) {
             'Content-Type': 'application/json'
         },
     })
-    .then(response => {
-        if (response.ok) {
-            // Trigger download
-            response.blob().then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${name}.${format}`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            });
-        } else {
-            return response.json();
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => {
+            if (response.ok) {
+                // Trigger download
+                response.blob().then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${name}.${format}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                });
+            } else {
+                return response.json();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 

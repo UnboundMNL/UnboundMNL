@@ -120,16 +120,16 @@ const projectController = {
                 updateData = req.body;
                 const updateProject = await Project.findOneAndUpdate({ _id: projectId }, updateData, { new: true });
                 if (updateProject) {
-                    if (currentProject.location !== location){
+                    if (currentProject.location !== location) {
                         const group = await Group.find({ _id: { $in: currentProject.groups } })
-                        
+
                         group.forEach(async (groupItem) => {
                             let locUpdate = {
-                                location :location
+                                location: location
                             }
-                            await Group.findOneAndUpdate({_id: groupItem._id}, locUpdate, { new: true })
+                            await Group.findOneAndUpdate({ _id: groupItem._id }, locUpdate, { new: true })
                         });
-                        
+
                     }
                     res.json({ success: "A Project has been edited." });
                 } else {

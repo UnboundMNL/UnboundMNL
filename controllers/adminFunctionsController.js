@@ -92,19 +92,19 @@ const adminFunctionsController = {
               });
             }
           }
-          });
+        });
 
-      
+
       });
 
-    const deletedUser = await User.findOneAndDelete({ _id: profileID })
-    if (deletedUser) {
-      return res.json({ success: "User has been deleted." })
+      const deletedUser = await User.findOneAndDelete({ _id: profileID })
+      if (deletedUser) {
+        return res.json({ success: "User has been deleted." })
+      }
+    } else {
+      res.redirect("/")
     }
-  } else {
-    res.redirect("/")
   }
-}
 
 }
 
