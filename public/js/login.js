@@ -1,8 +1,20 @@
-// login button
+// login button click event
 $(document).on('click', '#login', function () {
+    handleLogin();
+});
+
+// password input field keydown event
+$(document).on('keydown', '#pw', function (event) {
+    if (event.key === 'Enter') {
+        handleLogin();
+    }
+});
+
+// function to handle login
+function handleLogin() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("pw").value;
-    // const remember = document.getElementById("remember-me").checked;
+
     if (username == '' || password == '') {
         const errorDiv = document.getElementById("error");
         errorDiv.style.display = "block";
@@ -11,7 +23,6 @@ $(document).on('click', '#login', function () {
         const data = {
             username,
             password,
-            // remember
         };
         fetch('/login', {
             method: 'POST',
@@ -35,4 +46,4 @@ $(document).on('click', '#login', function () {
                 console.error('Error:', error);
             });
     }
-});
+}
