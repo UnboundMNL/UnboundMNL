@@ -33,7 +33,7 @@ const clusterController = {
                 }
                 let updatedParts;
                 if (req.query.search) {
-                    updatedParts = await Cluster.find({ name: { $regex: req.query.search } });
+                    updatedParts = await Cluster.find({ name: { $regex: req.query.search, $options: 'i' } });
                 } else {
                     updatedParts = await Cluster.find({});
                 }
