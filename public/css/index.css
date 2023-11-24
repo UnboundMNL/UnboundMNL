@@ -32,7 +32,7 @@ body {
     content: '₱ ';
 }
 
-/* CHANGE COLOUR */
+/* CHANGE BUTTON COLOUR */
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -44,8 +44,27 @@ body {
     border-color: var(--secondary-color);
 }
 
+/* CHANGE PAGINATION COLOUR */
+
+.pagination>li>a {
+    color: var(--secondary-color);
+}
+
 .pagination>li.active>a {
     background-color: var(--secondary-color);
+    border: solid 1px var(--secondary-color);
+}
+
+/* CHANGE BREADCRUMB STYLE */
+
+.breadcrumb-item a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
 }
 
 /* SIDEBAR */
