@@ -15,6 +15,18 @@ function displayContent(section) {
 
     // Show the selected content
     contentDisplay.style.display = "block";
+
+     // Remove 'active' class from all labels
+     document.querySelectorAll('.nav-link').forEach(function (label) {
+        label.classList.remove('active');
+    });
+
+    // Add 'active' class to the clicked label
+    var labelFor = section + "Display";
+    var associatedLabel = document.querySelector('label[for="' + labelFor + '"]');
+    if (associatedLabel) {
+        associatedLabel.classList.add('active');
+    }
 }
 
 function editProfile() {
