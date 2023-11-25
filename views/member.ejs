@@ -33,7 +33,7 @@
             <%- include('components/breadcrumb.ejs', {pageName: "Members"}) %>
             
             <div class="member-total d-flex justify-content-between flex-wrap mt-3 page-title">
-                <div class="mb-3 page-title">
+                <div class="page-title">
                     <p>Cluster <%=clusterName%> SP <%=projectName%></p>
                     <h4><%=groupName%> Members</h4>
                 </div>
@@ -46,11 +46,9 @@
                 </div>
             </div>
 
-             
             <% var type = "Member";  %>
             <div class="d-flex mt-4 mb-4 justify-content-between align-items-center card-actions">
-             
-                <div class="col-10">
+                <div class="col-9">
                     <div class="search-bar d-flex">
                         <input type="text" class="form-control" placeholder="Search for member by name or ID" aria-label="Search" aria-describedby="button-addon2" id="searchBar">
                     </div>

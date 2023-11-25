@@ -27,7 +27,9 @@
                             var decodedText<%=i%> = decodedElement.innerText;
 
                         </script>
-                        <h5><%=type%> <%=pageParts[i].name%></h5>
+                        
+                        <h5><%=pageParts[i].name%></h5>
+                        <!-- <h5>< %=type%> < %=pageParts[i].name%></h5> -->
                         <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, decodedText<%=i%>, '<%=pageParts[i]._id%>','<%=type%>')"></i>
                     </div>
                     
@@ -74,7 +76,7 @@
             translate-middle-x
             mt-5"
             data-delay="3000">
-    <div class="toast mt-4 text-center bg-info fw-bold text-black-50">
+    <div class="toast mt-4 text-center text-white bg-primary">
         <div class="toast-body">
 
         </div>

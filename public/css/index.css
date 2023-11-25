@@ -55,6 +55,11 @@ body {
     border: solid 1px var(--secondary-color);
 }
 
+/* CHANGE TOAST COLOUR */
+.bg-primary {
+    background-color: var(--primary-color) !important; 
+}
+
 /* CHANGE BREADCRUMB STYLE */
 
 .breadcrumb-item a {
@@ -245,27 +250,6 @@ main {
 
 #delete-i {
     color: var(--red-color);
-}
-
-/* PATH */
-.custom-path {
-    display: flex;
-    list-style: none;
-}
-
-.custom-path li a {
-    text-decoration: none;
-    padding-right: 5px;
-    color: var(--text-color);
-}
-
-.custom-path li a:hover {
-    color: var(--primary-color);
-}
-
-.custom-path li::before {
-    content: "›";
-    margin-right: 5px;
 }
 
 /* MOBILE */

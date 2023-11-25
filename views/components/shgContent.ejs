@@ -48,7 +48,7 @@
         <!-- Containers -->
         <div class="container-style mb-3" id = <%=pageParts[i]._id%>>
             <div class="d-flex justify-content-between">
-                <h5>SHG <%=pageParts[i].name%></h5>
+                <h5><%=pageParts[i].name%></h5>
                 <script>
                     var encodedText = '<%=pageParts[i].name%>';
 
@@ -69,9 +69,24 @@
 
             <div class="container-bottom">
                 <div class="d-flex align-items-end">
-                    <button type="button" class="btn btn-secondary btn-sm toggle-details" data-target="details-container<%= i %>">
-                        <i class='bx bxs-chevron-down'></i> View Details
+                    <button type="button" class="btn btn-secondary btn-sm toggle-details" data-target="details-container<%= i %>" onclick="toggleDetailsText('<%=pageParts[i]._id%>')">
+                        <i class="bx bxs-chevron-down arrow-icon"></i> View Details
                     </button>
+                    
+                    <script>
+                        function toggleDetailsText(containerId) {
+                            var detailsContainer = document.getElementById(containerId);
+                            var toggleDetailsButton = detailsContainer.querySelector(".toggle-details");
+                    
+                            if (toggleDetailsButton.textContent.trim() === "View Details") {
+                                toggleDetailsButton.innerHTML = "<i class='bx bxs-chevron-up arrow-icon'></i> Hide Details";
+                            } else {
+                                toggleDetailsButton.textContent = "View Details";
+                                toggleDetailsButton.innerHTML = "<i class='bx bxs-chevron-down arrow-icon'></i> View Details";
+                            }
+                        }
+                    </script>
+                    
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">Edit</button>
                     <script>
                         var editButton = document.getElementById("<%=pageParts[i]._id%>");
@@ -129,9 +144,9 @@
             translate-middle-x
             mt-5"
             data-delay="3000">
-    <div class="toast mt-4 text-center bg-info fw-bold text-black-50">
+    <div class="toast mt-4 text-center text-white bg-primary">
         <div class="toast-body">
-            
+
         </div>
     </div>
 </div>

@@ -9,6 +9,7 @@
 
 /* --------------- CARDS --------------- */
 .container-style {
+    position: relative;
     background-color: white;
     margin: 0.5rem 0;
     padding: 1rem;
@@ -37,10 +38,11 @@
 }
 
 .details-container {
-    background-image: linear-gradient(whitesmoke, white 15%);
-    margin: -0.8rem 0 1rem 0;
+    background-image: linear-gradient(gainsboro, white 7%);
+    margin: -1.3rem 0 1rem 0;
     padding: 1rem;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
 }
 
 .page-title p {
