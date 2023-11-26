@@ -41,33 +41,18 @@
                         <span class="mr-2">SHG <%=groupName%></span>
                     </div>
                 </div>
-                <div class="align-items-end">
-                    <div class="container-rounded">
-                        <span>Total:</span>
-
-                        <h3 class="format-number" id = "totalSaving"><%=totalSaving%></h3>
-                    </div>
-                </div>
             </div>
 
             <% var type = "Member";  %>
             <div class="d-flex mt-4 mb-4 justify-content-between align-items-center card-actions">
                 <div class="col-9">
                     <div class="search-bar d-flex">
+                        <span class="input-group-text"><i class='bx bx-search'></i></span>
                         <input type="text" class="form-control" placeholder="Search for member by name or ID" aria-label="Search" aria-describedby="button-addon2" id="searchBar">
                     </div>
                 </div>
                 
                 <%-include('components/orgPartViews/addButton.ejs', {type})%>
-            </div>
-
-            <div class ="row">
-                <div class = "col-3">
-                    <input type="number" class = "form-control" value="<%=year%>" id="yearInput" autocomplete="off">
-                </div>
-                <div class ="col">
-                    <button class = "btn btn-primary" id="yearButton">Change year</button>
-                </div>
             </div>
             
             <%- include('components/orgPartViews/membersTable.ejs', { memberList, type, year}) %>

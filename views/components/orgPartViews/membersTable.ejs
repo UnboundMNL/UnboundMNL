@@ -1,9 +1,20 @@
-<div id = "table_div" class = "mt-5">
-    <div class="d-flex justify-content-between align-items-center">
-        <h2 class="text-center flex-grow-1" id="memberYear">Savings and Matching Grant for <%=year%></h2>
+<div id="table_div" class="mt-4">
+    <div class="d-flex">
+        <div class="display-total">
+            <span>Total:</span>
+            <h4 class="format-number" id = "totalSaving"><%=totalSaving%></h4>
+        </div>
+    </div>
+    <h4 class="flex-grow-1 text-center mt-2 mb-3" id="memberYear">Savings and Matching Grant for <%=year%></h4>
+    
+    <div class="d-flex justify-content-between mb-2">
+        <div class="d-flex" id="yearChange">
+            <input type="number" class="form-control" value="<%=year%>" id="yearInput" autocomplete="off">
+            <button class="btn btn-primary" id="yearButton">Select</button>
+        </div>
         <button class="btn btn-primary" id="save" onclick="save()">Save All Changes</button>
     </div>
-    <table id="membersTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
+    <table id="membersTable" class="table table-hover table-striped table-bordered nowrap" style="width:100%">
         <thead>
             <tr>
                 <th rowspan="2" class = "align-middle">Name</th>
@@ -48,17 +59,17 @@
 </div>
 
 <div id="addSuccessToast" class="z-3 
-                                position-absolute 
+                                position-fixed 
                                 toast align-items-center 
-                                text-bg-success 
-                                border-0 
-                                start-50 
-                                translate-middle-x" 
-                                style="top:15%;"
+                                top-0 start-50 
+                                translate-middle-x
+                                toast-container
+                                text-white bg-success"
+                                data-delay="5000"
                                 role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
         <div class="toast-body align-middle">
-            <h5 class = "m-0">All changes have been saved!</h5>
+            All changes have been saved!
         </div>
         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>

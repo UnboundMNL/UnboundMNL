@@ -60,8 +60,11 @@ body {
     background-color: var(--primary-color) !important; 
 }
 
-/* CHANGE BREADCRUMB STYLE */
+.toast {
+    margin-top: 4.2rem;
+}
 
+/* CHANGE BREADCRUMB STYLE */
 .breadcrumb-item a {
     color: var(--text-color);
     text-decoration: none;
@@ -193,6 +196,14 @@ body {
     overflow: hidden;
 }
 
+/* --------------- CONTENT --------------- */
+/* SEARCH */
+.input-group-text {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+}
+
 /* MAIN */
 main {
     margin-top: 4rem;
@@ -221,21 +232,6 @@ main {
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-}
-
-.container-rounded {
-    background-color: var(--tertiary-color);
-    color: var(--text-color);
-    padding: 0.3rem 1rem;
-    border-radius: 10px;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.container-rounded h3 {
-    color: var(--text-color);
-    margin: 0;
 }
 
 /* --------------- TITLE --------------- */
