@@ -81,7 +81,7 @@ body {
 
 .nav-tabs .nav-link:not(.active):hover {
     cursor: pointer;
-    background-color: var(--border-color) ;
+    background-color: var(--border-color);
 }
 
 
