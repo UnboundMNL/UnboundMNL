@@ -30,8 +30,11 @@
             <%- include('components/breadcrumb.ejs', {pageName: "SHG"}) %>
             
             <div class="mt-3 page-title">
-                <p>Cluster <%=clusterName%> SP <%=projectName%></p>
                 <h4>Self-Help Groups</h4>
+                <div class="categories">
+                    <span class="mr-2">Cluster <%=clusterName%></span>
+                    <span class="mr-2">SP <%=projectName%></span>
+                </div>
             </div>
              
             <% var type = "SHG";  %>

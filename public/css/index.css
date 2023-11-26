@@ -238,6 +238,16 @@ main {
     margin: 0;
 }
 
+/* --------------- TITLE --------------- */
+.categories span{
+    background-color: lightgray;
+    padding: 0.2rem 0.3rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: small;
+    font-weight: 500;
+}
+
 /* MODALS */
 .modal-buttons {
     display: flex;
