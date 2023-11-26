@@ -1,15 +1,3 @@
-/* Page Buttons */
-.nav-tabs .nav-link {
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
-    border-bottom: none !important;
-}
-
-.nav-tabs .nav-link:not(.active):hover {
-    cursor: pointer;
-    background-color: var(--border-color) ;
-}
-
 /* Profile */
 #containerDisplay {
     border: 1px solid var(--border-color);

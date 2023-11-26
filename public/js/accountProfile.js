@@ -2,8 +2,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById('editAccount').style.display = 'none';
     const inputContainer = document.getElementById("inputContainer");
     const inputFields = inputContainer.querySelectorAll("input:not([type='checkbox'])");
+
+    // Show selected content
+    displayFields('usernameChange', 'checkUsername');
+
+    // Disable all input fields
     for (let i = 0; i < inputFields.length; i++) {
-        inputFields[i].disabled = true;
+        if (inputFields[i].closest('#usernameChange') === null) {
+            inputFields[i].disabled = true;
+        }
     }
     // delete user button
     document.getElementById("deleteButton").onclick = () => {
@@ -29,7 +36,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function editAccount() {
-    document.getElementById('editAccount').style.display = 'block';
+    document.getElementById('editAccount').style.display = 'flex';
     document.getElementById('profileAccount').style.display = 'none';
 }
 
@@ -62,34 +69,50 @@ function cancelChanges(user) {
     }
 }
 
-// Hannah: I made it so that the checkbox is disabled when the other checkbox is checked 
-// and it clears the text fields when the checkbox is unchecked
-function toggleFields(targetId, checkbox, user) {
+function toggleFields(targetId, checkboxId, user) {
     const target = document.getElementById(targetId);
     const allInputs = document.querySelectorAll(`input[type='text'], input[type='password']`);
     const inputs = target.querySelectorAll('input');
 
-    // Uncheck the other checkbox
-    const otherCheckboxId = checkbox.id === 'checkUsername' ? 'checkPassword' : 'checkUsername';
+    // Uncheck the other checkbox 
+    const otherCheckboxId = checkboxId === 'checkUsername' ? 'checkPassword' : 'checkUsername';
     const otherCheckbox = document.getElementById(otherCheckboxId);
     otherCheckbox.checked = false;
 
-    const inputsArray = Array.from(inputs);
-
     for (let input of allInputs) {
-        if (!inputsArray.includes(input)) {
+            if (input.closest(`#${targetId}`) !== null) {
+            input.disabled = false;
+        } else if (input.closest(`#${targetId}`) === null) {
             input.disabled = true;
             cancelChanges(user);
             clearAlert();
-        } else {
-            if (checkbox.checked) {
-                input.disabled = false;
-            } else {
-                input.disabled = true;
-                cancelChanges(user);
-                clearAlert();
-            }
         }
+    }
+
+    displayFields(targetId, checkboxId);
+}
+
+function displayFields(targetId, checkboxId) {
+    console.log("Displaying " + targetId);
+    const contentBlock = document.getElementById(targetId);
+
+    // Show the selected content
+    contentBlock.style.display = "block";
+
+    // Hide the other content
+    const otherContent = targetId === 'usernameChange' ? 'passwordChange' : 'usernameChange';
+    const contentHide = document.getElementById(otherContent);
+    contentHide.style.display = "none";
+
+     // Remove 'active' class from all labels
+     document.querySelectorAll('.nav-link').forEach(function (label) {
+        label.classList.remove('active');
+    });
+
+    // Add 'active' class to the clicked label
+    var associatedLabel = document.querySelector('label[for="' + checkboxId + '"]');
+    if (associatedLabel) {
+        associatedLabel.classList.add('active');
     }
 }
 
@@ -126,8 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
     checkUsernameCheckbox.addEventListener('change', updateSubmitButtonState);
     checkPasswordCheckbox.addEventListener('change', updateSubmitButtonState);
 
-    saveChangesButton.disabled = true;
+    // saveChangesButton.disabled = true;
 
+    console.log(checkUsernameCheckbox.checked, checkPasswordCheckbox.checked);
     function updateSubmitButtonState() {
         saveChangesButton.disabled = !checkUsernameCheckbox.checked && !checkPasswordCheckbox.checked;
     }
