@@ -3,17 +3,30 @@
     flex-flow: column;
     min-height: 100%;
     padding: 1rem;
+    position: relative;
+}
+
+.box-container h5 {
+    position: absolute;
+    z-index: 1;
+    color: white;
+    font-weight: bold;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .bg-top {
-    background-color: var(--tertiary-color);
+    background: url('/img/profile_bg.png');
+    opacity: 0.8;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: var(--primary-color); /* Fallback color */
     border-radius: 10px 10px 0 0;
+    min-height: 150px;
     height: 30vh;
     display: table-row;
-}
-
-.bg-top h5 {
-    color: var(--secondary-color);
+    z-index: 0;
 }
 
 .bg-bottom {
@@ -23,11 +36,13 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    min-height: 300px;
 }
 
 .bg-bottom img {
     margin-top: -100px;
     border: 5px solid white;
+    z-index: 1;
 }
 
 .edit-container {
