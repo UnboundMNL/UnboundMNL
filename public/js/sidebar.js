@@ -44,6 +44,15 @@ function toggleNav(bool) {
         toggleMiddle()
     }
 }
+
+// toggle sidebar when window is mobile size
+window.addEventListener('load', function () {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        const nav = document.getElementById("collapsibleNavbar");
+        nav.style.display = 'none';
+    }
+});
+
 // middleware
 function toggleMiddle() {
     fetch('/sidebarChange', {
