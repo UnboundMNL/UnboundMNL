@@ -172,7 +172,7 @@ const profileController = {
                     //     return res.status(401).json({ error: "Username must contain at least one letter or number, and be between 3-15 characters long, and cannot be 'visitor!" });
                     // }
                     if (newUsername === user.username) {
-                        return res.status(401).json({ errorType: 2, error: "No Canges Made." });
+                        return res.status(401).json({ errorType: 2, error: "No Changes Made." });
                     }
 
                     const isPasswordMatch = await user.comparePassword(currentPassword1);
