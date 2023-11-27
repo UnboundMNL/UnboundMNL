@@ -136,11 +136,8 @@ function linkMemberPage(id, className) {
 // download button
 function displayExportMessage(e, name, id, type) {
     e.stopPropagation();
-    name = name.replace(/[^a-zA-Z0-9]/g, '');
-    if (name == '') {
-        name = "export";
-    }
-    console.log(name)
+
+
     var toastEl = document.querySelector('.toast');
     if (toastEl) {
         var toastBodyEl = toastEl.querySelector('.toast-body');
@@ -150,6 +147,12 @@ function displayExportMessage(e, name, id, type) {
         var toast = new bootstrap.Toast(toastEl);
         toast.show();
     }
+
+    name = name.replace(/[^a-zA-Z0-9]/g, '');
+    if (name == '') {
+        name = "export";
+    }
+    
     let fetchLink, format;
     if (type === "All") {
         format = 'zip';

@@ -8,7 +8,9 @@ function displayDeleteModal(memberName, memberId, pageName) {
     } else {
         $('#userToDelete').text(memberName);
         $('#deleteButton').click(function () {
-            userDelete(memberId);
+            if (document.getElementById("deleteConfirm").value == "DELETE") {
+                userDelete(memberId);
+            }
         });
     }
 }
