@@ -50,6 +50,17 @@ window.addEventListener('load', function () {
     if (window.matchMedia("(max-width: 768px)").matches) {
         const nav = document.getElementById("collapsibleNavbar");
         nav.style.display = 'none';
+    } 
+});
+
+// toggle sidebar when window is resized
+window.addEventListener('resize', function () {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        const nav = document.getElementById("collapsibleNavbar");
+        nav.style.display = 'none';
+    } else {
+        const nav = document.getElementById("collapsibleNavbar");
+        nav.style.display = 'flex';
     }
 });
 
