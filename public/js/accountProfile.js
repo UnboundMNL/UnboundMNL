@@ -151,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // saveChangesButton.disabled = true;
 
-    console.log(checkUsernameCheckbox.checked, checkPasswordCheckbox.checked);
     function updateSubmitButtonState() {
         saveChangesButton.disabled = !checkUsernameCheckbox.checked && !checkPasswordCheckbox.checked;
     }

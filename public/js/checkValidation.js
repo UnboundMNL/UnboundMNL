@@ -1,7 +1,5 @@
 // form validations for passwords
 function validatePassword() {
-
-
     const saveChangesButton = document.getElementById('saveChanges');
 
     const newPass = document.getElementById('newPass').value;
@@ -12,6 +10,7 @@ function validatePassword() {
 
     if (newPass.length === 0 && confirmPass.length === 0) {
         matchingAlert2.innerHTML = '';
+        saveChangesButton.disabled = false;
     } else if (newPass !== confirmPass || newPass.length < minLength) {
         matchingAlert2.style.color = 'red';
         if (newPass !== confirmPass && confirmPass.length > 0) {
@@ -22,8 +21,7 @@ function validatePassword() {
             saveChangesButton.disabled = true;
         } else if (newPass.length < minLength) {
             matchingAlert2.innerHTML = '✕ Password must be at least ' + minLength + ' characters';
-            saveChangesButton.disabled = true
-
+            saveChangesButton.disabled = true;
         }
         // Add code to disable the save button if needed
     } else {
