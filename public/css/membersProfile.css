@@ -1,26 +1,9 @@
-/* Page Buttons */
-.btn-outline-custom {
-    background-color: darkgray;
-    border: 2px solid whitesmoke;
-    border-bottom: none;
-    color: black;
-    padding: 0.5rem 1rem;
-    border-radius: 10px 10px 0 0;
-    font-weight: 500;
-}
-
-.btn-check:checked + .btn-outline-custom {
-    background-color: white;
-    pointer-events: none;
-}
-
-.btn-outline-custom:hover {
-    background-color: lightgray;
-    color: var(--text-color);
-    cursor: pointer;
-}
-
 /* Profile */
+#containerDisplay {
+    border: 1px solid var(--border-color);
+    border-top: none;
+}
+
 .container-profile {
     background-color: white;
     padding: 2rem;
@@ -28,21 +11,6 @@
 
 .container-profile img {
     margin-right: 1rem;
-}
-
-.container-rounded {
-    background-color: var(--tertiary-color);
-    color: var(--text-color);
-    padding: 0.3rem 1rem;
-    border-radius: 10px;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.container-rounded h3 {
-    color: var(--text-color);
-    margin: 0;
 }
 
 /* KABAN */

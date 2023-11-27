@@ -5,7 +5,7 @@
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="edit<%=partname%>ModalLabel">Edit <%=partname%></h1>
 				<% if (partname == "User") { %>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close onclick="removeInput()"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="removeInput()"></button>
 				<% } else { %>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				<% } %>
@@ -36,6 +36,8 @@
 
 <script>
     function removeInput() {
+		const editUsernameInput = document.getElementById("editUsernameInput");
+		// editUsernameInput.value = ;
         const newPass = document.getElementById("newPass");
         newPass.value = "";
 		const confirmPass = document.getElementById("confirmPass");

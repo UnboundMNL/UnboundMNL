@@ -5,8 +5,8 @@
         </div>
         <h4>Edit Account</h4><hr>
         <div class="row">
-            <div class="col-md-6">
-                <div class="d-flex align-items-center button-gap">
+            <div class="col-md-5">
+                <div class="d-flex align-items-center button-gap flex-wrap">
                     <div class="change-profile" data-toggle="tooltip" data-placement="bottom" title="Change Profile Picture" data-delay="100">
                         <img src="/img/default_pfp.png" alt="profile" class="rounded-circle" width="100px" height="100px">
                         <div class="middle align-items-center rounded-circle">
@@ -18,15 +18,26 @@
                 <button class="btn btn-danger mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Account</button>
             </div>
 
-            <div class="col-md-6" id="inputContainer">
-                <span class="text-danger"><small><i>Note: Toggle the checkbox to enable editing for either your username or password.</i></small></span>
+            <div class="col-md-7" id="inputContainer">
+                <!-- <span class="text-danger"><small><i>Note: Toggle the checkbox to enable editing for either your username or password.</i></small></span> -->
+                <ul class="nav nav-tabs" role="tablist" aria-label="Basic radio toggle button group">
+                    <li class="nav-item">
+                        <input type="checkbox" class="nav-link btn-check" name="btnradio" id="checkUsername" onchange="toggleFields('usernameChange', 'checkUsername', `<%- user %>`)" checked>
+                        <label class="nav-link active" for="checkUsername">Change Username</label>
+                    </li>
+                    <li class="nav-item">
+                        <input type="checkbox" class="nav-link btn-check" name="btnradio" id="checkPassword" onchange="toggleFields('passwordChange', 'checkPassword', `<%- user %>`)">
+                        <label class="nav-link" for="checkPassword">Change Password</label>
+                    </li>
+                </ul>
                 <div class="mt-3">
                     <!-- Checkbox to enable editing -->
-                    <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkUsername" onchange="toggleFields('usernameChange', this, `<%- user %>`)">Change Username</h6>
+                    <!-- <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkUsername" onchange="toggleFields('usernameChange', this, `< %- user %>`)">Change Username</h6> -->
+                    
                     <div class="p-2" id="usernameChange">
                         <span>Username</span>
                         <div class="mb-2">
-                            <input type="text" class="form-control" value="<%- username %>" id="newUsername"  >
+                            <input type="text" class="form-control" value="<%- username %>" id="newUsername">
                             <span id="usernameAlert"></span>
                         </div>
                         <span>Password</span>
@@ -38,15 +49,15 @@
                 </div>
                 <div>
                     <!-- Checkbox to enable password editing -->
-                    <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkPassword" onchange="toggleFields('passwordChange', this, `<%- user %>`)">Change Password</h6>
+                    <!-- <h6 class="edit-title"><input type="checkbox" class="m-2" id="checkPassword" onchange="toggleFields('passwordChange', this, `< %- user %>`)">Change Password</h6> -->
                     <div class="p-2" id="passwordChange">
                         <div class="mb-2">
                             <span>Current Password</span>
                             <div class="input-group align-items-center">
                                 <input type="password" class="form-control" id="currentPassword2" >
                                 <!-- <i class='bx bx-show'></i> -->
-                                <span id="currentPasswordAlert2"></span>
                             </div>
+                            <span id="currentPasswordAlert2"></span>
                         </div>
                         <div class="mb-2">
                             <span>New Password</span>

@@ -8,9 +8,3 @@ table {
     color: white;
     font-weight: 500;
 }
-
-.input-group-text {
-    background-color: var(--secondary-color);
-    color: white;
-    border: none;
-}

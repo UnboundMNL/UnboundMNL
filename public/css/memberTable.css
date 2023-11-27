@@ -6,3 +6,43 @@
     margin-bottom: 0;
     font-weight: 500;
 }
+
+#table_div {
+    background-color: white;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* --------------- INPUT STYLES --------------- */
+#yearChange input,
+.search-bar span {
+    border-radius: 8px 0 0 8px;
+}
+
+#yearChange button,
+.search-bar input {
+    border-radius: 0 8px 8px 0;
+}
+
+#yearChange input {
+    width: 80px;
+}
+
+/* --------------- TOTAL DISPLAY --------------- */
+.display-total {
+    color: var(--text-color);
+    padding: 0.3rem 1rem;
+    border: 2px solid var(--secondary-color);
+    border-radius: 8px;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.display-total span,
+.display-total h4 {
+    color: var(--secondary-color);
+    margin: 0;
+    font-weight: 500;
+}

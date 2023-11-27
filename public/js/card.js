@@ -142,6 +142,14 @@ function displayExportMessage(e, name, id, type) {
     }
 
     var toastEl = document.querySelector('.toast');
+    
+    // Change toast background color (prevent overlap with other toasts)
+    if (toastEl && toastEl.classList.contains('bg-success')) {
+        toastEl.classList.remove('bg-success');
+        toastEl.classList.add('bg-primary');
+    }
+
+    
     if (toastEl) {
         var toastBodyEl = toastEl.querySelector('.toast-body');
 

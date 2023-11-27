@@ -32,7 +32,7 @@ body {
     content: '₱ ';
 }
 
-/* CHANGE COLOUR */
+/* CHANGE BUTTON COLOUR */
 .btn-primary {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
@@ -44,9 +44,53 @@ body {
     border-color: var(--secondary-color);
 }
 
+/* CHANGE PAGINATION COLOUR */
+
+.pagination>li>a {
+    color: var(--secondary-color);
+}
+
 .pagination>li.active>a {
     background-color: var(--secondary-color);
+    border: solid 1px var(--secondary-color);
 }
+
+/* CHANGE TOAST COLOUR */
+.bg-primary {
+    background-color: var(--primary-color) !important; 
+}
+
+.toast {
+    margin-top: 4.2rem;
+}
+
+/* CHANGE BREADCRUMB STYLE */
+.breadcrumb-item a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* CHANGE NAV-LINK DESIGN */
+.nav-tabs .nav-link {
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-bottom: none !important;
+}
+
+.nav-tabs .nav-link:not(.active) {
+    background-color: whitesmoke;
+}
+
+.nav-tabs .nav-link:not(.active):hover {
+    cursor: pointer;
+    background-color: var(--border-color);
+}
+
 
 /* SIDEBAR */
 .sidebar {
@@ -156,6 +200,14 @@ body {
     overflow: hidden;
 }
 
+/* --------------- CONTENT --------------- */
+/* SEARCH */
+.input-group-text {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+}
+
 /* MAIN */
 main {
     margin-top: 4rem;
@@ -183,22 +235,16 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
 }
 
-.container-rounded {
-    background-color: var(--tertiary-color);
-    color: var(--text-color);
-    padding: 0.3rem 1rem;
-    border-radius: 10px;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.container-rounded h3 {
-    color: var(--text-color);
-    margin: 0;
+/* --------------- TITLE --------------- */
+.categories span{
+    background-color: lightgray;
+    padding: 0.2rem 0.3rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: small;
+    font-weight: 500;
 }
 
 /* MODALS */
@@ -226,27 +272,6 @@ main {
 
 #delete-i {
     color: var(--red-color);
-}
-
-/* PATH */
-.custom-path {
-    display: flex;
-    list-style: none;
-}
-
-.custom-path li a {
-    text-decoration: none;
-    padding-right: 5px;
-    color: var(--text-color);
-}
-
-.custom-path li a:hover {
-    color: var(--primary-color);
-}
-
-.custom-path li::before {
-    content: "›";
-    margin-right: 5px;
 }
 
 /* MOBILE */
