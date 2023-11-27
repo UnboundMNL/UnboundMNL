@@ -82,6 +82,10 @@ body {
     border-bottom: none !important;
 }
 
+.nav-tabs .nav-link:not(.active) {
+    background-color: whitesmoke;
+}
+
 .nav-tabs .nav-link:not(.active):hover {
     cursor: pointer;
     background-color: var(--border-color);

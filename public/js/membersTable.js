@@ -256,6 +256,20 @@ async function save() {
 			.then(response => {
 				if (response.ok) { // Handle success
 					const toastLiveExample = document.getElementById('addSuccessToast')
+
+					// Change toast background color
+					toastLiveExample.classList.remove('bg-primary');
+					toastLiveExample.classList.add('bg-success');
+
+					setTimeout(function () {
+						addSuccessToast.classList.remove('bg-success');
+						addSuccessToast.classList.add('bg-primary');	
+					}, 5500);
+
+					// Add text
+					const toastText = document.getElementsByClassName('toast-body')[0];
+					toastText.innerHTML = "All changes have been saved!";
+
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
 					if (each === [...constructedChanges].pop()) {

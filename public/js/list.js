@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('usernameChange').style.display = 'block';
-    document.getElementById('passwordChange').style.display = 'none';    
+    if (window.location.pathname == "/accounts") {    
+        document.getElementById('usernameChange').style.display = 'block';
+        document.getElementById('passwordChange').style.display = 'none';    
+    }
 });
 
 function displayFields(targetId, checkboxId) {
