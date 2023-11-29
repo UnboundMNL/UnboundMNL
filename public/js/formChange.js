@@ -261,7 +261,7 @@ function editUser(form, route) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // window.location.reload();
+                window.location.reload();
             } else if (data.error) {
                 usernameInput.setCustomValidity('Invalid field.');
                 usernameInput.classList.add('is-invalid');
