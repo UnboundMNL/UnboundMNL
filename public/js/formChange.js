@@ -114,7 +114,13 @@ function changeForm(action, partname) {
                     }
 
                     event.preventDefault();
-                    form.classList.add('was-validated');
+                    if (document.getElementById('newPass').value=='' && document.getElementById('confirmPass').value==''){
+                        const editUsername = form.querySelector(`#editUsernameInput`);
+                        editUsername.classList.add('is-valid');
+                    } else {
+                        form.classList.add('was-validated');
+                    }
+                    
                     document.getElementById('editUsernameInput').addEventListener('input', event => {
                         const formNameInput = event.target;
                         const invalidFeedback = formNameInput.nextElementSibling;
@@ -255,7 +261,7 @@ function editUser(form, route) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                // window.location.reload();
             } else if (data.error) {
                 usernameInput.setCustomValidity('Invalid field.');
                 usernameInput.classList.add('is-invalid');

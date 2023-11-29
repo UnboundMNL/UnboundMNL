@@ -73,7 +73,7 @@ function loadDesktopTable() {
 		columnDefs: [
 			//stuff on top = more priority
 			{
-				targets: [0],
+				targets: [0,1 ],
 				searchable: true
 			},
 			//place the supposed to be visible columns here
