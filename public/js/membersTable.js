@@ -166,9 +166,9 @@ function reloadTable(value, table) {
 				for (let i = 0; i < 2; i++) {
 					let cell = cells[i];
 					className = "memberPage" + j;
-					j++;
-					cell.setAttribute('class', className);
+					cell.setAttribute('class', `memberPage ${className}`);
 				}
+				j++;
 
 				for (let i = 2; i < cells.length - 3; i += 2) {
 					let cell = cells[i];
