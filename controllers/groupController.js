@@ -147,7 +147,7 @@ const groupController = {
             if (req.session.isLoggedIn) {
                 const groupId = req.params.id;
                 const currentGroup = await Group.findById(groupId);
-                const { SPU, name, location, depositoryBank, bankAccountType, bankAccountNum,
+                const { name, location, depositoryBank, bankAccountType, bankAccountNum,
                     SHGLeaderFirstName, SHGLeaderLastName, SHGLeaderPhone,
                     SEDPChairmanFirstName, SEDPChairmanLastName, SEDPChairmanPhone,
                     kabanTreasurerFirstName, kabanTreasurerLastName, kabanTreasurerPhone,
@@ -180,7 +180,6 @@ const groupController = {
                     contatNo: kabanAuditorPhone
                 };
                 const updateData = {
-                    SPU,
                     name,
                     location,
                     depositoryBank,
