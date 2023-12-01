@@ -51,7 +51,7 @@ function addCluster(form, nameInput) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                window.location.href = '/cluster';
             } else if (data.error) {
                 formNameInput.setCustomValidity('Invalid field.');
                 formNameInput.classList.add('is-invalid');

@@ -25,7 +25,6 @@ const exportProjectForCluster = async (project, res) => {
     project = await Project.findOne({ _id: projectId })
         .populate({ path: 'groups', populate: { path: 'members', populate: { path: 'savings' } } });
     // maybe only filter for active members
-
     const workbook = new excelJS.Workbook();
     const worksheet = workbook.addWorksheet('Project_MainInfo');
     const columns = [
@@ -169,11 +168,20 @@ const exportsController = {
 
         ];
         worksheet.columns = columns;
-
+        let SHGLeader = shg.SHGLeader.firstName + " " + shg.SHGLeader.lastName;
+        let SEDOChairman = shg.SEDPChairman.firstName + " " + shg.SEDPChairman.lastName;
+        let kabanTreasurer = shg.kabanTreasurer.firstName + " " + shg.kabanTreasurer.lastName;
+        let kabanAuditor = shg.kabanAuditor.firstName + " " + shg.kabanAuditor.lastName;
         const mainRowData = {
             SPU: shg.SPU,
             name: shg.name,
             location: shg.location,
+            depositoryBank: shg.depositoryBank, bankAccountType: shg.bankAccountType,
+            bankAccountNum: shg.bankAccountNum,
+            SHGLeader: SHGLeader, SHGLeaderPhone: shg.SHGLeader.contatNo,
+            SEDOChairman: SEDOChairman, SEDOChairmanPhone: shg.SEDPChairman.contatNo,
+            kabanTreasurer: kabanTreasurer, kabanTreasurerPhone: shg.kabanTreasurer.contatNo,
+            kabanAuditor: kabanAuditor, kabanAuditorPhone: shg.kabanAuditor.contatNo,
         };
 
         worksheet.addRow(mainRowData);
