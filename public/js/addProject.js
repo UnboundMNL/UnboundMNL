@@ -1,3 +1,4 @@
+// form validation for adding projects
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -12,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('projectName').addEventListener('input', event => {
+                document.getElementById('addProjectName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('projectName').value == "") {
+                    if (document.getElementById('addProjectName').value == "") {
                         formNameInput.classList.add('is-invalid');
                         invalidFeedback.textContent = 'Please enter a sub-project name.';
                     } else {
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// addinng projects
 function addProject(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};
@@ -53,7 +55,7 @@ function addProject(form, nameInput) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                window.location.href = '/project';
             } else if (data.error) {
                 formNameInput.setCustomValidity('Invalid field.');
                 formNameInput.classList.add('is-invalid');

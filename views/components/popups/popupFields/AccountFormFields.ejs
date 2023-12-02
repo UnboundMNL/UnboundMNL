@@ -1,0 +1,30 @@
+<ul class="nav nav-tabs mb-3" role="tablist" aria-label="Basic radio toggle button group">
+    <li class="nav-item">
+        <input type="checkbox" class="nav-link btn-check" name="btnradio" id="checkUsername" onchange="displayFields('usernameChange', 'checkUsername'); removeInput();" checked>
+        <label class="nav-link active" for="checkUsername">Change Username</label>
+    </li>
+    <li class="nav-item">
+        <input type="checkbox" class="nav-link btn-check" name="btnradio" id="checkPassword" onchange="displayFields('passwordChange', 'checkPassword')">
+        <label class="nav-link" for="checkPassword">Change Password</label>
+    </li>
+</ul>
+
+<div class = "mb-3" id="usernameChange">
+    <label for="username" class="form-label">Username</label>
+    <input class="form-control"  id="editUsernameInput" name = "username" type="text" aria-describedby="username" autocomplete="off" required>
+    <div class="invalid-feedback">
+        Username taken. Please enter another username.
+    </div>  
+</div>
+
+<div id="passwordChange">
+    <div class="mb-3">
+        <span>New Password</span>
+        <input id="newPass" name = "newPassword" class="form-control" type = "password" autocomplete = "off" onkeyup="validatePassword()">
+    </div>
+    <div class="mb-3">
+        <span>Confirm New Password</span>
+        <input id="confirmPass" name = "confirmPassword" class="form-control" type = "password" autcomplete = "off" onkeyup="validatePassword()">
+    </div>
+    <span id="matchingAlert2"></span>
+</div>

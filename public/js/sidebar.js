@@ -1,8 +1,5 @@
 // sidebar button
 function toggleNav(bool) {
-    window.addEventListener('resize', function () { // Refresh page when window is resized
-        window.location.reload();
-    });
     if (window.matchMedia("(min-width: 769px)").matches) {
         const nav = document.getElementById("collapsibleNavbar");
         const navHeader = document.getElementsByClassName("header-text")[0];
@@ -44,6 +41,27 @@ function toggleNav(bool) {
         toggleMiddle()
     }
 }
+
+// toggle sidebar when window is mobile size
+window.addEventListener('load', function () {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        const nav = document.getElementById("collapsibleNavbar");
+        nav.style.display = 'none';
+    } 
+});
+
+// toggle sidebar when window is resized
+window.addEventListener('resize', function () {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        const nav = document.getElementById("collapsibleNavbar");
+        nav.style.display = 'none';
+        this.window.location.reload();
+    } else {
+        const nav = document.getElementById("collapsibleNavbar");
+        nav.style.display = 'flex';
+    }
+});
+
 // middleware
 function toggleMiddle() {
     fetch('/sidebarChange', {

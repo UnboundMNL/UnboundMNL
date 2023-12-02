@@ -1,3 +1,4 @@
+// windows back page makes you reload to prevent data discrepancy
 function handlePageShowEvent(event) {
     var historyTraversal = event.persisted ||
         (typeof window.performance !== "undefined" &&

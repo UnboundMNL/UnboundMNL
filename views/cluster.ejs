@@ -24,9 +24,11 @@
 
         <!-- Cluster Content -->
         <div class="p-4 mt-5">
-            <% var type = "cluster";  %>
+            <%- include('components/breadcrumb.ejs', {pageName: "Clusters"}) %>
+            
+            <% var type = "Cluster";  %>
             <h4 class="mt-3">Clusters</h4>
-            <%- include('components/cardPages.ejs', { pageParts, type, authority}) %>
+            <%- include('components/cardPages.ejs', { groupName: "All", groupId: "All", pageParts, type, authority}) %>
             <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 

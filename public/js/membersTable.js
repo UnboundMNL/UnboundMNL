@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		LISTOFCHANGES = [];
 		reloadTable(YEAR.value, DATATABLE);
 	})
+	YEAR.addEventListener('keydown', function (event) {
+		if (event.key === 'Enter') {
+			LISTOFCHANGES = [];
+			reloadTable(YEAR.value, DATATABLE);
+		}
+	});
 	//SAVE BUTTON
 	const saveButton = document.getElementById("save");
 	//TABLE EDITING
@@ -67,7 +73,7 @@ function loadDesktopTable() {
 		columnDefs: [
 			//stuff on top = more priority
 			{
-				targets: [0],
+				targets: [0,1 ],
 				searchable: true
 			},
 			//place the supposed to be visible columns here
@@ -109,6 +115,7 @@ function loadMobileTable() {
 	return table;
 };
 
+// reloads the table with the specific year
 function reloadTable(value, table) {
 	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
@@ -159,9 +166,9 @@ function reloadTable(value, table) {
 				for (let i = 0; i < 2; i++) {
 					let cell = cells[i];
 					className = "memberPage" + j;
-					j++;
-					cell.setAttribute('class', className);
+					cell.setAttribute('class', `memberPage ${className}`);
 				}
+				j++;
 
 				for (let i = 2; i < cells.length - 3; i += 2) {
 					let cell = cells[i];
@@ -207,13 +214,14 @@ function check(table) {
 	return true;
 }
 
+// on save create objects that saves the changes
 async function save() {
 	const constructedChanges = [];
 	for (const each of LISTOFCHANGES) {
 		const split = each.id.split('_');
 		const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
 		if (existingChange) {
-			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0":each.textContent , split[3]));
+			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
 		} else {
 			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
 		}
@@ -248,12 +256,26 @@ async function save() {
 			.then(response => {
 				if (response.ok) { // Handle success
 					const toastLiveExample = document.getElementById('addSuccessToast')
+
+					// Change toast background color
+					toastLiveExample.classList.remove('bg-primary');
+					toastLiveExample.classList.add('bg-success');
+
+					setTimeout(function () {
+						addSuccessToast.classList.remove('bg-success');
+						addSuccessToast.classList.add('bg-primary');	
+					}, 5500);
+
+					// Add text
+					const toastText = document.getElementsByClassName('toast-body')[0];
+					toastText.innerHTML = "All changes have been saved!";
+
 					const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 					toastBootstrap.show();
 					if (each === [...constructedChanges].pop()) {
 						reloadTable(YEAR.value, DATATABLE);
 					}
-					
+
 					// Clear the list of changes
 					LISTOFCHANGES = [];
 				} else {

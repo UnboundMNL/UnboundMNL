@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%-include('components/headers.ejs', {authority, pageName: "Account Management"})%>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/masterlist.css" />
+
+    <!-- SCRIPTS -->
+    <script src="/js/reload.js"></script>
+    <script src="/js/card.js"></script>
+    <script src="/js/list.js"></script>
+    <script src="/js/editButton.js"></script>
+    <script src="/js/checkValidation.js"></script>
+    <script src="/js/formChange.js"></script>
+</head>
+
+<body class="body-bg">
+    
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
+    
+    <main>
+        <!-- Top navigation bar -->
+        <%- include('components/navbars/topNavbar.ejs')%>
+
+        <!-- Materlist Content -->
+        <div class="p-4 mt-5"> 
+            <% var type = "Manage";  %>
+            <h4 class="mt-3">Account Management</h4>
+
+            <!-- Temporary memberList -->
+
+            <%- include('components/listContent.ejs', { memberList, pageName: "Account Management", authority }) %>
+            <%- include('components/popups/deleteProfileModal.ejs', { pageName: "Account Management" }) %>
+            <%- include('components/popups/editPopup.ejs', {partname: "User"})%>
+    </main>
+    <!-- REMINDER: Change file and function names to Account Management -->
+    <script>open('savingsButton')</script>
+    <%-include('components/popups/logoutPopup.ejs') %>
+</body>
+</html>

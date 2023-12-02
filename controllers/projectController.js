@@ -1,3 +1,6 @@
+
+// controllers for project related functions
+
 const Member = require('../models/Member');
 const Saving = require('../models/Saving');
 const User = require('../models/User');
@@ -15,7 +18,7 @@ const projectController = {
         try {
             if (req.session.isLoggedIn) {
                 if (req.session.authority == "Treasurer") {
-                    return res.redirect("/group");
+                    return res.redirect("/member");
                 }
                 const sidebar = req.session.sidebar;
                 const page = req.params.page;
@@ -58,7 +61,7 @@ const projectController = {
                     totalPages = 1;
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, clusterName: cluster.name, search: req.query.search });
+                res.render("project", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, clusterName: cluster.name, clusterId: cluster._id, search: req.query.search });
             } else {
                 res.redirect("/");
             }
@@ -68,7 +71,7 @@ const projectController = {
         }
     },
 
-    //create a new project
+    // create a new project
     newProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -104,21 +107,33 @@ const projectController = {
     editProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
+
                 const projectId = req.params.id;
-                const project = await Project.findById(projectId);
-                const { name } = req.body;
-                if (project.name != name) {
-                    const existingProject = await Project.findOne({ name });
-                    if (existingProject) {
-                        return res.status(400).json({ error: "A project with the same name already exists." });
-                    }
+                const currentProject = await Project.findById(projectId);
+                const { name, location } = req.body;
+                const cluster = await Cluster.findOne({ _id: req.session.clusterId });
+                const project = await Project.find({ _id: { $in: cluster.projects } });
+                const existingProjects = project.flatMap(project => project.name);
+                if (existingProjects.includes(name) && name != currentProject.name) {
+                    return res.json({ error: "A Project with the same name already exists." });
                 }
                 updateData = req.body;
-                const updateProject = await Project.findOneAndUpdate({ name: project.name }, updateData, { new: true });
+                const updateProject = await Project.findOneAndUpdate({ _id: projectId }, updateData, { new: true });
                 if (updateProject) {
-                    res.redirect("/project");
+                    if (currentProject.location !== location) {
+                        const group = await Group.find({ _id: { $in: currentProject.groups } })
+
+                        group.forEach(async (groupItem) => {
+                            let locUpdate = {
+                                location: location
+                            }
+                            await Group.findOneAndUpdate({ _id: groupItem._id }, locUpdate, { new: true })
+                        });
+
+                    }
+                    res.json({ success: "A Project has been edited." });
                 } else {
-                    return res.status(404).json({ error: "Update error!" });
+                    return res.json({ error: "An error occurred while editng a project." });
                 }
             } else {
                 res.redirect("/");
@@ -129,6 +144,7 @@ const projectController = {
         }
     },
 
+    // deletes a project
     deleteProject: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
@@ -144,7 +160,10 @@ const projectController = {
                                 kaban = await Saving.find({ memberID: member._id });
                                 for (const item of kaban) {
                                     cluster.totalKaban -= item.totalSaving;
+
+
                                     cluster.totalKaban -= item.totalMatch;
+
                                 }
                                 await Saving.deleteMany({ memberID: member._id });
                                 cluster.totalMembers -= 1;
@@ -173,12 +192,14 @@ const projectController = {
         }
     },
 
+    /// get's sub-project's info for edit modal
     loadEditSubProjectsForm: async (req, res) => {
         const projectId = req.params.projectId;
         const project = await Project.findOne({ _id: projectId });
         res.render('components/popups/popupFields/Sub-ProjectsFormFields', { project });
     },
 
+    // middleware to save project ids
     projectMiddle: async (req, res) => {
         try {
             req.session.projectId = req.body.id;

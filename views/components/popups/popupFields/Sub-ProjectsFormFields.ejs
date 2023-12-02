@@ -1,8 +1,11 @@
 <div class = "mb-3">
     <label for="projectName" class="form-label">Sub-Project Name</label>
-    <input class="form-control" id = "projectName" name = "name" type="text" aria-describedby="SubProjectName" required
+    <input class="form-control"  name = "name" type="text" aria-describedby="SubProjectName" required
     <% if (locals.project) { %>
         value = "<%=locals.project.name%>"
+        id = "editProjectName"
+    <% } else { %>
+        id = "addProjectName"
     <% } %>
     >
     <div class="invalid-feedback">
@@ -10,8 +13,8 @@
     </div>  
 </div>
 <div class = "mb-3">
-    <label for="projectName" class="form-label">Area</label>
-    <input class="form-control" id = "projectName" name = "location" type="text" aria-describedby="SubProjectArea" required
+    <label for="location" class="form-label">Area</label>
+    <input class="form-control" id = "location" name = "location" type="text" aria-describedby="SubProjectArea" required
     <% if (locals.project) { %>
         value = "<%=locals.project.location%>"
     <% } %>

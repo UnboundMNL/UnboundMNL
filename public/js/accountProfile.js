@@ -2,11 +2,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById('editAccount').style.display = 'none';
     const inputContainer = document.getElementById("inputContainer");
     const inputFields = inputContainer.querySelectorAll("input:not([type='checkbox'])");
+
+    // Show selected content
+    displayFields('usernameChange', 'checkUsername');
+
+    // Disable all input fields
     for (let i = 0; i < inputFields.length; i++) {
-        inputFields[i].disabled = true;
+        if (inputFields[i].closest('#usernameChange') === null) {
+            inputFields[i].disabled = true;
+        }
     }
+    // delete user button
     document.getElementById("deleteButton").onclick = () => {
-        if (document.getElementById("deleteConfirm").value == "DELETE"){
+        if (document.getElementById("deleteConfirm").value == "DELETE") {
             fetch('/deleteUser', {
                 method: 'POST',
                 headers: {
@@ -17,7 +25,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                     if (response.ok) {
                         location.href = "/";
                     } else {
-                        
+
                     }
                 })
                 .catch(error => {
@@ -28,7 +36,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function editAccount() {
-    document.getElementById('editAccount').style.display = 'block';
+    document.getElementById('editAccount').style.display = 'flex';
     document.getElementById('profileAccount').style.display = 'none';
 }
 
@@ -61,34 +69,50 @@ function cancelChanges(user) {
     }
 }
 
-// Hannah: I made it so that the checkbox is disabled when the other checkbox is checked 
-// and it clears the text fields when the checkbox is unchecked
-function toggleFields(targetId, checkbox, user) {
+function toggleFields(targetId, checkboxId, user) {
     const target = document.getElementById(targetId);
     const allInputs = document.querySelectorAll(`input[type='text'], input[type='password']`);
     const inputs = target.querySelectorAll('input');
 
-    // Uncheck the other checkbox
-    const otherCheckboxId = checkbox.id === 'checkUsername' ? 'checkPassword' : 'checkUsername';
+    // Uncheck the other checkbox 
+    const otherCheckboxId = checkboxId === 'checkUsername' ? 'checkPassword' : 'checkUsername';
     const otherCheckbox = document.getElementById(otherCheckboxId);
     otherCheckbox.checked = false;
 
-    const inputsArray = Array.from(inputs);
-
     for (let input of allInputs) {
-        if (!inputsArray.includes(input)) {
+            if (input.closest(`#${targetId}`) !== null) {
+            input.disabled = false;
+        } else if (input.closest(`#${targetId}`) === null) {
             input.disabled = true;
             cancelChanges(user);
             clearAlert();
-        } else {
-            if (checkbox.checked) {
-                input.disabled = false;
-            } else {
-                input.disabled = true;
-                cancelChanges(user);
-                clearAlert();
-            }
         }
+    }
+
+    displayFields(targetId, checkboxId);
+}
+
+function displayFields(targetId, checkboxId) {
+    console.log("Displaying " + targetId);
+    const contentBlock = document.getElementById(targetId);
+
+    // Show the selected content
+    contentBlock.style.display = "block";
+
+    // Hide the other content
+    const otherContent = targetId === 'usernameChange' ? 'passwordChange' : 'usernameChange';
+    const contentHide = document.getElementById(otherContent);
+    contentHide.style.display = "none";
+
+     // Remove 'active' class from all labels
+     document.querySelectorAll('.nav-link').forEach(function (label) {
+        label.classList.remove('active');
+    });
+
+    // Add 'active' class to the clicked label
+    var associatedLabel = document.querySelector('label[for="' + checkboxId + '"]');
+    if (associatedLabel) {
+        associatedLabel.classList.add('active');
     }
 }
 
@@ -121,13 +145,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkUsernameCheckbox = document.getElementById('checkUsername');
     const checkPasswordCheckbox = document.getElementById('checkPassword');
 
+
     checkUsernameCheckbox.addEventListener('change', updateSubmitButtonState);
     checkPasswordCheckbox.addEventListener('change', updateSubmitButtonState);
 
-    saveChangesButton.disabled = true;
+    // saveChangesButton.disabled = true;
 
     function updateSubmitButtonState() {
-
         saveChangesButton.disabled = !checkUsernameCheckbox.checked && !checkPasswordCheckbox.checked;
     }
 
@@ -142,9 +166,9 @@ function updateUserInformation() {
     const newUsername = document.getElementById('newUsername').value;
     const currentPassword1 = document.getElementById('currentPassword1').value;
 
-    const newPassword = document.getElementById('newPass').value; 
-    const confirmPassword = document.getElementById('confirmPass').value; 
-    const currentPassword2 = document.getElementById('currentPassword2').value; 
+    const newPassword = document.getElementById('newPass').value;
+    const confirmPassword = document.getElementById('confirmPass').value;
+    const currentPassword2 = document.getElementById('currentPassword2').value;
 
     const currentPasswordAlert1 = document.getElementById('currentPasswordAlert1');
     const usernameAlert = document.getElementById('usernameAlert');
@@ -155,10 +179,12 @@ function updateUserInformation() {
     usernameAlert.innerHTML = '';
     currentPasswordAlert2.innerHTML = '';
 
+
     const saveSuccessfulButton = document.getElementById('saveSuccessful');
     saveSuccessfulButton.addEventListener('click', function () {
         window.location.reload();
     });
+
     const requestBody = {
         newUsername: newUsername,
         currentPassword1: currentPassword1,
@@ -170,52 +196,56 @@ function updateUserInformation() {
         checkPasswordCheckbox: checkPasswordCheckbox.checked,
     };
 
-    const updateUserUrl = '/editProfile'; 
+    const updateUserUrl = '/editProfile';
     fetch(updateUserUrl, {
-        method: 'PATCH', 
+        method: 'PATCH',
         headers: {
-            'Content-Type': 'application/json', 
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
     })
-    .then((response) => {
-        if (response.ok) {
-            $('#saveModal').modal('show');
-            return response.json(); 
-        } else {
-            return response.json(); 
-        }
-    })
-    .then(data => {
-        if (data.errorType === 1) {
-            // Handle errorType 1
-            currentPasswordAlert1.style.color = 'red';
-            currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 2) {
-            usernameAlert.style.color = 'red';
-            usernameAlert.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 3) {
-            usernameAlert.style.color = 'red';
-            usernameAlert.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 4) {
-            currentPasswordAlert1.style.color = 'red';
-            currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 5) {
-            currentPasswordAlert2.style.color = 'red';
-            currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
-        } else if (data.errorType === 6) {
-            currentPasswordAlert2.style.color = 'red';
-            currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
-        } else if (data.error) {
-            const usernameAlert = document.getElementById('usernameAlert');
-            usernameAlert.style.color = 'red';
-            usernameAlert.innerHTML = `✕ ${data.error}`;
-        } else {
-           
-        }
-    })
-    .catch((error) => {
-        console.error('An error occurred:', error);
-    });
-    
+        .then((response) => {
+            if (response.ok) {
+                $('#saveModal').modal('show');
+                return response.json();
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            if (data.errorType === 1) {
+                // Handle errorType 1
+                currentPasswordAlert1.style.color = 'red';
+                currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 2) {
+                usernameAlert.style.color = 'red';
+                usernameAlert.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 3) {
+                usernameAlert.style.color = 'red';
+                usernameAlert.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 4) {
+                currentPasswordAlert1.style.color = 'red';
+                currentPasswordAlert1.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 5) {
+                currentPasswordAlert2.style.color = 'red';
+                currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
+            } else if (data.errorType === 6) {
+                currentPasswordAlert2.style.color = 'red';
+                currentPasswordAlert2.innerHTML = `✕ ${data.error}`;
+            } else if (data.error) {
+                const usernameAlert = document.getElementById('usernameAlert');
+                usernameAlert.style.color = 'red';
+                usernameAlert.innerHTML = `✕ ${data.error}`;
+            } else {
+                const saveSuccessfulButton = document.getElementById('saveSuccessful');
+                saveSuccessfulButton.addEventListener('click', function () {
+                    window.location.reload();
+                });
+
+            }
+        })
+        .catch((error) => {
+            console.error('An error occurred:', error);
+        });
+
 }

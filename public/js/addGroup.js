@@ -1,3 +1,4 @@
+// form validation for adding groups
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -12,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('SHGName').addEventListener('input', event => {
+                document.getElementById('addSHGName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('SHGName').value == "") {
+                    if (document.getElementById('addSHGName').value == "") {
                         formNameInput.classList.add('is-invalid');
                         invalidFeedback.textContent = 'Please enter a SHG name.';
                     } else {
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// adding groups
 function addGroup(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};
@@ -51,7 +53,7 @@ function addGroup(form, nameInput) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                window.location.href = '/group';
             } else if (data.error) {
                 formNameInput.setCustomValidity('Invalid field.');
                 formNameInput.classList.add('is-invalid');

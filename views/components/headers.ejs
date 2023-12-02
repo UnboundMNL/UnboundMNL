@@ -1,6 +1,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-<title><%=pageName%> | Unbound MNL</title>
+<title>
+    <% if (pageName !== "Login") { %>
+        <%=pageName%> | 
+    <% } %>
+    Unbound MNL
+</title>
 <link rel="icon" href="/img/Unbound_icon.png">
 
 <!-- JQUERY -->

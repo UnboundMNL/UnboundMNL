@@ -1,3 +1,4 @@
+// form validation for adding clusters
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -12,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 event.preventDefault();
                 form.classList.add('was-validated');
-                document.getElementById('clusterName').addEventListener('input', event => {
+                document.getElementById('addClusterName').addEventListener('input', event => {
                     const formNameInput = event.target;
                     const invalidFeedback = formNameInput.nextElementSibling;
                     formNameInput.setCustomValidity('');
                     formNameInput.classList.remove('is-invalid');
                     formNameInput.classList.remove('is-valid');
-                    if (document.getElementById('clusterName').value == "") {
+                    if (document.getElementById('addClusterName').value == "") {
                         formNameInput.classList.add('is-invalid');
                         invalidFeedback.textContent = 'Please enter a cluster name.';
                     } else {
@@ -31,16 +32,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// adding cluster
 function addCluster(form, nameInput) {
     const formData = new FormData(form);
     const formDataObject = {};
     const formNameInput = nameInput;
     const invalidFeedback = formNameInput.nextElementSibling;
-    // Convert FormData to plain object
     formData.forEach((value, key) => {
         formDataObject[key] = value;
     });
-    // Check if all values in formDataObject are not empty
     fetch('/newCluster', {
         method: 'POST',
         headers: {
@@ -51,7 +51,7 @@ function addCluster(form, nameInput) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                window.location.href = '/cluster';
             } else if (data.error) {
                 formNameInput.setCustomValidity('Invalid field.');
                 formNameInput.classList.add('is-invalid');
@@ -61,6 +61,5 @@ function addCluster(form, nameInput) {
         })
         .catch(error => {
             console.error('Error:', error);
-            // Handle errors here
         });
 }

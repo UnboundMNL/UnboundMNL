@@ -1,5 +1,5 @@
-
- function chart(monthValues) {
+// chart in dashboard
+function chart(monthValues) {
     let monthCounts = JSON.parse(monthValues).split(',');
 
     const ctx = document.getElementById('myChart');

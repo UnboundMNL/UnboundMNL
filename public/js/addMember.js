@@ -1,3 +1,4 @@
+// form validation for adding members
 document.addEventListener('DOMContentLoaded', function () {
     (() => {
         'use strict'
@@ -45,10 +46,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// adding members
 function addMember(form) {
     const formData = new FormData(form);
     const formDataObject = {};
-    const formNameInput =  document.getElementById('orgId');
+    const formNameInput = document.getElementById('orgId');
     const invalidFeedback = formNameInput.nextElementSibling;
 
     // Convert FormData to plain object
@@ -100,14 +102,14 @@ function checkDateValidity() {
         formNameInput.setCustomValidity('');
         formNameInput.classList.remove('is-invalid');
         formNameInput.classList.remove('is-valid');
-        const birthdateInput=document.getElementById('birthdate');
+        const birthdateInput = document.getElementById('birthdate');
         if (birthdateInput.validity.valueMissing) {
             formNameInput.classList.add('is-invalid');
             invalidFeedback.textContent = 'Birthday is required.';
         } else if (birthdateInput.validity.rangeUnderflow) {
             invalidFeedback.textContent = "Please select a date on or after January 1, 1900.";
         } else if (birthdateInput.validity.rangeOverflow) {
-            invalidFeedback.textContent = "Please select a date on or before December 31, 2200.";
+            invalidFeedback.textContent = "Please select a date on or before today.";
         } else {
             invalidFeedback.textContent = ""; // Clear the error message
         }

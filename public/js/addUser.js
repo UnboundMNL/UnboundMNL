@@ -1,3 +1,4 @@
+// form validation for adding users
 document.addEventListener('DOMContentLoaded', function () {
 
     const selectIDs = ["#clusterSelect", "#spuSelect", "#shgSelect"];
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
-        
+
     }
 
     const saveButton = document.getElementById("saveChanges");
@@ -51,14 +52,14 @@ document.addEventListener('DOMContentLoaded', function () {
             matchingAlert2.innerHTML = '✕ Use the same password';
             error = true;
         }
-        const accountType= document.getElementById("accountType").value;
-        if (accountType ==""){
+        const accountType = document.getElementById("accountType").value;
+        if (accountType == "") {
             noPart.innerHTML = '✕ Choose an account type';
             error = true;
-        } else if (accountType=="SEDO" && document.getElementById("clusterSelect").value==""){
+        } else if (accountType == "SEDO" && document.getElementById("clusterSelect").value == "") {
             noPart.innerHTML = '✕ Choose a valid cluster';
             error = true;
-        } else if (accountType=="Treasurer" && document.getElementById("shgSelect").value==""){
+        } else if (accountType == "Treasurer" && document.getElementById("shgSelect").value == "") {
             noPart.innerHTML = '✕ Choose a valid Group';
             error = true;
         }
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 data = { username, password: pass, authority: "Treasurer", validGroup: document.getElementById('shgSelect').value }
             }
+            // adding user
             fetch('/register', {
                 method: 'POST',
                 headers: {
@@ -127,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+// getting project options
 function getProject() {
     const clusterId = $('#clusterSelect').find(":selected").val();
     const data = { clusterId };
@@ -162,7 +165,7 @@ function getProject() {
         });
 }
 
-
+// getting group options
 function getSHG() {
     const projectId = $('#spuSelect').find(":selected").val();
     const data = { projectId };
@@ -198,25 +201,26 @@ function showModal() {
     saveModal.show();
 }
 
-function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
+// disabling and changing dropdown opotions
+function accountTypeSelect(clusterChoicesName, clusterChoicesId, authority) {
     var accountType = document.getElementById("accountType").value;
     var elementsToHandle = ["clusterSelect", "spuSelect", "shgSelect"];
 
-    if (accountType == "Admin") {
+    if (accountType == "Admin" && authority == "Admin") {
         elementsToHandle.forEach(function (elementId) {
             var element = document.getElementById(elementId);
             element.disabled = true;
             element.value = "";
-            $("#"+elementId).empty();
+            $("#" + elementId).empty();
         });
-    } else if (accountType == "SEDO") {
+    } else if (accountType == "SEDO" && authority == "Admin") {
         elementsToHandle.forEach(function (elementId) {
             if (elementId !== "clusterSelect") {
                 var element = document.getElementById(elementId);
                 element.disabled = true;
                 element.value = "";
-                $("#"+elementId).empty();
-                
+                $("#" + elementId).empty();
+
             } else {
                 var element = document.getElementById(elementId);
                 element.disabled = false;
@@ -231,40 +235,60 @@ function accountTypeSelect(clusterChoicesName, clusterChoicesId) {
 
             }
         });
-    } else {
+    } else if (accountType == "Treasurer" && authority == "Admin") {
         elementsToHandle.forEach(function (elementId) {
             document.getElementById(elementId).disabled = false;
             var element = document.getElementById(elementId);
             element.disabled = false;
-            $("#"+elementId).empty();
-            $("#"+elementId).append('<option value="" selected hidden default> Choose...</option>');
+            $("#" + elementId).empty();
+            $("#" + elementId).append('<option value="" selected hidden default> Choose...</option>');
         });
-            fetch('/clusterChoices', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+        fetch('/clusterChoices', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to fetch data');
+                }
             })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('Failed to fetch data');
-                    }
-                })
-                .then(data => {
-                    data.cluster.forEach((cluster) => {
-                        let newOption = `<option value="${cluster._id}">${cluster.name}</option>`;
-                        $("#clusterSelect").append(newOption);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+            .then(data => {
+                data.cluster.forEach((cluster) => {
+                    let newOption = `<option value="${cluster._id}">${cluster.name}</option>`;
+                    $("#clusterSelect").append(newOption);
                 });
-        
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    } else if (accountType == "SEDO" && authority == "SEDO") {
+        elementsToHandle.forEach(function (elementId) {
+            if (elementId !== "clusterSelect") {
+                var element = document.getElementById(elementId);
+                element.disabled = true;
+                element.value = "";
+                $("#" + elementId).empty();
+            }
+        })
+    } else {
+        elementsToHandle.forEach(function (elementId) {
+            if (elementId !== "clusterSelect") {
+                var element = document.getElementById(elementId);
+                element.disabled = false;
+                element.value = "";
+                $("#" + elementId).empty();
+            }
+        })
+        getProject();
     }
 }
 
+// reset all options
 function ResetAll(authority) {
     let groupSelectDefault;
     if (authority != "Treasurer") {

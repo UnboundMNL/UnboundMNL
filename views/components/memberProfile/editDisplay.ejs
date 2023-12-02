@@ -14,7 +14,8 @@
             <button class="btn btn-secondary btn-sm">Change Photo</button>
         </div>
         <div class="align-items-right">
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Member</button>
+            <% var memberName = member.name.firstName + " " + member.name.lastName; %>
+            <button class="btn btn-danger btn-sm" onclick="displayDeleteModal('<%= memberName %>')">Delete Member</button>
         </div>
     </div>
     <hr>
@@ -155,6 +156,11 @@
                 }
             }, false);
 
+            function displayDeleteModal(memberName) {
+                // Show the modal using Bootstrap's modal method
+                $('#deleteProfileModal').modal('show');
+                $('#memberNameToDelete').text(memberName);
+            }
         </script>
         
         <div class="d-flex justify-content-center mt-4 button-gap">
@@ -164,15 +170,17 @@
     </form>
 </div>
 
-<div class="toast-container
-                position-fixed 
-                top-0 start-50 
-                translate-middle-x
-                mt-5"
-                data-delay="3000">
-        <div class="toast mt-4 text-center bg-info fw-bold text-black-50">
-            <div class="toast-body">
-                Form fields have been reset.
-            </div>
+<div class="toast text-center text-white
+            bg-primary position-fixed 
+            top-0 start-50 
+            translate-middle-x"
+            data-delay="5000"
+            role="alert" aria-live="assertive"
+            aria-atomic="true">
+    <div class="d-flex">
+        <div class="toast-body">
+            Form fields have been reset.
         </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
 </div>

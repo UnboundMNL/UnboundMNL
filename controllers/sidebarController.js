@@ -8,6 +8,7 @@ const Group = require('../models/Group');
 
 const sidebarController = {
 
+    // middleware to save sidebar options
     sidebarChange: (req, res) => {
         try {
             req.session.sidebar = !req.session.sidebar;

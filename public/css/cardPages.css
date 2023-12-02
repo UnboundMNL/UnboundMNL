@@ -9,9 +9,11 @@
 
 /* --------------- CARDS --------------- */
 .container-style {
+    position: relative;
     background-color: white;
     margin: 0.5rem 0;
     padding: 1rem;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
 }
 
@@ -19,8 +21,9 @@
     margin-right: 0.5rem;
 }
 
-.container-style h3 {
-    color: var(--primary-color);
+.container-style h5 ,
+.container-style h4 {
+    color: var(--secondary-color);
 }
 
 .container-style:hover {
@@ -35,10 +38,11 @@
 }
 
 .details-container {
-    background-image: linear-gradient(whitesmoke, white 15%);
-    margin: -0.8rem 0 1rem 0;
+    background-image: linear-gradient(gainsboro, white 7%);
+    margin: -1.3rem 0 1rem 0;
     padding: 1rem;
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 8px 8px;
 }
 
 .page-title p {
@@ -49,3 +53,12 @@
 .modal-body i {
     color: var(--red-color);
 }
+
+.card-export {
+    font-size: 1.5rem;
+}
+
+.card-export:hover {
+    color: var(--primary-color);
+}
+

@@ -1,8 +1,36 @@
-<div class="d-flex align-items-center">
-    <div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=type%>">
-            <i class='bx bx-plus'></i>
-            <span class="d-none d-sm-inline">Add <%=type%></span>
-        </button>
+<div class="d-flex justify-content-end">
+    <div class="d-flex align-items-center p-1">
+        <div>
+            <script>
+                var encodedText = '<%=groupName%>';
+
+                // Create a new element to decode the HTML-encoded text
+                var decodedElement = document.createElement('div');
+                decodedElement.innerHTML = encodedText;
+
+                // Get the decoded text
+                var decodedText = decodedElement.innerText;
+
+            </script>
+            <% if (type=="Cluster") {%>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=groupId%>', 'All')">
+            <% } else if (type=="Sub-Projects") { %>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=groupId%>', 'Cluster')">
+            <% } else { %>
+                <button type="button" class="btn btn-primary" onclick="displayExportMessage(event, decodedText, '<%=groupId%>', 'SHG')">
+            <% } %>
+                <i class='bx bx-export '></i>
+                <span class="d-none d-sm-inline">Export</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="d-flex align-items-center">
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add<%=type%>">
+                <i class='bx bx-plus'></i>
+                <span class="d-none d-sm-inline">Add</span>
+            </button>
+        </div>
     </div>
 </div>

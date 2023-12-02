@@ -1,6 +1,7 @@
- function saveEdit(link, actionForm, saveID) {
+// save member edit
+function saveEdit(link, actionForm, saveID) {
     const saveButton = document.getElementById(saveID);
-    saveButton.onclick = async() => {
+    saveButton.onclick = async () => {
         const orgId = document.getElementById("id").value;
         const address = document.getElementById("address").value;
         const birthdate = document.getElementById("birthdate").value;

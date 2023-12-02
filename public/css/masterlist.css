@@ -1,0 +1,10 @@
+table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: var(--secondary-color);
+    color: white;
+    font-weight: 500;
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%-include('components/headers.ejs', {authority, pageName: "Groups"})%>
+    <%-include('components/headers.ejs', {authority, pageName: "Sub-Projects"})%>
     
     <!-- CSS -->
     <link rel="stylesheet" href="/css/cardPages.css" />
@@ -24,25 +24,18 @@
         <%- include('components/navbars/topNavbar.ejs')%>
 
         <!-- Project Content -->
-        <!-- Note: Temporary number of containers -->
         <% const containers = 9; %>
         <div class="p-4 mt-5">
-            <% const path = ["Clusters"]; %>
-            <div class="custom-path">
-                <% path.forEach((item) => { 
-                    if (item=="Clusters"){
-                        pathLink="/cluster"
-                    } %>
-                    <li><a href="<%=pathLink%>"><%=item%></a></li>
-                <% }); %>
-            </div>
+            <%- include('components/breadcrumb.ejs', {pageName: "Sub-Projects"}) %>
 
             <div class="mt-3 page-title">
-                <p>Cluster <%=clusterName%></p>
                 <h4>Sub-Projects</h4>
+                <div class="categories">
+                    <span class="mr-2">Cluster <%=clusterName%></span>
+                </div>
             </div>
             <% var type = "Sub-Projects"; %>
-            <%- include('components/cardPages.ejs', { pageParts, type}) %>
+            <%- include('components/cardPages.ejs', { groupName: clusterName, groupId: clusterId, pageParts, type}) %>
             <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>
 
