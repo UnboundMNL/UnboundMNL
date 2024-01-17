@@ -1,5 +1,5 @@
-require('dotenv').config();
-const link = process.env.DB_URL;
+
+const link = DB_URL;
 
 // FOR LOCAL TESTING
 //const link = "mongodb://localhost:27017/Unbound"
@@ -77,7 +77,7 @@ const store = new MongoStore({
 
 app.use(session({
   key: 'user._id',
-  secret: process.env.SesSECRET,
+  secret: SesSECRET,
   resave: false,
   saveUninitialized: false,
   rolling: true,
@@ -93,7 +93,7 @@ mongoose.connect(link)
   .then(() => console.log('Connected to server!'))
   .catch((error) => console.error('Connection error:', error));
 
-const port = process.env.PORT;
+const port = PORT;
 
 app.listen(port, () => {
   console.log(`Listening to Port ${port}`)
