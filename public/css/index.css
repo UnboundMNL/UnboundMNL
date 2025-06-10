@@ -57,7 +57,7 @@ body {
 
 /* CHANGE TOAST COLOUR */
 .bg-primary {
-    background-color: var(--primary-color) !important; 
+    background-color: var(--primary-color) !important;
 }
 
 .toast {
@@ -238,7 +238,7 @@ main {
 }
 
 /* --------------- TITLE --------------- */
-.categories span{
+.categories span {
     background-color: lightgray;
     padding: 0.2rem 0.3rem;
     border-radius: 8px;
@@ -317,4 +317,14 @@ main {
         margin-left: 0;
         width: 100%;
     }
+}
+
+/* OTHER UTILITY CLASSES */
+
+.flex {
+    display: flex;
+}
+
+.w-full {
+    width: 100%;
 }

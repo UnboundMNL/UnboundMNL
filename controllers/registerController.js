@@ -95,7 +95,33 @@ const registerController = {
       res.redirect("/");
     }
   },
-
+  massRegistrationPage: async (req, res) => {
+    try {
+      if (req.session.isLoggedIn) {
+        const userID = req.session.userId;
+        const sidebar = req.session.sidebar;
+        const user = await User.findById(userID);
+        const authority = user.authority;
+        const username = user.username;
+        dashbuttons = dashboardButtons(authority);
+        let clusterChoices;
+        if (authority == "Treasurer") {
+          return res.redirect("/");
+        }
+        if (authority == "Admin") {
+          clusterChoices = await Cluster.find({});
+        } else {
+          clusterChoices = await Cluster.findById(req.session.clusterId);
+        }
+        res.render("massRegistration", { authority, username, dashbuttons, sidebar, clusterChoices });
+      } else {
+        res.redirect("/");
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+    }
+  }
 }
 
 module.exports = registerController;
