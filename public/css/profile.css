@@ -131,3 +131,15 @@
     width: 100%;
     height: 100%;
 }
+
+.big-summary-text {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.big-summary-hr {
+    border-width: 1em;
+    color: blue;
+    border-radius: 1em;
+}
