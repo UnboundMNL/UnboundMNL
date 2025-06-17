@@ -7,10 +7,17 @@ const MemberSchema = new mongoose.Schema({
   },
   orgId: { type: String, required: true },
   photo: { type: String, required: true, default: 'something' },
-  parentName: { type: String, required: true, default: 'Unknown' },
-  sex: { type: String, enum: ['Male', 'Female', 'Other', 'Unknown'], required: true, default: 'Unknown' },
-  birthdate: { type: Date },
-  address: { type: String },
+  nameFather: {
+    firstName: String,
+    lastName: String
+  },
+  nameMother: {
+    firstName: String,
+    lastName: String
+  },
+  sex: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
+  birthdate: { type: Date, required: true },
+  address: { type: String, required: true },
   savings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'saving' }],
   totalSaving: { type: Number, default: 0 },
   totalMatch: { type: Number, default: 0 },
