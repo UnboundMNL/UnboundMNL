@@ -92,9 +92,6 @@ const savingsController = {
 
                     member.savings.push(newSaving._id);
                     const updatedMember = await member.save();
-
-                    // TODO: Update the group, project, and cluster totals
-                    /*
                     const group = await Group.findById(req.session.groupId);
                     group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
 
@@ -111,11 +108,7 @@ const savingsController = {
                     const updatedCluster = await cluster.save();
                     const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
                     if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
-                        res.json({ data: "true"});
-                    }
-                        */
-                    if (updatedSaving && updatedMember) {
-                        res.json({ data: "true"});
+                        res.json();
                     }
                 }
             } else {

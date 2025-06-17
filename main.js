@@ -33,7 +33,7 @@ const routesMember = require('./routers/routesMember');
 const routesChoices = require('./routers/routesChoices');
 const routesAdminFunctions = require('./routers/routesAdminFunctions');
 const routesExports = require('./routers/routesExports');
-const routesUploads = require('./routers/routesUploads');
+
 
 const { isLoggedInMiddleware } = require('./lib/middleware');
 const { userIDMiddleware } = require('./lib/middleware');
@@ -177,5 +177,4 @@ app.use(routesMember);
 app.use(routesChoices);
 app.use(routesAdminFunctions);
 app.use(routesExports);
-app.use(routesUploads);
 
