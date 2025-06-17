@@ -143,8 +143,8 @@ module.exports = {
                                 
                                 // DEBUGGING: Print member and saving details
                                 console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} for year ${year}:`, {
-                                    yearTotalSaving: savingDoc.yearTotalSaving,
-                                    yearTotalMatch: savingDoc.yearTotalMatch
+                                    yearTotalSaving: savingDoc.totalSaving,
+                                    yearTotalMatch: savingDoc.totalMatch
                                 });
                             }
                         }
