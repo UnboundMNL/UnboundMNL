@@ -167,7 +167,14 @@ module.exports = {
             // DEBUGGING: Prints the members after saving to the database
             if (logCount > 0 ) {
                 console.log(`Successfully processed ${logCount} members.`);
-                res.status(200).json({ success: true, message: 'Excel file processed successfully.', members });
+                req.session.massRegistrationSummary = {
+                    recordsDone: logCount,
+                    recordsTotal: dataRows.length,
+                    errorCount: dataRows.length - logCount,
+                    issues: [],
+                    successRate: ((logCount / dataRows.length) * 100).toFixed(2)
+                };
+                return res.redirect('/mass-register-done');
             } else {
                 console.log('No members saved.');
                 res.status(400).json({ success: false, message: 'No members saved.' });

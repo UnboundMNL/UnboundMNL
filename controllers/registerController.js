@@ -123,38 +123,43 @@ const registerController = {
     }
   },
   massRegistrationDone: async (req, res) => {
-    // TODO: For devs: link this page to the mass registration process
-    const recordsDone = 80
-    const recordsTotal = 92
-    const errorCount = recordsTotal - recordsDone
-    const issues = ['4 invalid emails', '2 duplicate entries']
     try {
-      if (req.session.isLoggedIn) {
-        const userID = req.session.userId;
-        const sidebar = req.session.sidebar;
-        const user = await User.findById(userID);
-        const authority = user.authority;
-        const username = user.username;
-        dashbuttons = dashboardButtons(authority);
-        let clusterChoices;
-        if (authority == "Treasurer") {
-          return res.redirect("/");
-        }
-        if (authority == "Admin") {
-          clusterChoices = await Cluster.find({});
-        } else {
-          clusterChoices = await Cluster.findById(req.session.clusterId);
-        }
-        res.render("massRegistrationSummary", { authority, username, dashbuttons, sidebar, clusterChoices, recordsDone, recordsTotal, errorCount, issues, successRate: (recordsDone / recordsTotal * 100).toFixed(2) });
-      } else {
-        res.redirect("/");
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).render("fail", { error: "An error occurred while fetching data." });
-    }
+        if (req.session.isLoggedIn) {
+            const userID = req.session.userId;
+            const sidebar = req.session.sidebar;
+            const user = await User.findById(userID);
+            const authority = user.authority;
+            const username = user.username;
+            dashbuttons = dashboardButtons(authority);
+            let clusterChoices;
+            if (authority == "Treasurer") {
+                return res.redirect("/");
+            }
+            if (authority == "Admin") {
+                clusterChoices = await Cluster.find({});
+            } else {
+                clusterChoices = await Cluster.findById(req.session.clusterId);
+            }
 
-  }
+            const summary = req.session.massRegistrationSummary || {};
+            delete req.session.massRegistrationSummary;
+
+            res.render("massRegistrationSummary", {
+                authority, username, dashbuttons, sidebar, clusterChoices,
+                recordsDone: summary.recordsDone,
+                recordsTotal: summary.recordsTotal,
+                errorCount: summary.errorCount,
+                issues: summary.issues,
+                successRate: summary.successRate
+            });
+        } else {
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+    }
+}
 }
 
 module.exports = registerController;
