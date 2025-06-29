@@ -94,7 +94,7 @@
 
 /* ACCOUNT REGISTRATION */
 .register-container {
-    background-color: var(--translucent-tertiary-color);
+    background-color: var(--body-color);
     min-height: 100%;
     padding: 1.5rem;
 }
