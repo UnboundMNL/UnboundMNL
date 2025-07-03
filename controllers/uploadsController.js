@@ -27,6 +27,9 @@ function mapMonthNameToSchemaKey(monthName) {
 module.exports = {
     post: async (req, res) => {
         try {
+            if (!req.file || !req.file.path) {
+                return res.status(400).json({ success: false, message: 'No file uploaded.' });
+            }
             const workbook = XLSX.readFile(req.file.path);
             const sheetName = workbook.SheetNames[0]; 
             const sheet = workbook.Sheets[sheetName];
@@ -174,7 +177,7 @@ module.exports = {
                     issues: [],
                     successRate: ((logCount / dataRows.length) * 100).toFixed(2)
                 };
-                return res.redirect('/mass-register-done');
+                
             } else {
                 console.log('No members saved.');
                 res.status(400).json({ success: false, message: 'No members saved.' });
@@ -193,6 +196,7 @@ module.exports = {
                     console.log('File deleted successfully');
                 }
             });
+            return res.redirect('/mass-register-done');
         }
     }
 };

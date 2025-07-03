@@ -9,12 +9,22 @@
 			<div id="fileName"></div>
 			<label for="fileUpload" class="btn btn-upload-files" style="width: fit-content" type="button">Upload Files</label>
 		</label>
-		<button class="btn btn-primary" style="width: fit-content; align-self: center">Register Accounts</button>
+		<button id="registerButton" class="btn btn-primary" style="width: fit-content; align-self: center" disabled>Register Accounts</button>
 	</div>
 </form>
 
 <script>
-	document.querySelector('#fileUpload').onchange = function(p) {
-		document.querySelector('#fileName').innerText = this.files[0].name
-	}
+	const fileInput = document.querySelector('#fileUpload');
+	const fileNameDisplay = document.querySelector('#fileName');
+	const registerBtn = document.querySelector('#registerButton');
+
+	fileInput.onchange = function () {
+		if (this.files.length > 0) {
+			fileNameDisplay.innerText = this.files[0].name;
+			registerBtn.disabled = false; 
+		} else {
+			fileNameDisplay.innerText = '';
+			registerBtn.disabled = true;
+		}
+	};
 </script>
