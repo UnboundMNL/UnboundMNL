@@ -26,6 +26,7 @@ function mapMonthNameToSchemaKey(monthName) {
 
 module.exports = {
     post: async (req, res) => {
+        let issues = [];
         try {
             if (!req.file || !req.file.path) {
                 return res.status(400).json({ success: false, message: 'No file uploaded.' });
@@ -40,18 +41,29 @@ module.exports = {
             });
             
             let logCount = 0;
+            let headerCount = 4;
             const template = rows[0];
             const headerRow = rows[1];
             const dataRows = rows.slice(3);
 
             // DEBUGGING: Store members and print later
             members = [];
+            nonEmptyRows = 0;
 
             for (let rowIdx = 0; rowIdx < dataRows.length; rowIdx++) {
                 const row = dataRows[rowIdx];
-                // Skip rows with missing required fields
-                if (!(row[1] && row[2] && row[3] && row[4] && row[5])) continue;
-
+                // Skip completely empty rows without logging an issue
+                if (!row || row.every(cell => cell === '' || cell === null || cell === undefined)) {
+                    continue;
+                }
+                
+                nonEmptyRows++;
+                // Skip rows with missing required fields and log an issue
+                if (!(row[1] && row[2] && row[3] && row[4])) {
+                    issues.push(`Row ${rowIdx + headerCount}: Missing required fields`);
+                    continue;
+                }
+                
                 const member = {
                     name: {
                         lastName: row[1] ? String(row[1]).trim() : '',
@@ -158,12 +170,17 @@ module.exports = {
                         console.log("Created member:", createdMember);
                         members[rowIdx] = createdMember; 
                         logCount++;
+                        
                     } else {
                         console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                        issues.push(`Row ${rowIdx + headerCount}: Member with ID ${member.orgId} already exists.`);
+
                         continue;
                     }
+                
                 } catch (error) {
                     console.error(`Error saving member ${member.name?.firstName} ${member.name?.lastName}:`, error);
+                    issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} can not be created.`);
                 }
             }
             
@@ -172,20 +189,34 @@ module.exports = {
                 console.log(`Successfully processed ${logCount} members.`);
                 req.session.massRegistrationSummary = {
                     recordsDone: logCount,
-                    recordsTotal: dataRows.length,
-                    errorCount: dataRows.length - logCount,
-                    issues: [],
-                    successRate: ((logCount / dataRows.length) * 100).toFixed(2)
+                    recordsTotal: nonEmptyRows,
+                    errorCount: nonEmptyRows - logCount,
+                    issues: issues, 
+                    successRate: ((logCount / nonEmptyRows) * 100).toFixed(2),
+                    message: 'Some members were saved.'
                 };
-                
             } else {
                 console.log('No members saved.');
-                res.status(400).json({ success: false, message: 'No members saved.' });
+                req.session.massRegistrationSummary = {
+                    recordsDone: 0,
+                    recordsTotal: nonEmptyRows,
+                    errorCount: nonEmptyRows,
+                    issues: issues,
+                    successRate: '0.00',
+                    message: 'No members were saved.'
+                };
             }
             
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ success: false, message: 'Failed to process Excel file.' });
+            console.error('Unhandled error:', err);
+            req.session.massRegistrationSummary = {
+                recordsDone: 0,
+                recordsTotal: 0,
+                errorCount: 0,
+                issues: issues,
+                successRate: '0.00',
+                message: 'An error occurred while processing the file.'
+            };
         } finally {
             // discard the uploaded file
             const fs = require('fs');
