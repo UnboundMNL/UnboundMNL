@@ -249,6 +249,46 @@ const memberController = {
         }
     },
 
+    // Bulk add members
+    bulkRegisterMember: async (member) => {
+        try {
+            const { name, status, orgId, parentName } = member;
+            const existingMember = await Member.findOne({ orgId });
+
+            // If member already exists, return null
+            if (existingMember) {
+                return null;
+            }
+    
+            const newMember = new Member({
+                name,
+                orgId,
+                parentName,
+                status,
+            });
+
+            // TODO: Implement group, project, and cluster updates
+            /*
+            const group = await Group.findById(req.session.groupId);
+            group.members.push(newMember);
+            group.totalMembers += 1;
+            await group.save();
+            const project = await Project.findById(req.session.projectId);
+            project.totalMembers += 1;
+            await project.save();
+            const cluster = await Cluster.findById(req.session.clusterId);
+            cluster.totalMembers += 1;
+            await cluster.save();
+            */
+    
+            await newMember.save();
+            return newMember;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    },
+
     // editing members
     editMember: async (req, res) => {
         try {
