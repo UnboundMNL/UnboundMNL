@@ -8,7 +8,7 @@ function toggleNav(bool) {
         const headerTextDisplayStyle = window.getComputedStyle(navHeader).getPropertyValue("display");
         if (headerTextDisplayStyle !== "block") {
             nav.classList.add("navOpen");
-            document.querySelectorAll(".nav-text").forEach(function (text) {
+            document.querySelectorAll(".nav-text").forEach(function(text) {
                 text.style.display = 'block';
             });
             navHeader.style.display = 'block';
@@ -17,12 +17,12 @@ function toggleNav(bool) {
             main.style.marginLeft = "14rem";
         } else {
             nav.classList.remove("navOpen");
-            document.querySelectorAll(".nav-text").forEach(function (text) {
+            document.querySelectorAll(".nav-text").forEach(function(text) {
                 text.style.display = 'none';
             });
             navHeader.style.display = 'none';
             nav.style.width = "4.5rem";
-            topBar.style.paddingRight = "5.5rem";
+            //topBar.style.paddingRight = "6.5rem";
             main.style.marginLeft = "4.5rem";
         }
     } else {
@@ -43,15 +43,15 @@ function toggleNav(bool) {
 }
 
 // toggle sidebar when window is mobile size
-window.addEventListener('load', function () {
+window.addEventListener('load', function() {
     if (window.matchMedia("(max-width: 768px)").matches) {
         const nav = document.getElementById("collapsibleNavbar");
         nav.style.display = 'none';
-    } 
+    }
 });
 
 // toggle sidebar when window is resized
-window.addEventListener('resize', function () {
+window.addEventListener('resize', function() {
     if (window.matchMedia("(max-width: 768px)").matches) {
         const nav = document.getElementById("collapsibleNavbar");
         nav.style.display = 'none';
@@ -81,7 +81,7 @@ function toggleMiddle() {
         });
 }
 // logout button
-$(document).on('click', '#logout', function () {
+$(document).on('click', '#logout', function() {
     fetch('/logout', {
         method: 'POST',
         headers: {
@@ -108,7 +108,7 @@ function open(button) {
 // profile button
 function profile() {
     let profile = document.querySelector(".profile");
-    profile.onclick = function () {
+    profile.onclick = function() {
         location.href = '/profile';
     };
 }
