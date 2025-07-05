@@ -71,17 +71,29 @@ module.exports = {
                     },
                     status: row[3] ? String(row[3]).trim() : '',
                     orgId: row[4] ? String(row[4]).trim() : '',
-                    parentName: row[5] ? String(row[5]).trim() : ''
+                    parentName: row[5] && String(row[5]).trim() !== '' ? String(row[5]).trim() : 'Unknown'
                 };
 
                 try {
                     // DEBUGGING: Print the member being processed
                     console.log(`Processing member at index ${rowIdx}:`, member);
                     
-                    // TODO: Error handling  for existing members
-                    const createdMember = await memberController.bulkRegisterMember(member);
+                    // Updated: Handle the new response format from bulkRegisterMember
+                    const memberResult = await memberController.bulkRegisterMember(member, {
+                        groupId: req.session.groupId,
+                        projectId: req.session.projectId,
+                        clusterId: req.session.clusterId
+                    });
 
-                    if (createdMember) {
+                    if (memberResult && memberResult.success) {
+                        const createdMember = memberResult.member;
+                        
+                        // Log warning if there was an update error
+                        if (memberResult.warning) {
+                            console.warn(`${memberResult.warning}`);
+                            issues.push(`Row ${rowIdx + headerCount}: Warning - ${memberResult.warning}`);
+                        }
+                        
                         let savingDoc = null;
                         let monthsData = {};
                         let year = null;
@@ -132,17 +144,19 @@ module.exports = {
                                 }
                                 if (month && value && !isNaN(Number(value))) {
                                     let monthKey = mapMonthNameToSchemaKey(month);
-                                    monthsData[monthKey] = {
-                                        savings: Number(value),
-                                        match: matchValue
-                                    };
-                                    yearTotalSaving += Number(value);
-                                    yearTotalMatch += matchValue;
-                                    createdMember.totalSaving += Number(value);
-                                    createdMember.totalMatch += matchValue;
+                                    if (monthKey) {
+                                        monthsData[monthKey] = {
+                                            savings: Number(value),
+                                            match: matchValue
+                                        };
+                                        yearTotalSaving += Number(value);
+                                        yearTotalMatch += matchValue;
+                                        createdMember.totalSaving += Number(value);
+                                        createdMember.totalMatch += matchValue;
 
-                                    // DEBUGGING: Print the saving details
-                                    console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
+                                        // DEBUGGING: Print the saving details
+                                        console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
+                                    }
                                 }
                             }
                             if (Object.keys(monthsData).length > 0) {
@@ -172,15 +186,23 @@ module.exports = {
                         logCount++;
                         
                     } else {
-                        console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
-                        issues.push(`Row ${rowIdx + headerCount}: Member with ID ${member.orgId} already exists.`);
-
+                        // Handle different error types from the memberResult
+                        if (memberResult && memberResult.error === 'DUPLICATE_ORG_ID') {
+                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created - duplicate ID.`);
+                            issues.push(`Row ${rowIdx + headerCount}: Member with ID ${member.orgId} already exists.`);
+                        } else if (memberResult && memberResult.error === 'CREATION_ERROR') {
+                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created - creation error.`);
+                            issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${memberResult.message}`);
+                        } else {
+                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                            issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                        }
                         continue;
                     }
                 
                 } catch (error) {
                     console.error(`Error saving member ${member.name?.firstName} ${member.name?.lastName}:`, error);
-                    issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} can not be created.`);
+                    issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${error.message}`);
                 }
             }
             
@@ -219,14 +241,15 @@ module.exports = {
             };
         } finally {
             // discard the uploaded file
-            const fs = require('fs');
-            fs.unlink(req.file.path, (err) => {
-                if (err) {
-                    console.error('Error deleting file:', err);
-                } else {
+            if (req.file && req.file.path) {
+                const fs = require('fs');
+                try {
+                    fs.unlinkSync(req.file.path);
                     console.log('File deleted successfully');
+                } catch (err) {
+                    console.error('Error deleting file:', err);
                 }
-            });
+            }
             return res.redirect('/mass-register-done');
         }
     }
