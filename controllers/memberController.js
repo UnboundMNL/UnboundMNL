@@ -223,13 +223,13 @@ const memberController = {
                 } else if (MotherFirstName && MotherLastName) {
                     parentName = `${MotherFirstName} ${MotherLastName}`;
                 }
-                
+
                 let savings = [];
                 const projectId = req.session.projectId;
                 const groupId = req.session.groupId;
                 const clusterId = req.session.clusterId;
                 const newMember = new Member({
-                    name, orgId, nameFather, nameMother, sex, birthdate, address, savings, status, projectId, groupId, clusterId
+                    name, orgId, parentName, sex, birthdate, address, savings, status, projectId, groupId, clusterId
                 });
                 await newMember.save();
                 const group = await Group.findById(req.session.groupId);
@@ -344,14 +344,15 @@ const memberController = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                const nameFather = {
-                    firstName: FatherFirstName,
-                    lastName: FatherLastName
-                };
-                const nameMother = {
-                    firstName: MotherFirstName,
-                    lastName: MotherLastName
-                };
+                let parentName = 'Unknown';
+                if (FatherFirstName && FatherLastName) {
+                    parentName = `${FatherFirstName} ${FatherLastName}`;
+                    if (MotherFirstName && MotherLastName) {
+                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
+                    }
+                } else if (MotherFirstName && MotherLastName) {
+                    parentName = `${MotherFirstName} ${MotherLastName}`;
+                }
                 const member = await Member.findOne({ _id: req.params.id });
                 if (member) {
                     if (member.groupId.toString() !== groupId) {
