@@ -112,6 +112,13 @@
     position: relative;
 }
 
+.btn:disabled {
+    background-color: dimgray !important; 
+    border-color: dimgray !important;
+    cursor: not-allowed;
+    opacity: 1;  
+  }                      
+
 .btn-upload-files {
     background-color: lightgray !important;
     border-color: lightgray !important;

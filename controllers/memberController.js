@@ -213,20 +213,23 @@ const memberController = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                const nameFather = {
-                    firstName: FatherFirstName,
-                    lastName: FatherLastName
-                };
-                const nameMother = {
-                    firstName: MotherFirstName,
-                    lastName: MotherLastName
-                };
+
+                let parentName = 'Unknown';
+                if (FatherFirstName && FatherLastName) {
+                    parentName = `${FatherFirstName} ${FatherLastName}`;
+                    if (MotherFirstName && MotherLastName) {
+                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
+                    }
+                } else if (MotherFirstName && MotherLastName) {
+                    parentName = `${MotherFirstName} ${MotherLastName}`;
+                }
+
                 let savings = [];
                 const projectId = req.session.projectId;
                 const groupId = req.session.groupId;
                 const clusterId = req.session.clusterId;
                 const newMember = new Member({
-                    name, orgId, nameFather, nameMother, sex, birthdate, address, savings, status, projectId, groupId, clusterId
+                    name, orgId, parentName, sex, birthdate, address, savings, status, projectId, groupId, clusterId
                 });
                 await newMember.save();
                 const group = await Group.findById(req.session.groupId);
@@ -250,42 +253,81 @@ const memberController = {
     },
 
     // Bulk add members
-    bulkRegisterMember: async (member) => {
+    bulkRegisterMember: async (member, sessionData = null) => {
         try {
             const { name, status, orgId, parentName } = member;
             const existingMember = await Member.findOne({ orgId });
 
-            // If member already exists, return null
+            // If member already exists, return error details
             if (existingMember) {
-                return null;
+                return {
+                    success: false,
+                    error: 'DUPLICATE_ORG_ID',
+                    message: `Member with Org ID ${orgId} already exists`,
+                    existingMember: {
+                        name: existingMember.name.firstName + ' ' + existingMember.name.lastName,
+                        orgId: existingMember.orgId
+                    }
+                };
             }
-    
+
             const newMember = new Member({
                 name,
                 orgId,
                 parentName,
                 status,
+                projectId: sessionData?.projectId,
+                groupId: sessionData?.groupId,
+                clusterId: sessionData?.clusterId
             });
 
-            // TODO: Implement group, project, and cluster updates
-            /*
-            const group = await Group.findById(req.session.groupId);
-            group.members.push(newMember);
-            group.totalMembers += 1;
-            await group.save();
-            const project = await Project.findById(req.session.projectId);
-            project.totalMembers += 1;
-            await project.save();
-            const cluster = await Cluster.findById(req.session.clusterId);
-            cluster.totalMembers += 1;
-            await cluster.save();
-            */
-    
             await newMember.save();
-            return newMember;
+
+            // If session data is provided, update group/project/cluster totals
+            if (sessionData && sessionData.groupId && sessionData.projectId && sessionData.clusterId) {
+                try {
+                    const group = await Group.findById(sessionData.groupId);
+                    if (group) {
+                        group.members.push(newMember._id);
+                        group.totalMembers += 1;
+                        await group.save();
+                    }
+
+                    const project = await Project.findById(sessionData.projectId);
+                    if (project) {
+                        project.totalMembers += 1;
+                        await project.save();
+                    }
+
+                    const cluster = await Cluster.findById(sessionData.clusterId);
+                    if (cluster) {
+                        cluster.totalMembers += 1;
+                        await cluster.save();
+                    }
+                } catch (updateError) {
+                    console.error('Error updating group/project/cluster totals:', updateError);
+                    // Return success with warning about totals update failure
+                    return {
+                        success: true,
+                        member: newMember,
+                        warning: 'Member created but failed to update group/project/cluster totals',
+                        updateError: updateError.message
+                    };
+                }
+            }
+
+            return {
+                success: true,
+                member: newMember
+            };
         } catch (error) {
-            console.error(error);
-            return null;
+            console.error('Error in bulkRegisterMember:', error);
+            return {
+                success: false,
+                error: 'CREATION_ERROR',
+                message: `Failed to create member: ${error.message}`,
+                details: error.message
+            };
         }
     },
 
@@ -302,14 +344,15 @@ const memberController = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                const nameFather = {
-                    firstName: FatherFirstName,
-                    lastName: FatherLastName
-                };
-                const nameMother = {
-                    firstName: MotherFirstName,
-                    lastName: MotherLastName
-                };
+                let parentName = 'Unknown';
+                if (FatherFirstName && FatherLastName) {
+                    parentName = `${FatherFirstName} ${FatherLastName}`;
+                    if (MotherFirstName && MotherLastName) {
+                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
+                    }
+                } else if (MotherFirstName && MotherLastName) {
+                    parentName = `${MotherFirstName} ${MotherLastName}`;
+                }
                 const member = await Member.findOne({ _id: req.params.id });
                 if (member) {
                     if (member.groupId.toString() !== groupId) {
