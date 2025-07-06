@@ -3,9 +3,33 @@ const Saving = require('../models/Saving');
 const Member = require('../models/Member');
 const memberController = require('../controllers/memberController.js');
 const savingsController = require('../controllers/savingsController.js');
+const path = require('path');
+const fs = require('fs');
 
+const CONFIG = {
+    SUPPORTED_FORMATS: ['.xlsx', '.xls'],
+    HEADER_ROW_COUNT: 4
+};
+
+// Helper function to validate the uploaded file
+function validateFileUpload(file) {
+    if (!file || !file.path) {
+        return { valid: false, error: 'No file uploaded.' };
+    }
+    
+    const fileExtension = path.extname(file.originalname).toLowerCase();
+    if (!CONFIG.SUPPORTED_FORMATS.includes(fileExtension)) {
+        return { valid: false, error: 'Invalid file format. Only Excel files are supported.' };
+    }
+    
+    return { valid: true };
+}
+
+// Helper function to map month names to schema keys
 function mapMonthNameToSchemaKey(monthName) {
-    monthName = monthName && monthName.toLowerCase();
+    if (!monthName) return null;
+    
+    monthName = monthName.toLowerCase();
     const monthMap = {
         'january': 'jan',
         'february': 'feb',
@@ -20,17 +44,91 @@ function mapMonthNameToSchemaKey(monthName) {
         'november': 'nov',
         'december': 'dec'
     };
-    if (!monthName) return null;
-    return monthMap[monthName.toLowerCase()] || null;
+    
+    return monthMap[monthName] || null;
+}
+
+// Helper function to map member status
+function mapMemberStatus(status) {
+    if (!status) return 'Active';
+    
+    status = status.toLowerCase();
+    const statusMap = {
+        'active': 'Active',
+        'rws': 'RwS', // Retired with Savings
+        'rwos': 'RwoS' // Retired without Savings
+    };
+    return statusMap[status] || 'Active'; // default to 'Active' if not found
+}
+
+// Helper function to validate member data
+function validateMemberData(member, rowIndex) {
+    const errors = [];
+    
+    if (!member.name?.firstName?.trim()) {
+        errors.push('First name is required');
+    }
+    
+    if (!member.name?.lastName?.trim()) {
+        errors.push('Last name is required');
+    }
+    
+    if (!member.orgId?.trim()) {
+        errors.push('Organization ID is required');
+    }
+
+    return {
+        valid: errors.length === 0,
+        errors: errors.map(err => `Row ${rowIndex}: ${err}`)
+    };
+}
+
+// Helper function to process each member's data
+function processMemberData(row) {
+    return {
+        name: {
+            lastName: row[1] ? String(row[1]).trim() : '',
+            firstName: row[2] ? String(row[2]).trim() : '',
+        },
+        status: row[3] ? mapMemberStatus(String(row[3]).trim()) : 'Active',
+        orgId: row[4] ? String(row[4]).trim() : '',
+        parentName: row[5] && String(row[5]).trim() !== '' ? String(row[5]).trim() : 'Unknown'
+    };
+}
+
+// Helper function to safely parse numbers
+function parseNumber(value, defaultValue = 0) {
+    if (value === null || value === undefined || value === '') {
+        return defaultValue;
+    }
+    const num = Number(value);
+    return isNaN(num) ? defaultValue : num;
 }
 
 module.exports = {
     post: async (req, res) => {
         let issues = [];
+        let members = [];
+        let logCount = 0;
+        let nonEmptyRows = 0;
+        let hasResponded = false;
+        
         try {
-            if (!req.file || !req.file.path) {
-                return res.status(400).json({ success: false, message: 'No file uploaded.' });
+            const fileValidation = validateFileUpload(req.file);
+            if (!fileValidation.valid) {
+                req.session.massRegistrationSummary = {
+                    recordsDone: 0,
+                    recordsTotal: 0,
+                    errorCount: 1,
+                    issues: [fileValidation.error], 
+                    successRate: '0.00',
+                    message: 'File validation failed.'
+                };
+                hasResponded = true;
+                return res.redirect('/mass-register-done');
             }
+
+            // Read the uploaded Excel file
             const workbook = XLSX.readFile(req.file.path);
             const sheetName = workbook.SheetNames[0]; 
             const sheet = workbook.Sheets[sheetName];
@@ -40,45 +138,35 @@ module.exports = {
                 defval: '',
             });
             
-            let logCount = 0;
-            let headerCount = 4;
+            let headerCount = CONFIG.HEADER_ROW_COUNT;
             const template = rows[0];
             const headerRow = rows[1];
             const dataRows = rows.slice(3);
 
-            // DEBUGGING: Store members and print later
-            members = [];
-            nonEmptyRows = 0;
-
             for (let rowIdx = 0; rowIdx < dataRows.length; rowIdx++) {
                 const row = dataRows[rowIdx];
+                
                 // Skip completely empty rows without logging an issue
                 if (!row || row.every(cell => cell === '' || cell === null || cell === undefined)) {
                     continue;
                 }
                 
                 nonEmptyRows++;
-                // Skip rows with missing required fields and log an issue
-                if (!(row[1] && row[2] && row[3] && row[4])) {
-                    issues.push(`Row ${rowIdx + headerCount}: Missing required fields`);
+                const statusEmpty = !row[3] || String(row[3]).trim() === '';
+                let member = processMemberData(row);
+
+                if (statusEmpty) {
+                    issues.push(`Row ${rowIdx + headerCount}: Member status is empty, defaulting to 'Active'`);
+                }
+
+                // Validate member data
+                const validation = validateMemberData(member, rowIdx + headerCount);
+                if (!validation.valid) {
+                    issues.push(...validation.errors);
                     continue;
                 }
-                
-                const member = {
-                    name: {
-                        lastName: row[1] ? String(row[1]).trim() : '',
-                        firstName: row[2] ? String(row[2]).trim() : '',
-                    },
-                    status: row[3] ? String(row[3]).trim() : '',
-                    orgId: row[4] ? String(row[4]).trim() : '',
-                    parentName: row[5] && String(row[5]).trim() !== '' ? String(row[5]).trim() : 'Unknown'
-                };
 
                 try {
-                    // DEBUGGING: Print the member being processed
-                    console.log(`Processing member at index ${rowIdx}:`, member);
-                    
-                    // Updated: Handle the new response format from bulkRegisterMember
                     const memberResult = await memberController.bulkRegisterMember(member, {
                         groupId: req.session.groupId,
                         projectId: req.session.projectId,
@@ -100,89 +188,72 @@ module.exports = {
 
                         if (template[1] === 'YEARLY') {
                             for (let i = 6; i < headerRow.length; i += 2) {
-                                const value = dataRows[rowIdx][i];
+                                const value = parseNumber(dataRows[rowIdx][i]);
                                 year = headerRow[i];
-                                let matchValue = 0;
-                                if (i + 1 < headerRow.length) {
-                                    const matchRaw = dataRows[rowIdx][i + 1];
-                                    matchValue = matchRaw && !isNaN(Number(matchRaw)) ? Number(matchRaw) : 0;
-                                }
-                                if (year && value && !isNaN(Number(value))) {
-                                    // DEBUGGING: Print the saving details
-                                    console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Value: ${value}, Match: ${matchValue}`);
+                                const matchValue = parseNumber(dataRows[rowIdx][i + 1]);
+                                
+                                if (year && (value > 0 || matchValue > 0)) {
+                                    console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} - Year: ${year}, Value: ${value}, Match: ${matchValue}`);
+                                    
                                     savingDoc = new Saving({
                                         memberID: createdMember._id,
-                                        year: Number(year),
-                                        totalSaving: Number(value),
+                                        year: parseNumber(year),
+                                        totalSaving: value,
                                         totalMatch: matchValue,
                                     });
-                                    createdMember.totalSaving += Number(value);
-                                    createdMember.totalMatch += matchValue;
+                                    
                                     await savingDoc.save();
                                     createdMember.savings.push(savingDoc._id);
-
-                                    // DEBUGGING: Print member and saving details
-                                    console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} for year ${year}:`, {
-                                        totalSaving: savingDoc.totalSaving,
-                                        totalMatch: savingDoc.totalMatch
-                                    });
+                                    createdMember.totalSaving += value;
+                                    createdMember.totalMatch += matchValue;
                                 }
                             }
                         } else {
                             // MONTHLY ENCODING: accumulate all months for the year in one doc
-                            let yearTotalSaving = 0, yearTotalMatch = 0;
+                            let yearTotalSaving = 0;
+                            let yearTotalMatch = 0;
                             monthsData = {};
                             year = template[2];
 
                             for (let i = 6; i < headerRow.length; i += 2) {
                                 const month = headerRow[i];
-                                const value = dataRows[rowIdx][i];
-                                let matchValue = 0;
-                                if (i + 1 < headerRow.length) {
-                                    const matchRaw = dataRows[rowIdx][i + 1];
-                                    matchValue = matchRaw && !isNaN(Number(matchRaw)) ? Number(matchRaw) : 0;
-                                }
-                                if (month && value && !isNaN(Number(value))) {
+                                const value = parseNumber(dataRows[rowIdx][i]);
+                                const matchValue = parseNumber(dataRows[rowIdx][i + 1]);
+                                
+                               if (month && (value > 0 || matchValue > 0)) {
                                     let monthKey = mapMonthNameToSchemaKey(month);
                                     if (monthKey) {
                                         monthsData[monthKey] = {
-                                            savings: Number(value),
+                                            savings: value,
                                             match: matchValue
                                         };
-                                        yearTotalSaving += Number(value);
+                                        yearTotalSaving += value;
                                         yearTotalMatch += matchValue;
-                                        createdMember.totalSaving += Number(value);
-                                        createdMember.totalMatch += matchValue;
-
-                                        // DEBUGGING: Print the saving details
-                                        console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
+                                        
+                                        console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
                                     }
                                 }
                             }
+                            
+                            
                             if (Object.keys(monthsData).length > 0) {
                                 savingDoc = new Saving({
                                     memberID: createdMember._id,
-                                    year: Number(year),
+                                    year: parseNumber(year),
                                     ...monthsData,
                                     totalSaving: yearTotalSaving,
                                     totalMatch: yearTotalMatch,
                                 });
+                                
                                 await savingDoc.save();
                                 createdMember.savings.push(savingDoc._id);
-                                
-                                // DEBUGGING: Print member and saving details
-                                console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} for year ${year}:`, {
-                                    yearTotalSaving: savingDoc.totalSaving,
-                                    yearTotalMatch: savingDoc.totalMatch
-                                });
+                                createdMember.totalSaving += yearTotalSaving;
+                                createdMember.totalMatch += yearTotalMatch;
                             }
                         }
 
                         await createdMember.save();
-
-                        // DEBUGGING: Print the created member
-                        console.log("Created member:", createdMember);
-                        members[rowIdx] = createdMember; 
+                        members.push(createdMember); 
                         logCount++;
                         
                     } else {
@@ -206,16 +277,15 @@ module.exports = {
                 }
             }
             
-            // DEBUGGING: Prints the members after saving to the database
-            if (logCount > 0 ) {
+            if (logCount > 0) {
                 console.log(`Successfully processed ${logCount} members.`);
                 req.session.massRegistrationSummary = {
                     recordsDone: logCount,
                     recordsTotal: nonEmptyRows,
                     errorCount: nonEmptyRows - logCount,
                     issues: issues, 
-                    successRate: ((logCount / nonEmptyRows) * 100).toFixed(2),
-                    message: 'Some members were saved.'
+                    successRate: nonEmptyRows > 0 ? ((logCount / nonEmptyRows) * 100).toFixed(2) : '0.00',
+                    message: `Successfully processed ${logCount} of ${nonEmptyRows} members.`
                 };
             } else {
                 console.log('No members saved.');
@@ -232,17 +302,15 @@ module.exports = {
         } catch (err) {
             console.error('Unhandled error:', err);
             req.session.massRegistrationSummary = {
-                recordsDone: 0,
-                recordsTotal: 0,
-                errorCount: 0,
-                issues: issues,
+                recordsDone: logCount,
+                recordsTotal: nonEmptyRows || 0,
+                errorCount: (nonEmptyRows || 0) -logCount + 1,
+                issues: [...issues, `System error: ${err.message}`],
                 successRate: '0.00',
                 message: 'An error occurred while processing the file.'
             };
         } finally {
-            // discard the uploaded file
             if (req.file && req.file.path) {
-                const fs = require('fs');
                 try {
                     fs.unlinkSync(req.file.path);
                     console.log('File deleted successfully');
@@ -250,7 +318,10 @@ module.exports = {
                     console.error('Error deleting file:', err);
                 }
             }
-            return res.redirect('/mass-register-done');
+
+            if (!hasResponded) {
+                return res.redirect('/mass-register-done');
+            }
         }
     }
 };
