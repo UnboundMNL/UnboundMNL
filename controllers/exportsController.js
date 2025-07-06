@@ -16,6 +16,10 @@ const fs = require('fs');
 const { pipeline } = require('stream');
 const pipelineAsync = promisify(pipeline);
 
+const ejs = require('ejs');
+const path = require('path');
+const puppeteer = require('puppeteer');
+
 const exportProjectForCluster = async (project, res) => {
     const projectId = project._id;
     if (!projectId) {
@@ -373,7 +377,48 @@ const exportsController = {
         await zip.finalize();
 
         return zip;
-    }
+    },
+
+    exportReport: async(req, res) => {
+        try {
+            // Get member
+            const id = req.query.id || req.params.id;
+            const member = await Member.findById(id).populate('savings');
+
+            // Render the EJS template to HTML
+            const html = await ejs.renderFile(
+                path.join(__dirname, '../views/report.ejs'),
+                { member },
+                { async: true },
+            );
+
+            // Launch Puppeteer and generate PDF
+            const browser = await puppeteer.launch({
+                headless: true, // Use "new" for Puppeteer v20+, otherwise use true
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+            const page = await browser.newPage();
+            await page.setContent(html, { waitUntil: 'networkidle0' });
+
+            // Set Format, Orientation, etc.
+            const pdfBuffer = await page.pdf({
+                format: 'A4',
+                landscape: true,
+                printBackground: true,
+                margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' }
+            });
+
+            await browser.close();
+
+            // Send PDF as response
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
+            res.end(pdfBuffer);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Failed to generate PDF');
+        }
+    },
 }
 
 module.exports = exportsController;

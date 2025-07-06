@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaban ng Kaunlaran Family Savings Program</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .container {
+            width: 100%;
+            margin: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h3 {
+            margin: 0;
+            font-weight: bold;
+        }
+        .header h4 {
+            margin: 0;
+            font-weight: bold;
+        }
+        .info-section {
+            margin-bottom: 20px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            padding: 2px 5px;
+        }
+        .input-line {
+            border: none;
+            border-bottom: 1px solid black;
+            width: 100%;
+        }
+        .status-section {
+            display: inline-block;
+        }
+        .year-tables-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        .year-table-wrapper {
+            break-inside: avoid;
+        }
+        .savings-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+        .savings-table th, .savings-table td {
+            border: 1px solid black;
+            padding: 4px;
+            text-align: center;
+        }
+        .savings-table thead {
+            font-weight: bold;
+        }
+        .savings-table .month-col {
+            text-align: left;
+            padding-left: 5px;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .empty-cell {
+            height: 20px;
+        }
+        .year-input {
+            border: none;
+            font-weight: bold;
+            width: 60px;
+            text-align: center;
+        }
+        .page-break {
+            break-before: page;
+            page-break-before: always; /* for older browsers/PDF engines */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h3>Unbound Manila Foundation, Inc.</h3>
+        <h4>KABAN NG KAUNLARAN FAMILY SAVINGS PROGRAM (KKNFSP)</h4>
+    </div>
+
+    <div class="info-section">
+        <table class="info-table">
+            <tr>
+                <td style="width: 15%;">Name of Parent/Guardian:</td>
+                <td style="width: 55%;"><input type="text" class="input-line" value="<%= member?.parentName || '' %>"></td>
+                <td style="width: 5%;">SPU:</td>
+                <td style="width: 25%;"><input type="text" class="input-line"></td>
+            </tr>
+            <tr>
+                <td>Name of SM:</td>
+                <td><input type="text" class="input-line" value="<%= member ? member.name.firstName + ' ' + member.name.lastName : '' %>"></td>
+                <td>SHG:</td>
+                <td><input type="text" class="input-line" value="<%= member?.groupId || '' %>"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="status-section">
+                        (<%= member?.status === 'Active' ? '✔' : '' %>) Active
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        (<%= member?.status !== 'Active' ? '✔' : '' %>) Inactive
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="year-tables-container">
+        <%
+            const months = [
+                { key: 'jan', label: 'January' },
+                { key: 'feb', label: 'February' },
+                { key: 'mar', label: 'March' },
+                { key: 'apr', label: 'April' },
+                { key: 'may', label: 'May' },
+                { key: 'jun', label: 'June' },
+                { key: 'jul', label: 'July' },
+                { key: 'aug', label: 'August' },
+                { key: 'sep', label: 'September' },
+                { key: 'oct', label: 'October' },
+                { key: 'nov', label: 'November' },
+                { key: 'dec', label: 'December' }
+            ];
+            const numberOfYears = member && member.savings ? member.savings.length : 0;
+        %>
+
+        <% for(let i = 0; i < numberOfYears; i++) { 
+            const saving = member.savings[i];
+        %>
+            <div class="year-table-wrapper">
+                <table class="savings-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: center;">
+                                YEAR <input type="text" class="year-input" value="<%= saving.year %>">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Month</th>
+                            <th>SM</th>
+                            <th>MG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% months.forEach(month => { %>
+                            <tr>
+                                <td class="month-col"><%= month.label %></td>
+                                <td class="empty-cell"><%= saving[month.key]?.savings ?? '' %></td>
+                                <td class="empty-cell"><%= saving[month.key]?.match ?? '' %></td>
+                            </tr>
+                        <% }); %>
+                        <tr class="total-row">
+                            <td style="font-weight: bold;">TOTAL</td>
+                            <td class="empty-cell"><%= saving.totalSaving ?? '' %></td>
+                            <td class="empty-cell"><%= saving.totalMatch ?? '' %></td>
+                        </tr>
+                        <tr class="total-row">
+                            <td style="font-weight: bold;">GRAND TOTAL</td>
+                            <td class="empty-cell" colspan="2"><%= saving.totalSaving + saving.totalMatch ?? '' %></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </div> <!-- End of .year-tables-container -->
+
+    <div class="page-break">
+        <div style="display: flex; gap: 40px; margin-top: 30px;">
+            <!-- Summary Table -->
+            <table class="summary-table">
+                <tr>
+                    <td>TOTAL Savings</td>
+                    <td><input type="text" style="border: none; border-bottom: 1px solid black; width: 100px;" value="<%= member?.totalSaving || '' %>"></td>
+                </tr>
+                <tr>
+                    <td>TOTAL Matching Grant</td>
+                    <td><input type="text" style="border: none; border-bottom: 1px solid black; width: 100px;" value="<%= member?.totalMatch || '' %>"></td>
+                </tr>
+            </table>
+
+            <!-- Signatories Table -->
+            <table class="signatories-table">
+                <tr>
+                    <td style="font-weight: bold;">Prepared by:</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 2px;"></div>
+                        <span style="font-style: italic;">Kaban Treasurer</span>
+                    </td>
+                </tr>
+                <tr><td style="height: 15px;"></td></tr>
+                <tr>
+                    <td style="font-weight: bold;">Noted by:</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 2px;"></div>
+                        <span style="font-style: italic;">SHG Leader</span>
+                    </td>
+                </tr>
+                <tr><td style="height: 15px;"></td></tr>
+                <tr>
+                    <td style="font-weight: bold;">Checked and reviewed by:</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 2px;"></div>
+                        <span style="font-style: italic;">SEDP Chairman</span>
+                    </td>
+                </tr>
+                <tr><td style="height: 15px;"></td></tr>
+                <tr>
+                    <td>
+                        <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 2px;"></div>
+                        <span style="font-style: italic;">Socio-Economic Development Officer</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
