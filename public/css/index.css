@@ -1,6 +1,6 @@
 /* --------------- REUSABLE STYLES --------------- */
 /*@import url('https://fonts.googleapis.com/css?family=Montserrat Alternates');*/
-@import url('https://fonts.googleapis.com/css?family=Poppins');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700');
 
 :root {
     --border-color: #dee2e6;
@@ -237,6 +237,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-left: auto;
 }
 
 .top-bar .profile span {
@@ -291,6 +292,10 @@ main {
 
 
 .card-actions {
+    border-radius: 16px;
+    background: white;
+    filter: drop-shadow(#00000040 4px 4px 4px);
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -414,6 +419,10 @@ main {
     border-left: #031366 solid 6px;
 }
 
+.left-card-plainblue {
+    border-left: #004FE1 solid 6px;
+}
+
 .left-card-yellow {
     border-left: #E0A737 solid 6px;
 }
@@ -427,6 +436,7 @@ main {
     grid-template-columns: repeat(3, 1fr);
 }
 
+h3.page-title,
 h4.page-title {
     border-image: linear-gradient(to bottom, #FD3451, #47EBB3) 1;
     border-left: 4px solid;
@@ -441,6 +451,75 @@ h4.page-title {
     background: linear-gradient(to bottom, #FFFFFF, #FFE2E2);
 }
 
+.search-bar-new {
+    border-radius: 16px;
+    padding-left: 1rem;
+    height: 32px;
+    letter-spacing: 0.25rem;
+}
+
+.search-btn {
+    background: linear-gradient(to bottom, #68BC69, #25F827);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+}
+
+.search-btn img {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-search-bar {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    letter-spacing: 0.25rem;
+}
+
+.btn-red {
+    background: linear-gradient(to bottom, #E84848, #F37676);
+}
+
+.btn-yellow {
+    background: linear-gradient(to bottom, #FD9416, #E3A75F);
+}
+
+.savings-card {
+    border-radius: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #71F7C961;
+    width: 100%;
+    padding: 2rem;
+    margin-bottom: 1rem;
+}
+
+.mini-button {
+    border-radius: 12px;
+    height: 24px;
+    color: white;
+    border: none;
+    padding: 3px;
+    width: 100%;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+.mini-button.blue {
+    background: linear-gradient(to bottom, #031366, #0626CC);
+}
+
+.mini-button.yellow {
+    background: linear-gradient(to bottom, #E0A738, #F2C875);
+}
+
+.mini-button.red {
+    background: linear-gradient(to bottom, #FD3451, #F86F83);
+}
+
 /* OTHER UTILITY CLASSES */
 
 .flex {
@@ -451,9 +530,14 @@ h4.page-title {
     justify-content: center;
 }
 
+.flex-cross-bottom {
+    align-items: flex-end;
+}
+
 .flex-cross-center {
     align-items: center;
 }
+
 
 .flex-center {
     align-items: center;

@@ -4,6 +4,8 @@
     <%-include('components/headers.ejs', {authority, pageName: "Clusters"})%>
     
     <!-- CSS -->
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/clusters.css" />
     <link rel="stylesheet" href="/css/cardPages.css" />
     
     <!-- SCRIPTS -->
@@ -24,10 +26,31 @@
 
         <!-- Cluster Content -->
         <div class="p-4 mt-5">
-            <%- include('components/breadcrumb.ejs', {pageName: "Clusters"}) %>
+            <h3 class="Clusters page-title">Cluster Management</h3>
+
+            <div class="section-card cluster-overview-container-card">
+                <h3 class="cluster-overview-title">Overview</h3>
+                <div class="cluster-overview-container">
+                    <div class="cluster-overview-card red">
+                        <div class="cluster-overview-number"><%=totalClusters%></div>
+                        <div class="cluster-overview-label">Total Clusters</div>
+                    </div>
+                    <div class="cluster-overview-card green">
+                        <div class="cluster-overview-number"><%=totalSavings%></div>
+                        <div class="cluster-overview-label">Total Savings</div>
+                    </div>
+                    <div class="cluster-overview-card yellow">
+                        <div class="cluster-overview-number"><%=activeMembers%></div>
+                        <div class="cluster-overview-label">Active Members</div>
+                    </div>
+                    <div class="cluster-overview-card blue">
+                        <div class="cluster-overview-number"><%=locations%></div>
+                        <div class="cluster-overview-label">Locations</div>
+                    </div>
+                </div>
+            </div>
             
             <% var type = "Cluster";  %>
-            <h4 class="mt-3">Clusters</h4>
             <%- include('components/cardPages.ejs', { groupName: "All", groupId: "All", pageParts, type, authority}) %>
             <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>

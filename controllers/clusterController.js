@@ -54,8 +54,15 @@ const clusterController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
+
+                // TODO: get summary information
+                const totalClusters = 2;
+                const totalSavings = 0;
+                const activeMembers = 0;
+                const locations = 2;
+
                 dashbuttons = dashboardButtons(authority);
-                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, search: req.query.search });
+                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, search: req.query.search, totalClusters, activeMembers, totalSavings, locations });
             } else {
                 res.redirect("/");
             }

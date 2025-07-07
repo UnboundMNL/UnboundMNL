@@ -1,0 +1,54 @@
+<div class="heading">
+    <div class="heading-circle">
+	<%= name.split(' ').map(a=>a.charAt(0)).join('') %>
+    </div>
+    <div>Financial Report</div>
+</div>
+<div class="p-4 gap-2 flex flex-column" style="overflow: scroll;">
+    <div class="left-card left-card-blue summary-container">
+	<h3 class="summary-heading">Member Information:</h3>
+	<table class="summary">
+	    <tr class="summary-row">
+		<td class="summary-label">Name:</td>
+		<td class="summary-data"><%= name %></td>
+	    </tr>
+	    <tr class="summary-row">
+		<td class="summary-label">Member ID:</td>
+		<td class="summary-data"><%= memberID %></td>
+	    </tr>
+	    <tr class="summary-row">
+		<td class="summary-label">Account Type:</td>
+		<td class="summary-data"><%= accountType %></td>
+	    </tr>
+	    <tr class="summary-row">
+		<td class="summary-label">Registration Date:</td>
+		<td class="summary-data"><%= regDate.toLocaleDateString("en-US", dateOptions) %></td>
+	    </tr>
+	    <tr class="summary-row">
+		<td class="summary-label">Report Period:</td>
+		<td class="summary-data"><%= reportStartDate.toLocaleDateString("en-US", dateOptions)%> - <%= reportEndDate.toLocaleDateString("en-US", dateOptions)%></td>
+	    </tr>
+	    <tr class="summary-row">
+		<td class="summary-label">Generated On:</td>
+		<td class="summary-data"><%= genDate.toLocaleDateString("en-US", dateOptions) %></td>
+	    </tr>
+	</table>
+    </div>
+    <h3 class="summary-heading">Finance Summary</h3>
+    <div class="left-card left-card-green centered-number">
+	<div class="centered-number-label">TOTAL CONTRIBUTIONS</div>
+	<div class="centered-number-green">₱12345</div>
+    </div>
+    <div class="left-card left-card-red centered-number">
+	<div class="centered-number-label">TOTAL WITHDRAWALS</div>
+	<div class="centered-number-red">₱12345</div>
+    </div>
+    <div class="left-card left-card-plainblue centered-number">
+	<div class="centered-number-label">NET BALANCE</div>
+	<div class="centered-number-plainblue">₱12345</div>
+    </div>
+    <div class="left-card">
+	<canvas id="myChart"></canvas>
+    </div>
+</div>
+

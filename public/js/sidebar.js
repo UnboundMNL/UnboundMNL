@@ -13,7 +13,7 @@ function toggleNav(bool) {
             });
             navHeader.style.display = 'block';
             nav.style.width = "14rem";
-            topBar.style.paddingRight = "15rem";
+            // topBar.style.paddingRight = "15rem";
             main.style.marginLeft = "14rem";
         } else {
             nav.classList.remove("navOpen");
@@ -22,7 +22,7 @@ function toggleNav(bool) {
             });
             navHeader.style.display = 'none';
             nav.style.width = "4.5rem";
-            //topBar.style.paddingRight = "6.5rem";
+            // topBar.style.paddingRight = "6.5rem";
             main.style.marginLeft = "4.5rem";
         }
     } else {
