@@ -1,4 +1,4 @@
-<form action="/uploadUsers" method="post" enc-type="multipart/form-data" class="register-container w-full">
+<form action="/uploadUsers" method="post" enctype="multipart/form-data" class="register-container w-full">
 	<h4>Account Registration</h4><hr>
 	<div class="edit-container flex flex-column" style="gap: 1em">
 		<h4>Upload Excel File</h4>
@@ -9,12 +9,22 @@
 			<div id="fileName"></div>
 			<label for="fileUpload" class="btn btn-upload-files" style="width: fit-content" type="button">Upload Files</label>
 		</label>
-		<button class="btn btn-primary" style="width: fit-content; align-self: center">Register Accounts</button>
+		<button id="registerButton" class="btn btn-primary" style="width: fit-content; align-self: center" disabled>Register Accounts</button>
 	</div>
 </form>
 
 <script>
-	document.querySelector('#fileUpload').onchange = function(p) {
-		document.querySelector('#fileName').innerText = this.files[0].name
-	}
+	const fileInput = document.querySelector('#fileUpload');
+	const fileNameDisplay = document.querySelector('#fileName');
+	const registerBtn = document.querySelector('#registerButton');
+
+	fileInput.onchange = function () {
+		if (this.files.length > 0) {
+			fileNameDisplay.innerText = this.files[0].name;
+			registerBtn.disabled = false; 
+		} else {
+			fileNameDisplay.innerText = '';
+			registerBtn.disabled = true;
+		}
+	};
 </script>

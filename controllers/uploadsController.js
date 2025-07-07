@@ -26,7 +26,11 @@ function mapMonthNameToSchemaKey(monthName) {
 
 module.exports = {
     post: async (req, res) => {
+        let issues = [];
         try {
+            if (!req.file || !req.file.path) {
+                return res.status(400).json({ success: false, message: 'No file uploaded.' });
+            }
             const workbook = XLSX.readFile(req.file.path);
             const sheetName = workbook.SheetNames[0]; 
             const sheet = workbook.Sheets[sheetName];
@@ -37,18 +41,29 @@ module.exports = {
             });
             
             let logCount = 0;
+            let headerCount = 4;
             const template = rows[0];
             const headerRow = rows[1];
             const dataRows = rows.slice(3);
 
             // DEBUGGING: Store members and print later
             members = [];
+            nonEmptyRows = 0;
 
             for (let rowIdx = 0; rowIdx < dataRows.length; rowIdx++) {
                 const row = dataRows[rowIdx];
-                // Skip rows with missing required fields
-                if (!(row[1] && row[2] && row[3] && row[4] && row[5])) continue;
-
+                // Skip completely empty rows without logging an issue
+                if (!row || row.every(cell => cell === '' || cell === null || cell === undefined)) {
+                    continue;
+                }
+                
+                nonEmptyRows++;
+                // Skip rows with missing required fields and log an issue
+                if (!(row[1] && row[2] && row[3] && row[4])) {
+                    issues.push(`Row ${rowIdx + headerCount}: Missing required fields`);
+                    continue;
+                }
+                
                 const member = {
                     name: {
                         lastName: row[1] ? String(row[1]).trim() : '',
@@ -56,17 +71,29 @@ module.exports = {
                     },
                     status: row[3] ? String(row[3]).trim() : '',
                     orgId: row[4] ? String(row[4]).trim() : '',
-                    parentName: row[5] ? String(row[5]).trim() : ''
+                    parentName: row[5] && String(row[5]).trim() !== '' ? String(row[5]).trim() : 'Unknown'
                 };
 
                 try {
                     // DEBUGGING: Print the member being processed
                     console.log(`Processing member at index ${rowIdx}:`, member);
                     
-                    // TODO: Error handling  for existing members
-                    const createdMember = await memberController.bulkRegisterMember(member);
+                    // Updated: Handle the new response format from bulkRegisterMember
+                    const memberResult = await memberController.bulkRegisterMember(member, {
+                        groupId: req.session.groupId,
+                        projectId: req.session.projectId,
+                        clusterId: req.session.clusterId
+                    });
 
-                    if (createdMember) {
+                    if (memberResult && memberResult.success) {
+                        const createdMember = memberResult.member;
+                        
+                        // Log warning if there was an update error
+                        if (memberResult.warning) {
+                            console.warn(`${memberResult.warning}`);
+                            issues.push(`Row ${rowIdx + headerCount}: Warning - ${memberResult.warning}`);
+                        }
+                        
                         let savingDoc = null;
                         let monthsData = {};
                         let year = null;
@@ -117,17 +144,19 @@ module.exports = {
                                 }
                                 if (month && value && !isNaN(Number(value))) {
                                     let monthKey = mapMonthNameToSchemaKey(month);
-                                    monthsData[monthKey] = {
-                                        savings: Number(value),
-                                        match: matchValue
-                                    };
-                                    yearTotalSaving += Number(value);
-                                    yearTotalMatch += matchValue;
-                                    createdMember.totalSaving += Number(value);
-                                    createdMember.totalMatch += matchValue;
+                                    if (monthKey) {
+                                        monthsData[monthKey] = {
+                                            savings: Number(value),
+                                            match: matchValue
+                                        };
+                                        yearTotalSaving += Number(value);
+                                        yearTotalMatch += matchValue;
+                                        createdMember.totalSaving += Number(value);
+                                        createdMember.totalMatch += matchValue;
 
-                                    // DEBUGGING: Print the saving details
-                                    console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
+                                        // DEBUGGING: Print the saving details
+                                        console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
+                                    }
                                 }
                             }
                             if (Object.keys(monthsData).length > 0) {
@@ -155,37 +184,73 @@ module.exports = {
                         console.log("Created member:", createdMember);
                         members[rowIdx] = createdMember; 
                         logCount++;
+                        
                     } else {
-                        console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                        // Handle different error types from the memberResult
+                        if (memberResult && memberResult.error === 'DUPLICATE_ORG_ID') {
+                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created - duplicate ID.`);
+                            issues.push(`Row ${rowIdx + headerCount}: Member with ID ${member.orgId} already exists.`);
+                        } else if (memberResult && memberResult.error === 'CREATION_ERROR') {
+                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created - creation error.`);
+                            issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${memberResult.message}`);
+                        } else {
+                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                            issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                        }
                         continue;
                     }
+                
                 } catch (error) {
                     console.error(`Error saving member ${member.name?.firstName} ${member.name?.lastName}:`, error);
+                    issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${error.message}`);
                 }
             }
             
             // DEBUGGING: Prints the members after saving to the database
             if (logCount > 0 ) {
                 console.log(`Successfully processed ${logCount} members.`);
-                res.status(200).json({ success: true, message: 'Excel file processed successfully.', members });
+                req.session.massRegistrationSummary = {
+                    recordsDone: logCount,
+                    recordsTotal: nonEmptyRows,
+                    errorCount: nonEmptyRows - logCount,
+                    issues: issues, 
+                    successRate: ((logCount / nonEmptyRows) * 100).toFixed(2),
+                    message: 'Some members were saved.'
+                };
             } else {
                 console.log('No members saved.');
-                res.status(400).json({ success: false, message: 'No members saved.' });
+                req.session.massRegistrationSummary = {
+                    recordsDone: 0,
+                    recordsTotal: nonEmptyRows,
+                    errorCount: nonEmptyRows,
+                    issues: issues,
+                    successRate: '0.00',
+                    message: 'No members were saved.'
+                };
             }
             
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ success: false, message: 'Failed to process Excel file.' });
+            console.error('Unhandled error:', err);
+            req.session.massRegistrationSummary = {
+                recordsDone: 0,
+                recordsTotal: 0,
+                errorCount: 0,
+                issues: issues,
+                successRate: '0.00',
+                message: 'An error occurred while processing the file.'
+            };
         } finally {
             // discard the uploaded file
-            const fs = require('fs');
-            fs.unlink(req.file.path, (err) => {
-                if (err) {
-                    console.error('Error deleting file:', err);
-                } else {
+            if (req.file && req.file.path) {
+                const fs = require('fs');
+                try {
+                    fs.unlinkSync(req.file.path);
                     console.log('File deleted successfully');
+                } catch (err) {
+                    console.error('Error deleting file:', err);
                 }
-            });
+            }
+            return res.redirect('/mass-register-done');
         }
     }
 };
