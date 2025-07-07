@@ -284,6 +284,7 @@ const memberController = {
             await newMember.save();
 
             // If session data is provided, update group/project/cluster totals
+            // TODO: UPDATE DEPENDING ON USER
             if (sessionData && sessionData.groupId && sessionData.projectId && sessionData.clusterId) {
                 try {
                     const group = await Group.findById(sessionData.groupId);
