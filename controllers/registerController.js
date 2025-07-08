@@ -105,15 +105,68 @@ const registerController = {
         const username = user.username;
         dashbuttons = dashboardButtons(authority);
         let clusterChoices;
-        if (authority == "Treasurer") {
-          return res.redirect("/");
-        }
+        //if (authority == "Treasurer") {
+        //  return res.redirect("/");
+        //}
         if (authority == "Admin") {
           clusterChoices = await Cluster.find({});
         } else {
           clusterChoices = await Cluster.findById(req.session.clusterId);
         }
-        res.render("massRegistration", { authority, username, dashbuttons, sidebar, clusterChoices });
+
+        ///const subprojects = null;
+
+        // TODO: add data
+        // shape must be like this
+        // id can have dashes or not, just make sure it is consistent
+        // this id is passed directly through form
+        const subprojects = [
+          {
+            '_id': '533686c6-5b5e-11f0-b4cc-fba2f2c0320a',
+            'name': 'Project 1',
+            'groups': [
+              '45385ec8-5b5e-11f0-9677-db8c863b48e5',
+              '70f59abc-5b5e-11f0-bd3c-73c4f5a9919b'
+            ]
+          },
+          {
+            '_id': '4fa6d9fc-5b5e-11f0-bf8c-63da6b061f11',
+            'name': 'Project 2',
+            'groups': [
+              '75bbd480-5b5e-11f0-bb6a-83bfe7555433',
+              '7774d114-5b5e-11f0-a942-5b80ac11610c',
+              '2404e7f0-5b61-11f0-9119-9b1f069ff1f3'
+            ]
+          },
+        ]
+        const shgs = [
+          {
+            '_id': '45385ec8-5b5e-11f0-9677-db8c863b48e5',
+            'name': 'Cluster 1 SHG 1'
+          },
+          {
+            '_id': '70f59abc-5b5e-11f0-bd3c-73c4f5a9919b',
+            'name': 'Cluster 1 SHG 2'
+          },
+          {
+            '_id': '75bbd480-5b5e-11f0-bb6a-83bfe7555433',
+            'name': 'Cluster 2 SHG 1'
+          },
+          {
+            '_id': '7774d114-5b5e-11f0-a942-5b80ac11610c',
+            'name': 'Cluster 2 SHG 2'
+          },
+          {
+            '_id': '2404e7f0-5b61-11f0-9119-9b1f069ff1f3',
+            'name': 'Cluster 2 SHG 3'
+          },
+        ]
+
+        res.render("massRegistration", {
+          authority, username, dashbuttons, sidebar,
+          subprojects: JSON.stringify(subprojects),
+          shgs: JSON.stringify(shgs)
+        });
       } else {
         res.redirect("/");
       }
@@ -124,42 +177,42 @@ const registerController = {
   },
   massRegistrationDone: async (req, res) => {
     try {
-        if (req.session.isLoggedIn) {
-            const userID = req.session.userId;
-            const sidebar = req.session.sidebar;
-            const user = await User.findById(userID);
-            const authority = user.authority;
-            const username = user.username;
-            dashbuttons = dashboardButtons(authority);
-            let clusterChoices;
-            if (authority == "Treasurer") {
-                return res.redirect("/");
-            }
-            if (authority == "Admin") {
-                clusterChoices = await Cluster.find({});
-            } else {
-                clusterChoices = await Cluster.findById(req.session.clusterId);
-            }
-
-            const summary = req.session.massRegistrationSummary || {};
-            delete req.session.massRegistrationSummary;
-
-            res.render("massRegistrationSummary", {
-                authority, username, dashbuttons, sidebar, clusterChoices,
-                recordsDone: summary.recordsDone,
-                recordsTotal: summary.recordsTotal,
-                errorCount: summary.errorCount,
-                issues: summary.issues,
-                successRate: summary.successRate
-            });
-        } else {
-            res.redirect("/");
+      if (req.session.isLoggedIn) {
+        const userID = req.session.userId;
+        const sidebar = req.session.sidebar;
+        const user = await User.findById(userID);
+        const authority = user.authority;
+        const username = user.username;
+        dashbuttons = dashboardButtons(authority);
+        let clusterChoices;
+        if (authority == "Treasurer") {
+          return res.redirect("/");
         }
+        if (authority == "Admin") {
+          clusterChoices = await Cluster.find({});
+        } else {
+          clusterChoices = await Cluster.findById(req.session.clusterId);
+        }
+
+        const summary = req.session.massRegistrationSummary || {};
+        delete req.session.massRegistrationSummary;
+
+        res.render("massRegistrationSummary", {
+          authority, username, dashbuttons, sidebar, clusterChoices,
+          recordsDone: summary.recordsDone,
+          recordsTotal: summary.recordsTotal,
+          errorCount: summary.errorCount,
+          issues: summary.issues,
+          successRate: summary.successRate
+        });
+      } else {
+        res.redirect("/");
+      }
     } catch (error) {
-        console.error(error);
-        return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+      console.error(error);
+      return res.status(500).render("fail", { error: "An error occurred while fetching data." });
     }
-}
+  }
 }
 
 module.exports = registerController;

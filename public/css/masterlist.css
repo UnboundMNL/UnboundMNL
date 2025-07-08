@@ -4,7 +4,7 @@ table {
 }
 
 .table th {
-    background-color: var(--secondary-color);
+    background-color: var(--table-header-color);
     color: white;
     font-weight: 500;
 }

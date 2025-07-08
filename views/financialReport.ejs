@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%-include('components/headers.ejs', {authority, pageName: "Dashboard"})%>
+    <%-include('components/headers.ejs', {authority, pageName: "Financial Report"})%>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/report.css" />
     
     <!-- SCRIPTS -->
     <script src="/js/chart.js"></script>
@@ -23,7 +23,7 @@
         <%- include('components/navbars/topNavbar.ejs')%>
 
         <!-- Dashboard content -->        
-        <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons, nCluster, nProject, nGroup, nMember, savings})%>
+        <%- include('components/financialReportContent.ejs', {})%>
         <script>open('dashboardButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
         <% const months = [monthCounts["jan"], monthCounts["feb"], monthCounts["mar"], monthCounts["apr"], monthCounts["may"], monthCounts["jun"],
