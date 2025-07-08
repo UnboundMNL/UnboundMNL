@@ -70,6 +70,7 @@
 .dashboard-org-structure {
     background: linear-gradient(-0.16turn, #FFA2AF, #FD746D);
     min-width: 60%;
+    max-width: 100% !important;
 }
 
 .dashboard-card {
