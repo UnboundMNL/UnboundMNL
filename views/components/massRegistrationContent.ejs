@@ -49,13 +49,13 @@
 	templateSel.onchange = updateTemplateSel
 	updateTemplateSel({target: templateSel})
 
-	const subprojects = JSON.parse('<%- subprojects %>')
-	const shgs = JSON.parse('<%- shgs %>')
+	const subprojects = JSON.parse(`<%- subprojects %>`)
+	const shgs = JSON.parse(`<%- shgs %>`)
 
 	console.log({subprojects, shgs})
 
-	const subprojectSelect = document.querySelector('#subproject')
-	const shgSelect = document.querySelector('#shg')
+	const subprojectSelect = document.querySelector(`#subproject`)
+	const shgSelect = document.querySelector(`#shg`)
 
 	const createOption = (id, displayValue) => {
 		const elm = document.createElement('option')
