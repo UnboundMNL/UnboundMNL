@@ -1,0 +1,81 @@
+[{
+  "_id": {
+    "$oid": "672ed62985c8e9472958dec2"
+  },
+  "SPU": "Dolores",
+  "name": "Sta. Lucia 2",
+  "location": "Sta. Lucia 2",
+  "depositoryBank": "Yakap at Halik Quezon 1",
+  "bankAccountType": "Savings",
+  "bankAccountNum": 119202023,
+  "SHGLeader": {
+    "firstName": "Amilen",
+    "lastName": "Muring",
+    "contatNo": "09104164199"
+  },
+  "SEDPChairman": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "kabanTreasurer": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "kabanAuditor": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "members": [
+    {
+      "$oid": "672ed6d385c8e9472958ded5"
+    },
+    {
+      "$oid": "6763b1832bd0f0e4a0289608"
+    },
+    {
+      "$oid": "6763b62d2bd0f0e4a028a374"
+    },
+    {
+      "$oid": "679ad022a1ae98e684456ffc"
+    }
+  ],
+  "totalMembers": 4,
+  "totalKaban": 2500
+},
+{
+  "_id": {
+    "$oid": "676375fa8a872d93575ea57f"
+  },
+  "SPU": "San Narciso",
+  "name": "Abuyog",
+  "location": "SHG 1",
+  "depositoryBank": "",
+  "bankAccountType": "",
+  "bankAccountNum": null,
+  "SHGLeader": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "SEDPChairman": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "kabanTreasurer": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "kabanAuditor": {
+    "firstName": "",
+    "lastName": "",
+    "contatNo": ""
+  },
+  "members": [],
+  "totalMembers": 0,
+  "totalKaban": 0
+}]
