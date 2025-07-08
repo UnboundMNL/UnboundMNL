@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%-include('components/headers.ejs', {authority, pageName: "Financial Report"})%>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/report.css" />
+    
+    <!-- SCRIPTS -->
+    <script src="/js/chart.js"></script>
+    <script src="/js/reload.js"></script>
+
+    <!-- CHART -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="body-bg">
+    
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
+    
+    <main>
+        <!-- Top navigation bar -->
+        <%- include('components/navbars/topNavbar.ejs')%>
+
+        <!-- Dashboard content -->        
+        <%- include('components/financialReportContent.ejs', {})%>
+        <script>open('dashboardButton')</script>
+        <%-include('components/popups/logoutPopup.ejs') %>
+        <% const months = [monthCounts["jan"], monthCounts["feb"], monthCounts["mar"], monthCounts["apr"], monthCounts["may"], monthCounts["jun"],
+            monthCounts["jul"], monthCounts["aug"], monthCounts["sep"], monthCounts["oct"], monthCounts["nov"], monthCounts["dec"] ]; %>
+        <script>
+            chart(JSON.stringify("<%=months%>"));
+        </script>
+    </main>
+</body>
+</html>

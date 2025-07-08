@@ -10,6 +10,7 @@ const User = require('../models/User');
 const profileController = require('../controllers/profileController');
 
 router.get("/dashboard", profileController.dashboard);
+router.get("/financial-report", profileController.report)
 router.get("/profile", profileController.profile);
 router.patch("/editProfile", profileController.editProfile);
 router.get("/retrieveUsernameList", profileController.retrieveUsernameList);
