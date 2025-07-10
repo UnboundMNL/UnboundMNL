@@ -11,11 +11,14 @@
 		</label>
 
 		<select id="template" name="template" defaultValue="yearly">
-			<option value="yearly">Yearly</option>
-			<option value="monthly">Monthly</option>
+			<option value="YEARLY">Yearly</option>
+			<option value="MONTHLY">Monthly</option>
 		</select>
 		<input type="number" name="year" id="year" placeholder="year" hidden>
 
+		<% if (authority != 'SEDO' && authority != 'Treasurer') { %>
+			<select id="cluster" name="cluster"></select>
+		<% } %>
 		<% if (authority != 'Treasurer') { %>
 			<select id="subproject" name="subproject"></select>
 			<select id="shg" name="shg"></select>
@@ -26,62 +29,196 @@
 </form>
 
 <script>
-	const fileInput = document.querySelector('#fileUpload');
-	const fileNameDisplay = document.querySelector('#fileName');
-	const registerBtn = document.querySelector('#registerButton');
+    const fileInput = document.querySelector('#fileUpload');
+    const fileNameDisplay = document.querySelector('#fileName');
+    const registerBtn = document.querySelector('#registerButton');
 
-	fileInput.onchange = function () {
-		if (this.files.length > 0) {
-			fileNameDisplay.innerText = this.files[0].name;
-			registerBtn.disabled = false; 
-		} else {
-			fileNameDisplay.innerText = '';
-			registerBtn.disabled = true;
-		}
-	};
+    const templateSel = document.querySelector("#template")
+    const yearField = document.querySelector("#year")
+    const clusterSelect = document.querySelector(`#cluster`)
+    const subprojectSelect = document.querySelector(`#subproject`)
+    const shgSelect = document.querySelector(`#shg`)
 
-	const templateSel = document.querySelector("#template")
-	const yearField = document.querySelector("#year")
-	const updateTemplateSel = (e) => {
-		if (e.target.value == "monthly") yearField.hidden = false
-		else yearField.hidden = true
-	}
-	templateSel.onchange = updateTemplateSel
-	updateTemplateSel({target: templateSel})
+    const clusters = JSON.parse(`<%- typeof clusters !== 'undefined' ? JSON.stringify(clusters) : '[]' %>`)
+    const subprojects = JSON.parse(`<%- subprojects %>`)
+    const shgs = JSON.parse(`<%- shgs %>`)
 
-	const subprojects = JSON.parse(`<%- subprojects %>`)
-	const shgs = JSON.parse(`<%- shgs %>`)
+    console.log({clusters, subprojects, shgs})
 
-	console.log({subprojects, shgs})
+    const updateRegisterButtonState = () => {
+        let canSubmit = true;
+        
+        if (!fileInput.files || fileInput.files.length === 0) {
+            canSubmit = false;
+        }
+        
+        if (templateSel && templateSel.value === 'MONTHLY' && (!yearField.value || yearField.value.trim() === '')) {
+            canSubmit = false;
+        }
+        
+        <% if (authority == 'Admin') { %>
+            if (!clusterSelect?.value || !subprojectSelect?.value || !shgSelect?.value) {
+                canSubmit = false;
+            }
+        <% } else if (authority == 'SEDO') { %>
+            if (!subprojectSelect?.value || !shgSelect?.value) {
+                canSubmit = false;
+            }
+        <% } else if (authority == 'Treasurer') { %>
+        <% } %>
+        
+        registerBtn.disabled = !canSubmit;
+        console.log('Register button state:', canSubmit ? 'enabled' : 'disabled');
+    };
 
-	const subprojectSelect = document.querySelector(`#subproject`)
-	const shgSelect = document.querySelector(`#shg`)
+    fileInput.onchange = function () {
+        if (this.files.length > 0) {
+            fileNameDisplay.innerText = this.files[0].name;
+            updateRegisterButtonState();
+        } else {
+            fileNameDisplay.innerText = '';
+            updateRegisterButtonState();
+        }
+    };
 
-	const createOption = (id, displayValue) => {
-		const elm = document.createElement('option')
-		elm.innerText = displayValue
-		elm.value = id
-		return elm
-	}
+    const updateTemplateSel = (e) => {
+        if (e.target.value == "MONTHLY") {
+            yearField.hidden = false
+            yearField.required = true;
+        } else {
+            yearField.hidden = true;
+            yearField.required = false;
+            yearField.value = ''; 
+        }
 
-	const updateOptions = (options, elm) => {
-		elm.innerHTML = "" // clear
-		console.log(options)
-		options.forEach(o => {
-			elm.appendChild(createOption(o.id, o.value))
-		})
-		elm.value = options[0]?.id || ''
-	}
+        updateRegisterButtonState();
+    }
+    templateSel.onchange = updateTemplateSel
+    updateTemplateSel({target: templateSel})
 
-	updateOptions(subprojects.map(p => ({id: p._id, value: p.name})), subprojectSelect)
+    const createOption = (id, displayValue) => {
+        const elm = document.createElement('option')
+        elm.innerText = displayValue
+        elm.value = id
+        return elm
+    }
 
-	const updateShgs = (e) => {
-		const sp = subprojects.find(p => p._id == e.target.value)
-		const validShgs = shgs.filter(s => sp
-											.groups
-											.includes(s._id))
-		updateOptions(validShgs.map(g => ({id: g._id, value: g.name})), shgSelect)
-	}
-	subprojectSelect.onchange = updateShgs
-	updateShgs({ target: subprojectSelect })
+    const updateOptions = (options, elm) => {
+        if (!elm) return;
+        
+        elm.innerHTML = ""; 
+
+        if (options.length === 0) {
+            elm.appendChild(createOption('', 'No options available'));
+            return;
+        }
+        
+        elm.appendChild(createOption('', `Select ${elm.id}`));
+        
+        console.log(`Updating ${elm.id} with options:`, options);
+        options.forEach(o => {
+            elm.appendChild(createOption(o.id, o.value))
+        });
+        
+        elm.value = '';
+    }
+
+    const updateShgs = (e) => {
+        const selectedProjectId = e.target.value;
+        
+        if (!selectedProjectId) {
+            updateOptions([], shgSelect);
+            updateRegisterButtonState();
+            return;
+        }
+        
+        const sp = subprojects.find(p => p._id == selectedProjectId);
+        
+        if (!sp || !sp.groups) {
+            updateOptions([], shgSelect);
+            updateRegisterButtonState();
+            return;
+        }
+        
+        const validShgs = shgs.filter(s => sp.groups.includes(s._id));
+        updateOptions(validShgs.map(g => ({id: g._id, value: g.name})), shgSelect);
+        updateRegisterButtonState();
+    }
+
+    // Initialize dropdowns based on authority
+    <% if (authority == 'Admin') { %>
+        if (clusterSelect && clusters.length > 0) {
+            updateOptions(clusters.map(c => ({id: c._id, value: c.name})), clusterSelect);
+
+            const updateSubprojects = (e) => {
+                const clusterId = e.target.value;
+                
+                if (!clusterId) {
+                    updateOptions([], subprojectSelect);
+                    updateOptions([], shgSelect);
+                    updateRegisterButtonState();
+                    return;
+                }
+                
+                const clusterProjects = subprojects.filter(p => p.cluster == clusterId);
+                updateOptions(clusterProjects.map(p => ({id: p._id, value: p.name})), subprojectSelect);
+                updateOptions([], shgSelect); // Clear groups when cluster changes
+                updateRegisterButtonState();
+            }
+            
+            clusterSelect.onchange = updateSubprojects;
+        }
+    <% } else if (authority == 'SEDO') { %>
+        if (subprojectSelect && subprojects.length > 0) {
+            updateOptions(subprojects.map(p => ({id: p._id, value: p.name})), subprojectSelect);
+        }
+    <% } else if (authority == 'Treasurer') { %>
+        console.log('Treasurer mode - no dropdowns needed');
+    <% } %>
+
+    // Set up event listeners for non-Treasurer users
+    <% if (authority != 'Treasurer') { %>
+        if (subprojectSelect) {
+            subprojectSelect.onchange = updateShgs;
+        }
+        if (shgSelect) {
+            shgSelect.addEventListener('change', updateRegisterButtonState);
+        }
+    <% } %>
+
+    // Add event listeners for year field
+    if (yearField) {
+        yearField.addEventListener('input', updateRegisterButtonState);
+        yearField.addEventListener('change', updateRegisterButtonState);
+    }
+
+    // Initial validation
+    updateRegisterButtonState();
+
+    // Form submit validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        if (templateSel.value === 'MONTHLY') {
+            const year = parseInt(yearField.value);
+            if (!year) {
+                e.preventDefault();
+                alert('Please enter a valid year');
+                return false;
+            }
+        }
+        
+        <% if (authority == 'Admin') { %>
+            if (!clusterSelect.value || !subprojectSelect.value || !shgSelect.value) {
+                e.preventDefault();
+                alert('Please select cluster, project, and group before uploading');
+                return false;
+            }
+        <% } else if (authority == 'SEDO') { %>
+            if (!subprojectSelect.value || !shgSelect.value) {
+                e.preventDefault();
+                alert('Please select project and group before uploading');
+                return false;
+            }
+        <% } %>
+    });
 </script>

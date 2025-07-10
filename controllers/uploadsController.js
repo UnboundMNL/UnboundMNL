@@ -1,6 +1,11 @@
 const XLSX = require('xlsx');
 const Saving = require('../models/Saving');
+const User = require('../models/User');
+const Group = require('../models/Group');       
+const Project = require('../models/Project');   
+const Cluster = require('../models/Cluster');   
 const memberController = require('../controllers/memberController.js');
+const savingsController = require('../controllers/savingsController.js');
 const path = require('path');
 const fs = require('fs');
 
@@ -22,6 +27,39 @@ function validateFileUpload(file) {
     }
     
     return { valid: true };
+}
+
+// Helper function to validate the encoding type
+function validateEncodingType(encoding, headerRow) {
+    let valid = true;
+    let error = '';
+
+    for (let i = 4; i < headerRow.length; i++) {
+        const header = headerRow[i];
+        const headerStr = header ? String(header).trim() : '';
+
+        if (encoding === 'YEARLY') {
+            // For YEARLY, expect 4-digit years
+            if (header && !/^\d{4}$/.test(headerStr)) {
+                valid = false;
+                error = `Invalid year format in header: '${headerStr}'. Expected 4-digit year.`;
+                break;
+            }
+        } else if (encoding === 'MONTHLY') {
+            // For MONTHLY, expect valid month names
+            const validMonths = [
+                'january', 'february', 'march', 'april', 'may', 'june',
+                'july', 'august', 'september', 'october', 'november', 'december'
+            ];
+            if (header && !validMonths.includes(headerStr.toLowerCase())) {
+                valid = false;
+                error = `Invalid month name in header: '${headerStr}'. Expected one of: ${validMonths.join(', ')}.`;
+                break;
+            }
+        }
+    }
+
+    return { valid, error };
 }
 
 // Helper function to map month names to schema keys
@@ -132,6 +170,48 @@ module.exports = {
         let hasResponded = false;
         
         try {
+            const selectedCluster = req.body.cluster;
+            const selectedSubproject = req.body.subproject;
+            const selectedShg = req.body.shg;
+            const encoding = req.body.template;
+            
+            console.log('Form selections:');
+            console.log('- Cluster:', selectedCluster);
+            console.log('- Subproject:', selectedSubproject);
+            console.log('- SHG:', selectedShg);
+            
+            // Validate that required selections are made
+            const authority = req.session.authority || (await User.findById(req.session.userId))?.authority;
+            
+            if (authority === 'Admin') {
+                if (!selectedCluster || !selectedSubproject || !selectedShg) {
+                    req.session.massRegistrationSummary = {
+                        recordsDone: 0,
+                        recordsTotal: 0,
+                        errorCount: 1,
+                        issues: ['Please select cluster, project, and group before uploading.'],
+                        successRate: '0.00',
+                        message: 'Missing required selections.'
+                    };
+                    hasResponded = true;
+                    return res.redirect('/mass-register-done');
+                }
+            } else if (authority === 'SEDO') {
+                if (!selectedSubproject || !selectedShg) {
+                    req.session.massRegistrationSummary = {
+                        recordsDone: 0,
+                        recordsTotal: 0,
+                        errorCount: 1,
+                        issues: ['Please select project and group before uploading.'],
+                        successRate: '0.00',
+                        message: 'Missing required selections.'
+                    };
+                    hasResponded = true;
+                    return res.redirect('/mass-register-done');
+                }
+            }
+            // For Treasurer, they should already have groupId in session
+            
             const fileValidation = validateFileUpload(req.file);
             if (!fileValidation.valid) {
                 req.session.massRegistrationSummary = {
@@ -157,23 +237,24 @@ module.exports = {
             });
             
             let headerCount = CONFIG.HEADER_ROW_COUNT;
-            const template = rows[0];
-            const encoding = template[0] ? String(template[0]).trim().toUpperCase() : '';
             const headerRow = rows[1];
             const dataRows = rows.slice(headerCount);
 
-            if (!CONFIG.ENCODING_TYPES.includes(encoding)) {
+            // Validate encoding type
+            const encodingValidation = validateEncodingType(encoding, headerRow);
+
+            if (!encodingValidation.valid) {
                 req.session.massRegistrationSummary = {
                     recordsDone: 0,
                     recordsTotal: 0,
                     errorCount: 1,
-                    issues: ['Invalid encoding type. Expected "YEARLY" or "MONTHLY".'],
+                    issues: [encodingValidation.error], 
                     successRate: '0.00',
-                    message: 'Invalid encoding type. Expected "YEARLY" or "MONTHLY".'
+                    message: 'File encoding not recognized.'
                 };
                 hasResponded = true;
                 return res.redirect('/mass-register-done');
-            }
+            } 
 
             for (let rowIdx = 0; rowIdx < dataRows.length; rowIdx++) {
                 const row = dataRows[rowIdx];
@@ -209,12 +290,29 @@ module.exports = {
                         parentName: member.parentName
                     };
 
+                    // Determine the session data based on authority and form selections
+                    let sessionData = {};
+                    
+                    if (authority === 'Admin' || authority === 'SEDO') {
+                        // Use form selections for Admin and SEDO
+                        sessionData = {
+                            groupId: selectedShg,
+                            projectId: selectedSubproject,
+                            clusterId: selectedCluster || req.session.clusterId
+                        };
+                    } else if (authority === 'Treasurer') {
+                        // Use session data for Treasurer (they can only access their own group)
+                        sessionData = {
+                            groupId: req.session.groupId,
+                            projectId: req.session.projectId,
+                            clusterId: req.session.clusterId
+                        };
+                    }
+
+                    console.log('Creating member with session data:', sessionData);
+
                     // Check if the member already exists, if not, create a new member
-                    const memberResult = await memberController.bulkRegisterMember(memberData, {
-                        groupId: req.session.groupId,
-                        projectId: req.session.projectId,
-                        clusterId: req.session.clusterId
-                    });
+                    const memberResult = await memberController.bulkRegisterMember(memberData, sessionData);
 
                     if (memberResult && memberResult.success) {
                         const createdMember = memberResult.member;
@@ -237,7 +335,7 @@ module.exports = {
                         let year = null;
 
                         if (encoding === 'YEARLY') {
-                            for (let i = 6; i < headerRow.length; i += 2) {
+                            for (let i = 5; i < headerRow.length; i += 2) {
                                 const value = parseNumber(dataRows[rowIdx][i]);
                                 year = headerRow[i];
                                 const matchValue = parseNumber(dataRows[rowIdx][i + 1]);
@@ -256,6 +354,19 @@ module.exports = {
                                     createdMember.totalSaving += value;
                                     createdMember.totalMatch += matchValue;
 
+                                    // Update group/project/cluster totals directly
+                                    const group = await Group.findById(sessionData.groupId);
+                                    group.totalKaban = (group.totalKaban || 0) + value + matchValue;
+                                    await group.save();
+
+                                    const project = await Project.findById(sessionData.projectId);
+                                    project.totalKaban = (project.totalKaban || 0) + value + matchValue;
+                                    await project.save();
+
+                                    const cluster = await Cluster.findById(sessionData.clusterId);
+                                    cluster.totalKaban = (cluster.totalKaban || 0) + value + matchValue;
+                                    await cluster.save();
+
                                     console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} - Year: ${year}, Value: ${value}, Match: ${matchValue}`);
                                 }
                             }
@@ -265,9 +376,9 @@ module.exports = {
                             let yearTotalSaving = 0;
                             let yearTotalMatch = 0;
                             monthsData = {};
-                            year = template[1];
+                            const year = req.body.year;
 
-                            for (let i = 6; i < headerRow.length; i += 2) {
+                            for (let i = 5; i < headerRow.length; i += 2) {
                                 const month = headerRow[i] ? String(headerRow[i]).trim() : '';
                                 const value = parseNumber(dataRows[rowIdx][i]);
                                 const matchValue = parseNumber(dataRows[rowIdx][i + 1]);
@@ -301,10 +412,24 @@ module.exports = {
                                 createdMember.savings.push(savingDoc._id);
                                 createdMember.totalSaving += yearTotalSaving;
                                 createdMember.totalMatch += yearTotalMatch;
+
+                                // Update group/project/cluster totals directly
+                                const group = await Group.findById(sessionData.groupId);
+                                group.totalKaban = (group.totalKaban || 0) + yearTotalSaving + yearTotalMatch;
+                                await group.save();
+
+                                const project = await Project.findById(sessionData.projectId);
+                                project.totalKaban = (project.totalKaban || 0) + yearTotalSaving + yearTotalMatch;
+                                await project.save();
+
+                                const cluster = await Cluster.findById(sessionData.clusterId);
+                                cluster.totalKaban = (cluster.totalKaban || 0) + yearTotalSaving + yearTotalMatch;
+                                await cluster.save();
                             }
                         }
 
                         await createdMember.save();
+
                         members.push(createdMember); 
                         logCount++;
                         

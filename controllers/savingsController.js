@@ -94,28 +94,29 @@ const savingsController = {
                     const updatedMember = await member.save();
 
                     // TODO: Update the group, project, and cluster totals
-                    /*
                     const group = await Group.findById(req.session.groupId);
-                    group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-
-                    group.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
+                    group.totalKaban += updatedData.totalSaving;
+                    group.totalKaban += updatedData.totalMatch;
                     const updatedGroup = await group.save();
+                    
                     const project = await Project.findById(req.session.projectId);
-                    project.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-                    project.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
+                    project.totalKaban += updatedData.totalSaving;
+                    project.totalKaban += updatedData.totalMatch;
                     const updatedProject = await project.save();
+                    
                     const cluster = await Cluster.findById(req.session.clusterId);
-                    cluster.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-                    cluster.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
-
+                    cluster.totalKaban += updatedData.totalSaving;
+                    cluster.totalKaban += updatedData.totalMatch;
                     const updatedCluster = await cluster.save();
-                    const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
+                    
+                    const updatedSaving = await Saving.findOneAndUpdate(
+                        { memberID: id, year }, 
+                        updatedData, 
+                        { new: true }
+                    );
+                    
                     if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
-                        res.json({ data: "true"});
-                    }
-                        */
-                    if (updatedSaving && updatedMember) {
-                        res.json({ data: "true"});
+                        res.json({ data: "true" });
                     }
                 }
             } else {
