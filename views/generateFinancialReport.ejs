@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%-include('components/headers.ejs', {authority, pageName: "Financial Report"})%>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/report.css" />
+    
+    <!-- SCRIPTS -->
+    <script src="/js/chart.js"></script>
+    <script src="/js/reload.js"></script>
+
+    <!-- CHART -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="body-bg">
+    
+    <%- include('components/navbars/navbar.ejs', {authority: authority})%>
+    
+    <main>
+        <!-- Top navigation bar -->
+        <%- include('components/navbars/topNavbar.ejs')%>
+
+
+        <form 
+            action="/financial-report"
+            method="GET"
+            class="p-4 flex flex-column gap-2"
+            style="max-width:100%;width:100%;"
+        >
+            <h3>Generate Financial Report</h3>
+            <b>Select Person</b>
+            <select name="member">
+                <% people.forEach(function(person){ %>
+                    <option value="<%= person.id %>">
+                        <%= person.name %>
+                    </option>
+                <% })%>
+            </select>
+            <button class="btn btn-primary">Generate</button>
+        </form>
+
+        <script>open('dashboardButton')</script>
+        <%-include('components/popups/logoutPopup.ejs') %>
+    </main>
+</body>
+</html>
