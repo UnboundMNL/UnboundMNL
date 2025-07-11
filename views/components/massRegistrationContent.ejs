@@ -199,10 +199,19 @@
     const form = document.querySelector('form');
     form.addEventListener('submit', function(e) {
         if (templateSel.value === 'MONTHLY') {
-            const year = parseInt(yearField.value);
-            if (!year) {
+            const year = yearField.value.trim();
+            // Check if year is a valid 4-digit number
+            if (!/^\d{4}$/.test(year)) {
                 e.preventDefault();
-                alert('Please enter a valid year');
+                alert('Year must be exactly 4 digits (e.g., 2024)');
+                return false;
+            }
+            
+            // Check if year is in valid range
+            const yearNum = parseInt(year);
+            if (yearNum < 1900 || yearNum > 2200) {
+                e.preventDefault();
+                alert('Year must be between 1900 and 2200');
                 return false;
             }
         }
