@@ -93,7 +93,6 @@ const savingsController = {
                     member.savings.push(newSaving._id);
                     const updatedMember = await member.save();
 
-                    // TODO: Update the group, project, and cluster totals
                     const group = await Group.findById(req.session.groupId);
                     group.totalKaban += updatedData.totalSaving;
                     group.totalKaban += updatedData.totalMatch;
