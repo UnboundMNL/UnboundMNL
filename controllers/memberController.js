@@ -342,23 +342,14 @@ const memberController = {
         try {
             if (req.session.isLoggedIn) {
                 const { MemberFirstName, MemberLastName, orgId,
-                    FatherFirstName, FatherLastName,
-                    MotherFirstName, MotherLastName,
+                    ParentFirstName, ParentLastName,
                     sex, birthdate, address, status,
                     projectId, groupId, clusterId } = req.body;
                 const name = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                let parentName = 'Unknown';
-                if (FatherFirstName && FatherLastName) {
-                    parentName = `${FatherFirstName} ${FatherLastName}`;
-                    if (MotherFirstName && MotherLastName) {
-                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
-                    }
-                } else if (MotherFirstName && MotherLastName) {
-                    parentName = `${MotherFirstName} ${MotherLastName}`;
-                }
+                const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 const member = await Member.findOne({ _id: req.params.id });
                 if (member) {
                     if (member.groupId.toString() !== groupId) {
@@ -399,7 +390,7 @@ const memberController = {
                             }
                         }
                     }
-                    const updateData = { name, orgId, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
+                    const updateData = { name, orgId, parentName, sex, birthdate, address, status, projectId, groupId, clusterId };
                     member.set(updateData);
                     const updateMember = await member.save({ new: true });
                     if (updateMember) {
