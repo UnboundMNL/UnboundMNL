@@ -24,14 +24,14 @@
 
 
         <form 
-            action="/financial-report"
+            action="/exportReport"
             method="GET"
             class="p-4 flex flex-column gap-2"
             style="max-width:100%;width:100%;"
         >
             <h3>Generate Financial Report</h3>
             <b>Select Person</b>
-            <select name="member">
+            <select name="id">
                 <% people.forEach(function(person){ %>
                     <option value="<%= person.id %>">
                         <%= person.name %>

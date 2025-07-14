@@ -382,7 +382,7 @@ const exportsController = {
     exportReport: async(req, res) => {
         try {
             // Get member
-            const id = req.query.id || req.params.id;
+            const id = req.query.id;
             const member = await Member.findById(id).populate('savings');
 
             // Render the EJS template to HTML
@@ -394,7 +394,7 @@ const exportsController = {
 
             // Launch Puppeteer and generate PDF
             const browser = await puppeteer.launch({
-                headless: true, // Use "new" for Puppeteer v20+, otherwise use true
+                headless: true,
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
             });
             const page = await browser.newPage();
