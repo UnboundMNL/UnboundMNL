@@ -5,7 +5,7 @@
     align-items: center;
     height: 320px;
     background: linear-gradient(to right, #5E89FF, #4800A6);
-    font-size: 32px;
+    font-size: 16px;
     color: white;
     gap: 2rem;
 }
@@ -28,7 +28,7 @@
     justify-content: center;
     align-items: center;
     font-weight: 1000;
-    font-size: 32px;
+    font-size: 24px;
     gap: 1rem;
 }
 
@@ -56,11 +56,11 @@
 .summary {
     width: 100%;
 
-    font-size: 24pt;
+    font-size: 16px;
 }
 
 .summary-heading {
-    font-size: 40pt;
+    font-size: 32px;
     font-weight: 900;
 }
 

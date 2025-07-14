@@ -166,10 +166,13 @@ const profileController = {
 
                 const genDate = new Date()
 
+                const generateLink = "/generate-financial-report?u=12345"
+
                 // don't touch this
                 const dateOptions = { year: "numeric", month: "long", day: "numeric" }
 
-                res.render("financialReport", { authority, username, sidebar, monthCounts, name, memberID, accountType, regDate, reportStartDate, reportEndDate, genDate, dateOptions, totalContrib, totalWithdraw, netBalance });
+
+                res.render("financialReport", { authority, username, sidebar, monthCounts, name, memberID, accountType, regDate, reportStartDate, reportEndDate, genDate, dateOptions, totalContrib, totalWithdraw, netBalance, generateLink });
             } else {
                 res.redirect("/");
             }
@@ -179,6 +182,36 @@ const profileController = {
         }
     },
 
+    // TODO: move to new router?
+    reportGeneratePage: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+
+                const people = [
+                    {
+                        id: "12fa16f8-5e6b-11f0-87b8-6f066637b594",
+                        name: "John Doe"
+                    },
+                    {
+                        id: "1b064e3e-5e6b-11f0-8f1f-effa06e075af",
+                        name: "Jane Doe"
+                    }
+                ]
+
+                res.render("generateFinancialReport", { authority, username, sidebar, people });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
     // profile page
     profile: async (req, res) => {
         try {
