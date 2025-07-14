@@ -1,4 +1,3 @@
-
 <div class="container-profile">
     <div>
         <button class="btn btn-outline-secondary btn-sm mb-2" onclick="backProfile()"><i class='bx bx-arrow-back'></i> Back to Profile</button>
@@ -9,24 +8,35 @@
                 <div class="d-flex flex-column">
                     <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
-                <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
+                <h4><%=member.name?.firstName || 'Unknown'%> <%=member.name?.lastName || 'Unknown'%></h4>
             </div>
             <button class="btn btn-secondary btn-sm">Change Photo</button>
         </div>
         <div class="align-items-right">
-            <% var memberName = member.name.firstName + " " + member.name.lastName; %>
+            <% var memberName = (member.name?.firstName || 'Unknown') + " " + (member.name?.lastName || 'Unknown'); %>
             <button class="btn btn-danger btn-sm" onclick="displayDeleteModal('<%= memberName %>')">Delete Member</button>
         </div>
     </div>
     <hr>
 
     <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
-    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
-    <!-- Hannah: Temporary Info -->
-    <% const personalInfo = [member.orgId, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
-    member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
+    "Parent's Name", "Birthdate", "Gender", "Status"]; %>
+    
+    <% const personalInfo = [
+        member.orgId || 'N/A', 
+        (member.name?.firstName || 'Unknown') + " " + (member.name?.lastName || 'Unknown'), 
+        cluster || 'Unknown Cluster', 
+        project || 'Unknown Project', 
+        group || 'Unknown Group', 
+        member.address || 'N/A',
+        member.parentName || 'Unknown', 
+        fixedBirthdate || 'Unknown', 
+        member.sex || 'Unknown', 
+        member.status || 'Active'
+    ]; %>
 
-    <% const fieldNames = ["id", "MemberName", "cluster", "project", "group", "address", "MotherName", "FatherName", "birthdate", "sex", "status"]; %>
+    <% const fieldNames = ["id", "MemberName", "cluster", "project", "group", "address", "parentName", "birthdate", "sex", "status"]; %>
+    
     <form onsubmit="event.preventDefault();" class="needs-validation" novalidate>
         <div class="d-flex mt-4" id="infoContainer">
             <div class="row d-flex flex-grow-1">
@@ -53,7 +63,7 @@
                             <div class="col no-padding mt-1">
                                 <div>
                                     <label for="MemberFirstName" class="text-muted"><small>First Name</small></label>
-                                    <input type="text" class="col form-control" value="<%- member.name.firstName %>" id="MemberFirstName" required/>
+                                    <input type="text" class="col form-control" value="<%- member.name?.firstName || '' %>" id="MemberFirstName" required/>
                                     <div class="invalid-feedback">
                                         Please fill out this field.
                                     </div>
@@ -61,7 +71,7 @@
                                 
                                 <div>
                                     <label for="MemberLastName" class="text-muted"><small>Last Name</small></label>
-                                    <input type="text" class="col form-control" value="<%- member.name.lastName %>" id="MemberLastName" required/>
+                                    <input type="text" class="col form-control" value="<%- member.name?.lastName || '' %>" id="MemberLastName" required/>
                                     <div class="invalid-feedback">
                                         Please fill out this field.
                                     </div>
@@ -74,7 +84,7 @@
                                     Please fill out this field.
                                 </div>
                             </div>
-                            <% }%>
+                        <% }%>
                         </div>
                     <% } %>                
                 </div>
@@ -87,44 +97,46 @@
 
                             <% if (fieldNames[i]=="birthdate") { %> 
                                 <input type="date" class="col form-control" value="<%- editDate %>" id="birthdate" max="<%= new Date().toISOString().split('T')[0] %>"/>
-                            <% } else if (fieldNames[i]=="MotherName"){ %>
+                            <% } else if (fieldNames[i]=="parentName"){ %>
                                 <div class="col no-padding mt-1">
-                                    <label for="MotherFirstName" class="text-muted"><small>Mother's First Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameMother.firstName %>" id="MotherFirstName"/>
-                                    <label for="MotherLastName" class="text-muted"><small>Mother's Last Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameMother.lastName %>" id="MotherLastName"/>
-                                </div>
-                            <% } else if (fieldNames[i]=="FatherName"){ %>
-                                <div class="col no-padding mt-1">
-                                    <label for="FatherFirstName" class="text-muted"><small>Father's First Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameFather.firstName %>" id="FatherFirstName"/>
-                                    <label for="FatherLastName" class="text-muted"><small>Father's Last Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameFather.lastName %>" id="FatherLastName"/>
+                                    <label for="parentName" class="text-muted"><small>Parent's Name</small></label>
+                                    <input type="text" class="form-control" value="<%- member.parentName || '' %>" id="parentName"/>
                                 </div>
                             <% } else if (fieldNames[i]=="sex"){%>
                                 <select class="col form-select" id="sex" name="sex" aria-label="sex">
                                     <option <% if  (member.sex=="Male"){ %> selected <% } %> value="Male">Male</option>
                                     <option <% if  (member.sex=="Female"){ %> selected <% } %> value="Female">Female</option>
                                     <option <% if  (member.sex=="Other"){ %> selected <% } %> value="Other">Other</option>
+                                    <option <% if  (member.sex=="Unknown"){ %> selected <% } %> value="Unknown">Unknown</option>
                                 </select>  
                             <% } else if (fieldNames[i]=="status"){%>
                                 <select class="col form-select" id="status" name="status" aria-label="status">
-                                    <option selected default hidden value="">Choose a Status</option>
                                     <option <% if  (member.status=="Active"){ %> selected <% } %> value="Active">Active</option>
                                     <option <% if  (member.status=="RwS"){ %> selected <% } %> value="RwS">Retired with Savings</option>
                                     <option <% if  (member.status=="RwoS"){ %> selected <% } %> value="RwoS">Retired w/o Savings</option>
                                 </select>  
-                            <% }%>%>
+                            <% } %>
                         </div>
                     <% } %>    
                 </div>  
             </div>
         </div>
 
-
         <script>
-            var inputFields = ["<%=member.orgId %>","<%=member.name.firstName%>", "<%=member.name.lastName %>", "<%=member.address %>", "<%=member.nameMother.firstName %>", "<%=member.nameMother.lastName %>", "<%=member.nameFather.firstName %>", "<%=member.nameFather.lastName %>"];
-            var dropdownFields = ["<%=cluster %>","<%=project %>","<%=group %>",'<%=member.sex%>','<%=member.status%>'];
+            var inputFields = [
+                "<%=member.orgId || '' %>",
+                "<%=member.name?.firstName || '' %>", 
+                "<%=member.name?.lastName || '' %>", 
+                "<%=member.address || '' %>", 
+                "<%=member.parentName || '' %>"
+            ];
+            var dropdownFields = [
+                "<%=cluster || '' %>",
+                "<%=project || '' %>",
+                "<%=group || '' %>",
+                '<%=member.sex || 'Unknown' %>',
+                '<%=member.status || 'Active' %>'
+            ];
             var projectChoicesName = [
                 <% for (let i = 0; i < projectChoices.length; i++) { %>
                         "<%= projectChoices[i].name %>"<%= i < projectChoices.length - 1 ? ',' : '' %>

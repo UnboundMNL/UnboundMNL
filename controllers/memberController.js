@@ -155,22 +155,27 @@ const memberController = {
                 const group = (await Group.findById(member.groupId)).name;
                 dashbuttons = dashboardButtons(authority);
                 // change date to Philippine format
-                const originalDate = new Date(member.birthdate);
-                originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
-                const options = {
-                    month: 'short',
-                    day: '2-digit',
-                    year: 'numeric',
-                };
-                fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
-                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                const parts = fixedBirthdate.split(' ');
-                let editDate;
-                if (parts.length === 3) {
-                    const monthIndex = months.indexOf(parts[0]) + 1;
-                    const day = parts[1].replace(',', '');
-                    const year = parts[2];
-                    editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                if (member.birthdate) {
+                    const originalDate = new Date(member.birthdate);
+                    originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
+                    const options = {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric',
+                    };
+                    fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
+                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const parts = fixedBirthdate.split(' ');
+                    let editDate;
+                    if (parts.length === 3) {
+                        const monthIndex = months.indexOf(parts[0]) + 1;
+                        const day = parts[1].replace(',', '');
+                        const year = parts[2];
+                        editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                    }
+                } else {
+                    fixedBirthdate = 'Unknown';
+                    editDate = '';
                 }
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
                 const projectChoices = await Project.find({
