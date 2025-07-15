@@ -260,15 +260,27 @@ const memberController = {
 
             // If member already exists, return error details
             if (existingMember) {
-                return {
-                    success: false,
-                    error: 'DUPLICATE_ORG_ID',
-                    message: `Member with Org ID ${orgId} already exists`,
-                    existingMember: {
-                        name: existingMember.name.firstName + ' ' + existingMember.name.lastName,
-                        orgId: existingMember.orgId
+                if (
+                    member.name &&
+                    existingMember.name &&
+                    member.name.firstName === existingMember.name.firstName &&
+                    member.name.lastName === existingMember.name.lastName &&
+                    member.orgId === existingMember.orgId
+                ) {
+                    return {
+                        success: true,
+                        member: existingMember,
+                        isExisting: true,
+                        message: 'Member already exists, will update savings only'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        member: null,
+                        error: 'MEMBER_ID_EXISTS_BUT_DIFFERENT_NAME',
+                        message: 'Member with the same ID already exists but has different name',
                     }
-                };
+                }
             }
 
             const newMember = new Member({
@@ -284,7 +296,6 @@ const memberController = {
             await newMember.save();
 
             // If session data is provided, update group/project/cluster totals
-            // TODO: UPDATE DEPENDING ON USER
             if (sessionData && sessionData.groupId && sessionData.projectId && sessionData.clusterId) {
                 try {
                     const group = await Group.findById(sessionData.groupId);

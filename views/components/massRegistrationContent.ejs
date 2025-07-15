@@ -10,11 +10,8 @@
 			<label for="fileUpload" class="btn btn-upload-files" style="width: fit-content" type="button">Upload Files</label>
 		</label>
 
-		<select id="template" name="template" defaultValue="yearly">
-			<option value="YEARLY">Yearly</option>
-			<option value="MONTHLY">Monthly</option>
-		</select>
-		<input type="number" name="year" id="year" placeholder="year" hidden>
+        
+		<input type="number" name="year" id="year" placeholder="Input year (e.g., 2025)" required>
 
 		<% if (authority != 'SEDO' && authority != 'Treasurer') { %>
 			<select id="cluster" name="cluster"></select>
@@ -33,7 +30,6 @@
     const fileNameDisplay = document.querySelector('#fileName');
     const registerBtn = document.querySelector('#registerButton');
 
-    const templateSel = document.querySelector("#template")
     const yearField = document.querySelector("#year")
     const clusterSelect = document.querySelector(`#cluster`)
     const subprojectSelect = document.querySelector(`#subproject`)
@@ -52,7 +48,7 @@
             canSubmit = false;
         }
         
-        if (templateSel && templateSel.value === 'MONTHLY' && (!yearField.value || yearField.value.trim() === '')) {
+        if (!yearField.value || yearField.value.trim() === '') {
             canSubmit = false;
         }
         
@@ -80,21 +76,6 @@
             updateRegisterButtonState();
         }
     };
-
-    const updateTemplateSel = (e) => {
-        if (e.target.value == "MONTHLY") {
-            yearField.hidden = false
-            yearField.required = true;
-        } else {
-            yearField.hidden = true;
-            yearField.required = false;
-            yearField.value = ''; 
-        }
-
-        updateRegisterButtonState();
-    }
-    templateSel.onchange = updateTemplateSel
-    updateTemplateSel({target: templateSel})
 
     const createOption = (id, displayValue) => {
         const elm = document.createElement('option')
@@ -198,22 +179,20 @@
     // Form submit validation
     const form = document.querySelector('form');
     form.addEventListener('submit', function(e) {
-        if (templateSel.value === 'MONTHLY') {
-            const year = yearField.value.trim();
-            // Check if year is a valid 4-digit number
-            if (!/^\d{4}$/.test(year)) {
-                e.preventDefault();
-                alert('Year must be exactly 4 digits (e.g., 2024)');
-                return false;
-            }
-            
-            // Check if year is in valid range
-            const yearNum = parseInt(year);
-            if (yearNum < 1900 || yearNum > 2200) {
-                e.preventDefault();
-                alert('Year must be between 1900 and 2200');
-                return false;
-            }
+        const year = yearField.value.trim();
+        // Check if year is a valid 4-digit number
+        if (!/^\d{4}$/.test(year)) {
+            e.preventDefault();
+            alert('Year must be exactly 4 digits (e.g., 2024)');
+            return false;
+        }
+        
+        // Check if year is in valid range
+        const yearNum = parseInt(year);
+        if (yearNum < 1900 || yearNum > 2200) {
+            e.preventDefault();
+            alert('Year must be between 1900 and 2200');
+            return false;
         }
         
         <% if (authority == 'Admin') { %>

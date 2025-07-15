@@ -7,7 +7,7 @@ const fs = require('fs');
 const { 
     CONFIG, 
     validateFileUpload, 
-    validateEncodingType 
+    validateEncoding
 } = require('./utils/uploadHelpers');
 
 const { 
@@ -16,7 +16,6 @@ const {
 } = require('./utils/memberDataHelpers');
 
 const { 
-    processYearlySavings, 
     processMonthlySavings 
 } = require('./utils/savingsHelpers');
 
@@ -33,7 +32,6 @@ module.exports = {
             const selectedCluster = req.body.cluster;
             const selectedSubproject = req.body.subproject;
             const selectedShg = req.body.shg;
-            const encoding = req.body.template;
             
             console.log('Form selections:', {
                 cluster: selectedCluster,
@@ -100,7 +98,7 @@ module.exports = {
             const dataRows = rows.slice(headerCount);
 
             // Validate encoding type
-            const encodingValidation = validateEncodingType(encoding, headerRow);
+            const encodingValidation = validateEncoding(headerRow);
             if (!encodingValidation.valid) {
                 req.session.massRegistrationSummary = {
                     recordsDone: 0,
@@ -171,37 +169,50 @@ module.exports = {
 
                     if (memberResult && memberResult.success) {
                         const createdMember = memberResult.member;
+                        const isExistingMember = memberResult.isExisting;
 
                         // Handle warnings
-                        if (member.statusWasEmpty && member.parentWasEmpty) {
-                            issues.push(`Row ${rowIdx + headerCount + 1}: User added - Member status and parent name were empty, defaulted to 'Active' and 'Unknown'`);
-                        } else if (member.statusWasEmpty) {
-                            issues.push(`Row ${rowIdx + headerCount + 1}: User added - Member status was empty, defaulted to 'Active'`);
-                        } else if (member.parentWasEmpty) {
-                            issues.push(`Row ${rowIdx + headerCount + 1}: User added - Parent name was empty, defaulted to 'Unknown'`);
+                        if (!isExistingMember) {
+                            if (member.statusWasEmpty && member.parentWasEmpty) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User added - Member status and parent name were empty, defaulted to 'Active' and 'Unknown'`);
+                            } else if (member.statusWasEmpty) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User added - Member status was empty, defaulted to 'Active'`);
+                            } else if (member.parentWasEmpty) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User added - Parent name was empty, defaulted to 'Unknown'`);
+                            }
                         }
 
                         if (memberResult.warning) {
                             issues.push(`Row ${rowIdx + headerCount + 1}: Warning - ${memberResult.warning}`);
                         }
+                        
+                        const savingResult = await processMonthlySavings(createdMember, headerRow, dataRows, rowIdx, sessionData, req.body.year);
 
-                        // Process savings
-                        if (encoding === 'YEARLY') {
-                            await processYearlySavings(createdMember, headerRow, dataRows, rowIdx, sessionData);
-                        } else {
-                            await processMonthlySavings(createdMember, headerRow, dataRows, rowIdx, sessionData, req.body.year);
+                        if (savingResult?.error) {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User savings not saved - ${savingResult.message}`);
+                        } else if (savingResult === -1) {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not updated - Member ${createdMember.name?.firstName} ${createdMember.name?.lastName} 
+                                does not belong to the selected cluster/project/group`);
+                        } else if (savingResult === 0) {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not updated - Member ${createdMember.name?.firstName} ${createdMember.name?.lastName} 
+                                already has savings for the year ${req.body.year}`);
+                        } else if (savingResult === 1) {
+                            if (isExistingMember) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User updated - Member ${createdMember.name?.firstName} ${createdMember.name?.lastName} 
+                                    exists, updated savings for year ${req.body.year}`);
+                            }
+                            await createdMember.save();
+                            members.push(createdMember);
+                            logCount++;
                         }
-
-                        await createdMember.save();
-                        members.push(createdMember);
-                        logCount++;
                         
                     } else {
                         // Handle creation errors
-                        if (memberResult?.error === 'DUPLICATE_ORG_ID') {
-                            issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member with ID ${member.orgId} already exists`);
-                        } else if (memberResult?.error === 'CREATION_ERROR') {
+                        if (memberResult?.error === 'CREATION_ERROR') {
                             issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${memberResult.message}`);
+                        } else if (memberResult?.error === 'MEMBER_ID_EXISTS_BUT_DIFFERENT_NAME') {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} failed validation - ${memberResult.message}`);
+                            
                         } else {
                             issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created`);
                         }
