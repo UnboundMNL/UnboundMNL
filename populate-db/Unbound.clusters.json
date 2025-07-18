@@ -1,0 +1,58 @@
+[{
+  "_id": {
+    "$oid": "672ed1029e4a7cafd3cc3f79"
+  },
+  "name": "Manila FDQ",
+  "location": "Dolores",
+  "projects": [
+    {
+      "$oid": "672ed50285c8e9472958deae"
+    },
+    {
+      "$oid": "676375bb8a872d93575ea560"
+    },
+    {
+      "$oid": "6763ae9a2bd0f0e4a028958e"
+    }
+  ],
+  "totalProjects": 3,
+  "totalGroups": 2,
+  "totalMembers": 0,
+  "totalKaban": 0
+},
+{
+  "_id": {
+    "$oid": "6763abb02bd0f0e4a028952b"
+  },
+  "name": "Manila AMP",
+  "location": "Pasig And MArikina",
+  "projects": [],
+  "totalProjects": 0,
+  "totalGroups": 0,
+  "totalMembers": 0,
+  "totalKaban": 0
+},
+{
+  "_id": {
+    "$oid": "6763abca2bd0f0e4a0289530"
+  },
+  "name": "Manila South Cluster",
+  "location": "GMA - NCR",
+  "projects": [],
+  "totalProjects": 0,
+  "totalGroups": 0,
+  "totalMembers": 0,
+  "totalKaban": 0
+},
+{
+  "_id": {
+    "$oid": "6763abe02bd0f0e4a0289535"
+  },
+  "name": "Manila MPH",
+  "location": "Tayabas and Laguna",
+  "projects": [],
+  "totalProjects": 0,
+  "totalGroups": 0,
+  "totalMembers": 0,
+  "totalKaban": 0
+}]

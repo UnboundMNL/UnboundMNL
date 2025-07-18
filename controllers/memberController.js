@@ -153,24 +153,31 @@ const memberController = {
                 const cluster = await Cluster.findById(member.clusterId);
                 const project = await Project.findById(member.projectId);
                 const group = (await Group.findById(member.groupId)).name;
+
+                let fixedBirthdate;
+                let editDate = '';
                 dashbuttons = dashboardButtons(authority);
                 // change date to Philippine format
-                const originalDate = new Date(member.birthdate);
-                originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
-                const options = {
-                    month: 'short',
-                    day: '2-digit',
-                    year: 'numeric',
-                };
-                fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
-                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                const parts = fixedBirthdate.split(' ');
-                let editDate;
-                if (parts.length === 3) {
-                    const monthIndex = months.indexOf(parts[0]) + 1;
-                    const day = parts[1].replace(',', '');
-                    const year = parts[2];
-                    editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                if (member.birthdate) {
+                    const originalDate = new Date(member.birthdate);
+                    originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
+                    const options = {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric',
+                    };
+                    fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
+                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const parts = fixedBirthdate.split(' ');
+                    if (parts.length === 3) {
+                        const monthIndex = months.indexOf(parts[0]) + 1;
+                        const day = parts[1].replace(',', '');
+                        const year = parts[2];
+                        editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                    }
+                } else {
+                    fixedBirthdate = 'Unknown';
+                    editDate = '';
                 }
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
                 const projectChoices = await Project.find({
@@ -202,8 +209,7 @@ const memberController = {
         try {
             if (req.session.isLoggedIn) {
                 const { MemberFirstName, MemberLastName, orgId,
-                    FatherFirstName, FatherLastName,
-                    MotherFirstName, MotherLastName,
+                    ParentFirstName, ParentLastName,
                     sex, birthdate, address, status } = req.body;
                 const existingMember = await Member.find({ orgId });
                 if (existingMember.length !== 0) {
@@ -213,17 +219,7 @@ const memberController = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-
-                let parentName = 'Unknown';
-                if (FatherFirstName && FatherLastName) {
-                    parentName = `${FatherFirstName} ${FatherLastName}`;
-                    if (MotherFirstName && MotherLastName) {
-                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
-                    }
-                } else if (MotherFirstName && MotherLastName) {
-                    parentName = `${MotherFirstName} ${MotherLastName}`;
-                }
-
+                const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 let savings = [];
                 const projectId = req.session.projectId;
                 const groupId = req.session.groupId;
@@ -260,15 +256,27 @@ const memberController = {
 
             // If member already exists, return error details
             if (existingMember) {
-                return {
-                    success: false,
-                    error: 'DUPLICATE_ORG_ID',
-                    message: `Member with Org ID ${orgId} already exists`,
-                    existingMember: {
-                        name: existingMember.name.firstName + ' ' + existingMember.name.lastName,
-                        orgId: existingMember.orgId
+                if (
+                    member.name &&
+                    existingMember.name &&
+                    member.name.firstName === existingMember.name.firstName &&
+                    member.name.lastName === existingMember.name.lastName &&
+                    member.orgId === existingMember.orgId
+                ) {
+                    return {
+                        success: true,
+                        member: existingMember,
+                        isExisting: true,
+                        message: 'Member already exists, will update savings only'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        member: null,
+                        error: 'MEMBER_ID_EXISTS_BUT_DIFFERENT_NAME',
+                        message: 'Member with the same ID already exists but has different name',
                     }
-                };
+                }
             }
 
             const newMember = new Member({
@@ -336,23 +344,14 @@ const memberController = {
         try {
             if (req.session.isLoggedIn) {
                 const { MemberFirstName, MemberLastName, orgId,
-                    FatherFirstName, FatherLastName,
-                    MotherFirstName, MotherLastName,
+                    ParentFirstName, ParentLastName,
                     sex, birthdate, address, status,
                     projectId, groupId, clusterId } = req.body;
                 const name = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                let parentName = 'Unknown';
-                if (FatherFirstName && FatherLastName) {
-                    parentName = `${FatherFirstName} ${FatherLastName}`;
-                    if (MotherFirstName && MotherLastName) {
-                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
-                    }
-                } else if (MotherFirstName && MotherLastName) {
-                    parentName = `${MotherFirstName} ${MotherLastName}`;
-                }
+                const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 const member = await Member.findOne({ _id: req.params.id });
                 if (member) {
                     if (member.groupId.toString() !== groupId) {
@@ -393,7 +392,7 @@ const memberController = {
                             }
                         }
                     }
-                    const updateData = { name, orgId, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
+                    const updateData = { name, orgId, parentName, sex, birthdate, address, status, projectId, groupId, clusterId };
                     member.set(updateData);
                     const updateMember = await member.save({ new: true });
                     if (updateMember) {

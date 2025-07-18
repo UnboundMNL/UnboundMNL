@@ -134,6 +134,10 @@ const SavingSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    totalDeductions: {
+        type: Number,
+        default: 0
+    },
 }, { versionKey: false });
 
 const Saving = mongoose.model('saving', SavingSchema);

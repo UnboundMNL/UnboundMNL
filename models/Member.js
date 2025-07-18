@@ -14,6 +14,7 @@ const MemberSchema = new mongoose.Schema({
   savings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'saving' }],
   totalSaving: { type: Number, default: 0 },
   totalMatch: { type: Number, default: 0 },
+  totalDeductions: { type: Number, default: 0 },
   status: { type: String, enum: ['Active', 'RwS', 'RwoS'], default: 'Active', required: true }, //Active, Retired with Savings, Retired w/o Savings
   projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'project' },
   groupId: { type: mongoose.Schema.Types.ObjectId, ref: 'group' },
