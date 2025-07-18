@@ -20,8 +20,8 @@ function validateFileUpload(file) {
     return { valid: true };
 }
 
-// Helper function to validate the encoding type
-function validateEncodingType(encoding, headerRow) {
+// Helper function to validate the encoding
+function validateEncoding(headerRow) {
     let valid = true;
     let error = '';
 
@@ -29,22 +29,21 @@ function validateEncodingType(encoding, headerRow) {
         const header = headerRow[i];
         const headerStr = header ? String(header).trim() : '';
 
-        if (encoding === 'YEARLY') {
-            if (header && !/^\d{4}$/.test(headerStr)) {
-                valid = false;
-                error = `Invalid year format in header: '${headerStr}'. Expected 4-digit year.`;
-                break;
-            }
-        } else if (encoding === 'MONTHLY') {
-            const validMonths = [
-                'january', 'february', 'march', 'april', 'may', 'june',
-                'july', 'august', 'september', 'october', 'november', 'december'
-            ];
-            if (header && !validMonths.includes(headerStr.toLowerCase())) {
-                valid = false;
-                error = `Invalid month name in header: '${headerStr}'. Expected one of: ${validMonths.join(', ')}.`;
-                break;
-            }
+        if (!header || headerStr === '') {
+            continue; // Skip empty headers
+        }
+
+        if (headerStr.toLowerCase().includes('deductions')) {
+            continue; // Skip deductions headers
+        }
+        const validMonths = [
+            'january', 'february', 'march', 'april', 'may', 'june',
+            'july', 'august', 'september', 'october', 'november', 'december'
+        ];
+        if (header && !validMonths.includes(headerStr.toLowerCase())) {
+            valid = false;
+            error = `Invalid month name in header: '${headerStr}'. Expected one of: ${validMonths.join(', ')}.`;
+            break;
         }
     }
 
@@ -83,10 +82,30 @@ function parseNumber(value, defaultValue = 0) {
     return isNaN(num) ? defaultValue : num;
 }
 
+function isValidNumericValue(value) {
+    if (value === null || value === undefined || value === '' || value === 0) {
+        return true;
+    }
+
+    const stringValue = String(value).trim();
+
+    if (stringValue === '') {
+        return true;
+    }
+    
+    if (!/^-?\d*\.?\d*$/.test(stringValue)) {
+        return false;
+    }
+    
+    const parsed = parseFloat(stringValue);
+    return !isNaN(parsed) && isFinite(parsed);
+}
+
 module.exports = {
     CONFIG,
     validateFileUpload,
-    validateEncodingType,
+    validateEncoding,
     mapMonthNameToSchemaKey,
-    parseNumber
+    parseNumber,
+    isValidNumericValue
 };
