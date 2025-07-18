@@ -153,6 +153,9 @@ const memberController = {
                 const cluster = await Cluster.findById(member.clusterId);
                 const project = await Project.findById(member.projectId);
                 const group = (await Group.findById(member.groupId)).name;
+
+                let fixedBirthdate;
+                let editDate = '';
                 dashbuttons = dashboardButtons(authority);
                 // change date to Philippine format
                 if (member.birthdate) {
@@ -166,7 +169,6 @@ const memberController = {
                     fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
                     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                     const parts = fixedBirthdate.split(' ');
-                    let editDate;
                     if (parts.length === 3) {
                         const monthIndex = months.indexOf(parts[0]) + 1;
                         const day = parts[1].replace(',', '');
@@ -207,8 +209,7 @@ const memberController = {
         try {
             if (req.session.isLoggedIn) {
                 const { MemberFirstName, MemberLastName, orgId,
-                    FatherFirstName, FatherLastName,
-                    MotherFirstName, MotherLastName,
+                    ParentFirstName, ParentLastName,
                     sex, birthdate, address, status } = req.body;
                 const existingMember = await Member.find({ orgId });
                 if (existingMember.length !== 0) {
@@ -218,17 +219,7 @@ const memberController = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-
-                let parentName = 'Unknown';
-                if (FatherFirstName && FatherLastName) {
-                    parentName = `${FatherFirstName} ${FatherLastName}`;
-                    if (MotherFirstName && MotherLastName) {
-                        parentName += ` & ${MotherFirstName} ${MotherLastName}`;
-                    }
-                } else if (MotherFirstName && MotherLastName) {
-                    parentName = `${MotherFirstName} ${MotherLastName}`;
-                }
-
+                const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 let savings = [];
                 const projectId = req.session.projectId;
                 const groupId = req.session.groupId;
