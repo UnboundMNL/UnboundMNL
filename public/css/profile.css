@@ -100,9 +100,7 @@
 }
 
 .upload-container {
-    /* TODO: update to use the new design language */
-    /*background: linear-gradient(#BABABA, #B99090);*/
-    background-color: #6f8fdf;
+    background: linear-gradient(to bottom, #BEBEBE 0%, #A7B4BC 37%, #90A9B9 100%);
     color: white;
     align-items: center;
     justify-content: center;
@@ -113,15 +111,16 @@
 }
 
 .btn:disabled {
-    background-color: dimgray !important; 
+    background-color: dimgray !important;
     border-color: dimgray !important;
     cursor: not-allowed;
-    opacity: 1;  
-  }                      
+    opacity: 1;
+}
 
 .btn-upload-files {
-    background-color: lightgray !important;
-    border-color: lightgray !important;
+    background-color: gray !important;
+    border-color: gray !important;
+    color: white !important;
 }
 
 .btn-upload-files:hover {

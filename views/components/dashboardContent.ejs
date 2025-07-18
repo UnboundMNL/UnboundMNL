@@ -6,12 +6,13 @@
 
         <% for (let i = 0; i < buttons.length; i++) {%>
         <!-- CLUSTERS BUTTON -->
-        <div class="left-card left-card-<%= buttons[i].color %>" id="<%=i%>">
+        <div class="left-card" id="<%=i%>" style="font-size:1.5rem;letter-spacing:0.25rem;">
             <div>
                 <span><%=buttons[i].text%></span>
             </div>
 	    <a href="<%= buttons[i].href %>"
-	       class="btn btn-primary dashboard-btn">View Clusters</a>
+	       style="background:var(--btn-grad);min-width:8rem; max-width: 16rem; color:white !important;margin-top:auto;"
+	       class="btn btn-primary dashboard-btn">View</a>
         </div>
 
         <% } %>
@@ -21,27 +22,29 @@
     <div class="dashboard-stats flex flex-column mt-3">
         <div class="flex flex-row gap-2">
                 <div class="container dashboard-org-structure section-card">
-                    <h5 class="mb-3">Organizational Structure</h5> 
-                    <% if (authority=="Admin") { %>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of Clusters</span>
-                        <span class="ml-auto"><%=nCluster%></span>
-                    </div>
-                    <% } %>
-                    <% if (authority=="Admin" || authority=="SEDO") { %>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of Projects</span>
-                        <span class="ml-auto"><%=nProject%></span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of SHGs</span>
-                        <span class="ml-auto"><%=nGroup%></span>
-                    </div>
-                    <% } %>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of Members</span>
-                        <span class="ml-auto"><%=nMember%></span>
-                    </div>
+                    <h5 class="mb-3" style="text-align:center;width:100%">Organizational Structure</h5> 
+					<div class="dashboard-org-struct-container">
+						<% if (authority=="Admin") { %>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nCluster%></span>
+								<span>Total Clusters</span>
+						</div>
+						<% } %>
+						<% if (authority=="Admin" || authority=="SEDO") { %>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nProject%></span>
+								<span>Total Projects</span>
+						</div>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nGroup%></span>
+								<span>Total SHGs</span>
+						</div>
+						<% } %>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nMember%></span>
+								<span>Total Members</span>
+						</div>
+					</div>
                 </div>
                 <div class="dashboard-card">
                     <div>

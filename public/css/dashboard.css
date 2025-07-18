@@ -53,12 +53,15 @@
     filter: drop-shadow(#00000040 4px 4px 4px);
 }
 
+
 .dashboard-stats .chart-container {
-    border-top: #FF6363 solid 4px;
+    border-top: #3FACFB solid 4px;
+    text-align: center;
 }
 
-.dashboard-stats .container h5 {
-    color: var(--secondary-color);
+.dashboard-org-struct-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .dashboard-btn {
@@ -68,15 +71,16 @@
 }
 
 .dashboard-org-structure {
-    background: linear-gradient(-0.16turn, #FFA2AF, #FD746D);
+    background: linear-gradient(-0.16turn, #3B82F6, #529AB2);
     min-width: 60%;
     max-width: 100% !important;
+    color: white !important;
 }
 
 .dashboard-card {
     filter: drop-shadow(#00000040 4px 4px 4px);
     border-radius: 10px;
-    border-top: #FF6363 solid 4px;
+    border-top: #3FACFB solid 4px;
     background: white;
     padding: 1em;
 }
