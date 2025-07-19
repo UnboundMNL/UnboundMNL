@@ -496,10 +496,11 @@ h4.page-title {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: #71F7C961;
+    background: linear-gradient(to bottom, #cbd4ff, #7a87d9);
     width: 100%;
     padding: 2rem;
     margin-bottom: 1rem;
+    color: white;
 }
 
 .mini-button {
