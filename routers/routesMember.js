@@ -21,5 +21,6 @@ router.post('/member/:id/edit', memberController.editMember);
 router.post('/member/:id/delete', memberController.deleteMember);
 router.get('/masterlist', memberController.retrieveMasterlist)
 router.post("/memberMiddle", memberController.memberMiddle);
+router.get("/financial-report", memberController.report)
 
 module.exports = router;  

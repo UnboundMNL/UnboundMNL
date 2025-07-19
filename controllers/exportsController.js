@@ -383,7 +383,7 @@ const exportsController = {
         try {
             // Get member
             const id = req.query.id;
-            const member = await Member.findById(id).populate('savings');
+            const member = await Member.findById(id).populate('savings').populate('groupId');
 
             // Render the EJS template to HTML
             const html = await ejs.renderFile(
