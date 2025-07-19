@@ -97,9 +97,3 @@
     font-size: 1rem;
     margin-top: 0.25rem;
 }
-
-.btn-green {
-    background-color: #28a745; /* Bootstrap success green */
-    color: white;
-    border: none;
-}
