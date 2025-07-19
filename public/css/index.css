@@ -11,9 +11,9 @@
     --red-color: #DC3545;
     --warning-color: #FFFFC0;
     --translucent-tertiary-color: rgba(173, 226, 255, 0.5);
-    --table-header-color: #48BBAE;
     --bs-body-font-family: 'Poppins';
-    --btn-grad: linear-gradient(#166FFF, #5401F0);
+    --btn-grad: linear-gradient(to right, #166FFF, #5401F0);
+    --table-header-color: linear-gradient(to right, #166FFF, #5401F0);
 }
 
 html {
@@ -23,6 +23,12 @@ html {
 
 body {
     min-height: 100%;
+}
+
+select {
+    background-color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
 }
 
 .body-bg {
@@ -578,5 +584,27 @@ h4.page-title {
     background-color: var(--warning-color);
 }
 
+.mb-4 {
+    margin-bottom: 1rem;
+}
 
 /* REDESIGN*/
+.login-btn {
+    color: white;
+    background: var(--btn-grad) !important;
+}
+
+.login-btn:hover {
+    color: white;
+    background: var(--btn-grad) !important;
+}
+
+.btn-primary {
+    color: white;
+    background: var(--btn-grad) !important;
+}
+
+.btn-primary:hover {
+    color: white;
+    background: var(--btn-grad) !important;
+}

@@ -35,6 +35,10 @@
 
             <%- include('components/listContent.ejs', { memberList, pageName: "Members Masterlist", authority }) %>
             <%- include('components/popups/deleteProfileModal.ejs', { pageName: "Members Masterlist" }) %>
+
+            <div class="flex flex-center w-full">
+                <a href="/generate-financial-report" class="fin-report-btn">Generate Financial Report</a>
+            </div>
     </main>
     <script>open('memberButton');</script>
     <%-include('components/popups/logoutPopup.ejs') %>

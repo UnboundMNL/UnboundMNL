@@ -43,7 +43,7 @@
                         <td class="text-center"><button type="button" class="btn btn-primary btn-sm col-md-9" onclick ="redirectMember('<%= memberList[i].objectID%>')">View</button></td>
                         <td class="text-center"><button type="button" class="btn btn-danger btn-sm col-md-9" onclick="displayDeleteModal('<%= memberList[i].name %>','<%= memberList[i].objectID%>','<%=pageName%>')">Delete</button></td>
                     <% } else { %>
-                        <td class = "text-center"><%= memberList[i].authority %></td>
+                        <td class = "text-center"><span class="authority" data-authority="<%= memberList[i].authority %>"><%= memberList[i].authority %></span></td>
                         <td class = "text-center"><%= memberList[i].username %></td>
                         <td class="text-center"><button type="button" class="btn btn-primary btn-sm col-md-9" data-bs-toggle="modal" data-bs-target="#editUser" data-bs-id="<%= memberList[i]._id%>" data-bs-username="<%=memberList[i].username%>" onclick="changeForm('<%=memberList[i]._id%>', 'User')">Edit</button></td>
                         <td class="text-center"><button type="button" class="btn btn-danger btn-sm col-md-9" onclick="displayDeleteModal('<%= memberList[i].username %>', '<%= memberList[i]._id%>','<%=pageName%>')">Delete</button></td>

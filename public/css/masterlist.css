@@ -4,7 +4,36 @@ table {
 }
 
 .table th {
-    background-color: var(--table-header-color);
+    background: var(--table-header-color);
     color: white;
     font-weight: 500;
+}
+
+.fin-report-btn {
+    background: var(--btn-grad);
+    color: white;
+    width: 16rem;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+}
+
+.authority {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.authority[data-authority="Admin"] {
+    background-color: #7263FF;
+    color: white;
+}
+
+.authority[data-authority="SEDO"] {
+    background-color: #68BC69;
+    color: white;
+}
+
+.authority[data-authority="Treasurer"] {
+    background-color: #FFEF63;
 }
