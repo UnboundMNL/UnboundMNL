@@ -42,7 +42,7 @@
                 <div class="container-bottom mt-4">
                     <div class="flex flex-row gap-2 w-full">
 						<button onclick="document.getElementById('<%=pageParts[i]._id%>').click()" class="mini-button blue">view</button>
-                        <button type="button" class="mini-button yellow" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">edit</button>
+                        <button type="button" class="mini-button btn-green" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">edit</button>
                         <script>
                             var editButton = document.getElementById("<%=pageParts[i]._id%>");
                             editButton.onclick = function() {

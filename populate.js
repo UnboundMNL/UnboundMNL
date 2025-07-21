@@ -104,45 +104,6 @@ function checkFiles() {
     return allFilesExist;
 }
 
-// Helper function to completely empty the database
-async function emptyDatabase() {
-    console.log('\nEMPTYING ENTIRE DATABASE...');
-    
-    try {
-        // Get all collection names
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        const collectionNames = collections.map(col => col.name);
-        
-        console.log(`Found ${collectionNames.length} collections:`, collectionNames);
-        
-        let totalDeleted = 0;
-        
-        // Delete all documents from each collection
-        for (const collectionName of collectionNames) {
-            const deleteResult = await mongoose.connection.db.collection(collectionName).deleteMany({});
-            console.log(`Cleared ${deleteResult.deletedCount} documents from '${collectionName}'`);
-            totalDeleted += deleteResult.deletedCount;
-        }
-        
-        console.log(`Database emptied successfully! Total documents deleted: ${totalDeleted}`);
-        
-        // Verify database is empty
-        console.log('\nVerifying database is empty...');
-        for (const collectionName of collectionNames) {
-            const count = await mongoose.connection.db.collection(collectionName).countDocuments();
-            if (count > 0) {
-                console.warn(`WARNING: ${collectionName} still has ${count} documents!`);
-            } else {
-                console.log(`${collectionName}: 0 documents`);
-            }
-        }
-        
-    } catch (error) {
-        console.error('ERROR: Error emptying database:', error.message);
-        throw error;
-    }
-}
-
 async function populateDatabase() {
     try {
         console.log('Starting database population...');
@@ -157,15 +118,15 @@ async function populateDatabase() {
         await mongoose.connect(DB_CONFIG.url);
         console.log('Connected to MongoDB successfully');
         
-        // EMPTY THE ENTIRE DATABASE FIRST
-        await emptyDatabase();
-        
         let totalInserted = 0;
         
         // Users
         console.log('\nProcessing users...');
         const usersData = readJSONFile('Unbound.users.json');
         if (usersData && usersData.length > 0) {
+            const deleteResult = await mongoose.connection.db.collection('users').deleteMany({});
+            console.log(`Cleared ${deleteResult.deletedCount} existing users`);
+            
             const convertedUsers = convertToMongooseFormat(usersData);
             await mongoose.connection.db.collection('users').insertMany(convertedUsers);
             console.log(`Inserted ${convertedUsers.length} users`);
@@ -178,6 +139,9 @@ async function populateDatabase() {
         console.log('\nProcessing clusters...');
         const clustersData = readJSONFile('Unbound.clusters.json');
         if (clustersData && clustersData.length > 0) {
+            const deleteResult = await mongoose.connection.db.collection('clusters').deleteMany({});
+            console.log(`Cleared ${deleteResult.deletedCount} existing clusters`);
+            
             const convertedClusters = convertToMongooseFormat(clustersData);
             await mongoose.connection.db.collection('clusters').insertMany(convertedClusters);
             console.log(`Inserted ${convertedClusters.length} clusters`);
@@ -190,6 +154,9 @@ async function populateDatabase() {
         console.log('\nProcessing projects...');
         const projectsData = readJSONFile('Unbound.projects.json');
         if (projectsData && projectsData.length > 0) {
+            const deleteResult = await mongoose.connection.db.collection('projects').deleteMany({});
+            console.log(`Cleared ${deleteResult.deletedCount} existing projects`);
+            
             const convertedProjects = convertToMongooseFormat(projectsData);
             await mongoose.connection.db.collection('projects').insertMany(convertedProjects);
             console.log(`Inserted ${convertedProjects.length} projects`);
@@ -202,6 +169,9 @@ async function populateDatabase() {
         console.log('\nProcessing groups...');
         const groupsData = readJSONFile('Unbound.groups.json');
         if (groupsData && groupsData.length > 0) {
+            const deleteResult = await mongoose.connection.db.collection('groups').deleteMany({});
+            console.log(`Cleared ${deleteResult.deletedCount} existing groups`);
+            
             const convertedGroups = convertToMongooseFormat(groupsData);
             await mongoose.connection.db.collection('groups').insertMany(convertedGroups);
             console.log(`Inserted ${convertedGroups.length} groups`);
@@ -211,7 +181,7 @@ async function populateDatabase() {
         }
         
         // Verify final state
-        console.log('\nVerifying final database state...');
+        console.log('\nVerifying database state...');
         const collections = ['users', 'clusters', 'projects', 'groups'];
         for (const collectionName of collections) {
             const count = await mongoose.connection.db.collection(collectionName).countDocuments();
@@ -235,4 +205,4 @@ if (require.main === module) {
     populateDatabase();
 }
 
-module.exports = { populateDatabase, checkFiles, emptyDatabase };
+module.exports = { populateDatabase, checkFiles };

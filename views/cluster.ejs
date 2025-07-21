@@ -18,6 +18,7 @@
 
 <body class="body-bg">
     
+    <!-- Sidebar -->
     <%- include('components/navbars/navbar.ejs', {authority: authority})%>
     
     <main>
@@ -28,24 +29,27 @@
         <div class="p-4 mt-5">
             <h3 class="Clusters page-title">Cluster Management</h3>
 
-            <div class="section-card cluster-overview-container-card">
-                <h3 class="cluster-overview-title">Overview</h3>
-                <div class="cluster-overview-container">
-                    <div class="cluster-overview-card red">
-                        <div class="cluster-overview-number"><%=totalClusters%></div>
-                        <div class="cluster-overview-label">Total Clusters</div>
-                    </div>
-                    <div class="cluster-overview-card green">
-                        <div class="cluster-overview-number"><%=totalSavings%></div>
-                        <div class="cluster-overview-label">Total Savings</div>
-                    </div>
-                    <div class="cluster-overview-card yellow">
-                        <div class="cluster-overview-number"><%=activeMembers%></div>
-                        <div class="cluster-overview-label">Active Members</div>
-                    </div>
-                    <div class="cluster-overview-card blue">
-                        <div class="cluster-overview-number"><%=locations%></div>
-                        <div class="cluster-overview-label">Locations</div>
+            <!-- Summary Box -->
+            <div class="org-structure-wrapper">
+                <div class="section-card org-structure-container-card">
+                    <h3 class="org-structure-title">Organizational Structure</h3>
+                    <div class="org-structure-grid">
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= totalClusters %></div>
+                            <div class="org-structure-label">Total Clusters</div>
+                        </div>
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= totalSavings %></div>
+                            <div class="org-structure-label">Total Savings</div>
+                        </div>
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= locations %></div>
+                            <div class="org-structure-label">Projects</div>
+                        </div>
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= activeMembers %></div>
+                            <div class="org-structure-label">Active Members</div>
+                        </div>
                     </div>
                 </div>
             </div>
