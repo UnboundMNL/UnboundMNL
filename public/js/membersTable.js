@@ -192,7 +192,6 @@ function reloadTable(value, table) {
 				totalDeductionsCell.setAttribute('id', `${member.id}_${value}_totalDeductions`);
 				linkMemberPage(`${member.id}`, className);
 				const yearDiv = document.getElementById("memberYear");
-				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
 				const totalDiv = document.getElementById("totalSaving");
 				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 

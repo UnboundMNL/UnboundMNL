@@ -56,6 +56,7 @@ const memberController = {
                             }
                             data.totalMatch = savings.totalMatch;
                             data.totalSaving = savings.totalSaving;
+                            data.totalDeductions = savings.totalDeductions;
                         } else {
                             for (const month of months) {
                                 data[month] = {
@@ -65,6 +66,7 @@ const memberController = {
                             }
                             data.totalMatch = 0;
                             data.totalSaving = 0;
+                            data.totalDeductions = 0;
                         }
                         totalSaving += parseInt(data.totalSaving) + parseInt(data.totalMatch);
                         memberList.push(data);
