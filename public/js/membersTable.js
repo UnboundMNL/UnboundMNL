@@ -42,11 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (/^\d+(\.\d+)?$/.test(cell.textContent) || cell.textContent === '') {
 				cell.style.backgroundColor = '';
 				
-				// Update Grant Total if Total Deductions cell is edited
-				if (cell.id && cell.id.includes('_totalDeductions')) {
-					updateGrantTotal(cell);
-				}
-				
 				if (check(table)) {
 					saveButton.disabled = false;
 				}
@@ -229,24 +224,6 @@ function check(table) {
 		}
 	}
 	return true;
-}
-
-// Update Grant Total when Total Deductions is changed
-function updateGrantTotal(deductionsCell) {
-	const row = deductionsCell.parentNode;
-	const cells = row.querySelectorAll('td');
-	
-	// Get Total Savings, Total Match, and Total Deductions values
-	const totalSavings = parseFloat(cells[cells.length - 4].textContent) || 0;
-	const totalMatch = parseFloat(cells[cells.length - 3].textContent) || 0;
-	const totalDeductions = parseFloat(deductionsCell.textContent) || 0;
-	
-	// Calculate new Grant Total
-	const grantTotal = totalSavings + totalMatch - totalDeductions;
-	
-	// Update the Grant Total cell (last cell)
-	const grantTotalCell = cells[cells.length - 1];
-	grantTotalCell.textContent = grantTotal;
 }
 
 // on save create objects that saves the changes
