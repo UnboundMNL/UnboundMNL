@@ -5,7 +5,7 @@
             <h4 class="format-number" id = "totalSaving"><%=totalSaving%></h4>
         </div>
     </div>
-    <h4 class="flex-grow-1 text-center mt-2 mb-3" id="memberYear">Savings and Matching Grant for <%=year%></h4>
+    <h4 class="flex-grow-1 text-center mt-2 mb-3" id="memberYear">Savings, Matching, and Deductions for <%=year%></h4>
     
     <div class="d-flex justify-content-between mb-2">
         <div class="d-flex" id="yearChange">
@@ -25,6 +25,7 @@
                 <% } %>
                 <th rowspan="2" class = "align-middle">Total Savings</th>
                 <th rowspan="2" class = "align-middle">Total Match</th>
+                <th rowspan="2" class = "align-middle">Total Deductions</th>
                 <th rowspan="2" class = "align-middle">Grant Total</th>
             </tr>
             <tr>
@@ -50,7 +51,8 @@
                     <% } %>
                     <td class="format-number"><%= memberList[i].totalSaving %></td>
                     <td class="format-number"><%= memberList[i].totalMatch %></td>
-                    <% let total = memberList[i].totalMatch + memberList[i].totalSaving%>
+                    <td class="format-number" contenteditable="true" id="<%= memberList[i].id %>_<%= year %>_totalDeductions"><%= memberList[i].totalDeductions %></td>
+                    <% let total = memberList[i].totalMatch + memberList[i].totalSaving - memberList[i].totalDeductions%>
                     <td class="format-number"><%= total %></td>
                 </tr>
             <% } %>

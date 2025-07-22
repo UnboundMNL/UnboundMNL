@@ -41,6 +41,12 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			if (/^\d+(\.\d+)?$/.test(cell.textContent) || cell.textContent === '') {
 				cell.style.backgroundColor = '';
+				
+				// Update Grant Total if Total Deductions cell is edited
+				if (cell.id && cell.id.includes('_totalDeductions')) {
+					updateGrantTotal(cell);
+				}
+				
 				if (check(table)) {
 					saveButton.disabled = false;
 				}
@@ -125,7 +131,7 @@ function reloadTable(value, table) {
 		.then((data) => {
 			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
-				let total = member.totalSaving + member.totalMatch;
+				let total = member.totalSaving + member.totalMatch - member.totalDeductions;
 				const rowData = [
 					member.name,
 					member.orgId,
@@ -155,9 +161,10 @@ function reloadTable(value, table) {
 					member.dec.match,
 					member.totalSaving,
 					member.totalMatch,
+					member.totalDeductions,
 					total,
 				];
-				sum += member.totalSaving + member.totalMatch;
+				sum += member.totalSaving + member.totalMatch - member.totalDeductions;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -170,7 +177,7 @@ function reloadTable(value, table) {
 				}
 				j++;
 
-				for (let i = 2; i < cells.length - 3; i += 2) {
+				for (let i = 2; i < cells.length - 4; i += 2) {
 					let cell = cells[i];
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_savings`);
@@ -178,6 +185,11 @@ function reloadTable(value, table) {
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_match`);
 				}
+				
+				// Make Total Deductions cell editable
+				const totalDeductionsCell = cells[cells.length - 2]; // Second to last cell
+				totalDeductionsCell.setAttribute('contenteditable', 'true');
+				totalDeductionsCell.setAttribute('id', `${member.id}_${value}_totalDeductions`);
 				linkMemberPage(`${member.id}`, className);
 				const yearDiv = document.getElementById("memberYear");
 				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
@@ -214,16 +226,47 @@ function check(table) {
 	return true;
 }
 
+// Update Grant Total when Total Deductions is changed
+function updateGrantTotal(deductionsCell) {
+	const row = deductionsCell.parentNode;
+	const cells = row.querySelectorAll('td');
+	
+	// Get Total Savings, Total Match, and Total Deductions values
+	const totalSavings = parseFloat(cells[cells.length - 4].textContent) || 0;
+	const totalMatch = parseFloat(cells[cells.length - 3].textContent) || 0;
+	const totalDeductions = parseFloat(deductionsCell.textContent) || 0;
+	
+	// Calculate new Grant Total
+	const grantTotal = totalSavings + totalMatch - totalDeductions;
+	
+	// Update the Grant Total cell (last cell)
+	const grantTotalCell = cells[cells.length - 1];
+	grantTotalCell.textContent = grantTotal;
+}
+
 // on save create objects that saves the changes
 async function save() {
 	const constructedChanges = [];
 	for (const each of LISTOFCHANGES) {
 		const split = each.id.split('_');
-		const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
-		if (existingChange) {
-			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
-		} else {
-			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
+		
+		// Handle totalDeductions field (format: memberID_year_totalDeductions)
+		if (split.length === 3 && split[2] === 'totalDeductions') {
+			const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[1]);
+			if (existingChange) {
+				existingChange.content.push(new orderedContent('totalDeductions', each.textContent === '' ? "0" : each.textContent, 'totalDeductions'));
+			} else {
+				constructedChanges.push(new Change(split[0], split[1], [new orderedContent('totalDeductions', each.textContent === '' ? "0" : each.textContent, 'totalDeductions')]));
+			}
+		} 
+		// Handle monthly savings/match fields (format: memberID_month_year_type)
+		else if (split.length === 4) {
+			const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
+			if (existingChange) {
+				existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
+			} else {
+				constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
+			}
 		}
 	}
 	for (const each of constructedChanges) {
@@ -243,6 +286,9 @@ async function save() {
 					updateData[orderedContent.month] = {};
 				}
 				updateData[orderedContent.month].savings = orderedContent.content;
+			}
+			if (orderedContent.type === "totalDeductions") {
+				updateData.totalDeductions = orderedContent.content;
 			}
 		});
 		data["updateData"] = updateData;

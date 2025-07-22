@@ -34,11 +34,22 @@ const savingsController = {
                     });
                     updatedData.totalSaving = totalSavings;
                     updatedData.totalMatch = totalMatch;
+                    
+                    // Handle totalDeductions if provided
+                    if (updateData.totalDeductions !== undefined) {
+                        updatedData.totalDeductions = parseInt(updateData.totalDeductions, 10);
+                    }
+                    
                     const currentSaving = await Saving.findOne({ memberID: id, year });
                     const member = await Member.findOne({ _id: id });
                     member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
 
                     member.totalMatch += (updatedData.totalMatch - currentSaving.totalMatch);
+                    
+                    // Update member totalDeductions if provided
+                    if (updatedData.totalDeductions !== undefined) {
+                        member.totalDeductions = updatedData.totalDeductions;
+                    }
                     const updatedMember = await member.save();
                     const group = await Group.findById(req.session.groupId);
                     group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
@@ -81,14 +92,22 @@ const savingsController = {
                     });
                     updatedData.totalSaving = totalSavings;
                     updatedData.totalMatch = totalMatch;
-
-
+                    
+                    // Handle totalDeductions if provided
+                    if (updateData.totalDeductions !== undefined) {
+                        updatedData.totalDeductions = parseInt(updateData.totalDeductions, 10);
+                    }
 
                     const currentSaving = await Saving.findOne({ memberID: id, year });
                     const member = await Member.findOne({ _id: id });
                     member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
 
                     member.totalMatch += (updatedData.totalMatch - currentSaving.totalMatch);
+                    
+                    // Update member totalDeductions if provided
+                    if (updatedData.totalDeductions !== undefined) {
+                        member.totalDeductions = updatedData.totalDeductions;
+                    }
 
                     member.savings.push(newSaving._id);
                     const updatedMember = await member.save();
