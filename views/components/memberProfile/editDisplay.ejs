@@ -1,4 +1,3 @@
-
 <div class="container-profile">
     <div>
         <button class="btn btn-outline-secondary btn-sm mb-2" onclick="backProfile()"><i class='bx bx-arrow-back'></i> Back to Profile</button>
@@ -9,24 +8,35 @@
                 <div class="d-flex flex-column">
                     <img src="/img/default_pfp.png" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
-                <h4><%=member.name.firstName%> <%=member.name.lastName%></h4>
+                <h4><%=member.name?.firstName || 'Unknown'%> <%=member.name?.lastName || 'Unknown'%></h4>
             </div>
             <button class="btn btn-secondary btn-sm">Change Photo</button>
         </div>
         <div class="align-items-right">
-            <% var memberName = member.name.firstName + " " + member.name.lastName; %>
+            <% var memberName = (member.name?.firstName || 'Unknown') + " " + (member.name?.lastName || 'Unknown'); %>
             <button class="btn btn-danger btn-sm" onclick="displayDeleteModal('<%= memberName %>')">Delete Member</button>
         </div>
     </div>
     <hr>
 
     <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
-    "Mother's Name", "Father's Name", "Birthdate", "Gender", "Status"]; %>
-    <!-- Hannah: Temporary Info -->
-    <% const personalInfo = [member.orgId, member.name.firstName+" "+member.name.lastName, cluster, project, group, member.address,
-    member.nameMother.firstName+" "+member.nameMother.lastName, member.nameFather.firstName+" "+member.nameFather.lastName, fixedBirthdate, member.sex, member.status]; %>
+    "Parent's Name", "Birthdate", "Gender", "Status"]; %>
+    
+    <% const personalInfo = [
+        member.orgId || 'N/A', 
+        (member.name?.firstName || 'Unknown') + " " + (member.name?.lastName || 'Unknown'), 
+        cluster || 'Unknown Cluster', 
+        project || 'Unknown Project', 
+        group || 'Unknown Group', 
+        member.address || 'N/A',
+        member.parentName || 'Unknown', 
+        fixedBirthdate || 'Unknown', 
+        member.sex || 'Unknown', 
+        member.status || 'Active'
+    ]; %>
 
-    <% const fieldNames = ["id", "MemberName", "cluster", "project", "group", "address", "MotherName", "FatherName", "birthdate", "sex", "status"]; %>
+    <% const fieldNames = ["id", "MemberName", "cluster", "project", "group", "address", "parentName", "birthdate", "sex", "status"]; %>
+    
     <form onsubmit="event.preventDefault();" class="needs-validation" novalidate>
         <div class="d-flex mt-4" id="infoContainer">
             <div class="row d-flex flex-grow-1">
@@ -36,44 +46,44 @@
                         <div class="row mt-2">
                             <h6 class="col-4 mt-2"><%- info[i] %></h6>
 
-                        <% if (i === 2 || i === 3 || i === 4) { %>
-                            <select class="col form-select" 
-                                aria-label="<%= i === 2 ? 'clusterId' : i === 3 ? 'projectId' : 'groupId' %>" 
-                                name="<%= i === 2 ? 'clusterId' : i === 3 ? 'projectId' : 'groupId' %>"
-                                id="<%= i === 2 ? 'clusterSelect' : i === 3 ? 'projectSelect' : 'groupSelect' %>">
-                                <% const choices = (i === 2) ? clusterChoices : (i === 3) ? projectChoices : groupChoices; %>
-                                <% for (let j = 0; j < choices.length; j++) { %>
-                                    <option value="<%= choices[j]._id %>" <%= choices[j].name === (i === 2 ? cluster : i === 3 ? project : group) ? 'selected' : '' %>>
-                                        <%= choices[j].name %>
-                                    </option>
-                                <% } %>
-                            </select>
-                            
-                        <% } else if (fieldNames[i]=="MemberName") { %>
-                            <div class="col no-padding mt-1">
-                                <div>
-                                    <label for="MemberFirstName" class="text-muted"><small>First Name</small></label>
-                                    <input type="text" class="col form-control" value="<%- member.name.firstName %>" id="MemberFirstName" required/>
-                                    <div class="invalid-feedback">
-                                        Please fill out this field.
-                                    </div>
-                                </div>
+                            <% if (i === 2 || i === 3 || i === 4) { %>
+                                <select class="col form-select" 
+                                    aria-label="<%= i === 2 ? 'clusterId' : i === 3 ? 'projectId' : 'groupId' %>" 
+                                    name="<%= i === 2 ? 'clusterId' : i === 3 ? 'projectId' : 'groupId' %>"
+                                    id="<%= i === 2 ? 'clusterSelect' : i === 3 ? 'projectSelect' : 'groupSelect' %>">
+                                    <% const choices = (i === 2) ? clusterChoices : (i === 3) ? projectChoices : groupChoices; %>
+                                    <% for (let j = 0; j < choices.length; j++) { %>
+                                        <option value="<%= choices[j]._id %>" <%= choices[j].name === (i === 2 ? cluster : i === 3 ? project : group) ? 'selected' : '' %>>
+                                            <%= choices[j].name %>
+                                        </option>
+                                    <% } %>
+                                </select>
                                 
-                                <div>
-                                    <label for="MemberLastName" class="text-muted"><small>Last Name</small></label>
-                                    <input type="text" class="col form-control" value="<%- member.name.lastName %>" id="MemberLastName" required/>
+                            <% } else if (fieldNames[i]=="MemberName") { %>
+                                <div class="col no-padding mt-1">
+                                    <div>
+                                        <label for="MemberFirstName" class="text-muted"><small>First Name</small></label>
+                                        <input type="text" class="col form-control" value="<%- member.name?.firstName || '' %>" id="MemberFirstName" required/>
+                                        <div class="invalid-feedback">
+                                            Please fill out this field.
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="MemberLastName" class="text-muted"><small>Last Name</small></label>
+                                        <input type="text" class="col form-control" value="<%- member.name?.lastName || '' %>" id="MemberLastName" required/>
+                                        <div class="invalid-feedback">
+                                            Please fill out this field.
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="col no-padding">
+                                    <input type="text" class="form-control" value="<%- personalInfo[i] %>" id="<%- fieldNames[i]%>" required/>
                                     <div class="invalid-feedback">
                                         Please fill out this field.
                                     </div>
                                 </div>
-                            </div>
-                        <% } else { %>
-                            <div class="col no-padding">
-                                <input type="text" class="form-control" value="<%- personalInfo[i] %>" id="<%- fieldNames[i]%>" required/>
-                                <div class="invalid-feedback">
-                                    Please fill out this field.
-                                </div>
-                            </div>
                             <% }%>
                         </div>
                     <% } %>                
@@ -87,44 +97,61 @@
 
                             <% if (fieldNames[i]=="birthdate") { %> 
                                 <input type="date" class="col form-control" value="<%- editDate %>" id="birthdate" max="<%= new Date().toISOString().split('T')[0] %>"/>
-                            <% } else if (fieldNames[i]=="MotherName"){ %>
+                            <% } else if (fieldNames[i]=="parentName"){ %>
                                 <div class="col no-padding mt-1">
-                                    <label for="MotherFirstName" class="text-muted"><small>Mother's First Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameMother.firstName %>" id="MotherFirstName"/>
-                                    <label for="MotherLastName" class="text-muted"><small>Mother's Last Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameMother.lastName %>" id="MotherLastName"/>
-                                </div>
-                            <% } else if (fieldNames[i]=="FatherName"){ %>
-                                <div class="col no-padding mt-1">
-                                    <label for="FatherFirstName" class="text-muted"><small>Father's First Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameFather.firstName %>" id="FatherFirstName"/>
-                                    <label for="FatherLastName" class="text-muted"><small>Father's Last Name</small></label>
-                                    <input type="text" class="form-control" value="<%- member.nameFather.lastName %>" id="FatherLastName"/>
+                                    <div>
+                                        <label for="ParentFirstName" class="text-muted"><small>Parent First Name</small></label>
+                                        <input type="text" class="form-control" value="<%- member.parentName ? member.parentName.split(' ')[0] : '' %>" id="ParentFirstName"/>
+                                    </div>
+                                    <div>
+                                        <label for="ParentLastName" class="text-muted"><small>Parent Last Name</small></label>
+                                        <input type="text" class="form-control" value="<%- member.parentName ? member.parentName.split(' ').slice(1).join(' ') : '' %>" id="ParentLastName"/>
+                                    </div>
                                 </div>
                             <% } else if (fieldNames[i]=="sex"){%>
                                 <select class="col form-select" id="sex" name="sex" aria-label="sex">
                                     <option <% if  (member.sex=="Male"){ %> selected <% } %> value="Male">Male</option>
                                     <option <% if  (member.sex=="Female"){ %> selected <% } %> value="Female">Female</option>
                                     <option <% if  (member.sex=="Other"){ %> selected <% } %> value="Other">Other</option>
+                                    <option <% if  (member.sex=="Unknown"){ %> selected <% } %> value="Unknown">Unknown</option>
                                 </select>  
                             <% } else if (fieldNames[i]=="status"){%>
                                 <select class="col form-select" id="status" name="status" aria-label="status">
-                                    <option selected default hidden value="">Choose a Status</option>
                                     <option <% if  (member.status=="Active"){ %> selected <% } %> value="Active">Active</option>
                                     <option <% if  (member.status=="RwS"){ %> selected <% } %> value="RwS">Retired with Savings</option>
                                     <option <% if  (member.status=="RwoS"){ %> selected <% } %> value="RwoS">Retired w/o Savings</option>
                                 </select>  
-                            <% }%>%>
+                            <% } else { %>
+                                <div class="col no-padding">
+                                    <input type="text" class="form-control" value="<%- personalInfo[i] %>" id="<%- fieldNames[i]%>" required/>
+                                    <div class="invalid-feedback">
+                                        Please fill out this field.
+                                    </div>
+                                </div>
+                            <% } %>
                         </div>
                     <% } %>    
                 </div>  
             </div>
         </div>
 
-
         <script>
-            var inputFields = ["<%=member.orgId %>","<%=member.name.firstName%>", "<%=member.name.lastName %>", "<%=member.address %>", "<%=member.nameMother.firstName %>", "<%=member.nameMother.lastName %>", "<%=member.nameFather.firstName %>", "<%=member.nameFather.lastName %>"];
-            var dropdownFields = ["<%=cluster %>","<%=project %>","<%=group %>",'<%=member.sex%>','<%=member.status%>'];
+            // Field reset values for proper mapping
+            var fieldResetValues = {
+                'id': "<%=member.orgId || '' %>",
+                'MemberFirstName': "<%=member.name?.firstName || '' %>",
+                'MemberLastName': "<%=member.name?.lastName || '' %>", 
+                'address': "<%=member.address || '' %>",
+                'ParentFirstName': "<%=member.parentName ? member.parentName.split(' ')[0] : '' %>",
+                'ParentLastName': "<%=member.parentName ? member.parentName.split(' ').slice(1).join(' ') : '' %>",
+                'birthdate': "<%=editDate || '' %>",
+                'clusterSelect': "<%=cluster || '' %>",
+                'projectSelect': "<%=project || '' %>", 
+                'groupSelect': "<%=group || '' %>",
+                'sex': '<%=member.sex || 'Unknown' %>',
+                'status': '<%=member.status || 'Active' %>'
+            };
+            
             var projectChoicesName = [
                 <% for (let i = 0; i < projectChoices.length; i++) { %>
                         "<%= projectChoices[i].name %>"<%= i < projectChoices.length - 1 ? ',' : '' %>
@@ -147,6 +174,7 @@
                 ];
 
             document.addEventListener('DOMContentLoaded', function() {
+                // Set permissions
                 if ("<%=authority%>" !== "Admin") {
                     document.getElementById("clusterSelect").disabled = true;
                 }
@@ -154,6 +182,9 @@
                     document.getElementById("projectSelect").disabled = true;
                     document.getElementById("groupSelect").disabled = true;
                 }
+                
+                const memberId = "<%=member._id%>";
+                saveEdit("/memberInfo", `/member/${memberId}/edit`, "saveEdit");
             }, false);
 
             function displayDeleteModal(memberName) {
@@ -161,14 +192,68 @@
                 $('#deleteProfileModal').modal('show');
                 $('#memberNameToDelete').text(memberName);
             }
+            
+            // Reset form fields to original values
+            function resetFormFields() {
+                // Reset text inputs
+                document.getElementById('id').value = fieldResetValues.id;
+                document.getElementById('MemberFirstName').value = fieldResetValues.MemberFirstName;
+                document.getElementById('MemberLastName').value = fieldResetValues.MemberLastName;
+                document.getElementById('address').value = fieldResetValues.address;
+                document.getElementById('ParentFirstName').value = fieldResetValues.ParentFirstName;
+                document.getElementById('ParentLastName').value = fieldResetValues.ParentLastName;
+                document.getElementById('birthdate').value = fieldResetValues.birthdate;
+                
+                // Reset dropdowns
+                document.getElementById('sex').value = fieldResetValues.sex;
+                document.getElementById('status').value = fieldResetValues.status;
+                
+                // Reset cluster/project/group dropdowns
+                const clusterSelect = document.getElementById('clusterSelect');
+                const projectSelect = document.getElementById('projectSelect');
+                const groupSelect = document.getElementById('groupSelect');
+                
+                if (clusterSelect) {
+                    for (let option of clusterSelect.options) {
+                        if (option.text === fieldResetValues.clusterSelect) {
+                            clusterSelect.value = option.value;
+                            break;
+                        }
+                    }
+                }
+                
+                if (projectSelect) {
+                    for (let option of projectSelect.options) {
+                        if (option.text === fieldResetValues.projectSelect) {
+                            projectSelect.value = option.value;
+                            break;
+                        }
+                    }
+                }
+                
+                if (groupSelect) {
+                    for (let option of groupSelect.options) {
+                        if (option.text === fieldResetValues.groupSelect) {
+                            groupSelect.value = option.value;
+                            break;
+                        }
+                    }
+                }
+                
+                // Show toast notification
+                $('.toast').toast('show');
+            }
         </script>
         
         <div class="d-flex justify-content-center mt-4 button-gap">
-            <button class="btn btn-secondary" id="cancelButton" onclick='cancelChanges(JSON.stringify(inputFields), "<%=editDate%>",JSON.stringify(dropdownFields), JSON.stringify(projectChoicesName), JSON.stringify(projectChoicesId), JSON.stringify(groupChoicesName), JSON.stringify(groupChoicesId))'>Cancel Changes</button>
+            <button class="btn btn-secondary" id="cancelButton" onclick="resetFormFields()">Cancel Changes</button>
             <button type="submit" class="btn btn-primary" id="saveEdit">Save Changes</button>
         </div>
     </form>
 </div>
+
+<!-- Include saveEdit.js -->
+<script src="/js/saveEdit.js"></script>
 
 <div class="toast text-center text-white
             bg-primary position-fixed 

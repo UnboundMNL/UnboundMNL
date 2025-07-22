@@ -4,8 +4,8 @@
 
         <!-- <form onsubmit="event.preventDefault();" class="needs-validation" novalidate> -->
             <div class="row">
-                <div class="col-md-6" id="inputContainer">
-                    <div class="p-2 flex flex-column gap-16">
+                <div class="col-md-6 w-full" id="inputContainer">
+                    <div class="p-2 flex flex-column">
                         <!-- Hannah: In case names are required -->
                         <!-- <div class="row mb-2">
                             <div class="col-md-6">
@@ -24,18 +24,40 @@
                             </div>
                         </div> -->
                         <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-red"></div>Username</span>
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Username</span>
 
                             <input type="text" class="form-control" id="username" autocomplete="off">
 
                             <span id="usernameAlert"></span>
                         </div>
+
                         <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-green"></div>Password</span>
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Password</span>
                             <input type="password" id="pass" class="form-control" autocomplete="new-password">
                         </div>
+
                         <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-brown"></div>Cluster</span>
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Confirm Password</span>
+                            <input type="password" id="repass" class="form-control" autocomplete="new-password">
+                        </div>
+
+                        <div class="mb-2">
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Account Type</span>
+                            <div>
+                                <select class="custom-select form-select" id="accountType" required>
+                                    <option selected hidden value="" default>Choose...</option>
+    
+                                    <% if (authority == "Admin") { %>
+                                        <option value="Admin">Admin</option>
+                                    <% } %>
+                                    <option value="SEDO">SEDO</option>
+                                    <option value="Treasurer">Treasurer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Cluster</span>
                             <div>
                                 <select class="custom-select form-select" id="clusterSelect" required <% if (authority !== 'Admin') { %> disabled <% } %>>
 
@@ -52,8 +74,18 @@
                             </div>
  
                         </div>
+                        
                         <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-turquoise"></div>Self-Help Group</span>
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Sub-Projects</span>
+                            <div>
+                                <select class="custom-select form-select" id="spuSelect" required>
+                                    <option selected hidden default value="" selected>Choose...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <span class="flex flex-row flex-cross-center gap-2 mb-2">Self-Help Group</span>
                             <div>
                                 <select class="custom-select form-select" id="shgSelect" required>
                                     <option selected hidden default value="" selected>Choose...</option>
@@ -62,38 +94,6 @@
 
                         </div>
                         <span id="matchingAlert2"></span>
-                    </div>
-                </div>
-                <div class="col-md-6" id="inputContainer">
-                    <div class="p-2 flex flex-column gap-16">
-                        <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-yellow"></div>Account Type</span>
-                            <div>
-                                <select class="custom-select form-select" id="accountType" required>
-                                    <option selected hidden value="" default>Choose...</option>
-    
-                                    <% if (authority == "Admin") { %>
-                                        <option value="Admin">Admin</option>
-                                    <% } %>
-                                    <option value="SEDO">SEDO</option>
-                                    <option value="Treasurer">Treasurer</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-darkblue"></div>Confirm Password</span>
-                            <input type="password" id="repass" class="form-control" autocomplete="new-password">
-                        </div>
-                        
-                        <div class="mb-2">
-                            <span class="flex flex-row flex-cross-center gap-2 mb-2"><div class="label-dot label-dot-red"></div>Sub-Projects</span>
-                            <div>
-                                <select class="custom-select form-select" id="spuSelect" required>
-                                    <option selected hidden default value="" selected>Choose...</option>
-                                </select>
-                            </div>
-                        </div>
     
                         <span id="noPart"></span>
                     </div>

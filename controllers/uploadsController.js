@@ -1,256 +1,261 @@
 const XLSX = require('xlsx');
-const Saving = require('../models/Saving');
-const Member = require('../models/Member');
-const memberController = require('../controllers/memberController.js');
-const savingsController = require('../controllers/savingsController.js');
+const User = require('../models/User');
+const memberController = require('./memberController');
+const fs = require('fs');
 
-function mapMonthNameToSchemaKey(monthName) {
-    monthName = monthName && monthName.toLowerCase();
-    const monthMap = {
-        'january': 'jan',
-        'february': 'feb',
-        'march': 'mar',
-        'april': 'apr',
-        'may': 'may',
-        'june': 'jun',
-        'july': 'jul',
-        'august': 'aug',
-        'september': 'sep',
-        'october': 'oct',
-        'november': 'nov',
-        'december': 'dec'
-    };
-    if (!monthName) return null;
-    return monthMap[monthName.toLowerCase()] || null;
-}
+// Import helper functions
+const { 
+    CONFIG, 
+    validateFileUpload, 
+    validateEncoding
+} = require('./utils/uploadHelpers');
+
+const { 
+    validateMemberData, 
+    processMemberData 
+} = require('./utils/memberDataHelpers');
+
+const { 
+    processMonthlySavings 
+} = require('./utils/savingsHelpers');
 
 module.exports = {
     post: async (req, res) => {
         let issues = [];
+        let members = [];
+        let logCount = 0;
+        let nonEmptyRows = 0;
+        let hasResponded = false;
+        let headerCount = CONFIG.HEADER_ROW_COUNT;
+        
         try {
-            if (!req.file || !req.file.path) {
-                return res.status(400).json({ success: false, message: 'No file uploaded.' });
+            const selectedCluster = req.body.cluster;
+            const selectedSubproject = req.body.subproject;
+            const selectedShg = req.body.shg;
+            
+            console.log('Form selections:', {
+                cluster: selectedCluster,
+                subproject: selectedSubproject,
+                shg: selectedShg
+            });
+            
+            // Validate selections based on authority
+            const authority = req.session.authority || (await User.findById(req.session.userId))?.authority;
+            
+            if (authority === 'Admin') {
+                if (!selectedCluster || !selectedSubproject || !selectedShg) {
+                    req.session.massRegistrationSummary = {
+                        recordsDone: 0,
+                        recordsTotal: 0,
+                        errorCount: 1,
+                        issues: ['Please select cluster, project, and group before uploading.'],
+                        successRate: '0.00',
+                        message: 'Missing required selections.'
+                    };
+                    hasResponded = true;
+                    return res.redirect('/mass-register-done');
+                }
+            } else if (authority === 'SEDO') {
+                if (!selectedSubproject || !selectedShg) {
+                    req.session.massRegistrationSummary = {
+                        recordsDone: 0,
+                        recordsTotal: 0,
+                        errorCount: 1,
+                        issues: ['Please select project and group before uploading.'],
+                        successRate: '0.00',
+                        message: 'Missing required selections.'
+                    };
+                    hasResponded = true;
+                    return res.redirect('/mass-register-done');
+                }
             }
-            const workbook = XLSX.readFile(req.file.path);
-            const sheetName = workbook.SheetNames[0]; 
-            const sheet = workbook.Sheets[sheetName];
+            
+            // Validate file
+            const fileValidation = validateFileUpload(req.file);
+            if (!fileValidation.valid) {
+                req.session.massRegistrationSummary = {
+                    recordsDone: 0,
+                    recordsTotal: 0,
+                    errorCount: 1,
+                    issues: [fileValidation.error],
+                    successRate: '0.00',
+                    message: 'File validation failed.'
+                };
+                hasResponded = true;
+                return res.redirect('/mass-register-done');
+            }
 
+            // Read Excel file
+            const workbook = XLSX.readFile(req.file.path);
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
             const rows = XLSX.utils.sheet_to_json(sheet, {
                 header: 1,
                 defval: '',
             });
             
-            let logCount = 0;
-            let headerCount = 4;
-            const template = rows[0];
             const headerRow = rows[1];
-            const dataRows = rows.slice(3);
+            const dataRows = rows.slice(headerCount);
 
-            // DEBUGGING: Store members and print later
-            members = [];
-            nonEmptyRows = 0;
+            // Validate encoding type
+            const encodingValidation = validateEncoding(headerRow);
+            if (!encodingValidation.valid) {
+                req.session.massRegistrationSummary = {
+                    recordsDone: 0,
+                    recordsTotal: 0,
+                    errorCount: 1,
+                    issues: [encodingValidation.error],
+                    successRate: '0.00',
+                    message: 'File encoding not recognized.'
+                };
+                hasResponded = true;
+                return res.redirect('/mass-register-done');
+            }
 
+            // Process each row
             for (let rowIdx = 0; rowIdx < dataRows.length; rowIdx++) {
                 const row = dataRows[rowIdx];
-                // Skip completely empty rows without logging an issue
+                
+                // Skip empty rows
                 if (!row || row.every(cell => cell === '' || cell === null || cell === undefined)) {
                     continue;
                 }
                 
                 nonEmptyRows++;
-                // Skip rows with missing required fields and log an issue
-                if (!(row[1] && row[2] && row[3] && row[4])) {
-                    issues.push(`Row ${rowIdx + headerCount}: Missing required fields`);
-                    continue;
-                }
-                
-                const member = {
-                    name: {
-                        lastName: row[1] ? String(row[1]).trim() : '',
-                        firstName: row[2] ? String(row[2]).trim() : '',
-                    },
-                    status: row[3] ? String(row[3]).trim() : '',
-                    orgId: row[4] ? String(row[4]).trim() : '',
-                    parentName: row[5] && String(row[5]).trim() !== '' ? String(row[5]).trim() : 'Unknown'
+                let member = processMemberData(row);
+
+                const memberForValidation = {
+                    name: member.name,
+                    status: member.status,
+                    orgId: member.orgId,
+                    parentName: member.parentName,
+                    originalStatus: member.originalStatus
                 };
 
+                // Validate member data
+                const validation = validateMemberData(memberForValidation, rowIdx + headerCount + 1);
+                if (!validation.valid) {
+                    const combinedErrors = validation.errors.join(', ');
+                    issues.push(`Row ${rowIdx + headerCount + 1}: User not added - ${combinedErrors}`);
+                    continue;
+                }
+
                 try {
-                    // DEBUGGING: Print the member being processed
-                    console.log(`Processing member at index ${rowIdx}:`, member);
-                    
-                    // Updated: Handle the new response format from bulkRegisterMember
-                    const memberResult = await memberController.bulkRegisterMember(member, {
-                        groupId: req.session.groupId,
-                        projectId: req.session.projectId,
-                        clusterId: req.session.clusterId
-                    });
+                    const memberData = {
+                        name: member.name,
+                        status: member.status,
+                        orgId: member.orgId,
+                        parentName: member.parentName
+                    };
+
+                    // Determine session data based on authority
+                    let sessionData = {};
+                    if (authority === 'Admin' || authority === 'SEDO') {
+                        sessionData = {
+                            groupId: selectedShg,
+                            projectId: selectedSubproject,
+                            clusterId: selectedCluster || req.session.clusterId
+                        };
+                    } else if (authority === 'Treasurer') {
+                        sessionData = {
+                            groupId: req.session.groupId,
+                            projectId: req.session.projectId,
+                            clusterId: req.session.clusterId
+                        };
+                    }
+
+                    // Create member
+                    const memberResult = await memberController.bulkRegisterMember(memberData, sessionData);
 
                     if (memberResult && memberResult.success) {
                         const createdMember = memberResult.member;
-                        
-                        // Log warning if there was an update error
+                        const isExistingMember = memberResult.isExisting;
+
+                        // Handle warnings
+                        if (!isExistingMember) {
+                            if (member.statusWasEmpty && member.parentWasEmpty) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User added - Member status and parent name were empty, defaulted to 'Active' and 'Unknown'`);
+                            } else if (member.statusWasEmpty) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User added - Member status was empty, defaulted to 'Active'`);
+                            } else if (member.parentWasEmpty) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User added - Parent name was empty, defaulted to 'Unknown'`);
+                            }
+                        }
+
                         if (memberResult.warning) {
-                            console.warn(`${memberResult.warning}`);
-                            issues.push(`Row ${rowIdx + headerCount}: Warning - ${memberResult.warning}`);
+                            issues.push(`Row ${rowIdx + headerCount + 1}: Warning - ${memberResult.warning}`);
                         }
                         
-                        let savingDoc = null;
-                        let monthsData = {};
-                        let year = null;
+                        const savingResult = await processMonthlySavings(createdMember, headerRow, dataRows, rowIdx, sessionData, req.body.year);
 
-                        if (template[1] === 'YEARLY') {
-                            for (let i = 6; i < headerRow.length; i += 2) {
-                                const value = dataRows[rowIdx][i];
-                                year = headerRow[i];
-                                let matchValue = 0;
-                                if (i + 1 < headerRow.length) {
-                                    const matchRaw = dataRows[rowIdx][i + 1];
-                                    matchValue = matchRaw && !isNaN(Number(matchRaw)) ? Number(matchRaw) : 0;
-                                }
-                                if (year && value && !isNaN(Number(value))) {
-                                    // DEBUGGING: Print the saving details
-                                    console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Value: ${value}, Match: ${matchValue}`);
-                                    savingDoc = new Saving({
-                                        memberID: createdMember._id,
-                                        year: Number(year),
-                                        totalSaving: Number(value),
-                                        totalMatch: matchValue,
-                                    });
-                                    createdMember.totalSaving += Number(value);
-                                    createdMember.totalMatch += matchValue;
-                                    await savingDoc.save();
-                                    createdMember.savings.push(savingDoc._id);
-
-                                    // DEBUGGING: Print member and saving details
-                                    console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} for year ${year}:`, {
-                                        totalSaving: savingDoc.totalSaving,
-                                        totalMatch: savingDoc.totalMatch
-                                    });
-                                }
+                        if (savingResult?.error) {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User savings not saved - ${savingResult.message}`);
+                        } else if (savingResult === -1) {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not updated - Member ${createdMember.name?.firstName} ${createdMember.name?.lastName} 
+                                does not belong to the selected cluster/project/group`);
+                        } else if (savingResult === 0) {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not updated - Member ${createdMember.name?.firstName} ${createdMember.name?.lastName} 
+                                already has savings for the year ${req.body.year}`);
+                        } else if (savingResult === 1) {
+                            if (isExistingMember) {
+                                issues.push(`Row ${rowIdx + headerCount + 1}: User updated - Member ${createdMember.name?.firstName} ${createdMember.name?.lastName} 
+                                    exists, updated savings for year ${req.body.year}`);
                             }
-                        } else {
-                            // MONTHLY ENCODING: accumulate all months for the year in one doc
-                            let yearTotalSaving = 0, yearTotalMatch = 0;
-                            monthsData = {};
-                            year = template[2];
-
-                            for (let i = 6; i < headerRow.length; i += 2) {
-                                const month = headerRow[i];
-                                const value = dataRows[rowIdx][i];
-                                let matchValue = 0;
-                                if (i + 1 < headerRow.length) {
-                                    const matchRaw = dataRows[rowIdx][i + 1];
-                                    matchValue = matchRaw && !isNaN(Number(matchRaw)) ? Number(matchRaw) : 0;
-                                }
-                                if (month && value && !isNaN(Number(value))) {
-                                    let monthKey = mapMonthNameToSchemaKey(month);
-                                    if (monthKey) {
-                                        monthsData[monthKey] = {
-                                            savings: Number(value),
-                                            match: matchValue
-                                        };
-                                        yearTotalSaving += Number(value);
-                                        yearTotalMatch += matchValue;
-                                        createdMember.totalSaving += Number(value);
-                                        createdMember.totalMatch += matchValue;
-
-                                        // DEBUGGING: Print the saving details
-                                        console.log(`Saving for member ${member.name?.firstName} ${member.name?.lastName} - Year: ${year}, Month: ${month}, Value: ${value}, Match: ${matchValue}`);
-                                    }
-                                }
-                            }
-                            if (Object.keys(monthsData).length > 0) {
-                                savingDoc = new Saving({
-                                    memberID: createdMember._id,
-                                    year: Number(year),
-                                    ...monthsData,
-                                    totalSaving: yearTotalSaving,
-                                    totalMatch: yearTotalMatch,
-                                });
-                                await savingDoc.save();
-                                createdMember.savings.push(savingDoc._id);
-                                
-                                // DEBUGGING: Print member and saving details
-                                console.log(`Saving for member ${createdMember.name?.firstName} ${createdMember.name?.lastName} for year ${year}:`, {
-                                    yearTotalSaving: savingDoc.totalSaving,
-                                    yearTotalMatch: savingDoc.totalMatch
-                                });
-                            }
+                            await createdMember.save();
+                            members.push(createdMember);
+                            logCount++;
                         }
-
-                        await createdMember.save();
-
-                        // DEBUGGING: Print the created member
-                        console.log("Created member:", createdMember);
-                        members[rowIdx] = createdMember; 
-                        logCount++;
                         
                     } else {
-                        // Handle different error types from the memberResult
-                        if (memberResult && memberResult.error === 'DUPLICATE_ORG_ID') {
-                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created - duplicate ID.`);
-                            issues.push(`Row ${rowIdx + headerCount}: Member with ID ${member.orgId} already exists.`);
-                        } else if (memberResult && memberResult.error === 'CREATION_ERROR') {
-                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created - creation error.`);
-                            issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${memberResult.message}`);
+                        // Handle creation errors
+                        if (memberResult?.error === 'CREATION_ERROR') {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${memberResult.message}`);
+                        } else if (memberResult?.error === 'MEMBER_ID_EXISTS_BUT_DIFFERENT_NAME') {
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} failed validation - ${memberResult.message}`);
+                            
                         } else {
-                            console.log(`Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
-                            issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created.`);
+                            issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created`);
                         }
-                        continue;
                     }
                 
                 } catch (error) {
                     console.error(`Error saving member ${member.name?.firstName} ${member.name?.lastName}:`, error);
-                    issues.push(`Row ${rowIdx + headerCount}: Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${error.message}`);
+                    issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${error.message}`);
                 }
             }
             
-            // DEBUGGING: Prints the members after saving to the database
-            if (logCount > 0 ) {
-                console.log(`Successfully processed ${logCount} members.`);
-                req.session.massRegistrationSummary = {
-                    recordsDone: logCount,
-                    recordsTotal: nonEmptyRows,
-                    errorCount: nonEmptyRows - logCount,
-                    issues: issues, 
-                    successRate: ((logCount / nonEmptyRows) * 100).toFixed(2),
-                    message: 'Some members were saved.'
-                };
-            } else {
-                console.log('No members saved.');
-                req.session.massRegistrationSummary = {
-                    recordsDone: 0,
-                    recordsTotal: nonEmptyRows,
-                    errorCount: nonEmptyRows,
-                    issues: issues,
-                    successRate: '0.00',
-                    message: 'No members were saved.'
-                };
-            }
+            // Set summary
+            req.session.massRegistrationSummary = {
+                recordsDone: logCount,
+                recordsTotal: nonEmptyRows,
+                errorCount: nonEmptyRows - logCount,
+                issues: issues,
+                successRate: nonEmptyRows > 0 ? ((logCount / nonEmptyRows) * 100).toFixed(2) : '0.00',
+                message: logCount > 0 ? `Successfully processed ${logCount} of ${nonEmptyRows} members.` : 'No members were saved.'
+            };
             
         } catch (err) {
             console.error('Unhandled error:', err);
             req.session.massRegistrationSummary = {
-                recordsDone: 0,
-                recordsTotal: 0,
-                errorCount: 0,
-                issues: issues,
-                successRate: '0.00',
+                recordsDone: logCount,
+                recordsTotal: nonEmptyRows || 0,
+                errorCount: (nonEmptyRows || 0) - logCount + 1,
+                issues: [...issues, `System error: ${err.message}`],
+                successRate: logCount > 0 && nonEmptyRows > 0 ? ((logCount / nonEmptyRows) * 100).toFixed(2) : '0.00',
                 message: 'An error occurred while processing the file.'
             };
         } finally {
-            // discard the uploaded file
             if (req.file && req.file.path) {
-                const fs = require('fs');
                 try {
                     fs.unlinkSync(req.file.path);
-                    console.log('File deleted successfully');
                 } catch (err) {
                     console.error('Error deleting file:', err);
                 }
             }
-            return res.redirect('/mass-register-done');
+
+            if (!hasResponded) {
+                return res.redirect('/mass-register-done');
+            }
         }
     }
 };

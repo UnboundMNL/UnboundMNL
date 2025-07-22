@@ -9,10 +9,8 @@ function saveEdit(link, actionForm, saveID) {
         const status = document.getElementById("status").value;
         const MemberFirstName = document.getElementById("MemberFirstName").value;
         const MemberLastName = document.getElementById("MemberLastName").value;
-        const MotherFirstName = document.getElementById("MotherFirstName").value;
-        const MotherLastName = document.getElementById("MotherLastName").value;
-        const FatherFirstName = document.getElementById("FatherFirstName").value;
-        const FatherLastName = document.getElementById("FatherLastName").value;
+        const ParentFirstName = document.getElementById("ParentFirstName").value;
+        const ParentLastName = document.getElementById("ParentLastName").value;
         const clusterId = document.getElementById("clusterSelect").value;
         const projectId = document.getElementById("projectSelect").value;
         const groupId = document.getElementById("groupSelect").value;
@@ -24,8 +22,7 @@ function saveEdit(link, actionForm, saveID) {
             },
             body: JSON.stringify({
                 orgId, address, birthdate, sex, status, MemberFirstName,
-                MemberLastName, MotherFirstName, MotherLastName,
-                FatherFirstName, FatherLastName, clusterId, projectId, groupId
+                MemberLastName, ParentFirstName, ParentLastName, clusterId, projectId, groupId
             })
         })
             .then(response => {
