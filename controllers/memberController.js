@@ -500,6 +500,51 @@ const memberController = {
         }
     },
 
+    // financial report page
+    report: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+
+                const id = req.query.id;
+                const member = await Member.findById(id).populate('savings').populate('groupId');
+
+                // TODO: monthly savings
+                const monthCounts = {};
+                const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+                const counts = [1000, 2100, 2310, 2345, 1234, 9000, 6969, 3840, 2160, 1920, 1080, 9090]
+
+                months.forEach((m, i) => monthCounts[m] = counts[i])
+                
+                const name = member.name.firstName + ' ' + member.name.lastName
+
+                const orgId = member.orgId
+
+                const totalSaving = member.totalSaving;
+                const totalMatch = member.totalMatch
+                const totalDeductions = member.totalDeductions
+
+                const genDate = new Date()
+
+                const generateLink = "/exportReport?id=" + id 
+
+                // don't touch this
+                const dateOptions = { year: "numeric", month: "long", day: "numeric" }
+
+                res.render("financialReport", { authority, username, sidebar, monthCounts, name, orgId, genDate, dateOptions, totalSaving, totalMatch, totalDeductions, generateLink });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
 }
 
 module.exports = memberController;

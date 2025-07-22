@@ -101,13 +101,13 @@
                 <td style="width: 15%;">Name of Parent/Guardian:</td>
                 <td style="width: 55%;"><input type="text" class="input-line" value="<%= member?.parentName || '' %>"></td>
                 <td style="width: 5%;">SPU:</td>
-                <td style="width: 25%;"><input type="text" class="input-line"></td>
+                <td style="width: 25%;"><input type="text" class="input-line" value="<%= member?.groupId.SPU || '' %>"></td>
             </tr>
             <tr>
                 <td>Name of SM:</td>
                 <td><input type="text" class="input-line" value="<%= member ? member.name.firstName + ' ' + member.name.lastName : '' %>"></td>
                 <td>SHG:</td>
-                <td><input type="text" class="input-line"></td>
+                <td><input type="text" class="input-line" value="<%= member?.groupId.name || '' %>"></td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -148,13 +148,13 @@
                     <thead>
                         <tr>
                             <th colspan="3" style="text-align: center;">
-                                YEAR <input type="text" class="year-input" value="<%= saving.year %>">
+                                YEAR <%= saving.year %>
                             </th>
                         </tr>
                         <tr>
                             <th>Month</th>
-                            <th>SM</th>
-                            <th>MG</th>
+                            <th>Savings</th>
+                            <th>Match</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,13 +166,16 @@
                             </tr>
                         <% }); %>
                         <tr class="total-row">
-                            <td style="font-weight: bold;">TOTAL</td>
-                            <td class="empty-cell"><%= saving.totalSaving ?? '' %></td>
-                            <td class="empty-cell"><%= saving.totalMatch ?? '' %></td>
+                            <td style="font-weight: bold;">Savings + Match</td>
+                            <td class="empty-cell" colspan="2"><%= saving.totalSaving + saving.totalMatch ?? '' %></td>
                         </tr>
                         <tr class="total-row">
-                            <td style="font-weight: bold;">GRAND TOTAL</td>
-                            <td class="empty-cell" colspan="2"><%= saving.totalSaving + saving.totalMatch ?? '' %></td>
+                            <td style="font-weight: bold;">Deductions</td>
+                            <td class="empty-cell" colspan="2"><%= saving.totalDeductions ?? '' %></td>
+                        </tr>
+                        <tr class="total-row">
+                            <td style="font-weight: bold;">Total</td>
+                            <td class="empty-cell" colspan="2"><%= saving.totalSaving + saving.totalMatch - saving.totalDeductions ?? '' %></td>
                         </tr>
                     </tbody>
                 </table>
@@ -185,12 +188,20 @@
             <!-- Summary Table -->
             <table class="summary-table">
                 <tr>
-                    <td>TOTAL Savings</td>
+                    <td>Savings</td>
                     <td><input type="text" style="border: none; border-bottom: 1px solid black; width: 100px;" value="<%= member?.totalSaving || '' %>"></td>
                 </tr>
                 <tr>
-                    <td>TOTAL Matching Grant</td>
+                    <td>Match</td>
                     <td><input type="text" style="border: none; border-bottom: 1px solid black; width: 100px;" value="<%= member?.totalMatch || '' %>"></td>
+                </tr>
+                <tr>
+                    <td>Deductions</td>
+                    <td><input type="text" style="border: none; border-bottom: 1px solid black; width: 100px;" value="<%= member?.totalDeductions || '' %>"></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td><input type="text" style="border: none; border-bottom: 1px solid black; width: 100px;" value="<%= member?.totalSaving + member?.totalMatch - member?.totalDeductions || '' %>"></td>
                 </tr>
             </table>
 
