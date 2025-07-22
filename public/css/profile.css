@@ -21,7 +21,8 @@
     opacity: 0.8;
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: var(--primary-color); /* Fallback color */
+    background-color: var(--primary-color);
+    /* Fallback color */
     border-radius: 10px 10px 0 0;
     min-height: 150px;
     height: 30vh;
@@ -93,8 +94,58 @@
 
 /* ACCOUNT REGISTRATION */
 .register-container {
-    background-color: var(--translucent-tertiary-color);
+    background-color: var(--body-color);
     min-height: 100%;
     padding: 1.5rem;
 }
 
+.upload-container {
+    background: linear-gradient(to bottom, #BEBEBE 0%, #A7B4BC 37%, #90A9B9 100%);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1em;
+    padding: 2em;
+
+    position: relative;
+}
+
+.btn:disabled {
+    background-color: dimgray !important;
+    border-color: dimgray !important;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.btn-upload-files {
+    background-color: gray !important;
+    border-color: gray !important;
+    color: white !important;
+}
+
+.btn-upload-files:hover {
+    background-color: dimgray !important;
+    border-color: dimgray !important;
+}
+
+.hidden-file-input {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+.big-summary-text {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.big-summary-hr {
+    border-width: 1em;
+    color: blue;
+    border-radius: 1em;
+}

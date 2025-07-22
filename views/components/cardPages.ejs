@@ -13,7 +13,7 @@
     <% for (let i = 0; i < pageParts.length; i++) { %>
         <!-- Containers -->
         <div class="col-md-4 d-flex" id = "<%=pageParts[i]._id%>">
-            <div class="container-fluid container-style d-flex flex-column flex-grow-1 justify-content-between">
+            <div class="d-flex flex-column flex-grow-1 justify-content-between section-card" style="background:white !important">
                 <div>
                     <div class="d-flex justify-content-between">
                         <script>
@@ -33,27 +33,28 @@
                         <i class='bx bx-export card-export' id="<%=pageParts[i]._id%>" onclick="displayExportMessage(event, decodedText<%=i%>, '<%=pageParts[i]._id%>','<%=type%>')"></i>
                     </div>
                     
-                    <div>
-                        <i class='bx bxs-map'></i>
+                    <div class="flex flex-row flex-cross-bottom" style="font-weight:200">
                         <span><small><%=pageParts[i].location%></small></span>
+                        <img src="/img/location.png" width="32" height="32" />
                     </div>
                 </div>
    
                 <div class="container-bottom mt-4">
-                    <div class="d-flex align-items-end">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">Edit</button>
+                    <div class="flex flex-row gap-2 w-full">
+						<button onclick="document.getElementById('<%=pageParts[i]._id%>').click()" class="mini-button blue">view</button>
+                        <button type="button" class="mini-button btn-green" data-bs-toggle="modal" data-bs-target="#edit<%=type%>" data-bs-name="<%=pageParts[i].name%>" id="<%=pageParts[i]._id%>">edit</button>
                         <script>
                             var editButton = document.getElementById("<%=pageParts[i]._id%>");
                             editButton.onclick = function() {
                                 changeForm("<%=pageParts[i]._id%>","<%=type%>");
                             };
                         </script>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>" id ="<%=pageParts[i]._id%>">Delete</button>
+                        <button type="button" class="mini-button red" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i %>" id ="<%=pageParts[i]._id%>">delete</button>
                     </div>
 
-                    <div>
-                        <span><small>Total Savings:</small></span>
+                    <div class="savings-card">
                         <h4 class="format-number"><%=pageParts[i].totalKaban%></h4>
+                        <span><small>Total Savings</small></span>
                     </div> 
                 </div>
             </div>

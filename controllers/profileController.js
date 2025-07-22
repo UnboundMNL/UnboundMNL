@@ -116,7 +116,7 @@ const profileController = {
                     })
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts });
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts, currYear });
             } else {
                 res.redirect("/");
             }

@@ -56,6 +56,7 @@ const memberController = {
                             }
                             data.totalMatch = savings.totalMatch;
                             data.totalSaving = savings.totalSaving;
+                            data.totalDeductions = savings.totalDeductions;
                         } else {
                             for (const month of months) {
                                 data[month] = {
@@ -65,6 +66,7 @@ const memberController = {
                             }
                             data.totalMatch = 0;
                             data.totalSaving = 0;
+                            data.totalDeductions = 0;
                         }
                         totalSaving += parseInt(data.totalSaving) + parseInt(data.totalMatch);
                         memberList.push(data);
@@ -112,6 +114,7 @@ const memberController = {
                         }
                         data.totalMatch = savings.totalMatch;
                         data.totalSaving = savings.totalSaving;
+                        data.totalDeductions = savings.totalDeductions;
                     } else {
                         for (const month of months) {
                             data[month] = {
@@ -121,6 +124,7 @@ const memberController = {
                         }
                         data.totalMatch = 0;
                         data.totalSaving = 0;
+                        data.totalDeductions = 0;
                     }
                     totalSaving += data.totalSaving;
                     memberList.push(data);
@@ -153,24 +157,31 @@ const memberController = {
                 const cluster = await Cluster.findById(member.clusterId);
                 const project = await Project.findById(member.projectId);
                 const group = (await Group.findById(member.groupId)).name;
+
+                let fixedBirthdate;
+                let editDate = '';
                 dashbuttons = dashboardButtons(authority);
                 // change date to Philippine format
-                const originalDate = new Date(member.birthdate);
-                originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
-                const options = {
-                    month: 'short',
-                    day: '2-digit',
-                    year: 'numeric',
-                };
-                fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
-                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                const parts = fixedBirthdate.split(' ');
-                let editDate;
-                if (parts.length === 3) {
-                    const monthIndex = months.indexOf(parts[0]) + 1;
-                    const day = parts[1].replace(',', '');
-                    const year = parts[2];
-                    editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                if (member.birthdate) {
+                    const originalDate = new Date(member.birthdate);
+                    originalDate.setMinutes(originalDate.getMinutes() + originalDate.getTimezoneOffset());
+                    const options = {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric',
+                    };
+                    fixedBirthdate = new Intl.DateTimeFormat('en-US', options).format(originalDate);
+                    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const parts = fixedBirthdate.split(' ');
+                    if (parts.length === 3) {
+                        const monthIndex = months.indexOf(parts[0]) + 1;
+                        const day = parts[1].replace(',', '');
+                        const year = parts[2];
+                        editDate = year + '-' + (monthIndex < 10 ? '0' : '') + monthIndex + '-' + day;
+                    }
+                } else {
+                    fixedBirthdate = 'Unknown';
+                    editDate = '';
                 }
                 const clusterChoices = await Cluster.find({ totalGroups: { $gt: 0 } });
                 const projectChoices = await Project.find({
@@ -202,8 +213,7 @@ const memberController = {
         try {
             if (req.session.isLoggedIn) {
                 const { MemberFirstName, MemberLastName, orgId,
-                    FatherFirstName, FatherLastName,
-                    MotherFirstName, MotherLastName,
+                    ParentFirstName, ParentLastName,
                     sex, birthdate, address, status } = req.body;
                 const existingMember = await Member.find({ orgId });
                 if (existingMember.length !== 0) {
@@ -213,20 +223,13 @@ const memberController = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                const nameFather = {
-                    firstName: FatherFirstName,
-                    lastName: FatherLastName
-                };
-                const nameMother = {
-                    firstName: MotherFirstName,
-                    lastName: MotherLastName
-                };
+                const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 let savings = [];
                 const projectId = req.session.projectId;
                 const groupId = req.session.groupId;
                 const clusterId = req.session.clusterId;
                 const newMember = new Member({
-                    name, orgId, nameFather, nameMother, sex, birthdate, address, savings, status, projectId, groupId, clusterId
+                    name, orgId, parentName, sex, birthdate, address, savings, status, projectId, groupId, clusterId
                 });
                 await newMember.save();
                 const group = await Group.findById(req.session.groupId);
@@ -249,27 +252,110 @@ const memberController = {
         }
     },
 
+    // Bulk add members
+    bulkRegisterMember: async (member, sessionData = null) => {
+        try {
+            const { name, status, orgId, parentName } = member;
+            const existingMember = await Member.findOne({ orgId });
+
+            // If member already exists, return error details
+            if (existingMember) {
+                if (
+                    member.name &&
+                    existingMember.name &&
+                    member.name.firstName === existingMember.name.firstName &&
+                    member.name.lastName === existingMember.name.lastName &&
+                    member.orgId === existingMember.orgId
+                ) {
+                    return {
+                        success: true,
+                        member: existingMember,
+                        isExisting: true,
+                        message: 'Member already exists, will update savings only'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        member: null,
+                        error: 'MEMBER_ID_EXISTS_BUT_DIFFERENT_NAME',
+                        message: 'Member with the same ID already exists but has different name',
+                    }
+                }
+            }
+
+            const newMember = new Member({
+                name,
+                orgId,
+                parentName,
+                status,
+                projectId: sessionData?.projectId,
+                groupId: sessionData?.groupId,
+                clusterId: sessionData?.clusterId
+            });
+
+            await newMember.save();
+
+            // If session data is provided, update group/project/cluster totals
+            if (sessionData && sessionData.groupId && sessionData.projectId && sessionData.clusterId) {
+                try {
+                    const group = await Group.findById(sessionData.groupId);
+                    if (group) {
+                        group.members.push(newMember._id);
+                        group.totalMembers += 1;
+                        await group.save();
+                    }
+
+                    const project = await Project.findById(sessionData.projectId);
+                    if (project) {
+                        project.totalMembers += 1;
+                        await project.save();
+                    }
+
+                    const cluster = await Cluster.findById(sessionData.clusterId);
+                    if (cluster) {
+                        cluster.totalMembers += 1;
+                        await cluster.save();
+                    }
+                } catch (updateError) {
+                    console.error('Error updating group/project/cluster totals:', updateError);
+                    // Return success with warning about totals update failure
+                    return {
+                        success: true,
+                        member: newMember,
+                        warning: 'Member created but failed to update group/project/cluster totals',
+                        updateError: updateError.message
+                    };
+                }
+            }
+
+            return {
+                success: true,
+                member: newMember
+            };
+        } catch (error) {
+            console.error('Error in bulkRegisterMember:', error);
+            return {
+                success: false,
+                error: 'CREATION_ERROR',
+                message: `Failed to create member: ${error.message}`,
+                details: error.message
+            };
+        }
+    },
+
     // editing members
     editMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {
                 const { MemberFirstName, MemberLastName, orgId,
-                    FatherFirstName, FatherLastName,
-                    MotherFirstName, MotherLastName,
+                    ParentFirstName, ParentLastName,
                     sex, birthdate, address, status,
                     projectId, groupId, clusterId } = req.body;
                 const name = {
                     firstName: MemberFirstName,
                     lastName: MemberLastName
                 };
-                const nameFather = {
-                    firstName: FatherFirstName,
-                    lastName: FatherLastName
-                };
-                const nameMother = {
-                    firstName: MotherFirstName,
-                    lastName: MotherLastName
-                };
+                const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 const member = await Member.findOne({ _id: req.params.id });
                 if (member) {
                     if (member.groupId.toString() !== groupId) {
@@ -310,7 +396,7 @@ const memberController = {
                             }
                         }
                     }
-                    const updateData = { name, orgId, nameFather, nameMother, sex, birthdate, address, status, projectId, groupId, clusterId };
+                    const updateData = { name, orgId, parentName, sex, birthdate, address, status, projectId, groupId, clusterId };
                     member.set(updateData);
                     const updateMember = await member.save({ new: true });
                     if (updateMember) {
@@ -418,6 +504,51 @@ const memberController = {
         }
     },
 
+    // financial report page
+    report: async (req, res) => {
+        try {
+            if (req.session.isLoggedIn) {
+                const userID = req.session.userId;
+                const sidebar = req.session.sidebar;
+                const user = await User.findById(userID);
+                const authority = user.authority;
+                const username = user.username;
+
+                const id = req.query.id;
+                const member = await Member.findById(id).populate('savings').populate('groupId');
+
+                // TODO: monthly savings
+                const monthCounts = {};
+                const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+                const counts = [1000, 2100, 2310, 2345, 1234, 9000, 6969, 3840, 2160, 1920, 1080, 9090]
+
+                months.forEach((m, i) => monthCounts[m] = counts[i])
+                
+                const name = member.name.firstName + ' ' + member.name.lastName
+
+                const orgId = member.orgId
+
+                const totalSaving = member.totalSaving;
+                const totalMatch = member.totalMatch
+                const totalDeductions = member.totalDeductions
+
+                const genDate = new Date()
+
+                const generateLink = "/exportReport?id=" + id 
+
+                // don't touch this
+                const dateOptions = { year: "numeric", month: "long", day: "numeric" }
+
+                res.render("financialReport", { authority, username, sidebar, monthCounts, name, orgId, genDate, dateOptions, totalSaving, totalMatch, totalDeductions, generateLink });
+            } else {
+                res.redirect("/");
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+        }
+    },
 }
 
 module.exports = memberController;

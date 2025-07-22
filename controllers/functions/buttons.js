@@ -6,22 +6,26 @@ function dashboardButtons(authority) {
             {
                 text: "Clusters",
                 href: "/cluster",
-                icon: "bx-category"
+                icon: "bx-category",
+                color: "red"
             },
             {
                 text: "Members Masterlist",
                 href: "/masterlist",
-                icon: "bxs-user-account"
+                icon: "bxs-user-account",
+                color: "brown"
             },
             {
                 text: "Account Management",
                 href: "/accounts",
-                icon: "bx-cog"
+                icon: "bx-cog",
+                color: "green"
             },
             {
                 text: "Account Registration",
                 href: "/registration",
-                icon: "bxs-user-plus"
+                icon: "bxs-user-plus",
+                color: "blue"
             }
         ];
     } else if (authority === "SEDO") {

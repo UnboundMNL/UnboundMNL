@@ -1,25 +1,27 @@
-<div class="top-bar z-2">
-    <!-- Navigation bar collapse button -->
-    <i class="bx bx-list-ul toggle" onclick="toggleNav(true)"></i>
-    <% if (!sidebar){ %>
-        <script>toggleNav(false)</script>
-    <%}%>
-
-    <!-- Logo -->
-    <div class="logo">
-        <span class="image">
-            <img src="/img/Unbound_icon.png" alt="Unbound Logo">
-        </span>
-        
-        <span class="text text-muted header-text">
-            <span class="name">UNBOUND MNL</span>
-        </span>
+<div class="top-bar-container z-2">
+    <div class="top-bar z-2">
+        <!-- Navigation bar collapse button -->
+        <i class="bx bx-list-ul toggle" onclick="toggleNav(true)"></i>
+        <% if (!sidebar){ %>
+            <script>toggleNav(false)</script>
+        <%}%>
+    
+        <!-- Logo -->
+        <div class="logo">
+            <span class="image">
+                <img src="/img/Unbound_icon.png" alt="Unbound Logo">
+            </span>
+            
+            <span class="text text-muted header-text">
+                <span class="name">UNBOUND MNL</span>
+            </span>
+        </div>
+    
+        <!-- Profile -->
+        <div class="profile toggle"id ="profileButton">
+            <i class="bx bx-user-circle"></i>
+            <span class="text m-1" id="topbar-name"><%=username%></span>
+        </div>
+        <script>profile()</script>
     </div>
-
-    <!-- Profile -->
-    <div class="profile toggle"id ="profileButton">
-        <i class="bx bx-user-circle"></i>
-        <span class="text m-1" id="topbar-name"><%=username%></span>
-    </div>
-    <script>profile()</script>
 </div>

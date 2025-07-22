@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const Cluster = require('../models/Cluster');
+const Project = require('../models/Project');
+const Group = require('../models/Group');
 const mongoose = require('mongoose')
 const { dashboardButtons } = require('../controllers/functions/buttons');
 
@@ -95,7 +97,204 @@ const registerController = {
       res.redirect("/");
     }
   },
+  massRegistrationPage: async (req, res) => {
+    try {
+      if (req.session.isLoggedIn) {
+        const userID = req.session.userId;
+        const sidebar = req.session.sidebar;
+        const user = await User.findById(userID);
+        const authority = user.authority;
+        const username = user.username;
+        dashbuttons = dashboardButtons(authority);
+        let clusterChoices;
+        let subprojects = [];
+        let shgs = [];
 
+        if (authority == "Admin") {
+            clusterChoices = await Cluster.find({}).lean();
+        } else if (authority == "SEDO" && req.session.clusterId) {
+            const cluster = await Cluster.findById(req.session.clusterId).lean();
+            clusterChoices = cluster ? [cluster] : [];
+        } else {
+            clusterChoices = [];
+        }
+        
+        try {
+            if (authority === "Admin") {
+              // Admin can see all projects and groups
+              const projects = await Project.find({}).populate('groups').lean();
+              const groups = await Group.find({}).lean();
+              
+              console.log('Admin - Projects found:', projects.length);
+              console.log('Admin - Groups found:', groups.length);
+              
+              // For Admin, we need to determine which cluster each project belongs to
+              const allClusters = await Cluster.find({}).lean();
+              
+              subprojects = projects.map(project => {
+                  // Find which cluster contains this project
+                  const parentCluster = allClusters.find(cluster => 
+                      cluster.projects && cluster.projects.some(p => p.toString() === project._id.toString())
+                  );
+                  
+                  return {
+                      '_id': project._id.toString(),
+                      'name': project.name,
+                      'cluster': parentCluster ? parentCluster._id.toString() : null,
+                      'groups': project.groups ? project.groups.map(group => group._id.toString()) : []
+                  };
+              });
+              
+              shgs = groups.map(group => ({
+                  '_id': group._id.toString(),
+                  'name': group.name,
+                  'cluster': null // Groups don't have cluster field
+              }));
+              
+              console.log('Admin - Sample subproject:', subprojects[0]);
+          } else if (authority === "SEDO" && req.session.clusterId) {
+                console.log('SEDO - clusterId:', req.session.clusterId);
+                
+                const cluster = await Cluster.findById(req.session.clusterId).populate('projects').lean();
+                
+                if (cluster && cluster.projects) {
+                    console.log('SEDO - Projects in cluster:', cluster.projects.length);
+                    
+                    const projectIds = cluster.projects.map(p => p._id);
+                    const projects = await Project.find({ 
+                        _id: { $in: projectIds } 
+                    }).populate('groups').lean();
+                    
+                    let allGroups = [];
+                    projects.forEach(project => {
+                        if (project.groups && project.groups.length > 0) {
+                            allGroups.push(...project.groups);
+                        }
+                    });
+                    
+                    console.log('SEDO - Projects found:', projects.length);
+                    console.log('SEDO - Groups found:', allGroups.length);
+                    
+                    subprojects = projects.map(project => ({
+                        '_id': project._id.toString(),
+                        'name': project.name,
+                        'cluster': req.session.clusterId.toString(), // Set cluster from session
+                        'groups': project.groups ? project.groups.map(group => group._id.toString()) : []
+                    }));
+                    
+                    shgs = allGroups.map(group => ({
+                        '_id': group._id.toString(),
+                        'name': group.name,
+                        'cluster': null // Groups don't have cluster field
+                    }));
+                } else {
+                    console.log('SEDO - No cluster found or cluster has no projects');
+                    subprojects = [];
+                    shgs = [];
+                }
+                
+            } else if (authority === "Treasurer" && req.session.groupId) {
+                console.log('Treasurer - groupId:', req.session.groupId);
+                
+                const project = await Project.findOne({ 
+                    groups: req.session.groupId 
+                }).populate('groups').lean();
+                
+                console.log('Treasurer - Project found:', !!project);
+                
+                if (project) {
+                    const group = project.groups.find(g => g._id.toString() === req.session.groupId.toString());
+                    
+                    console.log('Treasurer - Group found:', !!group);
+                    
+                    if (group) {
+                        subprojects = [{
+                            '_id': project._id.toString(),
+                            'name': project.name,
+                            'cluster': null, // Projects don't have cluster field
+                            'groups': [group._id.toString()]
+                        }];
+                        
+                        shgs = [{
+                            '_id': group._id.toString(),
+                            'name': group.name,
+                            'cluster': null // Groups don't have cluster field
+                        }];
+                    }
+                }
+            } else {
+                console.log('No matching authority condition met');
+                console.log('Authority:', authority);
+                console.log('Session clusterId:', req.session.clusterId);
+                console.log('Session groupId:', req.session.groupId);
+            }
+        } catch (dbError) {
+            console.error('Database query error:', dbError);
+            // Fallback to empty arrays if database queries fail
+            subprojects = [];
+            shgs = [];
+        }
+        console.log('Final data being sent:');
+        console.log('- Subprojects:', subprojects.length);
+        console.log('- SHGs:', shgs.length);
+        console.log('- ClusterChoices:', clusterChoices.length);
+
+
+        res.render("massRegistration", {
+            authority, 
+            username, 
+            dashbuttons, 
+            sidebar,
+            clusters: clusterChoices,
+            subprojects: JSON.stringify(subprojects),
+            shgs: JSON.stringify(shgs)
+        });
+      } else {
+        res.redirect("/");
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+    }
+  },
+  massRegistrationDone: async (req, res) => {
+    try {
+      if (req.session.isLoggedIn) {
+        const userID = req.session.userId;
+        const sidebar = req.session.sidebar;
+        const user = await User.findById(userID);
+        const authority = user.authority;
+        const username = user.username;
+        dashbuttons = dashboardButtons(authority);
+        let clusterChoices;
+
+        if (authority == "Admin") {
+          clusterChoices = await Cluster.find({});
+        } else if (authority == "SEDO") {
+          clusterChoices = await Cluster.findById(req.session.clusterId);
+        } else {
+          clusterChoices = [];
+        }
+
+        const summary = req.session.massRegistrationSummary || {};
+        delete req.session.massRegistrationSummary;
+
+        res.render("massRegistrationSummary", {
+          authority, username, dashbuttons, sidebar, clusterChoices,
+          recordsDone: summary.recordsDone,
+          recordsTotal: summary.recordsTotal,
+          errorCount: summary.errorCount,
+          issues: summary.issues,
+          successRate: summary.successRate
+        });
+      } else {
+        res.redirect("/");
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+    }
+  }
 }
 
 module.exports = registerController;

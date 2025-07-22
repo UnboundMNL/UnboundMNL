@@ -54,8 +54,43 @@ const clusterController = {
                     pageParts = orgParts;
                     totalPages = 1;
                 }
+
+                let totalClusters = 0;
+                let totalSavings = 0;
+                let activeMembers = 0;
+                let locations = 0;
+
+                try {
+                    totalClusters = await Cluster.countDocuments({});
+                    
+                    const uniqueLocations = await Cluster.distinct('location');
+                    locations = uniqueLocations.filter(loc => loc && loc.trim() !== '').length;
+                    
+                    const activeMembersCount = await Member.countDocuments({ 
+                        status: { $in: ['Active', 'active'] } 
+                    });
+                    activeMembers = activeMembersCount || 0;
+                    
+                    const savingsAggregation = await Cluster.aggregate([
+                        {
+                            $group: {
+                                _id: null,
+                                totalKaban: { $sum: "$totalKaban" }
+                            }
+                        }
+                    ]);
+                    totalSavings = savingsAggregation.length > 0 ? savingsAggregation[0].totalKaban : 0;
+                    
+                } catch (dbError) {
+                    console.error('Error fetching cluster summary data:', dbError);
+                    totalClusters = orgParts.length || 0;
+                    totalSavings = 0;
+                    activeMembers = 0;
+                    locations = 0;
+                }
+
                 dashbuttons = dashboardButtons(authority);
-                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, search: req.query.search });
+                res.render("cluster", { authority, pageParts, username, sidebar, dashbuttons, page, totalPages, search: req.query.search, totalClusters, activeMembers, totalSavings, locations });
             } else {
                 res.redirect("/");
             }

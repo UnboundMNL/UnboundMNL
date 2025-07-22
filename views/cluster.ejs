@@ -4,6 +4,8 @@
     <%-include('components/headers.ejs', {authority, pageName: "Clusters"})%>
     
     <!-- CSS -->
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/clusters.css" />
     <link rel="stylesheet" href="/css/cardPages.css" />
     
     <!-- SCRIPTS -->
@@ -16,6 +18,7 @@
 
 <body class="body-bg">
     
+    <!-- Sidebar -->
     <%- include('components/navbars/navbar.ejs', {authority: authority})%>
     
     <main>
@@ -24,10 +27,34 @@
 
         <!-- Cluster Content -->
         <div class="p-4 mt-5">
-            <%- include('components/breadcrumb.ejs', {pageName: "Clusters"}) %>
+            <h3 class="Clusters page-title">Cluster Management</h3>
+
+            <!-- Summary Box -->
+            <div class="org-structure-wrapper">
+                <div class="section-card org-structure-container-card">
+                    <h3 class="org-structure-title">Organizational Structure</h3>
+                    <div class="org-structure-grid">
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= totalClusters %></div>
+                            <div class="org-structure-label">Total Clusters</div>
+                        </div>
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= totalSavings %></div>
+                            <div class="org-structure-label">Total Savings</div>
+                        </div>
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= locations %></div>
+                            <div class="org-structure-label">Projects</div>
+                        </div>
+                        <div class="org-structure-item">
+                            <div class="org-structure-number"><%= activeMembers %></div>
+                            <div class="org-structure-label">Active Members</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <% var type = "Cluster";  %>
-            <h4 class="mt-3">Clusters</h4>
             <%- include('components/cardPages.ejs', { groupName: "All", groupId: "All", pageParts, type, authority}) %>
             <%- include('components/pagination.ejs', {page, totalPages})%>
         </div>

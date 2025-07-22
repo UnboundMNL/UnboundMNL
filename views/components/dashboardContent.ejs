@@ -1,65 +1,61 @@
-<div class="p-4">
+<div class="p-4" style="overflow: scroll;">
     <!-- Dashboard content -->
-    <h4 class="mt-3">Dashboard</h4>
+    <h4 class="mt-3 page-title">Dashboard</h4>
 
-    <div class="dashboard-actions row">
+    <div class="dashboard-actions">
 
         <% for (let i = 0; i < buttons.length; i++) {%>
         <!-- CLUSTERS BUTTON -->
-        <div class="container col" id="<%=i%>">
-            <i class='bx <%=buttons[i].icon%> icon'></i>
-            <script>
-                var div = document.getElementById(`<%=i%>`);
-                div.onclick = function() {
-                    location.href = '<%= buttons[i].href %>'; 
-                };
-            </script>
+        <div class="left-card" id="<%=i%>" style="font-size:1.5rem;letter-spacing:0.25rem;">
             <div>
                 <span><%=buttons[i].text%></span>
             </div>
+	    <a href="<%= buttons[i].href %>"
+	       style="background:var(--btn-grad);min-width:8rem; max-width: 16rem; color:white !important;margin-top:auto;"
+	       class="btn btn-primary dashboard-btn">View</a>
         </div>
 
         <% } %>
     </div>
 
     <!-- Statistics -->
-    <div class="dashboard-stats row mt-3">
-        <div class="col">
-            <div class="row">
-                <div class="container">
-                    <h5 class="mb-3">Organizational Structure</h5> 
-                    <% if (authority=="Admin") { %>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of Clusters</span>
-                        <span class="ml-auto"><%=nCluster%></span>
-                    </div>
-                    <% } %>
-                    <% if (authority=="Admin" || authority=="SEDO") { %>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of Projects</span>
-                        <span class="ml-auto"><%=nProject%></span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of SHGs</span>
-                        <span class="ml-auto"><%=nGroup%></span>
-                    </div>
-                    <% } %>
-                    <div class="d-flex justify-content-between">
-                        <span>Total number of Members</span>
-                        <span class="ml-auto"><%=nMember%></span>
-                    </div>
+    <div class="dashboard-stats flex flex-column mt-3">
+        <div class="flex flex-row gap-2">
+                <div class="container dashboard-org-structure section-card">
+                    <h5 class="mb-3" style="text-align:center;width:100%">Organizational Structure</h5> 
+					<div class="dashboard-org-struct-container">
+						<% if (authority=="Admin") { %>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nCluster%></span>
+								<span>Total Clusters</span>
+						</div>
+						<% } %>
+						<% if (authority=="Admin" || authority=="SEDO") { %>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nProject%></span>
+								<span>Total Projects</span>
+						</div>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nGroup%></span>
+								<span>Total SHGs</span>
+						</div>
+						<% } %>
+						<div class="d-flex justify-content-between flex-column flex-center">
+								<span><%=nMember%></span>
+								<span>Total Members</span>
+						</div>
+					</div>
                 </div>
-                <div class="container">
+                <div class="dashboard-card">
                     <div>
-                        <h5>Total Savings</h5>
+                        <h5>Total Savings (<%=currYear%>)</h5>
                         <h4 class="ml-auto fw-bold format-number"><%=savings%></h4>
                     </div>
                 </div>
-            </div>
         </div>
 
         <!-- Chart -->
-        <div class="container col-lg-7 align-middle">
+        <div class="container chart-container w-full col-lg-7 align-middle" style="max-width:100%">
             <canvas id="myChart"></canvas>
         </div>  
     </div>

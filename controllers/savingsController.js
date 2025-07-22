@@ -34,11 +34,22 @@ const savingsController = {
                     });
                     updatedData.totalSaving = totalSavings;
                     updatedData.totalMatch = totalMatch;
+                    
+                    // Handle totalDeductions if provided
+                    if (updateData.totalDeductions !== undefined) {
+                        updatedData.totalDeductions = parseInt(updateData.totalDeductions, 10);
+                    }
+                    
                     const currentSaving = await Saving.findOne({ memberID: id, year });
                     const member = await Member.findOne({ _id: id });
                     member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
 
                     member.totalMatch += (updatedData.totalMatch - currentSaving.totalMatch);
+                    
+                    // Update member totalDeductions if provided
+                    if (updatedData.totalDeductions !== undefined) {
+                        member.totalDeductions = updatedData.totalDeductions;
+                    }
                     const updatedMember = await member.save();
                     const group = await Group.findById(req.session.groupId);
                     group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
@@ -81,34 +92,49 @@ const savingsController = {
                     });
                     updatedData.totalSaving = totalSavings;
                     updatedData.totalMatch = totalMatch;
-
-
+                    
+                    // Handle totalDeductions if provided
+                    if (updateData.totalDeductions !== undefined) {
+                        updatedData.totalDeductions = parseInt(updateData.totalDeductions, 10);
+                    }
 
                     const currentSaving = await Saving.findOne({ memberID: id, year });
                     const member = await Member.findOne({ _id: id });
                     member.totalSaving += (updatedData.totalSaving - currentSaving.totalSaving);
 
                     member.totalMatch += (updatedData.totalMatch - currentSaving.totalMatch);
+                    
+                    // Update member totalDeductions if provided
+                    if (updatedData.totalDeductions !== undefined) {
+                        member.totalDeductions = updatedData.totalDeductions;
+                    }
 
                     member.savings.push(newSaving._id);
                     const updatedMember = await member.save();
+
                     const group = await Group.findById(req.session.groupId);
-                    group.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-
-                    group.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
+                    group.totalKaban += updatedData.totalSaving;
+                    group.totalKaban += updatedData.totalMatch;
                     const updatedGroup = await group.save();
+                    
                     const project = await Project.findById(req.session.projectId);
-                    project.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-                    project.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
+                    project.totalKaban += updatedData.totalSaving;
+                    project.totalKaban += updatedData.totalMatch;
                     const updatedProject = await project.save();
+                    
                     const cluster = await Cluster.findById(req.session.clusterId);
-                    cluster.totalKaban += (updatedData.totalSaving - currentSaving.totalSaving);
-                    cluster.totalKaban += (updatedData.totalMatch - currentSaving.totalMatch);
-
+                    cluster.totalKaban += updatedData.totalSaving;
+                    cluster.totalKaban += updatedData.totalMatch;
                     const updatedCluster = await cluster.save();
-                    const updatedSaving = await Saving.findOneAndUpdate({ memberID: id, year }, updatedData, { new: true });
+                    
+                    const updatedSaving = await Saving.findOneAndUpdate(
+                        { memberID: id, year }, 
+                        updatedData, 
+                        { new: true }
+                    );
+                    
                     if (updatedSaving && updatedMember && updatedGroup && updatedProject && updatedCluster) {
-                        res.json();
+                        res.json({ data: "true" });
                     }
                 }
             } else {

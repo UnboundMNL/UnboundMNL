@@ -23,5 +23,6 @@ router.get("/exportGroup/:id", exportsController.exportGroup);
 router.get("/exportProject/:id", exportsController.exportProject);
 router.get("/exportCluster/:id", exportsController.exportCluster);
 router.get("/exportAdminClusters", exportsController.exportAdminClusters);
+router.get("/exportReport", exportsController.exportReport);
 
 module.exports = router;

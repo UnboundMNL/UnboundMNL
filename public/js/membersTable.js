@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			if (/^\d+(\.\d+)?$/.test(cell.textContent) || cell.textContent === '') {
 				cell.style.backgroundColor = '';
+				
 				if (check(table)) {
 					saveButton.disabled = false;
 				}
@@ -117,6 +118,7 @@ function loadMobileTable() {
 
 // reloads the table with the specific year
 function reloadTable(value, table) {
+	showLoading();
 	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 	table.clear().draw();
@@ -125,7 +127,7 @@ function reloadTable(value, table) {
 		.then((data) => {
 			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
-				let total = member.totalSaving + member.totalMatch;
+				let total = member.totalSaving + member.totalMatch - member.totalDeductions;
 				const rowData = [
 					member.name,
 					member.orgId,
@@ -155,9 +157,10 @@ function reloadTable(value, table) {
 					member.dec.match,
 					member.totalSaving,
 					member.totalMatch,
+					member.totalDeductions,
 					total,
 				];
-				sum += member.totalSaving + member.totalMatch;
+				sum += member.totalSaving + member.totalMatch - member.totalDeductions;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -170,7 +173,7 @@ function reloadTable(value, table) {
 				}
 				j++;
 
-				for (let i = 2; i < cells.length - 3; i += 2) {
+				for (let i = 2; i < cells.length - 4; i += 2) {
 					let cell = cells[i];
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_savings`);
@@ -178,13 +181,22 @@ function reloadTable(value, table) {
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_match`);
 				}
+				
+				// Make Total Deductions cell editable
+				const totalDeductionsCell = cells[cells.length - 2]; // Second to last cell
+				totalDeductionsCell.setAttribute('contenteditable', 'true');
+				totalDeductionsCell.setAttribute('id', `${member.id}_${value}_totalDeductions`);
 				linkMemberPage(`${member.id}`, className);
 				const yearDiv = document.getElementById("memberYear");
-				yearDiv.textContent = "Savings and Matching Grant for " + data.year;
 				const totalDiv = document.getElementById("totalSaving");
 				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 			});
+			hideLoading();
+		})
+		.catch(error => {
+			console.error('Error loading table data:', error);
+			hideLoading();
 		});
 }
 
@@ -219,11 +231,24 @@ async function save() {
 	const constructedChanges = [];
 	for (const each of LISTOFCHANGES) {
 		const split = each.id.split('_');
-		const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
-		if (existingChange) {
-			existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
-		} else {
-			constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
+		
+		// Handle totalDeductions field (format: memberID_year_totalDeductions)
+		if (split.length === 3 && split[2] === 'totalDeductions') {
+			const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[1]);
+			if (existingChange) {
+				existingChange.content.push(new orderedContent('totalDeductions', each.textContent === '' ? "0" : each.textContent, 'totalDeductions'));
+			} else {
+				constructedChanges.push(new Change(split[0], split[1], [new orderedContent('totalDeductions', each.textContent === '' ? "0" : each.textContent, 'totalDeductions')]));
+			}
+		} 
+		// Handle monthly savings/match fields (format: memberID_month_year_type)
+		else if (split.length === 4) {
+			const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
+			if (existingChange) {
+				existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
+			} else {
+				constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
+			}
 		}
 	}
 	for (const each of constructedChanges) {
@@ -243,6 +268,9 @@ async function save() {
 					updateData[orderedContent.month] = {};
 				}
 				updateData[orderedContent.month].savings = orderedContent.content;
+			}
+			if (orderedContent.type === "totalDeductions") {
+				updateData.totalDeductions = orderedContent.content;
 			}
 		});
 		data["updateData"] = updateData;
@@ -285,5 +313,20 @@ async function save() {
 			.catch(error => {
 				console.error('Error:', error);
 			});
+	}
+}
+
+// Loading screen functions
+function showLoading() {
+	const loadingOverlay = document.getElementById('loadingOverlay');
+	if (loadingOverlay) {
+		loadingOverlay.classList.remove('d-none');
+	}
+}
+
+function hideLoading() {
+	const loadingOverlay = document.getElementById('loadingOverlay');
+	if (loadingOverlay) {
+		loadingOverlay.classList.add('d-none');
 	}
 }

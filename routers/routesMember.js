@@ -16,9 +16,11 @@ router.get('/member', memberController.member);
 router.get('/membersTable/:year', memberController.reloadTable);
 router.get('/memberInfo', memberController.retrieveMember);
 router.post('/newMember', memberController.newMember);
+router.post('/bulkRegisterMember', memberController.bulkRegisterMember);
 router.post('/member/:id/edit', memberController.editMember);
 router.post('/member/:id/delete', memberController.deleteMember);
 router.get('/masterlist', memberController.retrieveMasterlist)
 router.post("/memberMiddle", memberController.memberMiddle);
+router.get("/financial-report", memberController.report)
 
 module.exports = router;  
