@@ -123,6 +123,7 @@ function loadMobileTable() {
 
 // reloads the table with the specific year
 function reloadTable(value, table) {
+	showLoading();
 	YEAR.value = value;
 	const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 	table.clear().draw();
@@ -196,6 +197,11 @@ function reloadTable(value, table) {
 				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 			});
+			hideLoading();
+		})
+		.catch(error => {
+			console.error('Error loading table data:', error);
+			hideLoading();
 		});
 }
 
@@ -330,5 +336,20 @@ async function save() {
 			.catch(error => {
 				console.error('Error:', error);
 			});
+	}
+}
+
+// Loading screen functions
+function showLoading() {
+	const loadingOverlay = document.getElementById('loadingOverlay');
+	if (loadingOverlay) {
+		loadingOverlay.classList.remove('d-none');
+	}
+}
+
+function hideLoading() {
+	const loadingOverlay = document.getElementById('loadingOverlay');
+	if (loadingOverlay) {
+		loadingOverlay.classList.add('d-none');
 	}
 }
