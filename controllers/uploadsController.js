@@ -7,7 +7,8 @@ const fs = require('fs');
 const { 
     CONFIG, 
     validateFileUpload, 
-    validateEncoding
+    validateEncoding,
+    validateHeaderStructure
 } = require('./utils/uploadHelpers');
 
 const { 
@@ -94,11 +95,12 @@ module.exports = {
                 defval: '',
             });
             
-            const headerRow = rows[1];
+            const categoryHeaderRow = rows[1]; 
+            const detailHeaderRow = rows[2];  
             const dataRows = rows.slice(headerCount);
 
-            // Validate encoding type
-            const encodingValidation = validateEncoding(headerRow);
+            // Validate encoding type (check row 1 for month names)
+            const encodingValidation = validateEncoding(categoryHeaderRow);
             if (!encodingValidation.valid) {
                 req.session.massRegistrationSummary = {
                     recordsDone: 0,
@@ -107,6 +109,21 @@ module.exports = {
                     issues: [encodingValidation.error],
                     successRate: '0.00',
                     message: 'File encoding not recognized.'
+                };
+                hasResponded = true;
+                return res.redirect('/mass-register-done');
+            }
+
+            // Validate header structure (check row 2 for detailed field names)
+            const headerValidation = validateHeaderStructure(detailHeaderRow);
+            if (!headerValidation.valid) {
+                req.session.massRegistrationSummary = {
+                    recordsDone: 0,
+                    recordsTotal: 0,
+                    errorCount: 1,
+                    issues: [headerValidation.error],
+                    successRate: '0.00',
+                    message: 'Template validation failed.'
                 };
                 hasResponded = true;
                 return res.redirect('/mass-register-done');
@@ -186,7 +203,7 @@ module.exports = {
                             issues.push(`Row ${rowIdx + headerCount + 1}: Warning - ${memberResult.warning}`);
                         }
                         
-                        const savingResult = await processMonthlySavings(createdMember, headerRow, dataRows, rowIdx, sessionData, req.body.year);
+                        const savingResult = await processMonthlySavings(createdMember, categoryHeaderRow, dataRows, rowIdx, sessionData, req.body.year);
 
                         if (savingResult?.error) {
                             issues.push(`Row ${rowIdx + headerCount + 1}: User savings not saved - ${savingResult.message}`);
