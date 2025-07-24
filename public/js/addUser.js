@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const saveButton = document.getElementById("saveChanges");
-    saveButton.onclick = () => {
+    saveButton.onclick = async () => {
         const pass = document.getElementById("pass").value;
         const repass = document.getElementById("repass").value;
         const username = document.getElementById("username").value;
@@ -32,10 +32,38 @@ document.addEventListener('DOMContentLoaded', function () {
         noPart.style.color = 'red';
         const passwordRegex = /^[^\s]{6,}$/;
         let error = false;
+        
+        // Clear previous error messages
+        usernameAlert.innerHTML = '';
+        matchingAlert2.innerHTML = '';
+        noPart.innerHTML = '';
+        
+        // Check username availability first
         if (username.length === 0) {
             usernameAlert.innerHTML = '✕ Enter your username';
             error = true;
+        } else {
+            // Check if username already exists
+            try {
+                const usernameCheckResponse = await fetch('/check-username', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username })
+                });
+                const usernameCheckData = await usernameCheckResponse.json();
+                if (usernameCheckData.exists) {
+                    usernameAlert.innerHTML = '✕ Username already exists';
+                    error = true;
+                }
+            } catch (usernameError) {
+                console.error('Error checking username:', usernameError);
+                // Continue with form validation even if username check fails
+            }
         }
+        
+        // Password validation (always check regardless of username status)
         if (pass == "") {
             matchingAlert2.innerHTML = '✕ Enter your password';
             error = true;

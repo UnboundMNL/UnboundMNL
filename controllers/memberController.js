@@ -358,6 +358,12 @@ const memberController = {
                 const parentName = `${ParentFirstName || ''} ${ParentLastName || ''}`.trim();
                 const member = await Member.findOne({ _id: req.params.id });
                 if (member) {
+                    if (member.orgId !== orgId) {
+                        const existingMember = await Member.findOne({ orgId });
+                        if (existingMember) {
+                            return res.status(400).json({ error: "A member with the same ID already exists." });
+                        }
+                    }
                     if (member.groupId.toString() !== groupId) {
                         const prevGroup = await Group.findOne({ _id: member.groupId });
                         prevGroup.totalMembers -= 1;
@@ -414,7 +420,7 @@ const memberController = {
         }
     },
 
-    // deletinng members
+    // deleting members
     deleteMember: async (req, res) => {
         try {
             if (req.session.isLoggedIn) {

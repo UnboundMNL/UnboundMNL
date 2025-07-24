@@ -17,6 +17,9 @@
             <button class="btn btn-danger btn-sm" onclick="displayDeleteModal('<%= memberName %>')">Delete Member</button>
         </div>
     </div>
+    
+    <h6 class="fine-print alert alert-danger text-muted" role="alert" id="error" style="display: none;"></h6>
+    
     <hr>
 
     <% const info = ["ID", "Full Name", "Cluster", "Sub-Project", "SHG", "Address",
@@ -28,7 +31,7 @@
         cluster || 'Unknown Cluster', 
         project || 'Unknown Project', 
         group || 'Unknown Group', 
-        member.address || 'N/A',
+        member.address || 'Unknown',
         member.parentName || 'Unknown', 
         fixedBirthdate || 'Unknown', 
         member.sex || 'Unknown', 
@@ -141,7 +144,7 @@
                 'id': "<%=member.orgId || '' %>",
                 'MemberFirstName': "<%=member.name?.firstName || '' %>",
                 'MemberLastName': "<%=member.name?.lastName || '' %>", 
-                'address': "<%=member.address || '' %>",
+                'address': "<%=member.address || 'Unknown' %>",
                 'ParentFirstName': "<%=member.parentName ? member.parentName.split(' ')[0] : '' %>",
                 'ParentLastName': "<%=member.parentName ? member.parentName.split(' ').slice(1).join(' ') : '' %>",
                 'birthdate': "<%=editDate || '' %>",

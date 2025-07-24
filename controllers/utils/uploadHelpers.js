@@ -25,7 +25,7 @@ function validateEncoding(headerRow) {
     let valid = true;
     let error = '';
 
-    for (let i = 4; i < headerRow.length; i++) {
+    for (let i = 1; i < headerRow.length; i++) {
         const header = headerRow[i];
         const headerStr = header ? String(header).trim() : '';
 
@@ -36,6 +36,7 @@ function validateEncoding(headerRow) {
         if (headerStr.toLowerCase().includes('deductions')) {
             continue; // Skip deductions headers
         }
+        
         const validMonths = [
             'january', 'february', 'march', 'april', 'may', 'june',
             'july', 'august', 'september', 'october', 'november', 'december'
@@ -48,6 +49,75 @@ function validateEncoding(headerRow) {
     }
 
     return { valid, error };
+}
+
+// Helper function to validate header structure
+function validateHeaderStructure(headerRow) {
+    const expectedHeaders = [
+        'Last Name of SC/SY',
+        'First Name of SC/SY', 
+        'Status',
+        'CHID',
+        'Name of Parent'
+    ];
+    
+    const errors = [];
+    
+    if (!headerRow || headerRow.length < expectedHeaders.length) {
+        return {
+            valid: false,
+            error: 'Template structure is invalid. Missing required columns. Please use the correct template.'
+        };
+    }
+    
+    for (let i = 0; i < expectedHeaders.length; i++) {
+        const expectedHeader = expectedHeaders[i];
+        const actualHeader = headerRow[i] ? String(headerRow[i]).trim() : '';
+        
+        if (actualHeader.toLowerCase() !== expectedHeader.toLowerCase()) {
+            errors.push(`Column ${i + 1} should be "${expectedHeader}" but found "${actualHeader || '(empty)'}"`);
+        }
+    }
+    
+    let savingsMatchPattern = true;
+    let savingsMatchErrors = [];
+    
+    for (let i = 5; i < headerRow.length; i++) {
+        const header = headerRow[i] ? String(headerRow[i]).trim() : '';
+        
+        if (!header || header === '') {
+            continue;
+        }
+        
+        if (header.toLowerCase().includes('deductions')) {
+            continue;
+        }
+        
+        
+        const isEvenPosition = (i - 5) % 2 === 0;
+        const expectedType = isEvenPosition ? 'Savings' : 'Match';
+        
+        if (header.toLowerCase() !== expectedType.toLowerCase()) {
+            savingsMatchPattern = false;
+            savingsMatchErrors.push(`Column ${i + 1} should be "${expectedType}" but found "${header}"`);
+        }
+    }
+    
+    if (errors.length > 0) {
+        return {
+            valid: false,
+            error: `Template structure is invalid. ${errors.join(', ')}. Please use the correct template.`
+        };
+    }
+    
+    if (!savingsMatchPattern && savingsMatchErrors.length > 0) {
+        return {
+            valid: false,
+            error: `Template structure is invalid. Monthly columns should alternate between "Savings" and "Match". ${savingsMatchErrors.slice(0, 3).join(', ')}${savingsMatchErrors.length > 3 ? '...' : ''}. Please use the correct template.`
+        };
+    }
+    
+    return { valid: true };
 }
 
 // Helper function to map month names to schema keys
@@ -105,6 +175,7 @@ module.exports = {
     CONFIG,
     validateFileUpload,
     validateEncoding,
+    validateHeaderStructure,
     mapMonthNameToSchemaKey,
     parseNumber,
     isValidNumericValue
