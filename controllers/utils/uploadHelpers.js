@@ -145,7 +145,7 @@ function mapMonthNameToSchemaKey(monthName) {
 
 // Helper function to safely parse numbers
 function parseNumber(value, defaultValue = 0) {
-    if (value === null || value === undefined || value === '') {
+    if (value === null || value === undefined || value === '' || value ==='-') {
         return defaultValue;
     }
     const num = Number(value);
@@ -159,7 +159,7 @@ function isValidNumericValue(value) {
 
     const stringValue = String(value).trim();
 
-    if (stringValue === '') {
+    if (stringValue === '' || stringValue === '-') {
         return true;
     }
     
