@@ -1,3 +1,21 @@
+<style>
+    td[contenteditable="true"] {
+        background-color: #f8f9fa !important;
+        border: 1px solid #dee2e6;
+    }
+    
+    td[contenteditable="true"]:hover {
+        background-color: #e9ecef !important;
+    }
+    
+    td[contenteditable="true"]:focus {
+        background-color: #fff3cd !important;
+        border-color: #ffeaa7;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+    }
+</style>
+
 <div id="table_div" class="mt-4 position-relative">
     <div class="d-flex">
         <div class="display-total">
@@ -25,8 +43,9 @@
                 <% } %>
                 <th rowspan="2" class = "align-middle">Total Savings</th>
                 <th rowspan="2" class = "align-middle">Total Match</th>
+                <th rowspan="2" class = "align-middle">Total Grant</th>
                 <th rowspan="2" class = "align-middle">Total Deductions</th>
-                <th rowspan="2" class = "align-middle">Grant Total</th>
+                <th rowspan="2" class = "align-middle">Balance</th>
             </tr>
             <tr>
                 <% for(let i = 0; i < months.length; i++) { %>
@@ -51,9 +70,11 @@
                     <% } %>
                     <td class="format-number"><%= memberList[i].totalSaving %></td>
                     <td class="format-number"><%= memberList[i].totalMatch %></td>
+                    <% let grantTotal = memberList[i].totalMatch + memberList[i].totalSaving %>
+                    <td class="format-number"><%= grantTotal %></td>
                     <td class="format-number" contenteditable="true" id="<%= memberList[i].id %>_<%= year %>_totalDeductions"><%= memberList[i].totalDeductions %></td>
-                    <% let total = memberList[i].totalMatch + memberList[i].totalSaving - memberList[i].totalDeductions%>
-                    <td class="format-number"><%= total %></td>
+                    <% let balance = grantTotal - memberList[i].totalDeductions %>
+                    <td class="format-number"><%= balance %></td>
                 </tr>
             <% } %>
         </tbody>

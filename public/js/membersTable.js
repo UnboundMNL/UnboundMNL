@@ -127,7 +127,8 @@ function reloadTable(value, table) {
 		.then((data) => {
 			let j = 0, sum = 0;
 			data.memberList.forEach((member) => {
-				let total = member.totalSaving + member.totalMatch - member.totalDeductions;
+				let grantTotal = member.totalSaving + member.totalMatch;
+				let balance = grantTotal - member.totalDeductions;
 				const rowData = [
 					member.name,
 					member.orgId,
@@ -157,10 +158,11 @@ function reloadTable(value, table) {
 					member.dec.match,
 					member.totalSaving,
 					member.totalMatch,
+					grantTotal,
 					member.totalDeductions,
-					total,
+					balance,
 				];
-				sum += member.totalSaving + member.totalMatch - member.totalDeductions;
+				sum += balance;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -173,7 +175,7 @@ function reloadTable(value, table) {
 				}
 				j++;
 
-				for (let i = 2; i < cells.length - 4; i += 2) {
+				for (let i = 2; i < cells.length - 5; i += 2) {
 					let cell = cells[i];
 					cell.setAttribute('contenteditable', 'true');
 					cell.setAttribute('id', `${member.id}_${months[i / 2 - 1]}_${value}_savings`);
