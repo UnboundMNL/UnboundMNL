@@ -21,8 +21,8 @@ const savingsController = {
                     let totalMatch = 0;
                     const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
                     months.forEach(month => {
-                        const match = parseInt(updateData[month]?.match || saving[month]?.match || 0, 10);
-                        const savings = parseInt(updateData[month]?.savings || saving[month]?.savings || 0, 10);
+                        const match = parseFloat(updateData[month]?.match || saving[month]?.match || 0);
+                        const savings = parseFloat(updateData[month]?.savings || saving[month]?.savings || 0);
                         // Accumulate savings and match for the whole year
                         totalMatch += match;
                         totalSavings += savings;
@@ -37,7 +37,7 @@ const savingsController = {
                     
                     // Handle totalDeductions if provided
                     if (updateData.totalDeductions !== undefined) {
-                        updatedData.totalDeductions = parseInt(updateData.totalDeductions, 10);
+                        updatedData.totalDeductions = parseFloat(updateData.totalDeductions);
                     }
                     
                     const currentSaving = await Saving.findOne({ memberID: id, year });
@@ -80,8 +80,8 @@ const savingsController = {
                     let totalMatch = 0;
                     const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
                     months.forEach(month => {
-                        const match = parseInt(updateData[month]?.match || 0, 10);
-                        const savings = parseInt(updateData[month]?.savings || 0, 10);
+                        const match = parseFloat(updateData[month]?.match || 0);
+                        const savings = parseFloat(updateData[month]?.savings || 0);
                         // Accumulate savings and match for the whole year
                         totalMatch += match;
                         totalSavings += savings;
@@ -95,7 +95,7 @@ const savingsController = {
                     
                     // Handle totalDeductions if provided
                     if (updateData.totalDeductions !== undefined) {
-                        updatedData.totalDeductions = parseInt(updateData.totalDeductions, 10);
+                        updatedData.totalDeductions = parseFloat(updateData.totalDeductions);
                     }
 
                     const currentSaving = await Saving.findOne({ memberID: id, year });
