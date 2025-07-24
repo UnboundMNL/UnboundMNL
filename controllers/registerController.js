@@ -124,11 +124,6 @@ const registerController = {
               // Admin can see all projects and groups
               const projects = await Project.find({}).populate('groups').lean();
               const groups = await Group.find({}).lean();
-              
-              console.log('Admin - Projects found:', projects.length);
-              console.log('Admin - Groups found:', groups.length);
-              
-              // For Admin, we need to determine which cluster each project belongs to
               const allClusters = await Cluster.find({}).lean();
               
               subprojects = projects.map(project => {
@@ -151,15 +146,11 @@ const registerController = {
                   'cluster': null // Groups don't have cluster field
               }));
               
-              console.log('Admin - Sample subproject:', subprojects[0]);
           } else if (authority === "SEDO" && req.session.clusterId) {
-                console.log('SEDO - clusterId:', req.session.clusterId);
                 
                 const cluster = await Cluster.findById(req.session.clusterId).populate('projects').lean();
                 
                 if (cluster && cluster.projects) {
-                    console.log('SEDO - Projects in cluster:', cluster.projects.length);
-                    
                     const projectIds = cluster.projects.map(p => p._id);
                     const projects = await Project.find({ 
                         _id: { $in: projectIds } 
@@ -171,10 +162,6 @@ const registerController = {
                             allGroups.push(...project.groups);
                         }
                     });
-                    
-                    console.log('SEDO - Projects found:', projects.length);
-                    console.log('SEDO - Groups found:', allGroups.length);
-                    
                     subprojects = projects.map(project => ({
                         '_id': project._id.toString(),
                         'name': project.name,
@@ -188,24 +175,18 @@ const registerController = {
                         'cluster': null // Groups don't have cluster field
                     }));
                 } else {
-                    console.log('SEDO - No cluster found or cluster has no projects');
                     subprojects = [];
                     shgs = [];
                 }
                 
             } else if (authority === "Treasurer" && req.session.groupId) {
-                console.log('Treasurer - groupId:', req.session.groupId);
                 
                 const project = await Project.findOne({ 
                     groups: req.session.groupId 
                 }).populate('groups').lean();
                 
-                console.log('Treasurer - Project found:', !!project);
-                
                 if (project) {
                     const group = project.groups.find(g => g._id.toString() === req.session.groupId.toString());
-                    
-                    console.log('Treasurer - Group found:', !!group);
                     
                     if (group) {
                         subprojects = [{
@@ -234,11 +215,6 @@ const registerController = {
             subprojects = [];
             shgs = [];
         }
-        console.log('Final data being sent:');
-        console.log('- Subprojects:', subprojects.length);
-        console.log('- SHGs:', shgs.length);
-        console.log('- ClusterChoices:', clusterChoices.length);
-
 
         res.render("massRegistration", {
             authority, 
@@ -293,6 +269,21 @@ const registerController = {
     } catch (error) {
       console.error(error);
       return res.status(500).render("fail", { error: "An error occurred while fetching data." });
+    }
+  },
+
+  checkUsername: async (req, res) => {
+    try {
+      if (req.session.isLoggedIn) {
+        const { username } = req.body;
+        
+        const existingUser = await User.findOne({ username });
+        res.json({ exists: !!existingUser });
+      } else {
+        res.redirect("/");
+      }
+    } catch (error) {
+      res.status(500).render("fail", { error: "Internal server error" });
     }
   }
 }

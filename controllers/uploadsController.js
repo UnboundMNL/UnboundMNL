@@ -34,12 +34,6 @@ module.exports = {
             const selectedSubproject = req.body.subproject;
             const selectedShg = req.body.shg;
             
-            console.log('Form selections:', {
-                cluster: selectedCluster,
-                subproject: selectedSubproject,
-                shg: selectedShg
-            });
-            
             // Validate selections based on authority
             const authority = req.session.authority || (await User.findById(req.session.userId))?.authority;
             
