@@ -1,6 +1,6 @@
 // chart in dashboard
-function chart(monthValues) {
-    let monthCounts = JSON.parse(monthValues).split(',');
+function chart(monthSavings, monthMatch) {
+    console.log({ monthSavings, monthMatch })
 
     const ctx = document.getElementById('myChart');
     const monthColors = [
@@ -23,12 +23,19 @@ function chart(monthValues) {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             datasets: [{
                 label: 'Monthly Savings',
-                data: monthCounts,
-                backgroundColor: monthColors,
+                data: monthSavings,
+                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                borderWidth: 1
+            },
+            {
+                label: 'Matching',
+                data: monthMatch,
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
                 borderWidth: 1
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 y: {
                     beginAtZero: true
