@@ -207,6 +207,13 @@
                 document.getElementById('ParentLastName').value = fieldResetValues.ParentLastName;
                 document.getElementById('birthdate').value = fieldResetValues.birthdate;
                 
+                // Clear validation states
+                const errorDiv = document.getElementById('error');
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                    errorDiv.textContent = '';
+                }
+                
                 // Reset dropdowns
                 document.getElementById('sex').value = fieldResetValues.sex;
                 document.getElementById('status').value = fieldResetValues.status;
