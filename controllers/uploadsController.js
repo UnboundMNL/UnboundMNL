@@ -3,6 +3,9 @@ const User = require('../models/User');
 const memberController = require('./memberController');
 const fs = require('fs');
 
+const Member = require('../models/Member');
+const User = require('../models/User');
+
 // Import helper functions
 const { 
     CONFIG, 
@@ -268,5 +271,27 @@ module.exports = {
                 return res.redirect('/mass-register-done');
             }
         }
-    }
+    },
+
+    uploadMemberProfilePic: async (req, res) => {
+        try {
+            const memberId = req.body.id;
+            const filePath = '/uploads/' + req.file.filename;
+            await Member.findByIdAndUpdate(memberId, { photo: filePath });
+            res.json({ success: true, filePath });
+        } catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
+    },
+
+    uploadUserProfilePic: async (req, res) => {
+        try {
+            const userId = req.body.id;
+            const filePath = '/uploads/' + req.file.filename;
+            await User.findByIdAndUpdate(userId, { photo: filePath });
+            res.json({ success: true, filePath });
+        } catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
+    },
 };
