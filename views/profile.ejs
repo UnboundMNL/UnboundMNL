@@ -29,8 +29,8 @@
         <% let user = user1 %>
 
         <!-- Account Profile -->
-        <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user.username}) %>
-        <%- include('components/accountProfile/editAccount.ejs', {user: user.username}) %>
+        <%- include('components/accountProfile/profileAccount.ejs', {authority: authority, user: user.username, pfp: user.photo}) %>
+        <%- include('components/accountProfile/editAccount.ejs', {user: user.username, id: user._id, pfp: user.photo}) %>
 
         <!-- Modals -->
 
