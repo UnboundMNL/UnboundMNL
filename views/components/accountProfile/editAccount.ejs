@@ -9,7 +9,7 @@
                 <div class="d-flex align-items-center button-gap flex-wrap">
 					<input hidden type="file" accept="image/*" id="pfpInput" />
                     <label for="pfpInput" class="change-profile" data-toggle="tooltip" data-placement="bottom" title="Change Profile Picture" data-delay="100">
-                        <img src="<%= pfp %>" alt="profile" class="rounded-circle" width="100px" height="100px">
+                        <img src="<%= (pfp && pfp != 'something') ? pfp : '/img/default_pfp.png' %>" alt="profile" class="rounded-circle" width="100px" height="100px">
                         <div class="middle align-items-center rounded-circle">
                             <i class='bx bx-camera'></i>
                         </div>

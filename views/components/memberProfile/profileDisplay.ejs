@@ -3,7 +3,7 @@
         <div class="align-items-center">
             <div class="d-flex align-items-center flex-wrap">
                 <div class="mx-3">
-                    <img src="<%=member.photo%>" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
+                    <img src="<%=(member.photo && member.photo != 'something') ? member.photo : '/img/default_pfp.png' %>" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
 
                 <h4><%=member.name?.firstName || 'Unknown'%> <%=member.name?.lastName || 'Unknown'%></h4>
