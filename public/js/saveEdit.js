@@ -33,6 +33,7 @@ function saveEdit(link, actionForm, saveID) {
                         window.location.href = link;
                     }
                     saveModal.show();
+                    validateForm();
                 } else {
                     return response.json().then(data => {
                         let errorDiv = document.getElementById("error");
@@ -45,6 +46,5 @@ function saveEdit(link, actionForm, saveID) {
                 console.error('Error:', error);
             });
 
-        validateForm();
     }
 }

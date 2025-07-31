@@ -3,21 +3,23 @@ const User = require('../models/User');
 const memberController = require('./memberController');
 const fs = require('fs');
 
+const Member = require('../models/Member');
+
 // Import helper functions
-const { 
-    CONFIG, 
-    validateFileUpload, 
+const {
+    CONFIG,
+    validateFileUpload,
     validateEncoding,
     validateHeaderStructure
 } = require('./utils/uploadHelpers');
 
-const { 
-    validateMemberData, 
-    processMemberData 
+const {
+    validateMemberData,
+    processMemberData
 } = require('./utils/memberDataHelpers');
 
-const { 
-    processMonthlySavings 
+const {
+    processMonthlySavings
 } = require('./utils/savingsHelpers');
 
 module.exports = {
@@ -28,15 +30,15 @@ module.exports = {
         let nonEmptyRows = 0;
         let hasResponded = false;
         let headerCount = CONFIG.HEADER_ROW_COUNT;
-        
+
         try {
             const selectedCluster = req.body.cluster;
             const selectedSubproject = req.body.subproject;
             const selectedShg = req.body.shg;
-            
+
             // Validate selections based on authority
             const authority = req.session.authority || (await User.findById(req.session.userId))?.authority;
-            
+
             if (authority === 'Admin') {
                 if (!selectedCluster || !selectedSubproject || !selectedShg) {
                     req.session.massRegistrationSummary = {
@@ -64,7 +66,7 @@ module.exports = {
                     return res.redirect('/mass-register-done');
                 }
             }
-            
+
             // Validate file
             const fileValidation = validateFileUpload(req.file);
             if (!fileValidation.valid) {
@@ -88,9 +90,9 @@ module.exports = {
                 header: 1,
                 defval: '',
             });
-            
-            const categoryHeaderRow = rows[1]; 
-            const detailHeaderRow = rows[2];  
+
+            const categoryHeaderRow = rows[1];
+            const detailHeaderRow = rows[2];
             const dataRows = rows.slice(headerCount);
 
             // Validate encoding type (check row 1 for month names)
@@ -126,12 +128,12 @@ module.exports = {
             // Process each row
             for (let rowIdx = 0; rowIdx < dataRows.length; rowIdx++) {
                 const row = dataRows[rowIdx];
-                
+
                 // Skip empty rows
                 if (!row || row.every(cell => cell === '' || cell === null || cell === undefined)) {
                     continue;
                 }
-                
+
                 nonEmptyRows++;
                 let member = processMemberData(row);
 
@@ -196,7 +198,7 @@ module.exports = {
                         if (memberResult.warning) {
                             issues.push(`Row ${rowIdx + headerCount + 1}: Warning - ${memberResult.warning}`);
                         }
-                        
+
                         const savingResult = await processMonthlySavings(createdMember, categoryHeaderRow, dataRows, rowIdx, sessionData, req.body.year);
 
                         if (savingResult?.error) {
@@ -216,25 +218,25 @@ module.exports = {
                             members.push(createdMember);
                             logCount++;
                         }
-                        
+
                     } else {
                         // Handle creation errors
                         if (memberResult?.error === 'CREATION_ERROR') {
                             issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${memberResult.message}`);
                         } else if (memberResult?.error === 'MEMBER_ID_EXISTS_BUT_DIFFERENT_NAME') {
                             issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} failed validation - ${memberResult.message}`);
-                            
+
                         } else {
                             issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created`);
                         }
                     }
-                
+
                 } catch (error) {
                     console.error(`Error saving member ${member.name?.firstName} ${member.name?.lastName}:`, error);
                     issues.push(`Row ${rowIdx + headerCount + 1}: User not added - Member ${member.name?.firstName} ${member.name?.lastName} could not be created - ${error.message}`);
                 }
             }
-            
+
             // Set summary
             req.session.massRegistrationSummary = {
                 recordsDone: logCount,
@@ -244,7 +246,7 @@ module.exports = {
                 successRate: nonEmptyRows > 0 ? ((logCount / nonEmptyRows) * 100).toFixed(2) : '0.00',
                 message: logCount > 0 ? `Successfully processed ${logCount} of ${nonEmptyRows} members.` : 'No members were saved.'
             };
-            
+
         } catch (err) {
             console.error('Unhandled error:', err);
             req.session.massRegistrationSummary = {
@@ -268,5 +270,27 @@ module.exports = {
                 return res.redirect('/mass-register-done');
             }
         }
-    }
+    },
+
+    uploadMemberProfilePic: async (req, res) => {
+        try {
+            const memberId = req.body.id;
+            const filePath = '/uploads/' + req.file.filename;
+            await Member.findByIdAndUpdate(memberId, { photo: filePath });
+            res.json({ success: true, filePath });
+        } catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
+    },
+
+    uploadUserProfilePic: async (req, res) => {
+        try {
+            const userId = req.body.id;
+            const filePath = '/uploads/' + req.file.filename;
+            await User.findByIdAndUpdate(userId, { photo: filePath });
+            res.json({ success: true, filePath });
+        } catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
+    },
 };

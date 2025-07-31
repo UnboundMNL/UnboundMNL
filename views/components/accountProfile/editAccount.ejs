@@ -7,12 +7,13 @@
         <div class="row">
             <div class="col-md-5">
                 <div class="d-flex align-items-center button-gap flex-wrap">
-                    <div class="change-profile" data-toggle="tooltip" data-placement="bottom" title="Change Profile Picture" data-delay="100">
-                        <img src="/img/default_pfp.png" alt="profile" class="rounded-circle" width="100px" height="100px">
+					<input hidden type="file" accept="image/*" id="pfpInput" />
+                    <label for="pfpInput" class="change-profile" data-toggle="tooltip" data-placement="bottom" title="Change Profile Picture" data-delay="100">
+                        <img src="<%= (pfp && pfp != 'something') ? pfp : '/img/default_pfp.png' %>" alt="profile" class="rounded-circle" width="100px" height="100px">
                         <div class="middle align-items-center rounded-circle">
                             <i class='bx bx-camera'></i>
                         </div>
-                    </div>
+                    </label>
                     <h5><%- username %></h5>
                 </div>
                 <button class="btn btn-danger mt-4 mb-4" data-bs-toggle="modal" data-bs-target="#deleteProfileModal">Delete Account</button>
@@ -79,3 +80,24 @@
         </div>
     </div>
 </div>
+
+<script>
+	const pfpInput = document.querySelector("#pfpInput");
+
+	pfpInput.onchange = (e) => {
+		console.log(e.target.files)
+
+		const form = new FormData()
+		form.append('profilePic', e.target.files[0])
+		form.append('id', '<%= id%>')
+
+		fetch('/uploadUserProfilePic', {
+			body: form,
+			method: 'POST'
+		}).then(() => {
+			console.log('reloading')
+			window.location.reload()
+		})
+	}
+
+</script>
