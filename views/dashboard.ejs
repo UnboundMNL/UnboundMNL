@@ -26,10 +26,8 @@
         <%- include('components/dashboardContent.ejs', {authority: authority, buttons: dashbuttons, nCluster, nProject, nGroup, nMember, savings})%>
         <script>open('dashboardButton')</script>
         <%-include('components/popups/logoutPopup.ejs') %>
-        <% const months = [monthCounts["jan"], monthCounts["feb"], monthCounts["mar"], monthCounts["apr"], monthCounts["may"], monthCounts["jun"],
-            monthCounts["jul"], monthCounts["aug"], monthCounts["sep"], monthCounts["oct"], monthCounts["nov"], monthCounts["dec"] ]; %>
         <script>
-            chart(JSON.stringify("<%=months%>"));
+            chart([<%=[monthSavings.jan, monthSavings.feb, monthSavings.mar, monthSavings.apr, monthSavings.may, monthSavings.jun, monthSavings.jul, monthSavings.aug, monthSavings.sep, monthSavings.oct, monthSavings.nov, monthSavings.dec].join(',')%>], [<%=[monthMatch.jan, monthMatch.feb, monthMatch.mar, monthMatch.apr, monthMatch.may, monthMatch.jun, monthMatch.jul, monthMatch.aug, monthMatch.sep, monthMatch.oct, monthMatch.nov, monthMatch.dec].join(',')%>]);
         </script>
     </main>
 </body>

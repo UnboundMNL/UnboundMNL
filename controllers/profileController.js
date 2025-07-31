@@ -99,24 +99,29 @@ const profileController = {
                 }
                 // gets how much savings and matching grant is saved for all the months of the current year
                 const monthCounts = {};
+                const monthSavings = {};
+                const monthMatch = {};
                 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
                 months.forEach((month) => {
-                    monthCounts[month] = 0;
+                    monthSavings[month] = 0;
+                    monthMatch[month] = 0;
                 });
                 if (allSaving) {
                     allSaving.forEach((saving) => {
                         months.forEach((month) => {
-                            monthCounts[month] += saving[month].savings + saving[month].match;
+                            monthSavings[month] += saving[month].savings;
+                            monthMatch[month] += saving[month].match;
                             ;
                         });
                     });
                 } else {
                     months.forEach((month) => {
-                        monthCounts[month] = 0;
+                        monthSavings[month] = 0;
+                        monthMatch[month] += saving[month].match;
                     })
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthCounts, currYear });
+                res.render("dashboard", { authority, orgParts, username, dashbuttons, sidebar, nCluster, nProject, nGroup, nMember, savings, monthSavings, monthMatch, currYear });
             } else {
                 res.redirect("/");
             }
