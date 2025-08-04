@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const uploadPicture = multer({ storage: storage });
+const uploadPicture = multer({ storage: multer.memoryStorage() });
 
 router.post('/uploadMemberProfilePic', uploadPicture.single('profilePic'), uploadsController.uploadMemberProfilePic);
 router.post('/uploadUserProfilePic', uploadPicture.single('profilePic'), uploadsController.uploadUserProfilePic);

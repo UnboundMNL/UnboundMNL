@@ -275,9 +275,11 @@ module.exports = {
     uploadMemberProfilePic: async (req, res) => {
         try {
             const memberId = req.body.id;
-            const filePath = '/uploads/' + req.file.filename;
-            await Member.findByIdAndUpdate(memberId, { photo: filePath });
-            res.json({ success: true, filePath });
+            const base64 = req.file.buffer.toString('base64');
+            const mimeType = req.file.mimetype;
+            const base64Image = `data:${mimeType};base64,${base64}`;
+            await Member.findByIdAndUpdate(memberId, { photo: base64Image });
+            res.json({ success: true, photo: base64Image });
         } catch (err) {
             res.status(500).json({ success: false, error: err.message });
         }
@@ -286,9 +288,11 @@ module.exports = {
     uploadUserProfilePic: async (req, res) => {
         try {
             const userId = req.body.id;
-            const filePath = '/uploads/' + req.file.filename;
-            await User.findByIdAndUpdate(userId, { photo: filePath });
-            res.json({ success: true, filePath });
+            const base64 = req.file.buffer.toString('base64');
+            const mimeType = req.file.mimetype;
+            const base64Image = `data:${mimeType};base64,${base64}`;
+            await User.findByIdAndUpdate(userId, { photo: base64Image });
+            res.json({ success: true, photo: base64Image });
         } catch (err) {
             res.status(500).json({ success: false, error: err.message });
         }

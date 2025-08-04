@@ -6,12 +6,16 @@
         <div class="align-items-center">
             <div class="d-flex align-items-center flex-wrap">
                 <div class="d-flex flex-column">
-                    <img src="<%=(member.photo && member.photo != 'something') ? member.photo : '/img/default_pfp.png' %>" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
+                    <img src="<%= (member.photo && member.photo.startsWith('data:image/'))
+                        ? member.photo
+                        : (member.photo && member.photo != 'something')
+                            ? member.photo
+                            : '/img/default_pfp.png' %>" alt="profile" class="rounded-circle mb-4" width="100px" height="100px">
                 </div>
                 <h4><%=member.name?.firstName || 'Unknown'%> <%=member.name?.lastName || 'Unknown'%></h4>
             </div>
-			<input hidden type="file" accept="image/*" id="pfpInput" />
-		
+            <input hidden type="file" accept="image/*" id="pfpInput" />
+        
             <label for="pfpInput" class="btn btn-secondary btn-sm">Change Photo</label>
         </div>
         <div class="align-items-right">
@@ -284,23 +288,23 @@
 
 
 <script>
-	const pfpInput = document.querySelector("#pfpInput");
+    const pfpInput = document.querySelector("#pfpInput");
 
-	pfpInput.onchange = (e) => {
-		console.log(e.target.files)
+    pfpInput.onchange = (e) => {
+        console.log(e.target.files)
 
-		const form = new FormData()
-		form.append('profilePic', e.target.files[0])
-		form.append('id', '<%= member._id%>')
+        const form = new FormData()
+        form.append('profilePic', e.target.files[0])
+        form.append('id', '<%= member._id%>')
 
-		fetch('/uploadMemberProfilePic', {
-			body: form,
-			method: 'POST'
-		}).then(() => {
-			console.log('reloading')
-			window.location.reload()
-		})
-	}
+        fetch('/uploadMemberProfilePic', {
+            body: form,
+            method: 'POST'
+        }).then(() => {
+            console.log('reloading')
+            window.location.reload()
+        })
+    }
 
 </script>
 
