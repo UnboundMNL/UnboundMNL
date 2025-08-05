@@ -33,7 +33,7 @@ const memberController = {
                 const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
                 const members = await Member.find({ _id: { $in: group.members } });
-                let totalSaving = 0;
+                let totalBalance = 0;
 
                 // gets savings and matching grant of each member of a group on the current year
                 if (members) {
@@ -50,13 +50,13 @@ const memberController = {
                         if (savings) {
                             for (const month of months) {
                                 data[month] = {
-                                    savings: savings[month]?.savings || "",
-                                    match: savings[month]?.match || ""
+                                    savings: parseFloat((savings[month]?.savings || 0).toFixed(2)),
+                                    match: parseFloat((savings[month]?.match || 0).toFixed(2))
                                 };
                             }
-                            data.totalMatch = savings.totalMatch;
-                            data.totalSaving = savings.totalSaving;
-                            data.totalDeductions = savings.totalDeductions;
+                            data.totalMatch = parseFloat((savings.totalMatch || 0).toFixed(2));
+                            data.totalSaving = parseFloat((savings.totalSaving || 0).toFixed(2));
+                            data.totalDeductions = parseFloat((savings.totalDeductions || 0).toFixed(2));
                         } else {
                             for (const month of months) {
                                 data[month] = {
@@ -68,12 +68,12 @@ const memberController = {
                             data.totalSaving = 0;
                             data.totalDeductions = 0;
                         }
-                        totalSaving += parseInt(data.totalSaving) + parseInt(data.totalMatch);
+                        totalBalance += parseFloat(data.totalSaving || 0) + parseFloat(data.totalMatch || 0) - parseFloat(data.totalDeductions || 0);
                         memberList.push(data);
                     }
                 }
                 dashbuttons = dashboardButtons(authority);
-                res.render("member", { authority, username, sidebar, dashbuttons, groupName: group.name, year, memberList, totalSaving, projectName: project.name, clusterName: cluster.name });
+                res.render("member", { authority, username, sidebar, dashbuttons, groupName: group.name, year, memberList, totalBalance: parseFloat(totalBalance.toFixed(2)), projectName: project.name, clusterName: cluster.name });
             } else {
                 res.redirect("/");
             }
@@ -94,7 +94,7 @@ const memberController = {
 
 
                 const members = await Member.find({ _id: { $in: group.members } });
-                let totalSaving = 0;
+                let totalBalance = 0;
                 for (const member of members) {
                     const savings = await Saving.findOne({
                         _id: { $in: member.savings },
@@ -108,13 +108,13 @@ const memberController = {
                     if (savings) {
                         for (const month of months) {
                             data[month] = {
-                                savings: savings[month]?.savings || "",
-                                match: savings[month]?.match || ""
+                                savings: parseFloat((savings[month]?.savings || 0).toFixed(2)),
+                                match: parseFloat((savings[month]?.match || 0).toFixed(2))
                             };
                         }
-                        data.totalMatch = savings.totalMatch;
-                        data.totalSaving = savings.totalSaving;
-                        data.totalDeductions = savings.totalDeductions;
+                        data.totalMatch = parseFloat((savings.totalMatch || 0).toFixed(2));
+                        data.totalSaving = parseFloat((savings.totalSaving || 0).toFixed(2));
+                        data.totalDeductions = parseFloat((savings.totalDeductions || 0).toFixed(2));
                     } else {
                         for (const month of months) {
                             data[month] = {
@@ -126,10 +126,10 @@ const memberController = {
                         data.totalSaving = 0;
                         data.totalDeductions = 0;
                     }
-                    totalSaving += data.totalSaving;
+                    totalBalance += parseFloat(data.totalSaving || 0) + parseFloat(data.totalMatch || 0) - parseFloat(data.totalDeductions || 0);
                     memberList.push(data);
                 }
-                res.status(200).json({ memberList, totalSaving, year });
+                res.status(200).json({ memberList, totalBalance: parseFloat(totalBalance.toFixed(2)), year });
             } else {
                 res.status(400).json({ error: "An error occurred while retrieving group information." });
             }

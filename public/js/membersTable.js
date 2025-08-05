@@ -125,10 +125,10 @@ function reloadTable(value, table) {
 	fetch(`/membersTable/${value}`)
 		.then((res) => res.json())
 		.then((data) => {
-			let j = 0, sum = 0;
+			let j = 0;
 			data.memberList.forEach((member) => {
-				let grantTotal = member.totalSaving + member.totalMatch;
-				let balance = grantTotal - member.totalDeductions;
+				let grantTotal = parseFloat(member.totalSaving || 0) + parseFloat(member.totalMatch || 0);
+				let balance = grantTotal - parseFloat(member.totalDeductions || 0);
 				const rowData = [
 					member.name,
 					member.orgId,
@@ -162,7 +162,6 @@ function reloadTable(value, table) {
 					member.totalDeductions,
 					balance,
 				];
-				sum += balance;
 				// Add a new row to the table
 				const row = table.row.add(rowData).draw();
 				// Make the cells of the newly added row editable and set attributes
@@ -189,10 +188,14 @@ function reloadTable(value, table) {
 				totalDeductionsCell.setAttribute('contenteditable', 'true');
 				totalDeductionsCell.setAttribute('id', `${member.id}_${value}_totalDeductions`);
 				linkMemberPage(`${member.id}`, className);
-				const yearDiv = document.getElementById("memberYear");
-				const totalDiv = document.getElementById("totalSaving");
-				totalDiv.textContent = sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
+				
+			});
+			// Update total balance from backend data
+			const yearDiv = document.getElementById("memberYear");
+			const totalDiv = document.getElementById("totalBalance");
+			totalDiv.textContent = data.totalBalance.toLocaleString('en-US', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2
 			});
 			hideLoading();
 		})
@@ -236,20 +239,22 @@ async function save() {
 		
 		// Handle totalDeductions field (format: memberID_year_totalDeductions)
 		if (split.length === 3 && split[2] === 'totalDeductions') {
+			const value = each.textContent === '' ? "0.00" : parseFloat(each.textContent).toFixed(2);
 			const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[1]);
 			if (existingChange) {
-				existingChange.content.push(new orderedContent('totalDeductions', each.textContent === '' ? "0" : each.textContent, 'totalDeductions'));
+				existingChange.content.push(new orderedContent('totalDeductions', value, 'totalDeductions'));
 			} else {
-				constructedChanges.push(new Change(split[0], split[1], [new orderedContent('totalDeductions', each.textContent === '' ? "0" : each.textContent, 'totalDeductions')]));
+				constructedChanges.push(new Change(split[0], split[1], [new orderedContent('totalDeductions', value, 'totalDeductions')]));
 			}
 		} 
 		// Handle monthly savings/match fields (format: memberID_month_year_type)
 		else if (split.length === 4) {
+			const value = each.textContent === '' ? "0.00" : parseFloat(each.textContent).toFixed(2);
 			const existingChange = constructedChanges.find(change => change.id === split[0] && change.year === split[2]);
 			if (existingChange) {
-				existingChange.content.push(new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3]));
+				existingChange.content.push(new orderedContent(split[1], value, split[3]));
 			} else {
-				constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], each.textContent === '' ? "0" : each.textContent, split[3])]));
+				constructedChanges.push(new Change(split[0], split[2], [new orderedContent(split[1], value, split[3])]));
 			}
 		}
 	}
